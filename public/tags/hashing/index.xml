@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Hashing on Gill.Singh.A</title>
+        <link>http://localhost:1313/tags/hashing/</link>
+        <description>Recent content in Hashing on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Mon, 23 Sep 2024 04:56:45 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/hashing/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Password Cracking</title>
+        <link>http://localhost:1313/p/password-cracking/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/password-cracking/</guid>
+        <description>&lt;img src="http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database.png&#34;
+	width=&#34;1720&#34;
+	height=&#34;900&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu1473404851421758759.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu5701567306370613051.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Database&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;191&#34;
+		data-flex-basis=&#34;458px&#34;
+	
+&gt;&lt;br /&gt;
+Passwords are stored on databases by hashing them alone or after appending them with random values. Hashing is a one-way function that converts a given string of characters into another value. A strong hashing algorithm has to be quick, deterministic, and irreversible. In this blog, we explore how a hashed password can be cracked.&lt;/p&gt;
+&lt;h2 id=&#34;hashing-algorithms&#34;&gt;Hashing Algorithms
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing.png&#34;
+	width=&#34;2079&#34;
+	height=&#34;800&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hu4833789966977637885.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hu4912368868399801949.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Hashing&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;259&#34;
+		data-flex-basis=&#34;623px&#34;
+	
+&gt;&lt;br /&gt;
+Hashing algorithms are mathematical functions that take an input (often a string of characters, such as a password) and produce a fixed-size string of characters, known as a hash value or hash code. These algorithms are designed to be one-way functions, meaning that while it&amp;rsquo;s easy to compute the hash value from the input (password), it&amp;rsquo;s computationally infeasible to reverse the process and obtain the original input from the hash value.&lt;br /&gt;
+Some common hashing Algorithms are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;md5&lt;/strong&gt;: A widely-used cryptographic hash function producing a 128-bit (16-byte) hash value&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha1&lt;/strong&gt;: A cryptographic hash function designed by the NSA, producing a 160-bit (20-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha224&lt;/strong&gt;: A variant of SHA-2 family generating a 224-bit (28-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha256&lt;/strong&gt;: Part of the SHA-2 family, producing a 256-bit (32-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha384&lt;/strong&gt;: A SHA-2 algorithm variant producing a 384-bit (48-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_224&lt;/strong&gt;: One of the SHA-3 family hash functions generating a 224-bit (28-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_256&lt;/strong&gt;: Part of the SHA-3 family producing a 256-bit (32-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_384&lt;/strong&gt;: A SHA-3 algorithm variant generating a 384-bit (48-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_512&lt;/strong&gt;: A SHA-3 family hash function producing a 512-bit (64-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha512&lt;/strong&gt;: A SHA-2 algorithm variant generating a 512-bit (64-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BLAKE2&lt;/strong&gt;: A cryptographic hash function offering high speed and security, available in different output sizes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Whirlpool&lt;/strong&gt;: A cryptographic hash function producing a 512-bit (64-byte) hash value, designed by Vincent Rijmen and Paulo S. L. M. Barreto&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RIPEMD-160&lt;/strong&gt;: A cryptographic hash function developed as an improvement of RIPEMD, producing a 160-bit (20-byte) hash value&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tiger&lt;/strong&gt;: A cryptographic hash function known for its speed and cryptographic strength, producing a 192-bit (24-byte) hash value&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;why-passwords-are-hashed&#34;&gt;Why Passwords are Hashed
+&lt;/h2&gt;&lt;p&gt;Passwords are hashed primarily for security reasons. When a user creates an account or sets a password, the system does not store it. Instead, it computes the password&amp;rsquo;s hash value using a hashing algorithm and stores the hash value in its database.&lt;br /&gt;
+Here are the main reasons why passwords are hashed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Protection Against Data Breaches: Hidden passwords thwart attackers&lt;/li&gt;
+&lt;li&gt;User Privacy: Shield passwords from unauthorized access&lt;/li&gt;
+&lt;li&gt;Preventing Password Reuse: Encourage unique passwords&lt;/li&gt;
+&lt;li&gt;Compliance with Security Standards: PCI DSS, GDPR, and other standards mandate password hashing for user data protection&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;salting-in-hashes&#34;&gt;Salting in Hashes
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/salting.jpg&#34;
+	width=&#34;1940&#34;
+	height=&#34;1282&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu13723605654203217095.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu2456114825957901133.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Salting&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;151&#34;
+		data-flex-basis=&#34;363px&#34;
+	
+&gt;&lt;br /&gt;
+Salting in hashes is a technique used to enhance the security of hashed passwords or data by adding a random or unique value, called a &lt;em&gt;salt&lt;/em&gt;, before hashing. This salt is typically a random string of characters or bits generated separately for each password or piece of data being hashed. Here&amp;rsquo;s an explanation of how salting works and why it&amp;rsquo;s important:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Adding Randomness: Salting introduces randomness by appending a unique value to each password before hashing&lt;/li&gt;
+&lt;li&gt;Preventing Precomputed Attacks: Salting thwarts precomputed attacks like rainbow tables(explained later) by ensuring each password has a distinct hash&lt;/li&gt;
+&lt;li&gt;Enhancing Security: Salting significantly boosts security by mitigating various types of attacks, including brute force and dictionary attacks&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-protected-files-and-drives&#34;&gt;Password Protected Files and Drives
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions.jpg&#34;
+	width=&#34;550&#34;
+	height=&#34;345&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu4445162751528759475.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu11562899296713017864.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;File Encryption&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;382px&#34;
+	
+&gt;&lt;br /&gt;
+Password-protected files, such as ZIP archives and PDF documents, are digital files encrypted with a password to prevent unauthorized access. ZIP files, compressed archives containing multiple files and folders, can be password-protected to encrypt their contents, requiring the correct password for extraction. Similarly, PDF files, commonly used for document sharing, can be secured with password protection to encrypt the document&amp;rsquo;s contents and restrict access or actions like printing and editing without the correct password. Encrypted files and drives use encryption algorithms to encode data, making it unreadable without the corresponding decryption key or password. This encryption ensures the confidentiality and security of sensitive information stored within the files or drives, reinforcing protection against unauthorized access and data breaches.&lt;/p&gt;
+&lt;h2 id=&#34;hash-cracking&#34;&gt;Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/methods.jpg&#34;
+	width=&#34;495&#34;
+	height=&#34;316&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu8197215681215346304.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu3860945043454114380.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Hash Cracking&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;156&#34;
+		data-flex-basis=&#34;375px&#34;
+	
+&gt;&lt;br /&gt;
+In this section we explore the ways we can decipher a hashed password.&lt;/p&gt;
+&lt;h2 id=&#34;methods-of-password-cracking&#34;&gt;Methods of Password Cracking
+&lt;/h2&gt;&lt;p&gt;There are 4 methods to crack a Hash Protected Password&lt;/p&gt;
+&lt;h3 id=&#34;brute-force&#34;&gt;Brute Force
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;In a brute force attack, the attacker systematically tries every possible combination of characters until the correct password is found&lt;/li&gt;
+&lt;li&gt;This method starts with trying the simplest passwords, such as single characters or common words, and gradually progresses to more complex combinations&lt;/li&gt;
+&lt;li&gt;Brute force attacks can be resource-intensive and time-consuming, especially for longer and more complex passwords, but they are generally effective against weak passwords&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dictionary-attack&#34;&gt;Dictionary Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;A dictionary attack involves using a predefined list of words, phrases, or commonly used passwords to guess the password&lt;/li&gt;
+&lt;li&gt;Unlike brute force, which tries every possible combination, a dictionary attack focuses on likely passwords first, potentially speeding up the process&lt;/li&gt;
+&lt;li&gt;The dictionary used in this attack may include common words, phrases, names, and variations thereof, making it more efficient than brute force for many scenarios&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;rainbow-table-attack&#34;&gt;Rainbow Table Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Rainbow table attacks exploit weaknesses in password storage mechanisms, particularly when passwords are hashed without salting&lt;/li&gt;
+&lt;li&gt;A rainbow table is a precomputed table of password hashes and their corresponding plaintext passwords&lt;/li&gt;
+&lt;li&gt;Instead of recalculating hashes for each attempted password, the attacker compares the hash of the target password with entries in the rainbow table to find a match&lt;/li&gt;
+&lt;li&gt;This method can be faster than brute force or dictionary attacks, especially for large datasets, but it requires significant computational resources to generate and store the rainbow table initially&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;collision-attack&#34;&gt;Collision Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;A collision attack is a type of cryptographic attack where an attacker tries to find two different inputs (messages) that produce the same hash value when processed by a hashing algorithm. In other words, the attacker seeks to find a collision—a situation where two distinct inputs generate identical hash outputs.&lt;/li&gt;
+&lt;li&gt;Collision attacks can have serious security implications, especially in cryptographic systems where hash functions are used for ensuring data integrity, authentication, and other security purposes. A successful collision attack undermines the fundamental security properties of the hash function, leading to potential vulnerabilities and compromises in the overall security of the system.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;collision-attack-proof-of-concept&#34;&gt;Collision Attack Proof of Concept
+&lt;/h3&gt;&lt;p&gt;Collision attacks against MD5 are not only theoretically possible but have also been demonstrated in practice. In fact, MD5 is considered highly vulnerable to collision attacks due to its design flaws and weaknesses. &lt;br /&gt;
+In 2004, researchers Xiaoyun Wang and Hongbo Yu published a paper titled &lt;em&gt;Collisions for Hash Functions MD4, MD5, HAVAL-128 and RIPEMD&lt;/em&gt; where they presented practical collision attacks against several cryptographic hash functions, including MD5. They demonstrated that it was possible to find two different inputs that produce the same MD5 hash value, effectively breaking the collision resistance property of MD5. &lt;br /&gt;
+Since then, further advancements in computing power and cryptanalysis techniques have made collision attacks against MD5 even more feasible and practical. Today, it is relatively easy to generate MD5 collisions using specialized hardware or distributed computing resources. &lt;br /&gt;
+Due to these vulnerabilities, MD5 is no longer considered secure for cryptographic purposes, and its use has been strongly discouraged in favor of more secure hashing algorithms such as SHA-256 or SHA-3. In fact, most modern security standards and protocols explicitly prohibit the use of MD5 due to its susceptibility to collision attacks.&lt;/p&gt;
+&lt;h2 id=&#34;tools-for-hash-cracking&#34;&gt;Tools for Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/tools.jpg&#34;
+	width=&#34;738&#34;
+	height=&#34;576&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu12748403592501029798.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu8750775526461045458.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Tools&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;128&#34;
+		data-flex-basis=&#34;307px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashcat.net/hashcat/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hashcat&lt;/a&gt;: A highly versatile and powerful password recovery tool that supports various hashing algorithms and attack modes, including brute force, dictionary, and mask attacks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/openwall/john&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;John the Ripper&lt;/a&gt;: One of the oldest and most widely used password cracking tools, capable of performing dictionary and brute force attacks against various password hashes.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://ophcrack.sourceforge.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ophcrack&lt;/a&gt;: A free and open-source tool primarily used for cracking Windows passwords by leveraging rainbow tables for LM and NTLM hashes.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/medusa/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Medusa&lt;/a&gt;: A parallel login brute-forcer that supports various protocols, including SSH, FTP, Telnet, HTTP(S), SMB, and others.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/hydra/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hydra&lt;/a&gt;: A network login cracker that supports various protocols like SSH, FTP, Telnet, HTTP(S), and others, making it useful for cracking passwords on network services.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://sectools.org/tool/cain/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Cain and Abel&lt;/a&gt;: A versatile password recovery tool that can recover passwords using various methods such as dictionary attacks, brute-force attacks, and cryptanalysis attacks.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;http://project-rainbowcrack.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RainbowCrack&lt;/a&gt;: A password cracking tool that uses rainbow tables to crack hashes. It can handle various hash algorithms and supports distributed cracking.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.aircrack-ng.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Aircrack-ng&lt;/a&gt;: A popular tool for cracking Wi-Fi passwords by capturing and analyzing network packets, supporting various encryption algorithms like WEP and WPA/WPA2.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashcat.net/forum/thread-9151.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashcatGUI&lt;/a&gt;: A graphical user interface for Hashcat, providing an easier and more user-friendly way to perform hash cracking tasks.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Azure/PyRIT&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Pyrit&lt;/a&gt;: Another tool for cracking Wi-Fi passwords, Pyrit specializes in attacking WPA/WPA2-PSK authentication.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/fcrackzip/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;fcrackzip&lt;/a&gt;: fcrackzip is a fast password cracker partly written in assembler. It is able to crack password protected zip files with brute force or dictionary based attacks, optionally testing with unzip its results. It can also crack cpmask’ed images.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;websites-for-hash-cracking&#34;&gt;Websites for Hash Cracking
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.onlinehashcrack.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;OnlineHashCrack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Crack Station&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashes.com/en/decrypt/hash&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hashes.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://md5hashing.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MD5 Hashing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://nitrxgen.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ntirxgen&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;wordlists&#34;&gt;Wordlists
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists.png&#34;
+	width=&#34;1747&#34;
+	height=&#34;478&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu3032474284580762306.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu4384129554991596746.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Wordlists&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;365&#34;
+		data-flex-basis=&#34;877px&#34;
+	
+&gt;&lt;br /&gt;
+Most of the time Wordlists that contain commonly used passwords and words are used for this puspose. Wordlists like this typically originate from data breaches, leaks, or public disclosures of passwords used by individuals on various online platforms. Several famous wordlists are widely used in password cracking, security testing, and research. Here are some of the most notable ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RockYou: One of the largest and most well-known wordlists, containing millions of commonly used passwords leaked from the RockYou data breach in 2009.&lt;/li&gt;
+&lt;li&gt;SecLists: A collection of multiple wordlists curated and maintained by Daniel Miessler and Jason Haddix, covering various categories such as passwords, usernames, web shells, and more.&lt;/li&gt;
+&lt;li&gt;Probable Wordlists: Wordlists generated by combining common words, names, dates, and patterns likely to be used in passwords, often used in conjunction with brute force and dictionary attacks.&lt;/li&gt;
+&lt;li&gt;CrackStation: A collection of wordlists generated from leaked password databases, providing a comprehensive dataset for password cracking purposes.&lt;/li&gt;
+&lt;li&gt;Hashes.org: An online repository of hashed passwords and associated wordlists, allowing researchers and security professionals to collaborate on password cracking projects.&lt;/li&gt;
+&lt;li&gt;WPA/WPA2 Wordlists: Specialized wordlists containing common passwords and phrases used in Wi-Fi networks protected by WPA/WPA2 encryption, often used for cracking wireless network passwords.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;More Lists of Wordlists can be found on &lt;a class=&#34;link&#34; href=&#34;https://weakpass.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;WeakPass&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;custom-wordlists&#34;&gt;Custom Wordlists
+&lt;/h2&gt;&lt;p&gt;Several tools are available for generating wordlists, which are essential for password cracking and security testing. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/jim3ma/crunch&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Crunch&lt;/a&gt;: A powerful wordlist generator that allows users to specify custom character sets, lengths, and patterns for generating wordlists.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Mebus/cupp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CUPP&lt;/a&gt; (Common User Passwords Profiler): A simple tool that generates custom wordlists based on personal information such as names, dates, and common passwords.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/digininja/CeWL&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CeWL&lt;/a&gt; (Custom Word List generator): A tool that spiders a target website to create custom wordlists based on the content found in the web pages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;cpu-vs-gpu&#34;&gt;CPU vs GPU
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
+	width=&#34;800&#34;
+	height=&#34;445&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu4494810528079756738.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu7107262851154168624.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CPU vs GPU&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;179&#34;
+		data-flex-basis=&#34;431px&#34;
+	
+&gt;&lt;br /&gt;
+The choice between using CPU (Central Processing Unit) and GPU (Graphics Processing Unit) for hash cracking can significantly impact the speed and efficiency of the cracking process.&lt;/p&gt;
+&lt;h3 id=&#34;cpu-hash-cracking&#34;&gt;CPU Hash Cracking
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;CPUs are general-purpose processors designed to handle a wide range of tasks, including hash cracking&lt;/li&gt;
+&lt;li&gt;While CPUs can execute a variety of instructions, they typically have a limited number of processing cores compared to GPUs&lt;/li&gt;
+&lt;li&gt;Hash cracking on CPU relies heavily on the CPU&amp;rsquo;s processing power and its ability to handle sequential tasks efficiently&lt;/li&gt;
+&lt;li&gt;CPUs are well-suited for tasks that require complex logic, branching, and sequential processing, which are often found in password cracking algorithms&lt;/li&gt;
+&lt;li&gt;However, CPU hash cracking tends to be slower compared to GPU cracking, especially when dealing with large datasets or complex hashing algorithms&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;gpu-hash-cracking&#34;&gt;GPU Hash Cracking
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;GPUs are highly parallelized processors designed to handle large amounts of data simultaneously, making them well-suited for hash cracking.&lt;/li&gt;
+&lt;li&gt;Modern GPUs contain thousands of cores optimized for parallel processing, allowing them to perform many calculations simultaneously&lt;/li&gt;
+&lt;li&gt;Hash cracking on GPU can leverage the massive parallel processing power of GPUs to accelerate the cracking process significantly&lt;/li&gt;
+&lt;li&gt;GPUs are particularly effective at tasks that involve simple, repetitive calculations, such as those commonly encountered in cryptographic algorithms used for hashing&lt;/li&gt;
+&lt;li&gt;As a result, GPU hash cracking can achieve much higher speeds compared to CPU cracking, especially for algorithms that can be easily parallelized&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;types-of-passwords&#34;&gt;Types of Passwords
+&lt;/h2&gt;&lt;p&gt;It is also possible to classify passwords into certain sets. These sets can make the password cracking process more efficient, especially if we have some information about the targetted individual or group of individuals.&lt;br /&gt;
+Here are a few sets:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dictionary Password
+&lt;ul&gt;
+&lt;li&gt;These passwords are derived from words found in dictionaries. Attackers often use dictionary-based attacks where they try common words or phrases as passwords.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;sunshine&amp;rdquo;, &amp;ldquo;password123&amp;rdquo;, &amp;ldquo;football&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Short Set
+&lt;ul&gt;
+&lt;li&gt;Short sets are passwords that consist of a small number of characters or digits. These passwords are relatively easier to guess or crack through brute force methods compared to longer, more complex passwords.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;1234&amp;rdquo;, &amp;ldquo;abcd&amp;rdquo;, &amp;ldquo;qwerty&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keywalk
+&lt;ul&gt;
+&lt;li&gt;Keywalk passwords involve selecting characters that are adjacent to each other on a keyboard layout. Users may choose this method thinking it&amp;rsquo;s easy to remember, but it can be insecure due to its predictability.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;qwertyuiop&amp;rdquo;, &amp;ldquo;asdfghjkl&amp;rdquo;, &amp;ldquo;zxcvbnm&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Personal Data
+&lt;ul&gt;
+&lt;li&gt;These passwords incorporate personal information such as names, birthdates, addresses, or other identifiable information. While easy to remember, they are often easy to guess by someone who knows the individual well or can gather information about them.&lt;/li&gt;
+&lt;li&gt;This type of password can be easily generated with &lt;a class=&#34;link&#34; href=&#34;https://github.com/Mebus/cupp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CUPP&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;John1985NY&amp;rdquo;, &amp;ldquo;SarahSmith1234&amp;rdquo;, &amp;ldquo;London33&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Distortion of Specific Words
+&lt;ul&gt;
+&lt;li&gt;This method involves taking a common word or phrase and intentionally misspelling or distorting it in some way to create a password. While it may seem secure, attackers can still use techniques like dictionary attacks to crack them.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;P@$$w0rd&amp;rdquo; (instead of &amp;ldquo;Password&amp;rdquo;), &amp;ldquo;L0v3ly&amp;rdquo; (instead of &amp;ldquo;Lovely&amp;rdquo;), &amp;ldquo;S3cur!ty&amp;rdquo; (instead of &amp;ldquo;Security&amp;rdquo;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Repetitive Patterns
+&lt;ul&gt;
+&lt;li&gt;These passwords involve repeating a pattern of characters, numbers, or symbols. While they may seem complex at first, they can be easily cracked through pattern recognition.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;123123&amp;rdquo;, &amp;ldquo;abcabc&amp;rdquo;, &amp;ldquo;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Sequential Characters
+&lt;ul&gt;
+&lt;li&gt;Sequential character passwords involve using characters that appear in sequence in the alphabet or somewhere else. These passwords are often weak due to their predictability.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;abcdef&amp;rdquo;, &amp;ldquo;123456&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Common Phrases or Quotes
+&lt;ul&gt;
+&lt;li&gt;Passwords are derived from well-known phrases, slogans, or quotes. While they may be easy to remember, they are also easier for attackers to guess through dictionary-based attacks.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;ToBeOrNotToBe&amp;rdquo;, &amp;ldquo;LiveLaughLove&amp;rdquo;, &amp;ldquo;AllYouNeedIsLove&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keyboard Walks (Non-linear)
+&lt;ul&gt;
+&lt;li&gt;Unlike Keywalk passwords, these passwords involve selecting characters that are not adjacent to each other on a keyboard layout but follow a non-linear path. They might involve skipping or jumping over keys.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;plmokn&amp;rdquo;, &amp;ldquo;qawsed&amp;rdquo;, &amp;ldquo;okmijn&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Leet Speak Substitution
+&lt;ul&gt;
+&lt;li&gt;Leet Speak involves replacing letters with similar-looking characters or symbols. While it can increase complexity, it&amp;rsquo;s still vulnerable to dictionary-based attacks unless combined with other techniques.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;p@ssw0rd&amp;rdquo; (for &amp;ldquo;password&amp;rdquo;), &amp;ldquo;l33t&amp;rdquo; (for &amp;ldquo;leet&amp;rdquo;), &amp;ldquo;h4ck3r&amp;rdquo; (for &amp;ldquo;hacker&amp;rdquo;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-distortion-rules&#34;&gt;Password Distortion Rules
+&lt;/h2&gt;&lt;p&gt;Distortion rules in password cracking refer to various strategies and techniques attackers use to modify or manipulate passwords to crack them more effectively. These rules are applied during brute-force or dictionary attacks to generate a more extensive set of potential passwords by systematically altering known patterns, words, or phrases.&lt;br /&gt;
+Here are some common distortion rules used in password cracking:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Character Substitution
+&lt;ul&gt;
+&lt;li&gt;This rule involves replacing certain characters in a password.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;cnffjbeq&amp;rdquo; (ROT13 Algorithm).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Case Variations
+&lt;ul&gt;
+&lt;li&gt;Case variations involve changing the case of letters within a password, making some uppercase and some lowercase. This rule increases the search space for cracking algorithms.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;Password&amp;rdquo; might be distorted to &amp;ldquo;pAsswOrd&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Repetition
+&lt;ul&gt;
+&lt;li&gt;Repetition involves adding additional instances of characters or sequences within a password. This rule capitalizes on patterns humans tend to use, such as repeating characters or sequences.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;hello&amp;rdquo; might be distorted to &amp;ldquo;hellohello&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Appending or Prepending
+&lt;ul&gt;
+&lt;li&gt;Appending or prepending involves adding additional characters or sequences to the beginning or end of a password. Common choices include numbers, symbols, or words.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;password123&amp;rdquo; or &amp;ldquo;@password&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keyboard Patterns
+&lt;ul&gt;
+&lt;li&gt;Keyboard patterns involve manipulating passwords based on their proximity on a standard keyboard layout. This includes variations like adjacent keys, diagonal keys, or alternate rows.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;qwerty&amp;rdquo; might be distorted to &amp;ldquo;qweRty&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Common Affixes
+&lt;ul&gt;
+&lt;li&gt;This rule applies common prefixes or suffixes to passwords. Attackers might add common words or numbers before or after existing passwords to attempt cracking.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;password123&amp;rdquo; or &amp;ldquo;mypassword&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;L33t Speak
+&lt;ul&gt;
+&lt;li&gt;This type of Character Substitution replaces letters with visually similar numbers or symbols; in Character Substitution, the characters don&amp;rsquo;t have to be identical in any form. This rule capitalizes on common substitutions used by users to make their passwords more complex. For example, &amp;rsquo;e&amp;rsquo; might be replaced with &amp;lsquo;3&amp;rsquo;, &amp;lsquo;a&amp;rsquo; might be replaced with &amp;lsquo;@&amp;rsquo;, and &amp;lsquo;o&amp;rsquo; might be replaced with &amp;lsquo;0&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;Password&amp;rdquo; might be distorted to &amp;ldquo;P@$$w0rd&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-strength&#34;&gt;Password Strength
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength.jpg&#34;
+	width=&#34;2200&#34;
+	height=&#34;750&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu14296305625101620386.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu5624597227159595850.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Password Strength&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;293&#34;
+		data-flex-basis=&#34;704px&#34;
+	
+&gt;&lt;br /&gt;
+It is not always possible to crack a Hash and Obtain a password (in our lifetime). &lt;br /&gt;
+Let us take an example, suppose we have the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hash&lt;/li&gt;
+&lt;li&gt;Hashing Algorithm&lt;/li&gt;
+&lt;li&gt;Length of the Password&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;For the sake of example, let us assume:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rate of calculating the hashes = 100 Million Hashes / second&lt;/li&gt;
+&lt;li&gt;Length of the Password = 8&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;h3 id=&#34;character-set-0---numbers&#34;&gt;Character Set 0 - Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 10&lt;br /&gt;
+Number of Possible Passwords = 10^8 = 100000000 Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;1 second&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-i---lowercase-ascii-characters&#34;&gt;Character Set I - Lowercase ASCII Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 26&lt;br /&gt;
+Number of Possible Passwords = 26^8 = 208827064576 Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;2088.27 seconds = 34.8 minutes&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-ii---lowercase-ascii-characters--numbers&#34;&gt;Character Set II - Lowercase ASCII Characters + Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 36&lt;br /&gt;
+Number of Possible Passwords = 36^8 = 2.821109907×10¹² Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;28211.09 seconds = 470.18 minutes = 7.83 hours&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-iii---lowercase-ascii-characters--uppercase-ascii-characters&#34;&gt;Character Set III - Lowercase ASCII Characters + Uppercase ASCII Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 52&lt;br /&gt;
+Number of Possible Passwords = 52^8 = 5.345972853×10¹³ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;534597.28 seconds = 8909.95 minutes = 148.49 hours = 6.18 Days&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-iv---lowercase-ascii-characters--uppercase-ascii-characters--numbers&#34;&gt;Character Set IV - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 62&lt;br /&gt;
+Number of Possible Passwords = 62^8 = 5.345972853×10¹³ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;2183401.05 seconds = 36390.01 minutes = 606.5 hours = 25.27 Days&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-v---lowercase-ascii-characters--uppercase-ascii-characters--numbers--special-characters&#34;&gt;Character Set V - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 128&lt;br /&gt;
+Number of Possible Passwords = 128^8 = 7.205759404×10¹⁶ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;720575940.37 seconds = 12009599.00 minutes = 200159.98 hours = 8339.99 Days = 22.84 Years&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;
+So, here we saw that the time to crack the password increases significantly when we use more characters, making our password more complex.&lt;br /&gt;
+Here, in this case, we knew how long the password was. But in most real-life scenarios, when Hash Cracking is involved, we don&amp;rsquo;t know anything about the length of the password, making it even more time-consuming to do a Brutforce attack.&lt;br /&gt;
+That&amp;rsquo;s why you should keep a complex password that uses all of the following Characters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lowercase ASCII Characters&lt;/li&gt;
+&lt;li&gt;Uppercase ASCII Characters&lt;/li&gt;
+&lt;li&gt;Numbers&lt;/li&gt;
+&lt;li&gt;Special Characters&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Below is the table that shows how much time it would take to crack a hash with certain conditions&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Length&lt;/th&gt;
+&lt;th&gt;Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;1 sec&lt;/td&gt;
+&lt;td&gt;34.8 min&lt;/td&gt;
+&lt;td&gt;7.83 hours&lt;/td&gt;
+&lt;td&gt;6.18 days&lt;/td&gt;
+&lt;td&gt;25.27 days&lt;/td&gt;
+&lt;td&gt;22.84 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;10 sec&lt;/td&gt;
+&lt;td&gt;15.08 hours&lt;/td&gt;
+&lt;td&gt;8.57 days&lt;/td&gt;
+&lt;td&gt;162.12 days&lt;/td&gt;
+&lt;td&gt;1.8 years&lt;/td&gt;
+&lt;td&gt;57.1 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;1.67 min&lt;/td&gt;
+&lt;td&gt;16.28 days&lt;/td&gt;
+&lt;td&gt;223.03 days&lt;/td&gt;
+&lt;td&gt;11.51 years&lt;/td&gt;
+&lt;td&gt;47.46 years&lt;/td&gt;
+&lt;td&gt;1497.55 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;16.67 min&lt;/td&gt;
+&lt;td&gt;281.93 days&lt;/td&gt;
+&lt;td&gt;10.56 years&lt;/td&gt;
+&lt;td&gt;199.92 years&lt;/td&gt;
+&lt;td&gt;820.928 years&lt;/td&gt;
+&lt;td&gt;25843.264 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;2.78 hours&lt;/td&gt;
+&lt;td&gt;9.515 years&lt;/td&gt;
+&lt;td&gt;130.341 years&lt;/td&gt;
+&lt;td&gt;2463.897 years&lt;/td&gt;
+&lt;td&gt;1023042.47 years&lt;/td&gt;
+&lt;td&gt;6133565802.2 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;success-rate-of-hash-cracking&#34;&gt;Success Rate of Hash Cracking
+&lt;/h2&gt;&lt;p&gt;Based on the calculations shown in the previous section, we&amp;rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.&lt;/p&gt;
+&lt;h2 id=&#34;security-measure-against-hash-cracking&#34;&gt;Security Measure against Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/security.jpg&#34;
+	width=&#34;710&#34;
+	height=&#34;400&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu4729459122753097169.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu1248179033021697295.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Security&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+You might think that keeping a 20-character-long password and using all 128 Characters would protect you from an attacker attempting to crack the hash. But that&amp;rsquo;s not always true. It would make no difference if that specific 20-character-long password is present in the wordlist used by the attacker in a dictionary attack.&lt;br /&gt;
+Also, creating a password that contains your Name, Date of Birth, Family Member&amp;rsquo;s Name, or any other personal information is not considered secure. It won&amp;rsquo;t take much time to make a custom wordlist that contains combinations of this personal information from programs like CUPP and run a dictionary attack to crack your password.&lt;br /&gt;
+So, to enhance the Security of your password, here are a few points to keep in mind:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use a long password: The above table shows that cracking time significantly increases with password length. We can make a small sentence with spelling mistakes that can be used as your password.&lt;/li&gt;
+&lt;li&gt;Use Lowercase + Uppercase ASCII Letters + Numbers + Special Characters: cracking time significantly increases. Also, we can include spaces and some characters other than the English Alphabet (I think that would work on most of the websites)&lt;/li&gt;
+&lt;li&gt;Keep All Passwords Different: An attacker could access another asset using a password cracked from somewhere else. We surf the Internet, and we all have to put passwords for various websites that can&amp;rsquo;t be trusted, so keeping different passwords would make sure that a breach from any of these websites won&amp;rsquo;t affect our significant assets (like Google Account, etc.)&lt;/li&gt;
+&lt;li&gt;Enable Double Factor Authentication: Even if all of the above methods fail or your password was compromised by some other means (Phishing, etc), you would be secure if you&amp;rsquo;ve enabled double-factor authentication correctly. You would be notified by anyone trying to access your account with the correct password and would need your action to continue further&lt;/li&gt;
+&lt;li&gt;Change your Passwords after specific periods: We don&amp;rsquo;t know how our data is being used because it&amp;rsquo;s not always possible to tell how things work under the hood. Whether our passwords are hashed at the backend (with/without salts) or stored as plain text, if that&amp;rsquo;s not what you think, then there won&amp;rsquo;t be any wordlists like rockyou. It is impossible to check whether someone else has your password. Even if someone targets you, you can enhance your Security and privacy by changing your password regularly (after six months).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The above points do not Guarantee 100% Protection; they only enhance Security.&lt;/p&gt;
+&lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak.jpg&#34;
+	width=&#34;1200&#34;
+	height=&#34;675&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu15606094843707238069.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu12382051111320609846.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Database Leak&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+There are several websites you can use to check whether your password has been leaked somewhere online or not. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://haveibeenpwned.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Have I Been Pwned&lt;/a&gt;: Check if your email or phone is in a data breach&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.dehashed.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Dehashed&lt;/a&gt;: Free deep-web scans and protection against credential leaks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakcheck.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakCheck.io&lt;/a&gt;: Make sure your credentials haven&amp;rsquo;t been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;crackstation.net&lt;/a&gt;: Massive pre-computed lookup tables to crack password hashes&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashkiller.io/listmanager&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashKiller&lt;/a&gt;: Pre-cracked Hashes, easily searchable&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakedpassword.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakedPassword&lt;/a&gt;: Search across multiple data breaches to see if your pass has been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://bugmenot.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;BugMeNot&lt;/a&gt;: Find and share logins&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;broken-hashing-algorithms&#34;&gt;Broken Hashing Algorithms
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
+	width=&#34;1500&#34;
+	height=&#34;900&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu1574552661041515237.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu15285761037877453571.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Weak Encryption Algorithms&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;166&#34;
+		data-flex-basis=&#34;400px&#34;
+	
+&gt;&lt;br /&gt;
+Broken hashing algorithms refer to cryptographic hash functions that have been compromised in some way, making them unsuitable for security purposes. Some hashing algorithms have been found to have vulnerabilities that allow attackers to exploit weaknesses in the algorithm, potentially leading to collisions (two different inputs producing the same hash value), pre-image attacks (deriving the original input from its hash value), or other security breaches. Some well-known examples of broken hashing algorithms include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;md5: MD5 was widely used but has been found to have multiple vulnerabilities, including collision attacks. It is considered cryptographically broken and unsuitable for further use in secure applications.&lt;/li&gt;
+&lt;li&gt;sha1: SHA-1 is another widely used hashing algorithm that has been demonstrated to have vulnerabilities. Collision attacks against SHA-1 have been demonstrated, making it insecure for many cryptographic applications.&lt;/li&gt;
+&lt;li&gt;sha0: An earlier version of the SHA algorithm, SHA-0, was quickly replaced by SHA-1 due to vulnerabilities found in it.&lt;/li&gt;
+&lt;li&gt;RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160): Although not as widely used as MD5 or SHA-1, RIPEMD-160 has also been found to have vulnerabilities and is considered broken.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;It&amp;rsquo;s essential to use modern and secure hashing algorithms, such as SHA-256, SHA-3, or bcrypt, for cryptographic purposes to ensure data integrity and security. Additionally, algorithms should be regularly evaluated for potential weaknesses, and older algorithms should be replaced as needed to maintain security standards.&lt;/p&gt;
+&lt;h3 id=&#34;note-1&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;We&amp;rsquo;ve only discussed Offline Password Cracking because Online Password cracking by Brute Forcing Login Services would be infeasible in today&amp;rsquo;s scenario. After all, IPs would get blocked after a certain number of times. The process would be too slow even if we try to log in with proxies (different IPs).&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
