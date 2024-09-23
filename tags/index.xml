@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Tags on Gill.Singh.A</title>
+        <link>http://localhost:1313/tags/</link>
+        <description>Recent content in Tags on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Cybersecurity</title>
+        <link>http://localhost:1313/tags/cybersecurity/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/cybersecurity/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Hacking</title>
+        <link>http://localhost:1313/tags/hacking/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/hacking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Infosec</title>
+        <link>http://localhost:1313/tags/infosec/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/infosec/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Privilege Escalation</title>
+        <link>http://localhost:1313/tags/privilege-escalation/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/privilege-escalation/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Social Engineering</title>
+        <link>http://localhost:1313/tags/social-engineering/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/social-engineering/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Docker</title>
+        <link>http://localhost:1313/tags/docker/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/docker/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Shodan</title>
+        <link>http://localhost:1313/tags/shodan/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/shodan/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Brute Force</title>
+        <link>http://localhost:1313/tags/brute-force/</link>
+        <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/brute-force/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Cctv</title>
+        <link>http://localhost:1313/tags/cctv/</link>
+        <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/cctv/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Hashing</title>
+        <link>http://localhost:1313/tags/hashing/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/hashing/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Password Cracking</title>
+        <link>http://localhost:1313/tags/password-cracking/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/password-cracking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Password Security</title>
+        <link>http://localhost:1313/tags/password-security/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/password-security/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Salting</title>
+        <link>http://localhost:1313/tags/salting/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/tags/salting/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>

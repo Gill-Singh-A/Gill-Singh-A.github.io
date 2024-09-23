@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="This blog dives into password cracking techniques like brute force and dictionary attacks, highlighting how attackers exploit weak passwords and the importance of strong security measures">
+<title>Password Cracking</title>
+
+<link rel='canonical' href='http://localhost:1313/p/password-cracking/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Password Cracking">
+<meta property='og:description' content="This blog dives into password cracking techniques like brute force and dictionary attacks, highlighting how attackers exploit weak passwords and the importance of strong security measures">
+<meta property='og:url' content='http://localhost:1313/p/password-cracking/'>
+<meta property='og:site_name' content='Gill.Singh.A'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='password security' /><meta property='article:tag' content='password cracking' /><meta property='article:tag' content='hashing' /><meta property='article:tag' content='salting' /><meta property='article:published_time' content='2024-09-23T04:56:45&#43;05:30'/><meta property='article:modified_time' content='2024-09-23T04:56:45&#43;05:30'/><meta property='og:image' content='http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg' />
+<meta name="twitter:title" content="Password Cracking">
+<meta name="twitter:description" content="This blog dives into password cracking techniques like brute force and dictionary attacks, highlighting how attackers exploit weak passwords and the importance of strong security measures"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg' />
+    <link rel="shortcut icon" href="/favicon.jpg" />
+
+  
+
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🤖</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Gill.Singh.A</a></h1>
+            <h2 class="site-description">Undergraduate Student at IIT Kanpur</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Gill-Singh-A'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://x.com/Gill_Singh_A'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#how-passwords-are-stored-on-servers">How passwords are stored on servers?</a></li>
+    <li><a href="#hashing-algorithms">Hashing Algorithms</a></li>
+    <li><a href="#why-passwords-are-hashed">Why Passwords are Hashed</a></li>
+    <li><a href="#salting-in-hashes">Salting in Hashes</a></li>
+    <li><a href="#password-protected-files-and-drives">Password Protected Files and Drives</a></li>
+    <li><a href="#hash-cracking">Hash Cracking</a></li>
+    <li><a href="#methods-of-password-cracking">Methods of Password Cracking</a>
+      <ol>
+        <li><a href="#brute-force">Brute Force</a></li>
+        <li><a href="#dictionary-attack">Dictionary Attack</a></li>
+        <li><a href="#rainbow-table-attack">Rainbow Table Attack</a></li>
+        <li><a href="#collision-attack">Collision Attack</a></li>
+        <li><a href="#collision-attack-proof-of-concept">Collision Attack Proof of Concept</a></li>
+      </ol>
+    </li>
+    <li><a href="#tools-for-hash-cracking">Tools for Hash Cracking</a></li>
+    <li><a href="#websites-for-hash-cracking">Websites for Hash Cracking</a></li>
+    <li><a href="#wordlists">Wordlists</a></li>
+    <li><a href="#custom-wordlists">Custom Wordlists</a></li>
+    <li><a href="#cpu-vs-gpu">CPU vs GPU</a>
+      <ol>
+        <li><a href="#cpu-hash-cracking">CPU Hash Cracking</a></li>
+        <li><a href="#gpu-hash-cracking">GPU Hash Cracking</a></li>
+      </ol>
+    </li>
+    <li><a href="#types-of-passwords">Types of Passwords</a></li>
+    <li><a href="#password-distortion-rules">Password Distortion Rules</a></li>
+    <li><a href="#password-strength">Password Strength</a>
+      <ol>
+        <li><a href="#character-set-0---numbers">Character Set 0 - Numbers</a></li>
+        <li><a href="#character-set-i---lowercase-ascii-characters">Character Set I - Lowercase ASCII Characters</a></li>
+        <li><a href="#character-set-ii---lowercase-ascii-characters--numbers">Character Set II - Lowercase ASCII Characters + Numbers</a></li>
+        <li><a href="#character-set-iii---lowercase-ascii-characters--uppercase-ascii-characters">Character Set III - Lowercase ASCII Characters + Uppercase ASCII Characters</a></li>
+        <li><a href="#character-set-iv---lowercase-ascii-characters--uppercase-ascii-characters--numbers">Character Set IV - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers</a></li>
+        <li><a href="#character-set-v---lowercase-ascii-characters--uppercase-ascii-characters--numbers--special-characters">Character Set V - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters</a></li>
+      </ol>
+    </li>
+    <li><a href="#success-rate-of-hash-cracking">Success Rate of Hash Cracking</a></li>
+    <li><a href="#security-measure-against-hash-cracking">Security Measure against Hash Cracking</a>
+      <ol>
+        <li><a href="#note">Note</a></li>
+      </ol>
+    </li>
+    <li><a href="#checking-leaked-passwords">Checking Leaked Passwords</a></li>
+    <li><a href="#broken-hashing-algorithms">Broken Hashing Algorithms</a>
+      <ol>
+        <li><a href="#note-1">Note</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/password-cracking/">
+                <img src="/p/password-cracking/assets/images/password_cracking_hu15230581208002798967.jpeg"
+                        srcset="/p/password-cracking/assets/images/password_cracking_hu15230581208002798967.jpeg 800w, /p/password-cracking/assets/images/password_cracking_hu722744064955062850.jpeg 1600w"
+                        width="800" 
+                        height="457" 
+                        loading="lazy"
+                        alt="Featured image of post Password Cracking" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/cracking/" >
+                Cracking
+            </a>
+        
+            <a href="/categories/cybersecurity/" >
+                Cybersecurity
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/password-cracking/">Password Cracking</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            This blog dives into password cracking techniques like brute force and dictionary attacks, highlighting how attackers exploit weak passwords and the importance of strong security measures
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Sep 23, 2024</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    20 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="how-passwords-are-stored-on-servers">How passwords are stored on servers?
+</h2><p><img src="/p/password-cracking/assets/images/database.png"
+	width="1720"
+	height="900"
+	srcset="/p/password-cracking/assets/images/database_hu1473404851421758759.png 480w, /p/password-cracking/assets/images/database_hu5701567306370613051.png 1024w"
+	loading="lazy"
+	
+		alt="Database"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="191"
+		data-flex-basis="458px"
+	
+><br />
+Passwords are stored on databases by hashing them alone or after appending them with random values. Hashing is a one-way function that converts a given string of characters into another value. A strong hashing algorithm has to be quick, deterministic, and irreversible. In this blog, we explore how a hashed password can be cracked.</p>
+<h2 id="hashing-algorithms">Hashing Algorithms
+</h2><p><img src="/p/password-cracking/assets/images/hashing.png"
+	width="2079"
+	height="800"
+	srcset="/p/password-cracking/assets/images/hashing_hu4833789966977637885.png 480w, /p/password-cracking/assets/images/hashing_hu4912368868399801949.png 1024w"
+	loading="lazy"
+	
+		alt="Hashing"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="259"
+		data-flex-basis="623px"
+	
+><br />
+Hashing algorithms are mathematical functions that take an input (often a string of characters, such as a password) and produce a fixed-size string of characters, known as a hash value or hash code. These algorithms are designed to be one-way functions, meaning that while it&rsquo;s easy to compute the hash value from the input (password), it&rsquo;s computationally infeasible to reverse the process and obtain the original input from the hash value.<br />
+Some common hashing Algorithms are:</p>
+<ul>
+<li><strong>md5</strong>: A widely-used cryptographic hash function producing a 128-bit (16-byte) hash value</li>
+<li><strong>sha1</strong>: A cryptographic hash function designed by the NSA, producing a 160-bit (20-byte) hash value.</li>
+<li><strong>sha224</strong>: A variant of SHA-2 family generating a 224-bit (28-byte) hash value.</li>
+<li><strong>sha256</strong>: Part of the SHA-2 family, producing a 256-bit (32-byte) hash value.</li>
+<li><strong>sha384</strong>: A SHA-2 algorithm variant producing a 384-bit (48-byte) hash value.</li>
+<li><strong>sha3_224</strong>: One of the SHA-3 family hash functions generating a 224-bit (28-byte) hash value.</li>
+<li><strong>sha3_256</strong>: Part of the SHA-3 family producing a 256-bit (32-byte) hash value.</li>
+<li><strong>sha3_384</strong>: A SHA-3 algorithm variant generating a 384-bit (48-byte) hash value.</li>
+<li><strong>sha3_512</strong>: A SHA-3 family hash function producing a 512-bit (64-byte) hash value.</li>
+<li><strong>sha512</strong>: A SHA-2 algorithm variant generating a 512-bit (64-byte) hash value.</li>
+<li><strong>BLAKE2</strong>: A cryptographic hash function offering high speed and security, available in different output sizes</li>
+<li><strong>Whirlpool</strong>: A cryptographic hash function producing a 512-bit (64-byte) hash value, designed by Vincent Rijmen and Paulo S. L. M. Barreto</li>
+<li><strong>RIPEMD-160</strong>: A cryptographic hash function developed as an improvement of RIPEMD, producing a 160-bit (20-byte) hash value</li>
+<li><strong>Tiger</strong>: A cryptographic hash function known for its speed and cryptographic strength, producing a 192-bit (24-byte) hash value</li>
+</ul>
+<h2 id="why-passwords-are-hashed">Why Passwords are Hashed
+</h2><p>Passwords are hashed primarily for security reasons. When a user creates an account or sets a password, the system does not store it. Instead, it computes the password&rsquo;s hash value using a hashing algorithm and stores the hash value in its database.<br />
+Here are the main reasons why passwords are hashed:</p>
+<ul>
+<li>Protection Against Data Breaches: Hidden passwords thwart attackers</li>
+<li>User Privacy: Shield passwords from unauthorized access</li>
+<li>Preventing Password Reuse: Encourage unique passwords</li>
+<li>Compliance with Security Standards: PCI DSS, GDPR, and other standards mandate password hashing for user data protection</li>
+</ul>
+<h2 id="salting-in-hashes">Salting in Hashes
+</h2><p><img src="/p/password-cracking/assets/images/salting.jpg"
+	width="1940"
+	height="1282"
+	srcset="/p/password-cracking/assets/images/salting_hu13723605654203217095.jpg 480w, /p/password-cracking/assets/images/salting_hu2456114825957901133.jpg 1024w"
+	loading="lazy"
+	
+		alt="Salting"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="151"
+		data-flex-basis="363px"
+	
+><br />
+Salting in hashes is a technique used to enhance the security of hashed passwords or data by adding a random or unique value, called a <em>salt</em>, before hashing. This salt is typically a random string of characters or bits generated separately for each password or piece of data being hashed. Here&rsquo;s an explanation of how salting works and why it&rsquo;s important:</p>
+<ul>
+<li>Adding Randomness: Salting introduces randomness by appending a unique value to each password before hashing</li>
+<li>Preventing Precomputed Attacks: Salting thwarts precomputed attacks like rainbow tables(explained later) by ensuring each password has a distinct hash</li>
+<li>Enhancing Security: Salting significantly boosts security by mitigating various types of attacks, including brute force and dictionary attacks</li>
+</ul>
+<h2 id="password-protected-files-and-drives">Password Protected Files and Drives
+</h2><p><img src="/p/password-cracking/assets/images/file_encryptions.jpg"
+	width="550"
+	height="345"
+	srcset="/p/password-cracking/assets/images/file_encryptions_hu4445162751528759475.jpg 480w, /p/password-cracking/assets/images/file_encryptions_hu11562899296713017864.jpg 1024w"
+	loading="lazy"
+	
+		alt="File Encryption"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="159"
+		data-flex-basis="382px"
+	
+><br />
+Password-protected files, such as ZIP archives and PDF documents, are digital files encrypted with a password to prevent unauthorized access. ZIP files, compressed archives containing multiple files and folders, can be password-protected to encrypt their contents, requiring the correct password for extraction. Similarly, PDF files, commonly used for document sharing, can be secured with password protection to encrypt the document&rsquo;s contents and restrict access or actions like printing and editing without the correct password. Encrypted files and drives use encryption algorithms to encode data, making it unreadable without the corresponding decryption key or password. This encryption ensures the confidentiality and security of sensitive information stored within the files or drives, reinforcing protection against unauthorized access and data breaches.</p>
+<h2 id="hash-cracking">Hash Cracking
+</h2><p><img src="/p/password-cracking/assets/images/methods.jpg"
+	width="495"
+	height="316"
+	srcset="/p/password-cracking/assets/images/methods_hu8197215681215346304.jpg 480w, /p/password-cracking/assets/images/methods_hu3860945043454114380.jpg 1024w"
+	loading="lazy"
+	
+		alt="Hash Cracking"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="156"
+		data-flex-basis="375px"
+	
+><br />
+In this section we explore the ways we can decipher a hashed password.</p>
+<h2 id="methods-of-password-cracking">Methods of Password Cracking
+</h2><p>There are 4 methods to crack a Hash Protected Password</p>
+<h3 id="brute-force">Brute Force
+</h3><ul>
+<li>In a brute force attack, the attacker systematically tries every possible combination of characters until the correct password is found</li>
+<li>This method starts with trying the simplest passwords, such as single characters or common words, and gradually progresses to more complex combinations</li>
+<li>Brute force attacks can be resource-intensive and time-consuming, especially for longer and more complex passwords, but they are generally effective against weak passwords</li>
+</ul>
+<h3 id="dictionary-attack">Dictionary Attack
+</h3><ul>
+<li>A dictionary attack involves using a predefined list of words, phrases, or commonly used passwords to guess the password</li>
+<li>Unlike brute force, which tries every possible combination, a dictionary attack focuses on likely passwords first, potentially speeding up the process</li>
+<li>The dictionary used in this attack may include common words, phrases, names, and variations thereof, making it more efficient than brute force for many scenarios</li>
+</ul>
+<h3 id="rainbow-table-attack">Rainbow Table Attack
+</h3><ul>
+<li>Rainbow table attacks exploit weaknesses in password storage mechanisms, particularly when passwords are hashed without salting</li>
+<li>A rainbow table is a precomputed table of password hashes and their corresponding plaintext passwords</li>
+<li>Instead of recalculating hashes for each attempted password, the attacker compares the hash of the target password with entries in the rainbow table to find a match</li>
+<li>This method can be faster than brute force or dictionary attacks, especially for large datasets, but it requires significant computational resources to generate and store the rainbow table initially</li>
+</ul>
+<h3 id="collision-attack">Collision Attack
+</h3><ul>
+<li>A collision attack is a type of cryptographic attack where an attacker tries to find two different inputs (messages) that produce the same hash value when processed by a hashing algorithm. In other words, the attacker seeks to find a collision—a situation where two distinct inputs generate identical hash outputs.</li>
+<li>Collision attacks can have serious security implications, especially in cryptographic systems where hash functions are used for ensuring data integrity, authentication, and other security purposes. A successful collision attack undermines the fundamental security properties of the hash function, leading to potential vulnerabilities and compromises in the overall security of the system.</li>
+</ul>
+<h3 id="collision-attack-proof-of-concept">Collision Attack Proof of Concept
+</h3><p>Collision attacks against MD5 are not only theoretically possible but have also been demonstrated in practice. In fact, MD5 is considered highly vulnerable to collision attacks due to its design flaws and weaknesses. <br />
+In 2004, researchers Xiaoyun Wang and Hongbo Yu published a paper titled <em>Collisions for Hash Functions MD4, MD5, HAVAL-128 and RIPEMD</em> where they presented practical collision attacks against several cryptographic hash functions, including MD5. They demonstrated that it was possible to find two different inputs that produce the same MD5 hash value, effectively breaking the collision resistance property of MD5. <br />
+Since then, further advancements in computing power and cryptanalysis techniques have made collision attacks against MD5 even more feasible and practical. Today, it is relatively easy to generate MD5 collisions using specialized hardware or distributed computing resources. <br />
+Due to these vulnerabilities, MD5 is no longer considered secure for cryptographic purposes, and its use has been strongly discouraged in favor of more secure hashing algorithms such as SHA-256 or SHA-3. In fact, most modern security standards and protocols explicitly prohibit the use of MD5 due to its susceptibility to collision attacks.</p>
+<h2 id="tools-for-hash-cracking">Tools for Hash Cracking
+</h2><p><img src="/p/password-cracking/assets/images/tools.jpg"
+	width="738"
+	height="576"
+	srcset="/p/password-cracking/assets/images/tools_hu12748403592501029798.jpg 480w, /p/password-cracking/assets/images/tools_hu8750775526461045458.jpg 1024w"
+	loading="lazy"
+	
+		alt="Tools"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="128"
+		data-flex-basis="307px"
+	
+><br /></p>
+<ul>
+<li><a class="link" href="https://hashcat.net/hashcat/"  target="_blank" rel="noopener"
+    >Hashcat</a>: A highly versatile and powerful password recovery tool that supports various hashing algorithms and attack modes, including brute force, dictionary, and mask attacks</li>
+<li><a class="link" href="https://github.com/openwall/john"  target="_blank" rel="noopener"
+    >John the Ripper</a>: One of the oldest and most widely used password cracking tools, capable of performing dictionary and brute force attacks against various password hashes.</li>
+<li><a class="link" href="https://ophcrack.sourceforge.io/"  target="_blank" rel="noopener"
+    >Ophcrack</a>: A free and open-source tool primarily used for cracking Windows passwords by leveraging rainbow tables for LM and NTLM hashes.</li>
+<li><a class="link" href="https://www.kali.org/tools/medusa/"  target="_blank" rel="noopener"
+    >Medusa</a>: A parallel login brute-forcer that supports various protocols, including SSH, FTP, Telnet, HTTP(S), SMB, and others.</li>
+<li><a class="link" href="https://www.kali.org/tools/hydra/"  target="_blank" rel="noopener"
+    >Hydra</a>: A network login cracker that supports various protocols like SSH, FTP, Telnet, HTTP(S), and others, making it useful for cracking passwords on network services.</li>
+<li><a class="link" href="https://sectools.org/tool/cain/"  target="_blank" rel="noopener"
+    >Cain and Abel</a>: A versatile password recovery tool that can recover passwords using various methods such as dictionary attacks, brute-force attacks, and cryptanalysis attacks.</li>
+<li><a class="link" href="http://project-rainbowcrack.com/"  target="_blank" rel="noopener"
+    >RainbowCrack</a>: A password cracking tool that uses rainbow tables to crack hashes. It can handle various hash algorithms and supports distributed cracking.</li>
+<li><a class="link" href="https://www.aircrack-ng.org/"  target="_blank" rel="noopener"
+    >Aircrack-ng</a>: A popular tool for cracking Wi-Fi passwords by capturing and analyzing network packets, supporting various encryption algorithms like WEP and WPA/WPA2.</li>
+<li><a class="link" href="https://hashcat.net/forum/thread-9151.html"  target="_blank" rel="noopener"
+    >HashcatGUI</a>: A graphical user interface for Hashcat, providing an easier and more user-friendly way to perform hash cracking tasks.</li>
+<li><a class="link" href="https://github.com/Azure/PyRIT"  target="_blank" rel="noopener"
+    >Pyrit</a>: Another tool for cracking Wi-Fi passwords, Pyrit specializes in attacking WPA/WPA2-PSK authentication.</li>
+<li><a class="link" href="https://www.kali.org/tools/fcrackzip/"  target="_blank" rel="noopener"
+    >fcrackzip</a>: fcrackzip is a fast password cracker partly written in assembler. It is able to crack password protected zip files with brute force or dictionary based attacks, optionally testing with unzip its results. It can also crack cpmask’ed images.</li>
+</ul>
+<h2 id="websites-for-hash-cracking">Websites for Hash Cracking
+</h2><ul>
+<li><a class="link" href="https://www.onlinehashcrack.com/"  target="_blank" rel="noopener"
+    >OnlineHashCrack</a></li>
+<li><a class="link" href="https://crackstation.net/"  target="_blank" rel="noopener"
+    >Crack Station</a></li>
+<li><a class="link" href="https://hashes.com/en/decrypt/hash"  target="_blank" rel="noopener"
+    >Hashes.com</a></li>
+<li><a class="link" href="https://md5hashing.net/"  target="_blank" rel="noopener"
+    >MD5 Hashing</a></li>
+<li><a class="link" href="https://nitrxgen.net/"  target="_blank" rel="noopener"
+    >Ntirxgen</a></li>
+</ul>
+<h2 id="wordlists">Wordlists
+</h2><p><img src="/p/password-cracking/assets/images/wordlists.png"
+	width="1747"
+	height="478"
+	srcset="/p/password-cracking/assets/images/wordlists_hu3032474284580762306.png 480w, /p/password-cracking/assets/images/wordlists_hu4384129554991596746.png 1024w"
+	loading="lazy"
+	
+		alt="Wordlists"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="365"
+		data-flex-basis="877px"
+	
+><br />
+Most of the time Wordlists that contain commonly used passwords and words are used for this puspose. Wordlists like this typically originate from data breaches, leaks, or public disclosures of passwords used by individuals on various online platforms. Several famous wordlists are widely used in password cracking, security testing, and research. Here are some of the most notable ones:</p>
+<ul>
+<li>RockYou: One of the largest and most well-known wordlists, containing millions of commonly used passwords leaked from the RockYou data breach in 2009.</li>
+<li>SecLists: A collection of multiple wordlists curated and maintained by Daniel Miessler and Jason Haddix, covering various categories such as passwords, usernames, web shells, and more.</li>
+<li>Probable Wordlists: Wordlists generated by combining common words, names, dates, and patterns likely to be used in passwords, often used in conjunction with brute force and dictionary attacks.</li>
+<li>CrackStation: A collection of wordlists generated from leaked password databases, providing a comprehensive dataset for password cracking purposes.</li>
+<li>Hashes.org: An online repository of hashed passwords and associated wordlists, allowing researchers and security professionals to collaborate on password cracking projects.</li>
+<li>WPA/WPA2 Wordlists: Specialized wordlists containing common passwords and phrases used in Wi-Fi networks protected by WPA/WPA2 encryption, often used for cracking wireless network passwords.</li>
+</ul>
+<!-- -->
+<p>More Lists of Wordlists can be found on <a class="link" href="https://weakpass.com/"  target="_blank" rel="noopener"
+    >WeakPass</a></p>
+<h2 id="custom-wordlists">Custom Wordlists
+</h2><p>Several tools are available for generating wordlists, which are essential for password cracking and security testing. Here are some popular ones:</p>
+<ul>
+<li><a class="link" href="https://github.com/jim3ma/crunch"  target="_blank" rel="noopener"
+    >Crunch</a>: A powerful wordlist generator that allows users to specify custom character sets, lengths, and patterns for generating wordlists.</li>
+<li><a class="link" href="https://github.com/Mebus/cupp"  target="_blank" rel="noopener"
+    >CUPP</a> (Common User Passwords Profiler): A simple tool that generates custom wordlists based on personal information such as names, dates, and common passwords.</li>
+<li><a class="link" href="https://github.com/digininja/CeWL"  target="_blank" rel="noopener"
+    >CeWL</a> (Custom Word List generator): A tool that spiders a target website to create custom wordlists based on the content found in the web pages.</li>
+</ul>
+<h2 id="cpu-vs-gpu">CPU vs GPU
+</h2><p><img src="/p/password-cracking/assets/images/cpu-vs-gpu.jpg"
+	width="800"
+	height="445"
+	srcset="/p/password-cracking/assets/images/cpu-vs-gpu_hu4494810528079756738.jpg 480w, /p/password-cracking/assets/images/cpu-vs-gpu_hu7107262851154168624.jpg 1024w"
+	loading="lazy"
+	
+		alt="CPU vs GPU"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="179"
+		data-flex-basis="431px"
+	
+><br />
+The choice between using CPU (Central Processing Unit) and GPU (Graphics Processing Unit) for hash cracking can significantly impact the speed and efficiency of the cracking process.</p>
+<h3 id="cpu-hash-cracking">CPU Hash Cracking
+</h3><ul>
+<li>CPUs are general-purpose processors designed to handle a wide range of tasks, including hash cracking</li>
+<li>While CPUs can execute a variety of instructions, they typically have a limited number of processing cores compared to GPUs</li>
+<li>Hash cracking on CPU relies heavily on the CPU&rsquo;s processing power and its ability to handle sequential tasks efficiently</li>
+<li>CPUs are well-suited for tasks that require complex logic, branching, and sequential processing, which are often found in password cracking algorithms</li>
+<li>However, CPU hash cracking tends to be slower compared to GPU cracking, especially when dealing with large datasets or complex hashing algorithms</li>
+</ul>
+<h3 id="gpu-hash-cracking">GPU Hash Cracking
+</h3><ul>
+<li>GPUs are highly parallelized processors designed to handle large amounts of data simultaneously, making them well-suited for hash cracking.</li>
+<li>Modern GPUs contain thousands of cores optimized for parallel processing, allowing them to perform many calculations simultaneously</li>
+<li>Hash cracking on GPU can leverage the massive parallel processing power of GPUs to accelerate the cracking process significantly</li>
+<li>GPUs are particularly effective at tasks that involve simple, repetitive calculations, such as those commonly encountered in cryptographic algorithms used for hashing</li>
+<li>As a result, GPU hash cracking can achieve much higher speeds compared to CPU cracking, especially for algorithms that can be easily parallelized</li>
+</ul>
+<h2 id="types-of-passwords">Types of Passwords
+</h2><p>It is also possible to classify passwords into certain sets. These sets can make the password cracking process more efficient, especially if we have some information about the targetted individual or group of individuals.<br />
+Here are a few sets:</p>
+<ul>
+<li>Dictionary Password
+<ul>
+<li>These passwords are derived from words found in dictionaries. Attackers often use dictionary-based attacks where they try common words or phrases as passwords.</li>
+<li>Example: &ldquo;sunshine&rdquo;, &ldquo;password123&rdquo;, &ldquo;football&rdquo;</li>
+</ul>
+</li>
+<li>Short Set
+<ul>
+<li>Short sets are passwords that consist of a small number of characters or digits. These passwords are relatively easier to guess or crack through brute force methods compared to longer, more complex passwords.</li>
+<li>Example: &ldquo;1234&rdquo;, &ldquo;abcd&rdquo;, &ldquo;qwerty&rdquo;</li>
+</ul>
+</li>
+<li>Keywalk
+<ul>
+<li>Keywalk passwords involve selecting characters that are adjacent to each other on a keyboard layout. Users may choose this method thinking it&rsquo;s easy to remember, but it can be insecure due to its predictability.</li>
+<li>Example: &ldquo;qwertyuiop&rdquo;, &ldquo;asdfghjkl&rdquo;, &ldquo;zxcvbnm&rdquo;</li>
+</ul>
+</li>
+<li>Personal Data
+<ul>
+<li>These passwords incorporate personal information such as names, birthdates, addresses, or other identifiable information. While easy to remember, they are often easy to guess by someone who knows the individual well or can gather information about them.</li>
+<li>This type of password can be easily generated with <a class="link" href="https://github.com/Mebus/cupp"  target="_blank" rel="noopener"
+    >CUPP</a>.</li>
+<li>Example: &ldquo;John1985NY&rdquo;, &ldquo;SarahSmith1234&rdquo;, &ldquo;London33&rdquo;</li>
+</ul>
+</li>
+<li>Distortion of Specific Words
+<ul>
+<li>This method involves taking a common word or phrase and intentionally misspelling or distorting it in some way to create a password. While it may seem secure, attackers can still use techniques like dictionary attacks to crack them.</li>
+<li>Example: &ldquo;P@$$w0rd&rdquo; (instead of &ldquo;Password&rdquo;), &ldquo;L0v3ly&rdquo; (instead of &ldquo;Lovely&rdquo;), &ldquo;S3cur!ty&rdquo; (instead of &ldquo;Security&rdquo;)</li>
+</ul>
+</li>
+<li>Repetitive Patterns
+<ul>
+<li>These passwords involve repeating a pattern of characters, numbers, or symbols. While they may seem complex at first, they can be easily cracked through pattern recognition.</li>
+<li>Example: &ldquo;123123&rdquo;, &ldquo;abcabc&rdquo;, &ldquo;&amp;&amp;&amp;&amp;&amp;&amp;&rdquo;</li>
+</ul>
+</li>
+<li>Sequential Characters
+<ul>
+<li>Sequential character passwords involve using characters that appear in sequence in the alphabet or somewhere else. These passwords are often weak due to their predictability.</li>
+<li>Example: &ldquo;abcdef&rdquo;, &ldquo;123456&rdquo;</li>
+</ul>
+</li>
+<li>Common Phrases or Quotes
+<ul>
+<li>Passwords are derived from well-known phrases, slogans, or quotes. While they may be easy to remember, they are also easier for attackers to guess through dictionary-based attacks.</li>
+<li>Example: &ldquo;ToBeOrNotToBe&rdquo;, &ldquo;LiveLaughLove&rdquo;, &ldquo;AllYouNeedIsLove&rdquo;</li>
+</ul>
+</li>
+<li>Keyboard Walks (Non-linear)
+<ul>
+<li>Unlike Keywalk passwords, these passwords involve selecting characters that are not adjacent to each other on a keyboard layout but follow a non-linear path. They might involve skipping or jumping over keys.</li>
+<li>Example: &ldquo;plmokn&rdquo;, &ldquo;qawsed&rdquo;, &ldquo;okmijn&rdquo;</li>
+</ul>
+</li>
+<li>Leet Speak Substitution
+<ul>
+<li>Leet Speak involves replacing letters with similar-looking characters or symbols. While it can increase complexity, it&rsquo;s still vulnerable to dictionary-based attacks unless combined with other techniques.</li>
+<li>Example: &ldquo;p@ssw0rd&rdquo; (for &ldquo;password&rdquo;), &ldquo;l33t&rdquo; (for &ldquo;leet&rdquo;), &ldquo;h4ck3r&rdquo; (for &ldquo;hacker&rdquo;).</li>
+</ul>
+</li>
+</ul>
+<h2 id="password-distortion-rules">Password Distortion Rules
+</h2><p>Distortion rules in password cracking refer to various strategies and techniques attackers use to modify or manipulate passwords to crack them more effectively. These rules are applied during brute-force or dictionary attacks to generate a more extensive set of potential passwords by systematically altering known patterns, words, or phrases.<br />
+Here are some common distortion rules used in password cracking:</p>
+<ul>
+<li>Character Substitution
+<ul>
+<li>This rule involves replacing certain characters in a password.</li>
+<li>Example: &ldquo;password&rdquo; might be distorted to &ldquo;cnffjbeq&rdquo; (ROT13 Algorithm).</li>
+</ul>
+</li>
+<li>Case Variations
+<ul>
+<li>Case variations involve changing the case of letters within a password, making some uppercase and some lowercase. This rule increases the search space for cracking algorithms.</li>
+<li>Example: &ldquo;Password&rdquo; might be distorted to &ldquo;pAsswOrd&rdquo;.</li>
+</ul>
+</li>
+<li>Repetition
+<ul>
+<li>Repetition involves adding additional instances of characters or sequences within a password. This rule capitalizes on patterns humans tend to use, such as repeating characters or sequences.</li>
+<li>Example: &ldquo;hello&rdquo; might be distorted to &ldquo;hellohello&rdquo;.</li>
+</ul>
+</li>
+<li>Appending or Prepending
+<ul>
+<li>Appending or prepending involves adding additional characters or sequences to the beginning or end of a password. Common choices include numbers, symbols, or words.</li>
+<li>Example: &ldquo;password&rdquo; might be distorted to &ldquo;password123&rdquo; or &ldquo;@password&rdquo;.</li>
+</ul>
+</li>
+<li>Keyboard Patterns
+<ul>
+<li>Keyboard patterns involve manipulating passwords based on their proximity on a standard keyboard layout. This includes variations like adjacent keys, diagonal keys, or alternate rows.</li>
+<li>Example: &ldquo;qwerty&rdquo; might be distorted to &ldquo;qweRty&rdquo;.</li>
+</ul>
+</li>
+<li>Common Affixes
+<ul>
+<li>This rule applies common prefixes or suffixes to passwords. Attackers might add common words or numbers before or after existing passwords to attempt cracking.</li>
+<li>Example: &ldquo;password&rdquo; might be distorted to &ldquo;password123&rdquo; or &ldquo;mypassword&rdquo;.</li>
+</ul>
+</li>
+<li>L33t Speak
+<ul>
+<li>This type of Character Substitution replaces letters with visually similar numbers or symbols; in Character Substitution, the characters don&rsquo;t have to be identical in any form. This rule capitalizes on common substitutions used by users to make their passwords more complex. For example, &rsquo;e&rsquo; might be replaced with &lsquo;3&rsquo;, &lsquo;a&rsquo; might be replaced with &lsquo;@&rsquo;, and &lsquo;o&rsquo; might be replaced with &lsquo;0&rsquo;.</li>
+<li>Example: &ldquo;Password&rdquo; might be distorted to &ldquo;P@$$w0rd&rdquo;.</li>
+</ul>
+</li>
+</ul>
+<h2 id="password-strength">Password Strength
+</h2><p><img src="/p/password-cracking/assets/images/password-strength.jpg"
+	width="2200"
+	height="750"
+	srcset="/p/password-cracking/assets/images/password-strength_hu14296305625101620386.jpg 480w, /p/password-cracking/assets/images/password-strength_hu5624597227159595850.jpg 1024w"
+	loading="lazy"
+	
+		alt="Password Strength"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="293"
+		data-flex-basis="704px"
+	
+><br />
+It is not always possible to crack a Hash and Obtain a password (in our lifetime). <br />
+Let us take an example, suppose we have the following information:</p>
+<ul>
+<li>Hash</li>
+<li>Hashing Algorithm</li>
+<li>Length of the Password</li>
+</ul>
+<!-- -->
+<p>For the sake of example, let us assume:</p>
+<ul>
+<li>Rate of calculating the hashes = 100 Million Hashes / second</li>
+<li>Length of the Password = 8</li>
+</ul>
+<!-- -->
+<h3 id="character-set-0---numbers">Character Set 0 - Numbers
+</h3><p>Characters Available = 10<br />
+Number of Possible Passwords = 10^8 = 100000000 Passwords<br />
+Time Taken to Crack the Password = <strong>1 second</strong><br /></p>
+<h3 id="character-set-i---lowercase-ascii-characters">Character Set I - Lowercase ASCII Characters
+</h3><p>Characters Available = 26<br />
+Number of Possible Passwords = 26^8 = 208827064576 Passwords<br />
+Time Taken to Crack the Password = <strong>2088.27 seconds = 34.8 minutes</strong><br /></p>
+<h3 id="character-set-ii---lowercase-ascii-characters--numbers">Character Set II - Lowercase ASCII Characters + Numbers
+</h3><p>Characters Available = 36<br />
+Number of Possible Passwords = 36^8 = 2.821109907×10¹² Passwords<br />
+Time Taken to Crack the Password = <strong>28211.09 seconds = 470.18 minutes = 7.83 hours</strong><br /></p>
+<h3 id="character-set-iii---lowercase-ascii-characters--uppercase-ascii-characters">Character Set III - Lowercase ASCII Characters + Uppercase ASCII Characters
+</h3><p>Characters Available = 52<br />
+Number of Possible Passwords = 52^8 = 5.345972853×10¹³ Passwords<br />
+Time Taken to Crack the Password = <strong>534597.28 seconds = 8909.95 minutes = 148.49 hours = 6.18 Days</strong><br /></p>
+<h3 id="character-set-iv---lowercase-ascii-characters--uppercase-ascii-characters--numbers">Character Set IV - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers
+</h3><p>Characters Available = 62<br />
+Number of Possible Passwords = 62^8 = 5.345972853×10¹³ Passwords<br />
+Time Taken to Crack the Password = <strong>2183401.05 seconds = 36390.01 minutes = 606.5 hours = 25.27 Days</strong><br /></p>
+<h3 id="character-set-v---lowercase-ascii-characters--uppercase-ascii-characters--numbers--special-characters">Character Set V - Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters
+</h3><p>Characters Available = 128<br />
+Number of Possible Passwords = 128^8 = 7.205759404×10¹⁶ Passwords<br />
+Time Taken to Crack the Password = <strong>720575940.37 seconds = 12009599.00 minutes = 200159.98 hours = 8339.99 Days = 22.84 Years</strong><br /><br />
+So, here we saw that the time to crack the password increases significantly when we use more characters, making our password more complex.<br />
+Here, in this case, we knew how long the password was. But in most real-life scenarios, when Hash Cracking is involved, we don&rsquo;t know anything about the length of the password, making it even more time-consuming to do a Brutforce attack.<br />
+That&rsquo;s why you should keep a complex password that uses all of the following Characters:</p>
+<ul>
+<li>Lowercase ASCII Characters</li>
+<li>Uppercase ASCII Characters</li>
+<li>Numbers</li>
+<li>Special Characters</li>
+</ul>
+<!-- -->
+<p>Below is the table that shows how much time it would take to crack a hash with certain conditions</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Length</th>
+<th>Numbers</th>
+<th>Lowercase ASCII Characters</th>
+<th>Lowercase ASCII Characters + Numbers</th>
+<th>Lowercase ASCII Characters + Uppercase ASCII Characters</th>
+<th>Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers</th>
+<th>Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8</td>
+<td>1 sec</td>
+<td>34.8 min</td>
+<td>7.83 hours</td>
+<td>6.18 days</td>
+<td>25.27 days</td>
+<td>22.84 years</td>
+</tr>
+<tr>
+<td>9</td>
+<td>10 sec</td>
+<td>15.08 hours</td>
+<td>8.57 days</td>
+<td>162.12 days</td>
+<td>1.8 years</td>
+<td>57.1 years</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1.67 min</td>
+<td>16.28 days</td>
+<td>223.03 days</td>
+<td>11.51 years</td>
+<td>47.46 years</td>
+<td>1497.55 years</td>
+</tr>
+<tr>
+<td>11</td>
+<td>16.67 min</td>
+<td>281.93 days</td>
+<td>10.56 years</td>
+<td>199.92 years</td>
+<td>820.928 years</td>
+<td>25843.264 years</td>
+</tr>
+<tr>
+<td>12</td>
+<td>2.78 hours</td>
+<td>9.515 years</td>
+<td>130.341 years</td>
+<td>2463.897 years</td>
+<td>1023042.47 years</td>
+<td>6133565802.2 years</td>
+</tr>
+<tr>
+<td>This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="success-rate-of-hash-cracking">Success Rate of Hash Cracking
+</h2><p>Based on the calculations shown in the previous section, we&rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.</p>
+<h2 id="security-measure-against-hash-cracking">Security Measure against Hash Cracking
+</h2><p><img src="/p/password-cracking/assets/images/security.jpg"
+	width="710"
+	height="400"
+	srcset="/p/password-cracking/assets/images/security_hu4729459122753097169.jpg 480w, /p/password-cracking/assets/images/security_hu1248179033021697295.jpg 1024w"
+	loading="lazy"
+	
+		alt="Security"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+><br />
+You might think that keeping a 20-character-long password and using all 128 Characters would protect you from an attacker attempting to crack the hash. But that&rsquo;s not always true. It would make no difference if that specific 20-character-long password is present in the wordlist used by the attacker in a dictionary attack.<br />
+Also, creating a password that contains your Name, Date of Birth, Family Member&rsquo;s Name, or any other personal information is not considered secure. It won&rsquo;t take much time to make a custom wordlist that contains combinations of this personal information from programs like CUPP and run a dictionary attack to crack your password.<br />
+So, to enhance the Security of your password, here are a few points to keep in mind:</p>
+<ul>
+<li>Use a long password: The above table shows that cracking time significantly increases with password length. We can make a small sentence with spelling mistakes that can be used as your password.</li>
+<li>Use Lowercase + Uppercase ASCII Letters + Numbers + Special Characters: cracking time significantly increases. Also, we can include spaces and some characters other than the English Alphabet (I think that would work on most of the websites)</li>
+<li>Keep All Passwords Different: An attacker could access another asset using a password cracked from somewhere else. We surf the Internet, and we all have to put passwords for various websites that can&rsquo;t be trusted, so keeping different passwords would make sure that a breach from any of these websites won&rsquo;t affect our significant assets (like Google Account, etc.)</li>
+<li>Enable Double Factor Authentication: Even if all of the above methods fail or your password was compromised by some other means (Phishing, etc), you would be secure if you&rsquo;ve enabled double-factor authentication correctly. You would be notified by anyone trying to access your account with the correct password and would need your action to continue further</li>
+<li>Change your Passwords after specific periods: We don&rsquo;t know how our data is being used because it&rsquo;s not always possible to tell how things work under the hood. Whether our passwords are hashed at the backend (with/without salts) or stored as plain text, if that&rsquo;s not what you think, then there won&rsquo;t be any wordlists like rockyou. It is impossible to check whether someone else has your password. Even if someone targets you, you can enhance your Security and privacy by changing your password regularly (after six months).</li>
+</ul>
+<h3 id="note">Note
+</h3><p>The above points do not Guarantee 100% Protection; they only enhance Security.</p>
+<h2 id="checking-leaked-passwords">Checking Leaked Passwords
+</h2><p><img src="/p/password-cracking/assets/images/database_leak.jpg"
+	width="1200"
+	height="675"
+	srcset="/p/password-cracking/assets/images/database_leak_hu15606094843707238069.jpg 480w, /p/password-cracking/assets/images/database_leak_hu12382051111320609846.jpg 1024w"
+	loading="lazy"
+	
+		alt="Database Leak"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+><br />
+There are several websites you can use to check whether your password has been leaked somewhere online or not. Here are some popular ones:</p>
+<ul>
+<li><a class="link" href="https://haveibeenpwned.com/"  target="_blank" rel="noopener"
+    >Have I Been Pwned</a>: Check if your email or phone is in a data breach</li>
+<li><a class="link" href="https://www.dehashed.com/"  target="_blank" rel="noopener"
+    >Dehashed</a>: Free deep-web scans and protection against credential leaks</li>
+<li><a class="link" href="https://leakcheck.io/"  target="_blank" rel="noopener"
+    >LeakCheck.io</a>: Make sure your credentials haven&rsquo;t been compromised</li>
+<li><a class="link" href="https://crackstation.net/"  target="_blank" rel="noopener"
+    >crackstation.net</a>: Massive pre-computed lookup tables to crack password hashes</li>
+<li><a class="link" href="https://hashkiller.io/listmanager"  target="_blank" rel="noopener"
+    >HashKiller</a>: Pre-cracked Hashes, easily searchable</li>
+<li><a class="link" href="https://leakedpassword.com/"  target="_blank" rel="noopener"
+    >LeakedPassword</a>: Search across multiple data breaches to see if your pass has been compromised</li>
+<li><a class="link" href="https://bugmenot.com/"  target="_blank" rel="noopener"
+    >BugMeNot</a>: Find and share logins</li>
+</ul>
+<!-- -->
+<p>Source: <a class="link" href="https://github.com/edoardottt/awesome-hacker-search-engines"  target="_blank" rel="noopener"
+    >edoardottt/awesome-hacker-search-engines</a></p>
+<h2 id="broken-hashing-algorithms">Broken Hashing Algorithms
+</h2><p><img src="/p/password-cracking/assets/images/weak_crypto_algo.png"
+	width="1500"
+	height="900"
+	srcset="/p/password-cracking/assets/images/weak_crypto_algo_hu1574552661041515237.png 480w, /p/password-cracking/assets/images/weak_crypto_algo_hu15285761037877453571.png 1024w"
+	loading="lazy"
+	
+		alt="Weak Encryption Algorithms"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="166"
+		data-flex-basis="400px"
+	
+><br />
+Broken hashing algorithms refer to cryptographic hash functions that have been compromised in some way, making them unsuitable for security purposes. Some hashing algorithms have been found to have vulnerabilities that allow attackers to exploit weaknesses in the algorithm, potentially leading to collisions (two different inputs producing the same hash value), pre-image attacks (deriving the original input from its hash value), or other security breaches. Some well-known examples of broken hashing algorithms include:</p>
+<ul>
+<li>md5: MD5 was widely used but has been found to have multiple vulnerabilities, including collision attacks. It is considered cryptographically broken and unsuitable for further use in secure applications.</li>
+<li>sha1: SHA-1 is another widely used hashing algorithm that has been demonstrated to have vulnerabilities. Collision attacks against SHA-1 have been demonstrated, making it insecure for many cryptographic applications.</li>
+<li>sha0: An earlier version of the SHA algorithm, SHA-0, was quickly replaced by SHA-1 due to vulnerabilities found in it.</li>
+<li>RIPEMD-160 (RACE Integrity Primitives Evaluation Message Digest 160): Although not as widely used as MD5 or SHA-1, RIPEMD-160 has also been found to have vulnerabilities and is considered broken.</li>
+</ul>
+<!-- -->
+<p>It&rsquo;s essential to use modern and secure hashing algorithms, such as SHA-256, SHA-3, or bcrypt, for cryptographic purposes to ensure data integrity and security. Additionally, algorithms should be regularly evaluated for potential weaknesses, and older algorithms should be replaced as needed to maintain security standards.</p>
+<h3 id="note-1">Note
+</h3><p>We&rsquo;ve only discussed Offline Password Cracking because Online Password cracking by Brute Forcing Login Services would be infeasible in today&rsquo;s scenario. After all, IPs would get blocked after a certain number of times. The process would be too slow even if we try to log in with proxies (different IPs).</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cybersecurity/">Cybersecurity</a>
+        
+            <a href="/tags/password-security/">Password Security</a>
+        
+            <a href="/tags/password-cracking/">Password Cracking</a>
+        
+            <a href="/tags/hashing/">Hashing</a>
+        
+            <a href="/tags/salting/">Salting</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/getting-remote-root-shell-on-devices-via-portainer/">
+        
+        
+            <div class="article-image">
+                <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.4c459b92c425fc59dceb815826706cc8_hu7743102481193174317.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Getting Remote Root Shell on Devices via Portainer"
+                        
+                        data-hash="md5-TEWbksQl/Fnc64FYJnBsyA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Getting Remote Root Shell on Devices via Portainer</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/compromising-cctvs-101/">
+        
+        
+            <div class="article-image">
+                <img src="/p/compromising-cctvs-101/assets/images/main_image.081582ce84d9bc3e317e8da88b24bf82_hu13858725307311463504.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Compromising Cctvs 101"
+                        
+                        data-hash="md5-CBWCzoTZvD4xfo2oiyS/gg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Compromising Cctvs 101</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2024 Gill.Singh.A
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.27.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

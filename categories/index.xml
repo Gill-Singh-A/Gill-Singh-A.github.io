@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on Gill.Singh.A</title>
+        <link>http://localhost:1313/categories/</link>
+        <description>Recent content in Categories on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Hacking</title>
+        <link>http://localhost:1313/categories/hacking/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/hacking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Privilege Escalation</title>
+        <link>http://localhost:1313/categories/privilege-escalation/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/privilege-escalation/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Social Engineering</title>
+        <link>http://localhost:1313/categories/social-engineering/</link>
+        <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/social-engineering/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Cybersecurity</title>
+        <link>http://localhost:1313/categories/cybersecurity/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/cybersecurity/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Docker</title>
+        <link>http://localhost:1313/categories/docker/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/docker/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Osint</title>
+        <link>http://localhost:1313/categories/osint/</link>
+        <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/osint/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Cracking</title>
+        <link>http://localhost:1313/categories/cracking/</link>
+        <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/cracking/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>
