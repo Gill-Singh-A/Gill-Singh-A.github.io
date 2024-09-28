@@ -1,5 +1,5 @@
 ---
-title: "Compromising Cctvs 101"
+title: "Compromising CCTVs 101"
 description: How attackers can gain access to CCTV devices via the RTSP protocol, using tools like Shodan, Google Dorking, and port scanning.
 date: 2024-09-23T05:13:06+05:30
 image: assets/images/main_image.png
