@@ -7,12 +7,12 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
         <lastBuildDate>Mon, 23 Sep 2024 05:13:06 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/brute-force/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Compromising Cctvs 101</title>
+        <title>Compromising CCTVs 101</title>
         <link>http://localhost:1313/p/compromising-cctvs-101/</link>
         <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
         
         <guid>http://localhost:1313/p/compromising-cctvs-101/</guid>
-        <description>&lt;img src="http://localhost:1313/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising Cctvs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
+        <description>&lt;img src="http://localhost:1313/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising CCTVs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
 &lt;/h1&gt;&lt;h2 id=&#34;rtsp-protocol&#34;&gt;RTSP Protocol
 &lt;/h2&gt;&lt;p&gt;RTSP Protocol stands for &lt;em&gt;Real Time Streaming Protocol&lt;/em&gt; and by default runs on &lt;em&gt;Port 554&lt;/em&gt;. As the name tells, its an application level protocol designed to transport streams over a network and is commonly used by Devices like CCTVs. The RTSP Protocol doesn&amp;rsquo;t offer encryption, therefore everything is transparent to an Attacker eavesdropping on the Network Traffic of a Device using RTSP. We won&amp;rsquo;t cover MITM (Man-in-the-Middle) Attacks and other eavesdropping methods in this blogs, rather will focus on gaining direct access to CCTVs.&lt;/p&gt;
 &lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
