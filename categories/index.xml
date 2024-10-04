@@ -6,36 +6,20 @@
         <description>Recent content in Categories on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 28 Sep 2024 07:09:31 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Cybersecurity</title>
-        <link>http://localhost:1313/categories/cybersecurity/</link>
-        <pubDate>Sat, 28 Sep 2024 07:09:31 +0530</pubDate>
-        
-        <guid>http://localhost:1313/categories/cybersecurity/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Infosec</title>
-        <link>http://localhost:1313/categories/infosec/</link>
-        <pubDate>Sat, 28 Sep 2024 07:09:31 +0530</pubDate>
-        
-        <guid>http://localhost:1313/categories/infosec/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Network</title>
-        <link>http://localhost:1313/categories/network/</link>
-        <pubDate>Sat, 28 Sep 2024 07:09:31 +0530</pubDate>
-        
-        <guid>http://localhost:1313/categories/network/</guid>
-        <description></description>
-        </item>
-        <item>
+        <lastBuildDate>Tue, 24 Sep 2024 04:24:41 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Development</title>
         <link>http://localhost:1313/categories/development/</link>
         <pubDate>Tue, 24 Sep 2024 04:24:41 +0530</pubDate>
         
         <guid>http://localhost:1313/categories/development/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Infosec</title>
+        <link>http://localhost:1313/categories/infosec/</link>
+        <pubDate>Tue, 24 Sep 2024 04:24:41 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/infosec/</guid>
         <description></description>
         </item>
         <item>
@@ -60,6 +44,14 @@
         <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
         
         <guid>http://localhost:1313/categories/social-engineering/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Cybersecurity</title>
+        <link>http://localhost:1313/categories/cybersecurity/</link>
+        <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/cybersecurity/</guid>
         <description></description>
         </item>
         <item>

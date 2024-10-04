@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Wireshark on Gill.Singh.A</title>
-        <link>http://localhost:1313/tags/wireshark/</link>
+        <link>https://Gill-Singh-A.github.io/tags/wireshark/</link>
         <description>Recent content in Wireshark on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 28 Sep 2024 07:09:31 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/wireshark/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 28 Sep 2024 07:09:31 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/tags/wireshark/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests</title>
-        <link>http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/</link>
+        <link>https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/</link>
         <pubDate>Sat, 28 Sep 2024 07:09:31 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/</guid>
-        <description>&lt;img src="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis.png" alt="Featured image of post Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests" /&gt;&lt;h2 id=&#34;ldap-servers-on-network&#34;&gt;LDAP Servers on Network
+        <guid>https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis.png" alt="Featured image of post Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests" /&gt;&lt;h2 id=&#34;ldap-servers-on-network&#34;&gt;LDAP Servers on Network
 &lt;/h2&gt;&lt;p&gt;I decided to investigate the LDAP servers within my institute&amp;rsquo;s private network, which utilizes Class B private IP addresses.&lt;br /&gt;
 I employed &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt; to scan for LDAP ports (389, 636, 3268, 3269) and discovered 49 devices with at least one of these ports open.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan.png&#34;
 	width=&#34;1131&#34;
 	height=&#34;619&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan_hu5214438431600738618.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan_hu7060229708197509510.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan_hu5214438431600738618.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan_hu7060229708197509510.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;LDAP Port Scan&#34;
@@ -33,10 +33,10 @@ I employed &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/
 &lt;h2 id=&#34;ldap-anonymous-bind&#34;&gt;LDAP Anonymous Bind
 &lt;/h2&gt;&lt;p&gt;Following that, I used &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/LDAP-Anonymous-Bind-Checker&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/LDAP-Anonymous-Bind-Checker&lt;/a&gt; to assess LDAP Anonymous Bind support, finding that 32 devices allowed anonymous binding.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check.png&#34;
 	width=&#34;1217&#34;
 	height=&#34;619&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check_hu11417373108919641133.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check_hu7436161976449918966.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check_hu11417373108919641133.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check_hu7436161976449918966.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;LDAP Anonymous Bind Check&#34;
@@ -51,10 +51,10 @@ After some exploration, I discovered the LDAP server responsible for managing au
 The server was identified by the hostname &lt;strong&gt;ldap.cc.iitk.ac.in&lt;/strong&gt;, supported LDAP Anonymous Bind.&lt;/p&gt;
 &lt;h2 id=&#34;computer-center-ldap-server&#34;&gt;Computer Center LDAP Server
 &lt;/h2&gt;&lt;p&gt;After manually exploring &lt;strong&gt;ldap.cc.iitk.ac.in&lt;/strong&gt;, I discovered that I could retrieve any student’s mobile number using a simple search query.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info.png&#34;
 	width=&#34;1058&#34;
 	height=&#34;914&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info_hu6706158349291098143.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info_hu14491039418514966273.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info_hu6706158349291098143.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info_hu14491039418514966273.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CC LDAP Student Information&#34;
@@ -66,10 +66,10 @@ The server was identified by the hostname &lt;strong&gt;ldap.cc.iitk.ac.in&lt;/s
 	
 &gt;&lt;br /&gt;
 However, what truly alarmed me was that the server was not utilizing SSL for data transmission over the network. This meant that all Computer Center credentials used for authenticating to services like Web Mail and SSH servers were being transmitted as plaintext, making them easily accessible to anyone intercepting the traffic.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication.png&#34;
 	width=&#34;1763&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication_hu7729842253027930951.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication_hu1957787686004190964.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication_hu7729842253027930951.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication_hu1957787686004190964.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;LDAP Authentication&#34;
@@ -93,10 +93,10 @@ However, what truly alarmed me was that the server was not utilizing SSL for dat
 &lt;/div&gt;&lt;p&gt;After successfully logging into the server using my Computer Center credentials on another terminal, I stopped the network capture and downloaded the pcap file for further analysis.&lt;/p&gt;
 &lt;h2 id=&#34;network-traffic-analysis&#34;&gt;Network Traffic Analysis
 &lt;/h2&gt;&lt;p&gt;After opening the pcap file in &lt;strong&gt;Wireshark&lt;/strong&gt; and conducting some analysis, I was able to find my Computer Center user ID and password in plaintext within an LDAP Bind Request.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis.png&#34;
 	width=&#34;1723&#34;
 	height=&#34;694&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis_hu15684315963115790267.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis_hu6391675548106611853.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis_hu15684315963115790267.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis_hu6391675548106611853.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Network Traffic Analysis&#34;
@@ -170,10 +170,10 @@ This confirmed my suspicions: the Computer Center credentials were indeed transm
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;The following was the output&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted.png&#34;
 	width=&#34;938&#34;
 	height=&#34;254&#34;
-	srcset=&#34;http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted_hu15989953465181069283.png 480w, http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted_hu13346716360919305969.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted_hu15989953465181069283.png 480w, https://Gill-Singh-A.github.io/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted_hu13346716360919305969.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Extraced Passwords&#34;
