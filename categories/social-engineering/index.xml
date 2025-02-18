@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Social Engineering on Gill.Singh.A</title>
-        <link>http://localhost:1313/categories/social-engineering/</link>
+        <link>https://Gill-Singh-A.github.io/categories/social-engineering/</link>
         <description>Recent content in Social Engineering on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/social-engineering/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 23 Sep 2024 05:28:07 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/social-engineering/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Using Social Engineering for Privilege Escalation</title>
-        <link>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</link>
+        <link>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</link>
         <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</guid>
-        <description>&lt;img src="http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+        <guid>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
 &lt;/h2&gt;&lt;p&gt;While exploring devices on my college network, I managed to gain Remote Desktop Access to a server for one of our institute&amp;rsquo;s websites. The method I used to obtain access to the interface is out of the scope of this blog.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
 	width=&#34;1042&#34;
 	height=&#34;779&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu3798650764409171018.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu4295186151521413508.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu3798650764409171018.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu4295186151521413508.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Remote Desktop Access&#34;
@@ -29,10 +29,10 @@
 	
 &gt;&lt;br /&gt;
 Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt;/strong&gt;. The terminal displayed &lt;strong&gt;user&lt;/strong&gt; as the current user.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
 	width=&#34;1038&#34;
 	height=&#34;778&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu18328591220318913029.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu7294103013318607692.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu18328591220318913029.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu7294103013318607692.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Terminal&#34;
@@ -44,10 +44,10 @@ Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt
 	
 &gt;&lt;br /&gt;
 I added my public key to &lt;em&gt;/home/user/.ssh/authorized_keys&lt;/em&gt; and checked the SSH connection.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
 	width=&#34;715&#34;
 	height=&#34;502&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu10281628265701383641.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu7560144399843845447.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu10281628265701383641.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu7560144399843845447.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;User SSH Connection&#34;
@@ -147,10 +147,10 @@ I created a single-line bash script to be appended to &lt;em&gt;/home/user/.bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;After appending this line to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, every time a new terminal was opened, it would prompt the &lt;strong&gt;user&lt;/strong&gt; for their password.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
 	width=&#34;890&#34;
 	height=&#34;390&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu9311836505811142885.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu15260579389586501392.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu9311836505811142885.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu15260579389586501392.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Prompt&#34;
@@ -165,10 +165,10 @@ Once the user entered their password, the line would be removed from &lt;strong&
 Although there were concerns about potential failures, such as entering the wrong password or pressing &lt;strong&gt;CTRL+C&lt;/strong&gt;, the method worked successfully after a few days.&lt;/p&gt;
 &lt;h2 id=&#34;obtaining-password&#34;&gt;Obtaining Password
 &lt;/h2&gt;&lt;p&gt;A few days later, I logged in as &lt;strong&gt;user&lt;/strong&gt; via SSH and found that it wasn’t prompting for a password. I checked &lt;em&gt;/tmp/tmp.txt&lt;/em&gt; and found the base64 encoded password.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
 	width=&#34;610&#34;
 	height=&#34;384&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu15247351470866518167.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu12880556767352814779.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu15247351470866518167.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu12880556767352814779.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Encoded Password&#34;
@@ -180,10 +180,10 @@ Although there were concerns about potential failures, such as entering the wron
 	
 &gt;&lt;br /&gt;
 After Decoding it, I obtained the password.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
 	width=&#34;568&#34;
 	height=&#34;119&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu4472420002180516116.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu1426856767055626827.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu4472420002180516116.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu1426856767055626827.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Decoding&#34;
@@ -195,10 +195,10 @@ After Decoding it, I obtained the password.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 Finally, I verified the success of my social engineering method by checking for root access.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
 	width=&#34;190&#34;
 	height=&#34;40&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu15170616915056937535.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu4895617423315236842.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu15170616915056937535.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu4895617423315236842.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Sudo Bash&#34;
