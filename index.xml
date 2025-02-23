@@ -6,7 +6,87 @@
         <description>Recent content on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Wed, 19 Feb 2025 02:54:39 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 24 Feb 2025 00:50:12 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</title>
+        <link>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</link>
+        <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg" alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" /&gt;&lt;h2 id=&#34;discovery-of-vulnerable-machines&#34;&gt;Discovery of Vulnerable Machines
+&lt;/h2&gt;&lt;p&gt;While investigating vulnerable, internet-facing systems, I successfully compromised several devices. Although the specific techniques I used to gain initial access fall outside the scope of this post, the real discovery came during my post-exploitation phase on one of the compromised machines.&lt;/p&gt;
+&lt;h2 id=&#34;discovering-vulnerable-ssh-configurations&#34;&gt;Discovering Vulnerable SSH Configurations
+&lt;/h2&gt;&lt;p&gt;While reviewing the files on the compromised system, I stumbled upon something interesting in the &lt;code&gt;~/.ssh&lt;/code&gt; directory of a particular user account.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
+	width=&#34;507&#34;
+	height=&#34;617&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu262946270955953487.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu9608147882277425666.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Directory&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;82&#34;
+		data-flex-basis=&#34;197px&#34;
+	
+&gt;&lt;br /&gt;
+Within this directory, I found a private key file being used for SSH logins to other systems. My next step was to check whether the private key was encrypted.&lt;/p&gt;
+&lt;h2 id=&#34;unencrypted-private-key&#34;&gt;Unencrypted Private Key
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;“The thing about secrets is, once you know them, they change the way you see everything.”  - Irving, Mr. Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;To verify if the private key was encrypted, I attempted to use it to connect to a device listed in the SSH configuration file.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
+	width=&#34;677&#34;
+	height=&#34;747&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu2589043890797124511.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu7071950340316858503.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Connection&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;90&#34;
+		data-flex-basis=&#34;217px&#34;
+	
+&gt;&lt;br /&gt;
+The connection was successfully established without any prompts for a passphrase, confirming that the private key was unencrypted.&lt;/p&gt;
+&lt;h2 id=&#34;spreading-to-other-machines&#34;&gt;Spreading to Other Machines
+&lt;/h2&gt;&lt;p&gt;With the unencrypted private key, I was able to repeat this process across multiple machines listed in the configuration file. By leveraging the same method, I gained access to an increasing number of devices.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
+	width=&#34;803&#34;
+	height=&#34;862&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu17252320995000315683.jpg 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu1413890062935640257.jpg 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Attack Path - Plotted using Maltego&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;93&#34;
+		data-flex-basis=&#34;223px&#34;
+	
+&gt;&lt;br /&gt;
+This chain of connections allowed me to traverse and breach several systems.&lt;/p&gt;
+&lt;h2 id=&#34;key-takeaways-and-attack-path&#34;&gt;Key Takeaways and Attack Path
+&lt;/h2&gt;&lt;p&gt;The attack path was simple but effective—once I had access to one system, the unencrypted private key enabled me to easily escalate and spread across other devices. The lack of passphrase protection for the private key and poor SSH configurations provided the necessary leverage.&lt;br /&gt;
+Additionally, &lt;strong&gt;if the private key file is encrypted with a weak password, it can be cracked using brute force techniques, making it crucial to use strong, complex passphrases.&lt;/strong&gt; You can check out this &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/RSA-Private-Key-Passphrase-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/RSA-Private-Key-Passphrase-Brute-Force&lt;/a&gt; for more details on how this can be done.&lt;br /&gt;
+Furthermore, &lt;strong&gt;attackers can use &lt;a class=&#34;link&#34; href=&#34;https://shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Shodan&lt;/a&gt; to discover devices belonging to the same organization by scanning for exposed SSH services and other identifying information.&lt;/strong&gt; This highlights the importance of securing not only individual systems but also considering how vulnerable configurations can be exposed publicly. It&amp;rsquo;s vital to ensure SSH ports are either closed or properly secured to prevent remote exploitation.&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;To prevent this type of attack, consider the following security best practices:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Encrypt Private Keys&lt;/strong&gt;: Always use a passphrase to protect private keys. If keys are exposed or leaked, encryption ensures they cannot be easily used.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Harden SSH Configurations&lt;/strong&gt;: Review and harden your SSH configuration files. Disable weak or unnecessary authentication methods and ensure proper permissions for key files.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Use SSH Key Management Tools&lt;/strong&gt;: Implement centralized SSH key management solutions to monitor and control which keys are authorized on which systems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Implement Two-Factor Authentication&lt;/strong&gt;: For an extra layer of security, enable two-factor authentication (2FA) for SSH access, especially for sensitive machines.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Regular Audits&lt;/strong&gt;: Conduct regular audits of your systems to identify misconfigurations and potential vulnerabilities like unprotected private keys or improper access controls.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>Lateral Movement Through SSH Command Tampering</title>
         <link>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</link>
         <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
@@ -33,7 +113,11 @@ While analyzing one of the compromised machines during post-exploitation, I noti
 &gt;&lt;br /&gt;
 This discovery led me to investigate further, with the goal of capturing credentials to access additional systems.&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;capturing-ssh-credentials&#34;&gt;Capturing SSH Credentials
-&lt;/h2&gt;&lt;p&gt;To achieve this, I devised a simple method using a Python script alongside modifications to the &lt;code&gt;.bashrc&lt;/code&gt; file. This setup allowed me to intercept SSH credentials entered by the user.&lt;/p&gt;
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;“You don’t have to be a part of the system to use it. You just need to know how to manipulate it.” — Mr.Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;To achieve this, I devised a simple method using a Python script alongside modifications to the &lt;code&gt;.bashrc&lt;/code&gt; file. This setup allowed me to intercept SSH credentials entered by the user.&lt;/p&gt;
 &lt;h3 id=&#34;implementation&#34;&gt;Implementation
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;Installing &lt;code&gt;sshpass&lt;/code&gt;&lt;/strong&gt; – This tool bypasses the native SSH password prompt, allowing automation of SSH authentication.&lt;/li&gt;

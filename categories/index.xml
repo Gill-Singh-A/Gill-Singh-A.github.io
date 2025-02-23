@@ -6,10 +6,10 @@
         <description>Recent content in Categories on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Wed, 19 Feb 2025 02:54:39 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 24 Feb 2025 00:50:12 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Hacking</title>
         <link>https://Gill-Singh-A.github.io/categories/hacking/</link>
-        <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
+        <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
         
         <guid>https://Gill-Singh-A.github.io/categories/hacking/</guid>
         <description></description>
@@ -17,9 +17,17 @@
         <item>
         <title>Lateral-Movement</title>
         <link>https://Gill-Singh-A.github.io/categories/lateral-movement/</link>
-        <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
+        <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
         
         <guid>https://Gill-Singh-A.github.io/categories/lateral-movement/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Ssh</title>
+        <link>https://Gill-Singh-A.github.io/categories/ssh/</link>
+        <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/categories/ssh/</guid>
         <description></description>
         </item>
         <item>
@@ -28,14 +36,6 @@
         <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
         
         <guid>https://Gill-Singh-A.github.io/categories/network/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Ssh</title>
-        <link>https://Gill-Singh-A.github.io/categories/ssh/</link>
-        <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
-        
-        <guid>https://Gill-Singh-A.github.io/categories/ssh/</guid>
         <description></description>
         </item>
         <item>

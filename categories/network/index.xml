@@ -33,7 +33,11 @@ While analyzing one of the compromised machines during post-exploitation, I noti
 &gt;&lt;br /&gt;
 This discovery led me to investigate further, with the goal of capturing credentials to access additional systems.&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;capturing-ssh-credentials&#34;&gt;Capturing SSH Credentials
-&lt;/h2&gt;&lt;p&gt;To achieve this, I devised a simple method using a Python script alongside modifications to the &lt;code&gt;.bashrc&lt;/code&gt; file. This setup allowed me to intercept SSH credentials entered by the user.&lt;/p&gt;
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;“You don’t have to be a part of the system to use it. You just need to know how to manipulate it.” — Mr.Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;To achieve this, I devised a simple method using a Python script alongside modifications to the &lt;code&gt;.bashrc&lt;/code&gt; file. This setup allowed me to intercept SSH credentials entered by the user.&lt;/p&gt;
 &lt;h3 id=&#34;implementation&#34;&gt;Implementation
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;Installing &lt;code&gt;sshpass&lt;/code&gt;&lt;/strong&gt; – This tool bypasses the native SSH password prompt, allowing automation of SSH authentication.&lt;/li&gt;
