@@ -19,6 +19,8 @@ While analyzing one of the compromised machines during post-exploitation, I noti
 ![Bash History](assets/images/bash_history.png)<br />
 This discovery led me to investigate further, with the goal of capturing credentials to access additional systems.<br />
 ## Capturing SSH Credentials
+> “You don’t have to be a part of the system to use it. You just need to know how to manipulate it.” — Mr.Robot
+<!-- -->
 To achieve this, I devised a simple method using a Python script alongside modifications to the `.bashrc` file. This setup allowed me to intercept SSH credentials entered by the user.
 ### Implementation
 1. **Installing `sshpass`** – This tool bypasses the native SSH password prompt, allowing automation of SSH authentication.
