@@ -2,138 +2,144 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://Gill-Singh-A.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/cracking/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/cracking/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/cybersecurity/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/hacking/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/hacking/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/infosec/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/lateral-movement/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/lateral-movement/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/post/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/ssh/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/ssh/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</loc>
     <lastmod>2025-02-24T00:50:12+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/cybersecurity/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/lateral-movement/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/lateral-movement/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/post/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/ssh/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/ssh/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/</loc>
-    <lastmod>2025-02-24T00:50:12+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</loc>
+    <loc>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</loc>
     <lastmod>2025-02-19T02:54:39+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/network/</loc>
+    <loc>http://localhost:1313/categories/network/</loc>
     <lastmod>2025-02-19T02:54:39+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</loc>
+    <loc>http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/development/</loc>
+    <loc>http://localhost:1313/tags/development/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/development/</loc>
+    <loc>http://localhost:1313/categories/development/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/heat-map/</loc>
+    <loc>http://localhost:1313/tags/heat-map/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/infosec/</loc>
+    <loc>http://localhost:1313/categories/infosec/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/network/</loc>
+    <loc>http://localhost:1313/tags/network/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/tracking/</loc>
+    <loc>http://localhost:1313/tags/tracking/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
+    <loc>http://localhost:1313/tags/privilege-escalation/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
+    <loc>http://localhost:1313/categories/privilege-escalation/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/social-engineering/</loc>
+    <loc>http://localhost:1313/tags/social-engineering/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/social-engineering/</loc>
+    <loc>http://localhost:1313/categories/social-engineering/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</loc>
+    <loc>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/cybersecurity/</loc>
+    <loc>http://localhost:1313/categories/cybersecurity/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/docker/</loc>
+    <loc>http://localhost:1313/tags/docker/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/docker/</loc>
+    <loc>http://localhost:1313/categories/docker/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/</loc>
+    <loc>http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/shodan/</loc>
+    <loc>http://localhost:1313/tags/shodan/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/brute-force/</loc>
+    <loc>http://localhost:1313/tags/brute-force/</loc>
     <lastmod>2024-09-23T05:13:06+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/cctv/</loc>
+    <loc>http://localhost:1313/tags/cctv/</loc>
     <lastmod>2024-09-23T05:13:06+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/compromising-cctvs-101/</loc>
+    <loc>http://localhost:1313/p/compromising-cctvs-101/</loc>
     <lastmod>2024-09-23T05:13:06+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/osint/</loc>
+    <loc>http://localhost:1313/categories/osint/</loc>
     <lastmod>2024-09-23T05:13:06+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/cracking/</loc>
+    <loc>http://localhost:1313/tags/hashing/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/hashing/</loc>
+    <loc>http://localhost:1313/tags/password-cracking/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/password-cracking/</loc>
+    <loc>http://localhost:1313/p/password-cracking/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/password-cracking/</loc>
+    <loc>http://localhost:1313/tags/password-security/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/password-security/</loc>
+    <loc>http://localhost:1313/tags/salting/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/salting/</loc>
-    <lastmod>2024-09-23T04:56:45+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/archives/</loc>
+    <loc>http://localhost:1313/archives/</loc>
     <lastmod>2022-03-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/page/</loc>
+    <loc>http://localhost:1313/page/</loc>
     <lastmod>2022-03-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/search/</loc>
+    <loc>http://localhost:1313/search/</loc>
   </url>
 </urlset>

@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Network on Gill.Singh.A</title>
-        <link>https://Gill-Singh-A.github.io/categories/network/</link>
+        <link>http://localhost:1313/categories/network/</link>
         <description>Recent content in Network on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Wed, 19 Feb 2025 02:54:39 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/network/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 19 Feb 2025 02:54:39 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/network/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Lateral Movement Through SSH Command Tampering</title>
-        <link>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</link>
+        <link>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</link>
         <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
+        <guid>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</guid>
+        <description>&lt;img src="http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
 &lt;/h2&gt;&lt;p&gt;Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.&lt;/p&gt;
 &lt;h2 id=&#34;entry-point&#34;&gt;Entry Point
 &lt;/h2&gt;&lt;p&gt;During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.&lt;br /&gt;
 While analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
 	width=&#34;480&#34;
 	height=&#34;270&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu9191204011516167986.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu12104229560349473230.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Bash History&#34;
@@ -48,10 +48,10 @@ This discovery led me to investigate further, with the goal of capturing credent
     &gt;SSH Credential Logger&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;extracting-ssh-credentials&#34;&gt;Extracting SSH Credentials
 &lt;/h2&gt;&lt;p&gt;After some waiting, my setup successfully captured SSH credentials entered by the user.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
 	width=&#34;430&#34;
 	height=&#34;172&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8459928850480813140.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu10474649911885188044.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Credentials&#34;
@@ -69,10 +69,10 @@ With these credentials, I was ready to move laterally across the network.&lt;/p&
 &lt;/h3&gt;&lt;p&gt;This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.&lt;/p&gt;
 &lt;h3 id=&#34;2-extracting-ips-from-known_hosts&#34;&gt;2. Extracting IPs from &lt;code&gt;known_hosts&lt;/code&gt;
 &lt;/h3&gt;&lt;p&gt;A stealthier method involves inspecting the &lt;code&gt;.ssh/known_hosts&lt;/code&gt; file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
 	width=&#34;1487&#34;
 	height=&#34;492&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu13037433810454352534.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu8199313507788782025.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;known_hosts&#34;
@@ -87,10 +87,10 @@ By leveraging this information, I could target machines more efficiently while m
 &lt;h2 id=&#34;summary&#34;&gt;Summary
 &lt;/h2&gt;&lt;p&gt;Below is the attack path I followed, visualized using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Maltego&lt;/a&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
 	width=&#34;1112&#34;
 	height=&#34;1024&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu4582674992775991328.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu7481765843318099108.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;

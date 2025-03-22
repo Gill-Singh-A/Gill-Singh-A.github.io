@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Brute Force on Gill.Singh.A</title>
-        <link>https://Gill-Singh-A.github.io/tags/brute-force/</link>
+        <link>http://localhost:1313/tags/brute-force/</link>
         <description>Recent content in Brute Force on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Mon, 23 Sep 2024 05:13:06 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/tags/brute-force/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 23 Sep 2024 05:13:06 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/brute-force/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Compromising CCTVs 101</title>
-        <link>https://Gill-Singh-A.github.io/p/compromising-cctvs-101/</link>
+        <link>http://localhost:1313/p/compromising-cctvs-101/</link>
         <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/compromising-cctvs-101/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising CCTVs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
+        <guid>http://localhost:1313/p/compromising-cctvs-101/</guid>
+        <description>&lt;img src="http://localhost:1313/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising CCTVs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
 &lt;/h1&gt;&lt;h2 id=&#34;rtsp-protocol&#34;&gt;RTSP Protocol
 &lt;/h2&gt;&lt;p&gt;RTSP Protocol stands for &lt;em&gt;Real Time Streaming Protocol&lt;/em&gt; and by default runs on &lt;em&gt;Port 554&lt;/em&gt;. As the name tells, its an application level protocol designed to transport streams over a network and is commonly used by Devices like CCTVs. The RTSP Protocol doesn&amp;rsquo;t offer encryption, therefore everything is transparent to an Attacker eavesdropping on the Network Traffic of a Device using RTSP. We won&amp;rsquo;t cover MITM (Man-in-the-Middle) Attacks and other eavesdropping methods in this blogs, rather will focus on gaining direct access to CCTVs.&lt;/p&gt;
 &lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
@@ -26,10 +26,10 @@
 &lt;h4 id=&#34;shodan&#34;&gt;Shodan
 &lt;/h4&gt;&lt;p&gt;On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Search Engine&lt;/a&gt;, search with query &lt;em&gt;port:554 RTSP&lt;/em&gt;. This would list out all the Devices that have Port 554 Open found by Shodan with &lt;em&gt;RTSP&lt;/em&gt; in their banner. Most of them will be CCTVs.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_hu14443492354665730748.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_hu16264344125568431578.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan CCTV Search&#34;
@@ -41,10 +41,10 @@
 	
 &gt;&lt;br /&gt;
 We can even filter out more on various basis, for example location (country, city, etc)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
 	width=&#34;1279&#34;
 	height=&#34;1021&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report_hu14764165423814458476.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report_hu10659267179480159027.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Report&#34;
@@ -56,10 +56,10 @@ We can even filter out more on various basis, for example location (country, cit
 	
 &gt;&lt;br /&gt;
 Or if we want to find CCTVs that have no authentication, we can provide the filter &lt;em&gt;has_screenshot:true&lt;/em&gt;.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open_hu14618864246904070306.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open_hu2971455043730689372.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search Open&#34;
@@ -71,10 +71,10 @@ Or if we want to find CCTVs that have no authentication, we can provide the filt
 	
 &gt;&lt;br/&gt;
 After setting the requeired filters, we can download the results.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_hu2063741215654517212.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_hu6580981014759218426.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -86,10 +86,10 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 The Number of Results that can be downloaded depends upon your query credits available(1 Query Credit = 100 Results)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;496&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu565796369991160296.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu11318525179348910452.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -102,10 +102,10 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &gt;&lt;br /&gt;
 After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data is ready for Download&lt;/em&gt; or we can alernatively wait on &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Download Page&lt;/a&gt; while the data is being compiled&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
 	width=&#34;827&#34;
 	height=&#34;526&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail_hu18147256887731184041.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail_hu13989390231115179836.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -227,10 +227,10 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;active webcame page&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1000&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_hu7955939607532502183.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_hu930169016370301703.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Dorking&#34;
@@ -241,10 +241,10 @@ The utility can be installed with the command&lt;/p&gt;
 		data-flex-basis=&#34;460px&#34;
 	
 &gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu1090711425912968332.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu4876511850212848111.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -262,10 +262,10 @@ We won&amp;rsquo;t cover much of the dorking part, because it is painful to extr
     &gt;unicornscan&lt;/a&gt;, etc. For scanning a Large Subdomain/Large Number of Devices I&amp;rsquo;d prefer using &lt;em&gt;unicornscan&lt;/em&gt; tool, because it sends all the &lt;em&gt;SYN Packets&lt;/em&gt; without waiting for responses and starts a sniffer which looks for &lt;em&gt;SYN-ACK Packets&lt;/em&gt; to determine which Device has an open port, making it faster than &lt;em&gt;nmap&lt;/em&gt;.&lt;br /&gt;
 In the following example of port scan, I&amp;rsquo;ve used &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt;. In this repository &lt;em&gt;port_scanner.py&lt;/em&gt; sends the &lt;em&gt;SYN Packet&lt;/em&gt;, waits for the &lt;em&gt;SYN-ACK Packets&lt;/em&gt; and then completes the TCP Handshake by sending the &lt;em&gt;ACK&lt;/em&gt; Packet and finally closes the connection by sending &lt;em&gt;FIN Packet&lt;/em&gt; making it a slow scanner. The &lt;em&gt;scapy_port_scanner.py&lt;/em&gt; (used in the following example) is somewhat based on the &lt;em&gt;unicornscan tool&lt;/em&gt; and is faster than &lt;em&gt;port_scanner.py&lt;/em&gt;.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
 	width=&#34;1018&#34;
 	height=&#34;959&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner_hu3693660484821326266.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner_hu14907436726361292309.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Port Scanner&#34;
@@ -286,10 +286,10 @@ I use &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/RTSP-
     &gt;Gill-Singh-A/RTSP-Brute-Force&lt;/a&gt;, it is a Program written in python that uses OpenCV to brute force the CCTVs and uses multithreading module to parallelize the brute force tasks. We can also redirect the Error output by OpenCv by using the error redirected to Null &lt;em&gt;2&amp;gt;/dev/null&lt;/em&gt; at the end of the command.&lt;br /&gt;
 Here in the following exampe, I&amp;rsquo;ve run the program and also opened the Stream in &lt;a class=&#34;link&#34; href=&#34;https://www.videolan.org/vlc/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;VLC Media Player&lt;/a&gt; of the CCTV that it gained access to.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu7225274532095461435.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu12319331695325303554.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -302,10 +302,10 @@ Here in the following exampe, I&amp;rsquo;ve run the program and also opened the
 &gt;&lt;br /&gt;
 We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IP-Location&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/IP-Location&lt;/a&gt; to get an approximate location of the Devices (although it may not always be correct)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
 	width=&#34;1799&#34;
 	height=&#34;861&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location_hu6535110091859157299.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location_hu13102888798691609469.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Location&#34;
@@ -317,10 +317,10 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 	
 &gt;
 We can now even open the Admin Panel of the CCTV using the Browser and can manipulate crucial settings, backup storage and more.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;926&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings_hu8200271080662183132.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings_hu17345935752817358705.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV Settings&#34;
@@ -336,10 +336,10 @@ We can now even open the Admin Panel of the CCTV using the Browser and can manip
     &gt;Gill-Singh-A/SYN-Flood-Attack&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/goldeneye/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;GoldenEye&lt;/a&gt;, etc&lt;br /&gt;
 But I prefer using the &lt;em&gt;hping&lt;/em&gt; tool to do SYN Flood Attack because its more effective.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
 	width=&#34;1152&#34;
 	height=&#34;648&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos_hu15656584701875584317.gif 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3609808415653887726.gif 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_480x0_resize_box_1.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_1024x0_resize_box_1.gif 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DOS Attack on CCTV&#34;

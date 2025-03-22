@@ -2,24 +2,205 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Gill.Singh.A</title>
-        <link>https://Gill-Singh-A.github.io/</link>
+        <link>http://localhost:1313/</link>
         <description>Recent content on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Mon, 24 Feb 2025 00:50:12 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Cracking Linux Hashes and Expanding Access</title>
+        <link>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</link>
+        <pubDate>Fri, 21 Mar 2025 23:30:23 +0530</pubDate>
+        
+        <guid>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</guid>
+        <description>&lt;img src="http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png" alt="Featured image of post Cracking Linux Hashes and Expanding Access" /&gt;&lt;h2 id=&#34;initial-entry-point&#34;&gt;Initial Entry Point
+&lt;/h2&gt;&lt;p&gt;During a routine exploration of vulnerable servers on the internet, I successfully gained root access to several machines. While the specific method used to achieve root access is beyond the scope of this blog, I’ll focus on how I expanded my access to other servers within the same organization.&lt;/p&gt;
+&lt;h2 id=&#34;extracting-linux-user-hashes&#34;&gt;Extracting Linux User Hashes
+&lt;/h2&gt;&lt;p&gt;Once inside the compromised machine, I noticed multiple user accounts. With root privileges, I accessed the &lt;em&gt;/etc/shadow&lt;/em&gt; file, which stores password hashes for all users on the system.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
+	width=&#34;841&#34;
+	height=&#34;841&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu8c4de1fa10806a215d74c2433836b196_88365_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu8c4de1fa10806a215d74c2433836b196_88365_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Shadow File&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;100&#34;
+		data-flex-basis=&#34;240px&#34;
+	
+&gt;&lt;br /&gt;
+I copied the contents of the shadow file to my local machine and extracted the hashes using the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat shadow_file &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; cut -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt; -f2 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; sort &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; uniq &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;[!-*]&amp;#39;&lt;/span&gt; &amp;gt; hashes
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
+	width=&#34;1156&#34;
+	height=&#34;268&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_huafe8babadc922e10af77b4bbcfce20dc_30315_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_huafe8babadc922e10af77b4bbcfce20dc_30315_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Hashes&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;431&#34;
+		data-flex-basis=&#34;1035px&#34;
+	
+&gt;&lt;br /&gt;
+This command isolates the hashes, removes unnecessary characters, and saves them to a file named &lt;code&gt;hashes&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;identifying-the-hash-type&#34;&gt;Identifying the Hash Type
+&lt;/h2&gt;&lt;p&gt;The next step was to determine the type of hash used. I referenced &lt;a class=&#34;link&#34; href=&#34;https://hashcat.net/wiki/doku.php?id=example_hashes&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Hashcat’s Example Hashes&lt;/a&gt; to identify the hash format. In this case, the hashes were of type &lt;strong&gt;sha512crypt&lt;/strong&gt;, which includes salting for added security.&lt;/p&gt;
+&lt;h2 id=&#34;selecting-a-wordlist&#34;&gt;Selecting a Wordlist
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Hacking is about patience. If you rush, you lose. If you’re too slow, you lose. Timing is everything.&amp;rdquo; - Mr. Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;With the hash type identified, I needed a suitable wordlist for a dictionary attack. Given the presence of salting, using an excessively large wordlist would be inefficient. I opted for the &lt;a class=&#34;link&#34; href=&#34;https://github.com/danielmiessler/SecLists/blob/master/Passwords/Leaked-Databases/rockyou.txt.tar.gz&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;rockyou&lt;/a&gt; wordlist, a popular choice for password cracking due to its manageable size and effectiveness. You can explore other useful wordlists on platforms like &lt;a class=&#34;link&#34; href=&#34;https://github.com/danielmiessler/SecLists&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;SecLists&lt;/a&gt; and &lt;a class=&#34;link&#34; href=&#34;https://weakpass.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;WeakPass&lt;/a&gt;.&lt;br /&gt;
+For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;https://github.com/Mebus/cupp&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CUPP (Common User Passwords Profiler)&lt;/a&gt; can generate custom wordlists tailored to specific users or organizations. Additionally, leveraging GPU resources can significantly speed up the cracking process. For a deeper dive into password cracking techniques, check out this &lt;a class=&#34;link&#34; href=&#34;https://gill-singh-a.github.io/p/password-cracking/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Password Cracking Blog&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;cracking-the-hashes&#34;&gt;Cracking the Hashes
+&lt;/h2&gt;&lt;p&gt;I used &lt;strong&gt;Hashcat&lt;/strong&gt;, a powerful password-cracking tool, to crack the extracted hashes. The command I used was:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;hashcat -a &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt; -m &lt;span class=&#34;m&#34;&gt;1800&lt;/span&gt; path_to_hashes_file path_to_wordlist
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;explanation-of-arguments&#34;&gt;Explanation of Arguments:
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-a 0&lt;/code&gt;: Specifies a dictionary attack.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-m 1800&lt;/code&gt;: Indicates the hash type (sha512crypt).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- --&gt;
+&lt;p&gt;After running the command, Hashcat successfully cracked two of the hashes. Below is an example of one of the cracked hashes:&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
+	width=&#34;989&#34;
+	height=&#34;874&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu9de55c81493ffd4b275fa07b4db9a594_369889_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu9de55c81493ffd4b275fa07b4db9a594_369889_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Cracked Hash&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;113&#34;
+		data-flex-basis=&#34;271px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;discovering-additional-machines&#34;&gt;Discovering Additional Machines
+&lt;/h2&gt;&lt;p&gt;With the cracked credentials in hand, my next goal was to identify other machines within the same organization. I began by gathering information about the compromised server’s owner or organization. Using tools like &lt;strong&gt;Shodan&lt;/strong&gt;, I extracted details such as the organization name, ISP (Internet Service Provider), ASN (Autonomous System Number), and subnet associated with the server’s IP address.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
+	width=&#34;948&#34;
+	height=&#34;431&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu2c039f1a226d9901c7465b6070cb8d43_15516_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu2c039f1a226d9901c7465b6070cb8d43_15516_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Server Details&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;219&#34;
+		data-flex-basis=&#34;527px&#34;
+	
+&gt;&lt;br /&gt;
+Using this information, I filtered Shodan search results to compile a list of IP addresses belonging to the same organization, ISP, or subnet.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
+	width=&#34;1920&#34;
+	height=&#34;951&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu6fafdd03b1b9cccaac7d389f4b9c02f3_138860_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu6fafdd03b1b9cccaac7d389f4b9c02f3_138860_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Filtered Shodan Search&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;201&#34;
+		data-flex-basis=&#34;484px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;gaining-access-to-other-machines&#34;&gt;Gaining Access to Other Machines
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Credentials are the keys to the kingdom. Once you have them, you can go anywhere.&amp;rdquo; - Mr. Robot&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Armed with a list of IP addresses and valid credentials, I launched a SSH brute-force attack using the &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SSH-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/SSH-Brute-Force&lt;/a&gt; tool. This allowed me to authenticate successfully on several other machines within the organization.&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
+	width=&#34;785&#34;
+	height=&#34;223&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu5419c5fe50c108a31a4faa1b513b04fb_100975_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu5419c5fe50c108a31a4faa1b513b04fb_100975_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH Brute-Force Logs of 1 pair of Credential&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;352&#34;
+		data-flex-basis=&#34;844px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;attack-path-visualization&#34;&gt;Attack Path Visualization
+&lt;/h2&gt;&lt;p&gt;Below is a visual representation of the attack path, created using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Maltego&lt;/a&gt;:&lt;br /&gt;
+&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
+	width=&#34;1148&#34;
+	height=&#34;719&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_huef6711e9958d649e148c895e36dc7818_660057_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_huef6711e9958d649e148c895e36dc7818_660057_1024x0_resize_box_3.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Attack Path&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;383px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;This exercise highlights how a single compromised machine can serve as a gateway to an entire network. By extracting and cracking Linux user hashes, identifying related machines using Shodan, and leveraging brute-force techniques, I was able to expand my access across multiple servers within the organization.&lt;/p&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;To prevent such attacks, organizations should implement the following security measures:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Strong Password Policies&lt;/strong&gt;: Enforce the use of complex, unique passwords and mandate regular password changes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-Factor Authentication (MFA)&lt;/strong&gt;: Implement MFA for SSH and other critical services to add an extra layer of security.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Regular Audits&lt;/strong&gt;: Conduct regular security audits to identify and address vulnerabilities, including weak passwords and misconfigurations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Limit SSH Access&lt;/strong&gt;: Restrict SSH access to specific IP addresses or networks and disable root login.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor Logs&lt;/strong&gt;: Continuously monitor system logs for suspicious activity, such as repeated failed login attempts.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Patch Management&lt;/strong&gt;: Keep all systems and software up to date with the latest security patches.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Network Segmentation&lt;/strong&gt;: Segment networks to limit lateral movement in case of a breach.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Educate Users&lt;/strong&gt;: Train employees and system administrators on security best practices, including password hygiene and phishing awareness.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- --&gt;
+&lt;p&gt;By adopting these measures, organizations can significantly reduce the risk of unauthorized access and lateral movement within their networks.&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</title>
-        <link>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</link>
+        <link>http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</link>
         <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg" alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" /&gt;&lt;h2 id=&#34;discovery-of-vulnerable-machines&#34;&gt;Discovery of Vulnerable Machines
+        <guid>http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</guid>
+        <description>&lt;img src="http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg" alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" /&gt;&lt;h2 id=&#34;discovery-of-vulnerable-machines&#34;&gt;Discovery of Vulnerable Machines
 &lt;/h2&gt;&lt;p&gt;While investigating vulnerable, internet-facing systems, I successfully compromised several devices. Although the specific techniques I used to gain initial access fall outside the scope of this post, the real discovery came during my post-exploitation phase on one of the compromised machines.&lt;/p&gt;
 &lt;h2 id=&#34;discovering-vulnerable-ssh-configurations&#34;&gt;Discovering Vulnerable SSH Configurations
 &lt;/h2&gt;&lt;p&gt;While reviewing the files on the compromised system, I stumbled upon something interesting in the &lt;code&gt;~/.ssh&lt;/code&gt; directory of a particular user account.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
 	width=&#34;507&#34;
 	height=&#34;617&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu262946270955953487.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu9608147882277425666.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu6a322e42c91e5e366e6c161bc02678b4_64659_480x0_resize_box_3.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu6a322e42c91e5e366e6c161bc02678b4_64659_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Directory&#34;
@@ -37,10 +218,10 @@ Within this directory, I found a private key file being used for SSH logins to o
 &lt;/blockquote&gt;
 &lt;!-- --&gt;
 &lt;p&gt;To verify if the private key was encrypted, I attempted to use it to connect to a device listed in the SSH configuration file.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
 	width=&#34;677&#34;
 	height=&#34;747&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu2589043890797124511.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu7071950340316858503.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu9829a05cfe909d44764fe854736746de_105174_480x0_resize_box_3.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu9829a05cfe909d44764fe854736746de_105174_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Connection&#34;
@@ -54,10 +235,10 @@ Within this directory, I found a private key file being used for SSH logins to o
 The connection was successfully established without any prompts for a passphrase, confirming that the private key was unencrypted.&lt;/p&gt;
 &lt;h2 id=&#34;spreading-to-other-machines&#34;&gt;Spreading to Other Machines
 &lt;/h2&gt;&lt;p&gt;With the unencrypted private key, I was able to repeat this process across multiple machines listed in the configuration file. By leveraging the same method, I gained access to an increasing number of devices.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
+&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
 	width=&#34;803&#34;
 	height=&#34;862&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu17252320995000315683.jpg 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu1413890062935640257.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hua304c8084e2f5ab0585d310b3bae85e6_87084_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hua304c8084e2f5ab0585d310b3bae85e6_87084_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path - Plotted using Maltego&#34;
@@ -88,19 +269,19 @@ Furthermore, &lt;strong&gt;attackers can use &lt;a class=&#34;link&#34; href=&#3
         </item>
         <item>
         <title>Lateral Movement Through SSH Command Tampering</title>
-        <link>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</link>
+        <link>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</link>
         <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
+        <guid>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</guid>
+        <description>&lt;img src="http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
 &lt;/h2&gt;&lt;p&gt;Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.&lt;/p&gt;
 &lt;h2 id=&#34;entry-point&#34;&gt;Entry Point
 &lt;/h2&gt;&lt;p&gt;During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.&lt;br /&gt;
 While analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
 	width=&#34;480&#34;
 	height=&#34;270&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu9191204011516167986.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu12104229560349473230.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Bash History&#34;
@@ -128,10 +309,10 @@ This discovery led me to investigate further, with the goal of capturing credent
     &gt;SSH Credential Logger&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;extracting-ssh-credentials&#34;&gt;Extracting SSH Credentials
 &lt;/h2&gt;&lt;p&gt;After some waiting, my setup successfully captured SSH credentials entered by the user.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
 	width=&#34;430&#34;
 	height=&#34;172&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8459928850480813140.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu10474649911885188044.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Credentials&#34;
@@ -149,10 +330,10 @@ With these credentials, I was ready to move laterally across the network.&lt;/p&
 &lt;/h3&gt;&lt;p&gt;This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.&lt;/p&gt;
 &lt;h3 id=&#34;2-extracting-ips-from-known_hosts&#34;&gt;2. Extracting IPs from &lt;code&gt;known_hosts&lt;/code&gt;
 &lt;/h3&gt;&lt;p&gt;A stealthier method involves inspecting the &lt;code&gt;.ssh/known_hosts&lt;/code&gt; file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
 	width=&#34;1487&#34;
 	height=&#34;492&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu13037433810454352534.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu8199313507788782025.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;known_hosts&#34;
@@ -167,10 +348,10 @@ By leveraging this information, I could target machines more efficiently while m
 &lt;h2 id=&#34;summary&#34;&gt;Summary
 &lt;/h2&gt;&lt;p&gt;Below is the attack path I followed, visualized using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Maltego&lt;/a&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
 	width=&#34;1112&#34;
 	height=&#34;1024&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu4582674992775991328.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu7481765843318099108.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;
@@ -195,16 +376,16 @@ Key takeaways:&lt;/p&gt;
         </item>
         <item>
         <title>Building a Heat Map for IIT Kanpur&#39;s Computer Labs</title>
-        <link>https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</link>
+        <link>http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</link>
         <pubDate>Tue, 24 Sep 2024 04:24:41 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png" alt="Featured image of post Building a Heat Map for IIT Kanpur&#39;s Computer Labs" /&gt;&lt;h2 id=&#34;ssh-services-at-iit-kanpur&#34;&gt;SSH Services at IIT Kanpur
+        <guid>http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</guid>
+        <description>&lt;img src="http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png" alt="Featured image of post Building a Heat Map for IIT Kanpur&#39;s Computer Labs" /&gt;&lt;h2 id=&#34;ssh-services-at-iit-kanpur&#34;&gt;SSH Services at IIT Kanpur
 &lt;/h2&gt;&lt;p&gt;IIT Kanpur&amp;rsquo;s network uses Class B private IP addresses. Within this private network, students, faculty and staff can SSH into various servers using their Computer Center credentials to access different services. Examples of such servers include the GPU server, APP server, and MATH server.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh.png&#34;
 	width=&#34;910&#34;
 	height=&#34;297&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu8126236527895794791.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu961427184623176891.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu49471534d7b4902be2b6e2086dbbb4dd_144575_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu49471534d7b4902be2b6e2086dbbb4dd_144575_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;GPU Server SSH&#34;
@@ -216,10 +397,10 @@ Key takeaways:&lt;/p&gt;
 	
 &gt;&lt;br /&gt;
 Each user has a 2GB directory on the Computer Center&amp;rsquo;s NFS (Network File System), which is mounted on all servers. This allows users to access their files across multiple servers without needing to copy them to each one, reducing the need for additional storage on individual servers. &lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage.png&#34;
 	width=&#34;510&#34;
 	height=&#34;366&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu8269651536020412203.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu5967961997424418485.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu72b09afdb72e468149a22f3daeee79a3_177887_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu72b09afdb72e468149a22f3daeee79a3_177887_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;NFS Storage&#34;
@@ -234,10 +415,10 @@ Each user has a 2GB directory on the Computer Center&amp;rsquo;s NFS (Network Fi
 &lt;/h2&gt;&lt;p&gt;I couldn’t find a complete list of servers supporting SSH authentication with our Computer Center credentials and was eager to discover all the servers users could SSH into.&lt;br /&gt;
 So, I conducted a port scan of IIT Kanpur&amp;rsquo;s entire private network for port 22 (SSH) using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt; and identified around 4,000 devices with the port open. &lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan.png&#34;
 	width=&#34;1007&#34;
 	height=&#34;998&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu1143654086383212746.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu2323178954725116190.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_huaf93e777eee245a5ff5b1a6652713e66_463490_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_huaf93e777eee245a5ff5b1a6652713e66_463490_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Port Scan on Private Network&#34;
@@ -252,10 +433,10 @@ So, I conducted a port scan of IIT Kanpur&amp;rsquo;s entire private network for
 &lt;/h2&gt;&lt;p&gt;The next task was to identify the servers where we could authenticate using our Computer Center credentials.&lt;br /&gt;
 To accomplish this, I used the tool &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SSH-Brute-Force.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/SSH-Brute-Force&lt;/a&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force.png&#34;
 	width=&#34;747&#34;
 	height=&#34;241&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu11087886100348921863.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu14075750169346195069.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu575ee8b5eb189aba034eb149a826d690_132072_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu575ee8b5eb189aba034eb149a826d690_132072_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Brute Force&#34;
@@ -269,10 +450,10 @@ To accomplish this, I used the tool &lt;a class=&#34;link&#34; href=&#34;https:/
 After getting the Results, I got some interesting results.&lt;/p&gt;
 &lt;h2 id=&#34;linux-lab-ips&#34;&gt;Linux Lab IPs
 &lt;/h2&gt;&lt;p&gt;I discovered 110 consecutive IP addresses, and upon gathering more information, I learned that these belonged to the Computer Center&amp;rsquo;s Linux Lab 2 and 3.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc.png&#34;
 	width=&#34;786&#34;
 	height=&#34;943&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu8919633338099758210.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu12534562684825068655.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu9c4d3a73297bb60e30e0f82d1d5b9aab_362253_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu9c4d3a73297bb60e30e0f82d1d5b9aab_362253_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Linux Lab PC SSH&#34;
@@ -286,10 +467,10 @@ After getting the Results, I got some interesting results.&lt;/p&gt;
 &lt;h2 id=&#34;users-currently-loggedin-the-computer&#34;&gt;Users currently logged in the Computer
 &lt;/h2&gt;&lt;p&gt;After that, I accessed the computer using my user ID via SSH. &lt;br /&gt;
 To check the currently logged-in users, I entered the command &lt;strong&gt;who&lt;/strong&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who.png&#34;
 	width=&#34;415&#34;
 	height=&#34;82&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu12145478836246524794.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu13584290742720563728.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu5df7119ac62c9c99c9b0941fc686a988_21938_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu5df7119ac62c9c99c9b0941fc686a988_21938_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Users Currently Logged In&#34;
@@ -304,10 +485,10 @@ This command allowed me to see both users logged in through SSH (indicated by th
 &lt;h2 id=&#34;building-the-heat-map&#34;&gt;Building the Heat Map
 &lt;/h2&gt;&lt;p&gt;After identifying the users on specific computers in Computer Center Linux Lab 2 and 3, it was time to create the heat map.&lt;br /&gt;
 I compiled a CSV file containing the IP addresses and locations of the computers, then developed a Python program to automate the process of checking user activity on each machine and display the results.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli.png&#34;
 	width=&#34;963&#34;
 	height=&#34;361&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu12093248892090213383.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu15377235950789636050.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_huf9d5110afa17108fe66a83298e343e77_149287_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_huf9d5110afa17108fe66a83298e343e77_149287_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Heat Map Program&#34;
@@ -320,10 +501,10 @@ I compiled a CSV file containing the IP addresses and locations of the computers
 &gt;&lt;br /&gt;
 The program presents the results on the user&amp;rsquo;s &lt;a class=&#34;link&#34; href=&#34;https://home.iitk.ac.in&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;IITK Homepage&lt;/a&gt; that was used in the program.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png&#34;
 	width=&#34;1915&#34;
 	height=&#34;948&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu8058897782699062672.png 480w, https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu16937831630874459995.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu9da49b5f85f3c8169e38e5c7f14b601c_125248_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu9da49b5f85f3c8169e38e5c7f14b601c_125248_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Heat Map Web Page&#34;
@@ -349,16 +530,16 @@ It displays the results on &lt;a class=&#34;link&#34; href=&#34;https://home.iit
         </item>
         <item>
         <title>Using Social Engineering for Privilege Escalation</title>
-        <link>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</link>
+        <link>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</link>
         <pubDate>Mon, 23 Sep 2024 05:28:07 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+        <guid>http://localhost:1313/p/using-social-engineering-for-privilege-escalation/</guid>
+        <description>&lt;img src="http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png" alt="Featured image of post Using Social Engineering for Privilege Escalation" /&gt;&lt;h2 id=&#34;prologue&#34;&gt;Prologue
 &lt;/h2&gt;&lt;p&gt;While exploring devices on my college network, I managed to gain Remote Desktop Access to a server for one of our institute&amp;rsquo;s websites. The method I used to obtain access to the interface is out of the scope of this blog.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
 	width=&#34;1042&#34;
 	height=&#34;779&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu3798650764409171018.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu4295186151521413508.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu1eb34262c577f51095444feecf887986_602731_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu1eb34262c577f51095444feecf887986_602731_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Remote Desktop Access&#34;
@@ -370,10 +551,10 @@ It displays the results on &lt;a class=&#34;link&#34; href=&#34;https://home.iit
 	
 &gt;&lt;br /&gt;
 Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt;/strong&gt;. The terminal displayed &lt;strong&gt;user&lt;/strong&gt; as the current user.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
 	width=&#34;1038&#34;
 	height=&#34;778&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu18328591220318913029.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu7294103013318607692.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_huc2562a9c8b0d269c093fea677cad18c2_367912_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_huc2562a9c8b0d269c093fea677cad18c2_367912_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Terminal&#34;
@@ -385,10 +566,10 @@ Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt
 	
 &gt;&lt;br /&gt;
 I added my public key to &lt;em&gt;/home/user/.ssh/authorized_keys&lt;/em&gt; and checked the SSH connection.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
 	width=&#34;715&#34;
 	height=&#34;502&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu10281628265701383641.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu7560144399843845447.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu79677f45d57d073e4ba29d2ff7cf669b_171553_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu79677f45d57d073e4ba29d2ff7cf669b_171553_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;User SSH Connection&#34;
@@ -488,10 +669,10 @@ I created a single-line bash script to be appended to &lt;em&gt;/home/user/.bash
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;After appending this line to &lt;em&gt;/home/user/.bashrc&lt;/em&gt;, every time a new terminal was opened, it would prompt the &lt;strong&gt;user&lt;/strong&gt; for their password.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
 	width=&#34;890&#34;
 	height=&#34;390&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu9311836505811142885.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu15260579389586501392.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu70dd91f32928c4beb467cf72aa2c19b5_119628_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu70dd91f32928c4beb467cf72aa2c19b5_119628_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Prompt&#34;
@@ -506,10 +687,10 @@ Once the user entered their password, the line would be removed from &lt;strong&
 Although there were concerns about potential failures, such as entering the wrong password or pressing &lt;strong&gt;CTRL+C&lt;/strong&gt;, the method worked successfully after a few days.&lt;/p&gt;
 &lt;h2 id=&#34;obtaining-password&#34;&gt;Obtaining Password
 &lt;/h2&gt;&lt;p&gt;A few days later, I logged in as &lt;strong&gt;user&lt;/strong&gt; via SSH and found that it wasn’t prompting for a password. I checked &lt;em&gt;/tmp/tmp.txt&lt;/em&gt; and found the base64 encoded password.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
 	width=&#34;610&#34;
 	height=&#34;384&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu15247351470866518167.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu12880556767352814779.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hudc2f432dc96c9d532197cae7345a05db_103829_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hudc2f432dc96c9d532197cae7345a05db_103829_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Encoded Password&#34;
@@ -521,10 +702,10 @@ Although there were concerns about potential failures, such as entering the wron
 	
 &gt;&lt;br /&gt;
 After Decoding it, I obtained the password.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
 	width=&#34;568&#34;
 	height=&#34;119&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu4472420002180516116.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu1426856767055626827.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_huc3c946262e5c6b03bbe34431a78911bf_28095_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_huc3c946262e5c6b03bbe34431a78911bf_28095_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Decoding&#34;
@@ -536,10 +717,10 @@ After Decoding it, I obtained the password.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 Finally, I verified the success of my social engineering method by checking for root access.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
 	width=&#34;190&#34;
 	height=&#34;40&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu15170616915056937535.png 480w, https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu4895617423315236842.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu886bedfec7845265df4dd266490c39c5_7216_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu886bedfec7845265df4dd266490c39c5_7216_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Sudo Bash&#34;
@@ -568,11 +749,11 @@ To mitigate the risk of social engineering attacks:&lt;/p&gt;
         </item>
         <item>
         <title>Getting Remote Root Shell on Devices via Portainer</title>
-        <link>https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/</link>
+        <link>http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/</link>
         <pubDate>Mon, 23 Sep 2024 05:21:38 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png" alt="Featured image of post Getting Remote Root Shell on Devices via Portainer" /&gt;&lt;h2 id=&#34;portainer&#34;&gt;Portainer
+        <guid>http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/</guid>
+        <description>&lt;img src="http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png" alt="Featured image of post Getting Remote Root Shell on Devices via Portainer" /&gt;&lt;h2 id=&#34;portainer&#34;&gt;Portainer
 &lt;/h2&gt;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.portainer.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Portainer&lt;/a&gt; is an open-source management tool designed for containers. It offers a user-friendly, lightweight web interface that simplifies the deployment and management of Docker environments. It&amp;rsquo;s important to note that while Portainer itself does not run with root privileges, if the Docker service managed by Portainer operates with root permissions, it could potentially lead to a remote root shell vulnerability, as discussed further.&lt;/p&gt;
 &lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
@@ -581,10 +762,10 @@ To mitigate the risk of social engineering attacks:&lt;/p&gt;
     &gt;Shodan Search Engine&lt;/a&gt; to Collect Target Devices.&lt;br /&gt;
 On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Search Engine&lt;/a&gt; search with query &lt;em&gt;product:portainer&lt;/em&gt;, this would list out all the Devices that were identified running Portainer by Shodan.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu5065758196418204342.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu3985421631415068294.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu94c03c09a91badb5d3b334886523d12d_229599_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu94c03c09a91badb5d3b334886523d12d_229599_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search&#34;
@@ -596,10 +777,10 @@ On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;
 	
 &gt;
 After setting the requeired filters, we can download the results.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu2063741215654517212.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu6580981014759218426.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -611,10 +792,10 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 The Number of Results that can be downloaded depends upon your query credits available(1 Query Credit = 100 Results)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1233&#34;
 	height=&#34;487&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu14804659552564800396.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu13959971194765878774.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu6b5986b9e1bf917e642427a816acccc6_65614_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu6b5986b9e1bf917e642427a816acccc6_65614_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -627,10 +808,10 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &gt;&lt;br /&gt;
 After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data is ready for Download&lt;/em&gt; or we can alernatively wait on &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Download Page&lt;/a&gt; while the data is being compiled&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail.png&#34;
 	width=&#34;1034&#34;
 	height=&#34;530&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu8959094722694699415.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu11703782515361506775.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hue1cfcccfb596bcb7e7f311c2f431b4d4_83443_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hue1cfcccfb596bcb7e7f311c2f431b4d4_83443_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -680,10 +861,10 @@ After collecting Target Devices and Passwords, we&amp;rsquo;re ready to do a Bru
 I use &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Portainer-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A&lt;/a&gt;, it is a Program written in Python that uses requests to brute force the Web Interface of Portainer through &lt;em&gt;/api/auth&lt;/em&gt; endpoint and multithreading module to parallelize the brute force tasks.&lt;br &gt;
 I&amp;rsquo;ve attached a small example of brute force in the following picture.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force.png&#34;
 	width=&#34;1214&#34;
 	height=&#34;788&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu9138035496253350322.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu14537001647000182556.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_huf93e458ca9f083c7cbce8ee4938024b6_649589_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_huf93e458ca9f083c7cbce8ee4938024b6_649589_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Brute Force&#34;
@@ -696,10 +877,10 @@ I&amp;rsquo;ve attached a small example of brute force in the following picture.
 &gt;&lt;/p&gt;
 &lt;h2 id=&#34;getting-remote-root-shell&#34;&gt;Getting Remote Root Shell
 &lt;/h2&gt;&lt;p&gt;Now after getting access to the Portainer Web Interface, our job is to get a Remote Root Shell.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu9614265903048951971.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu8576249461380108094.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu49876a7da197e7a87d28f2239acf6b55_166016_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu49876a7da197e7a87d28f2239acf6b55_166016_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Portainer Interface&#34;
@@ -711,10 +892,10 @@ I&amp;rsquo;ve attached a small example of brute force in the following picture.
 	
 &gt;&lt;br /&gt;
 First, we have to go to Images and find any Linux OS Image. Here in this example we see &lt;em&gt;ubuntu:latest&lt;/em&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu2322801518449959949.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu18078554214050661318.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_huc9608fac27f5a680d3d9edbdb5949818_105137_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_huc9608fac27f5a680d3d9edbdb5949818_105137_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Portainer Images&#34;
@@ -726,10 +907,10 @@ First, we have to go to Images and find any Linux OS Image. Here in this example
 	
 &gt;&lt;br /&gt;
 Next, we go to containers and click on &lt;strong&gt;Add Container&lt;/strong&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container.png&#34;
 	width=&#34;714&#34;
 	height=&#34;154&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu3666424460501405624.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu15059500577359673673.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu41a87485e77381737e450377989c25fb_19599_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu41a87485e77381737e450377989c25fb_19599_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Add Container&#34;
@@ -741,10 +922,10 @@ Next, we go to containers and click on &lt;strong&gt;Add Container&lt;/strong&gt
 	
 &gt;&lt;br /&gt;
 We name the Container as &lt;em&gt;health_test&lt;/em&gt; :) and pull the Linux OS Image, in this case &lt;em&gt;ubuntu:latest&lt;/em&gt;&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu908856593392907783.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu12783991672513390335.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_huc6fecb2d065d4d5fb59208f3d9eb93d2_164024_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_huc6fecb2d065d4d5fb59208f3d9eb93d2_164024_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Name and Image&#34;
@@ -756,10 +937,10 @@ We name the Container as &lt;em&gt;health_test&lt;/em&gt; :) and pull the Linux 
 	
 &gt;&lt;br /&gt;
 In the command and Logging Section, we select &lt;em&gt;Interactive and TTY&lt;/em&gt; Console.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu15233796208589774411.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu4016618940591782649.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu1463858a985ee3f74705f57d5a6d75a9_173953_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu1463858a985ee3f74705f57d5a6d75a9_173953_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Interactive and TTY Console&#34;
@@ -771,10 +952,10 @@ In the command and Logging Section, we select &lt;em&gt;Interactive and TTY&lt;/
 	
 &gt;&lt;br /&gt;
 Next we go to &lt;em&gt;Volume&lt;/em&gt;, Click on &lt;em&gt;Map Additional Volume&lt;/em&gt;, Click on &lt;em&gt;Bind&lt;/em&gt; and select &lt;em&gt;/host&lt;/em&gt; in container and &lt;em&gt;/&lt;/em&gt; in host. This way we&amp;rsquo;ve mounted the Host Root Directory into the Docker Container and we&amp;rsquo;ll use this to get the Remote Root Shell in the upcoming setups&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu14721800550594329791.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu12121615468244265343.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu86f1cf1e1793b9e61d0b2b9ef7dae64b_157219_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu86f1cf1e1793b9e61d0b2b9ef7dae64b_157219_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Volume Bind&#34;
@@ -786,10 +967,10 @@ Next we go to &lt;em&gt;Volume&lt;/em&gt;, Click on &lt;em&gt;Map Additional Vol
 	
 &gt;&lt;br /&gt;
 Next in &lt;em&gt;Runtime &amp;amp; Resources&lt;/em&gt; turn &lt;em&gt;Privilege Mode&lt;/em&gt; on.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu9582574800918379062.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu17013298951981916531.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_huc788cf9700aac08dac6989b4bbb29c10_149130_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_huc788cf9700aac08dac6989b4bbb29c10_149130_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Privilege Mode&#34;
@@ -801,10 +982,10 @@ Next in &lt;em&gt;Runtime &amp;amp; Resources&lt;/em&gt; turn &lt;em&gt;Privileg
 	
 &gt;&lt;br /&gt;
 Next in &lt;em&gt;Capabilities&lt;/em&gt;, turn every Linux Capability on to ensure smooth operation.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu15087138263603342898.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu6321382386868751134.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu9361b5eec22654ab2ca475a10018f02b_218050_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu9361b5eec22654ab2ca475a10018f02b_218050_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Linux Capabilities&#34;
@@ -816,10 +997,10 @@ Next in &lt;em&gt;Capabilities&lt;/em&gt;, turn every Linux Capability on to ens
 	
 &gt;&lt;br /&gt;
 Then Click on &lt;em&gt;Deploy The Container&lt;/em&gt;.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu14319672496457784038.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1116306713389433321.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1d08ce8189c74938f01e316cc28d4efa_166631_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1d08ce8189c74938f01e316cc28d4efa_166631_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Deploy The Container&#34;
@@ -831,10 +1012,10 @@ Then Click on &lt;em&gt;Deploy The Container&lt;/em&gt;.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 We can see our Container &lt;em&gt;health_test&lt;/em&gt; running.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu18313534528892442679.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu17285871667837831672.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hua004ba360b181a8b7a4e398feca8f30e_152190_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hua004ba360b181a8b7a4e398feca8f30e_152190_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Running&#34;
@@ -846,10 +1027,10 @@ We can see our Container &lt;em&gt;health_test&lt;/em&gt; running.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 Then we click on &lt;em&gt;exec console&lt;/em&gt; and in the &lt;em&gt;Container Console&lt;/em&gt; connect to &lt;em&gt;/bin/bash&lt;/em&gt; as &lt;em&gt;root&lt;/em&gt; user.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu3161454972954789171.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu1411818477929618143.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hucbe3e3beb9945f8f16f48c43b91cd248_81492_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hucbe3e3beb9945f8f16f48c43b91cd248_81492_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Root User Bash&#34;
@@ -861,10 +1042,10 @@ Then we click on &lt;em&gt;exec console&lt;/em&gt; and in the &lt;em&gt;Containe
 	
 &gt;&lt;br /&gt;
 Here, we&amp;rsquo;ve run the &lt;em&gt;bash&lt;/em&gt; as &lt;em&gt;root&lt;/em&gt; user in the Container&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu7415295291949231712.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu1747088773533602066.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hucbe3e3beb9945f8f16f48c43b91cd248_82248_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hucbe3e3beb9945f8f16f48c43b91cd248_82248_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Bash Shell&#34;
@@ -876,10 +1057,10 @@ Here, we&amp;rsquo;ve run the &lt;em&gt;bash&lt;/em&gt; as &lt;em&gt;root&lt;/em
 	
 &gt;&lt;br /&gt;
 We type the command &lt;em&gt;ps aux&lt;/em&gt; and see &lt;em&gt;bash&lt;/em&gt; Process with PID 1, this tells us that currently we&amp;rsquo;re inside the Container.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid.png&#34;
 	width=&#34;1819&#34;
 	height=&#34;245&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu14170412485534328633.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7937223515794384908.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7cc5c9b9d0eedf03a70a69b307166e6c_127742_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7cc5c9b9d0eedf03a70a69b307166e6c_127742_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Bash Shell PID&#34;
@@ -891,10 +1072,10 @@ We type the command &lt;em&gt;ps aux&lt;/em&gt; and see &lt;em&gt;bash&lt;/em&gt
 	
 &gt;&lt;br /&gt;
 Then to break out of the Container, we change our directory to &lt;em&gt;/host&lt;/em&gt; and &lt;em&gt;chroot&lt;/em&gt; into it and to confirm that We&amp;rsquo;ve successfully broken out of the container, we type &lt;em&gt;ps aux&lt;/em&gt; and see that &lt;em&gt;systemd&lt;/em&gt; has PID 1. Which confirms that we&amp;rsquo;ve broken out of the Container into the Host Machine&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break.png&#34;
 	width=&#34;1196&#34;
 	height=&#34;282&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu15875942141868754971.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu16203558250265293144.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_huafe9e80e4e93464ba9ff48a61eb10a32_54703_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_huafe9e80e4e93464ba9ff48a61eb10a32_54703_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Break&#34;
@@ -916,10 +1097,10 @@ Next we check that we can login as root via ssh using the following command&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;If not then we set it to yes.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login.png&#34;
 	width=&#34;470&#34;
 	height=&#34;70&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu12176505217845881688.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu14977004533623781768.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu85a40a5e26a374a82ea61d1e493bcb8f_13899_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu85a40a5e26a374a82ea61d1e493bcb8f_13899_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Root Login&#34;
@@ -940,10 +1121,10 @@ Next we generate a Public-Private Key Pair with the following command on our mac
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Then paste the Public Key File to the &lt;em&gt;/root/.ssh/authorized_keys&lt;/em&gt; of the Target Machine.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys.png&#34;
 	width=&#34;504&#34;
 	height=&#34;128&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14001699606681207158.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14605633080691089983.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_huca7f3cdd3af559fb6efff39a2a61a7d3_16132_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_huca7f3cdd3af559fb6efff39a2a61a7d3_16132_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Keys&#34;
@@ -955,10 +1136,10 @@ Next we generate a Public-Private Key Pair with the following command on our mac
 	
 &gt;&lt;br /&gt;
 After all this, now we&amp;rsquo;ll be able to ssh to the Target Machine with root user.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root.png&#34;
 	width=&#34;688&#34;
 	height=&#34;225&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu7218786597690895416.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu18022615190246826073.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu26f2b0f526c5ee73a05e980a5dcbb65d_138475_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu26f2b0f526c5ee73a05e980a5dcbb65d_138475_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Root&#34;
@@ -971,10 +1152,10 @@ After all this, now we&amp;rsquo;ll be able to ssh to the Target Machine with ro
 &gt;&lt;br /&gt;
 We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IP-Location&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/IP-Location&lt;/a&gt; to get an approximate location of the Devices (although it may not always be correct)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation.png&#34;
 	width=&#34;1832&#34;
 	height=&#34;900&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu14051010684105683587.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu9533190491809791552.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu0a881eb2ea934190b346633a70b28db4_1427692_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu0a881eb2ea934190b346633a70b28db4_1427692_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Geolocation&#34;
@@ -986,10 +1167,10 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 	
 &gt;&lt;br /&gt;
 We can use the Compromised Devices for Cluster Computing after gaining basic information about their Processing Power, Memory, Space, etc&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection.png&#34;
 	width=&#34;1618&#34;
 	height=&#34;179&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16114222399472748084.png 480w, https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16740672284121985108.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu6a3e483adeb668590e9ed5630a3d76d2_59854_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu6a3e483adeb668590e9ed5630a3d76d2_59854_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DB&#34;
@@ -1036,11 +1217,11 @@ To avoid getting your Device compromised, you should take the following steps:&l
         </item>
         <item>
         <title>Compromising CCTVs 101</title>
-        <link>https://Gill-Singh-A.github.io/p/compromising-cctvs-101/</link>
+        <link>http://localhost:1313/p/compromising-cctvs-101/</link>
         <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/compromising-cctvs-101/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising CCTVs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
+        <guid>http://localhost:1313/p/compromising-cctvs-101/</guid>
+        <description>&lt;img src="http://localhost:1313/p/compromising-cctvs-101/assets/images/main_image.png" alt="Featured image of post Compromising CCTVs 101" /&gt;&lt;h1 id=&#34;compromising-cctvs-101&#34;&gt;Compromising CCTVs 101
 &lt;/h1&gt;&lt;h2 id=&#34;rtsp-protocol&#34;&gt;RTSP Protocol
 &lt;/h2&gt;&lt;p&gt;RTSP Protocol stands for &lt;em&gt;Real Time Streaming Protocol&lt;/em&gt; and by default runs on &lt;em&gt;Port 554&lt;/em&gt;. As the name tells, its an application level protocol designed to transport streams over a network and is commonly used by Devices like CCTVs. The RTSP Protocol doesn&amp;rsquo;t offer encryption, therefore everything is transparent to an Attacker eavesdropping on the Network Traffic of a Device using RTSP. We won&amp;rsquo;t cover MITM (Man-in-the-Middle) Attacks and other eavesdropping methods in this blogs, rather will focus on gaining direct access to CCTVs.&lt;/p&gt;
 &lt;h2 id=&#34;information-gathering&#34;&gt;Information Gathering
@@ -1054,10 +1235,10 @@ To avoid getting your Device compromised, you should take the following steps:&l
 &lt;h4 id=&#34;shodan&#34;&gt;Shodan
 &lt;/h4&gt;&lt;p&gt;On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Search Engine&lt;/a&gt;, search with query &lt;em&gt;port:554 RTSP&lt;/em&gt;. This would list out all the Devices that have Port 554 Open found by Shodan with &lt;em&gt;RTSP&lt;/em&gt; in their banner. Most of them will be CCTVs.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_hu14443492354665730748.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_hu16264344125568431578.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan CCTV Search&#34;
@@ -1069,10 +1250,10 @@ To avoid getting your Device compromised, you should take the following steps:&l
 	
 &gt;&lt;br /&gt;
 We can even filter out more on various basis, for example location (country, city, etc)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
 	width=&#34;1279&#34;
 	height=&#34;1021&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report_hu14764165423814458476.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_report_hu10659267179480159027.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Report&#34;
@@ -1084,10 +1265,10 @@ We can even filter out more on various basis, for example location (country, cit
 	
 &gt;&lt;br /&gt;
 Or if we want to find CCTVs that have no authentication, we can provide the filter &lt;em&gt;has_screenshot:true&lt;/em&gt;.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open_hu14618864246904070306.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_search_open_hu2971455043730689372.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search Open&#34;
@@ -1099,10 +1280,10 @@ Or if we want to find CCTVs that have no authentication, we can provide the filt
 	
 &gt;&lt;br/&gt;
 After setting the requeired filters, we can download the results.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_hu2063741215654517212.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_hu6580981014759218426.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -1114,10 +1295,10 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 	
 &gt;&lt;br /&gt;
 The Number of Results that can be downloaded depends upon your query credits available(1 Query Credit = 100 Results)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;496&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu565796369991160296.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu11318525179348910452.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -1130,10 +1311,10 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &gt;&lt;br /&gt;
 After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data is ready for Download&lt;/em&gt; or we can alernatively wait on &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Shodan Download Page&lt;/a&gt; while the data is being compiled&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
 	width=&#34;827&#34;
 	height=&#34;526&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail_hu18147256887731184041.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/shodan_mail_hu13989390231115179836.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -1255,10 +1436,10 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;intitle&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;active webcame page&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1000&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_hu7955939607532502183.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_hu930169016370301703.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Dorking&#34;
@@ -1269,10 +1450,10 @@ The utility can be installed with the command&lt;/p&gt;
 		data-flex-basis=&#34;460px&#34;
 	
 &gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu1090711425912968332.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu4876511850212848111.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -1290,10 +1471,10 @@ We won&amp;rsquo;t cover much of the dorking part, because it is painful to extr
     &gt;unicornscan&lt;/a&gt;, etc. For scanning a Large Subdomain/Large Number of Devices I&amp;rsquo;d prefer using &lt;em&gt;unicornscan&lt;/em&gt; tool, because it sends all the &lt;em&gt;SYN Packets&lt;/em&gt; without waiting for responses and starts a sniffer which looks for &lt;em&gt;SYN-ACK Packets&lt;/em&gt; to determine which Device has an open port, making it faster than &lt;em&gt;nmap&lt;/em&gt;.&lt;br /&gt;
 In the following example of port scan, I&amp;rsquo;ve used &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/Port-Scanner&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/Port-Scanner&lt;/a&gt;. In this repository &lt;em&gt;port_scanner.py&lt;/em&gt; sends the &lt;em&gt;SYN Packet&lt;/em&gt;, waits for the &lt;em&gt;SYN-ACK Packets&lt;/em&gt; and then completes the TCP Handshake by sending the &lt;em&gt;ACK&lt;/em&gt; Packet and finally closes the connection by sending &lt;em&gt;FIN Packet&lt;/em&gt; making it a slow scanner. The &lt;em&gt;scapy_port_scanner.py&lt;/em&gt; (used in the following example) is somewhat based on the &lt;em&gt;unicornscan tool&lt;/em&gt; and is faster than &lt;em&gt;port_scanner.py&lt;/em&gt;.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
 	width=&#34;1018&#34;
 	height=&#34;959&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner_hu3693660484821326266.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/port_scanner_hu14907436726361292309.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Port Scanner&#34;
@@ -1314,10 +1495,10 @@ I use &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/RTSP-
     &gt;Gill-Singh-A/RTSP-Brute-Force&lt;/a&gt;, it is a Program written in python that uses OpenCV to brute force the CCTVs and uses multithreading module to parallelize the brute force tasks. We can also redirect the Error output by OpenCv by using the error redirected to Null &lt;em&gt;2&amp;gt;/dev/null&lt;/em&gt; at the end of the command.&lt;br /&gt;
 Here in the following exampe, I&amp;rsquo;ve run the program and also opened the Stream in &lt;a class=&#34;link&#34; href=&#34;https://www.videolan.org/vlc/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;VLC Media Player&lt;/a&gt; of the CCTV that it gained access to.&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu7225274532095461435.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu12319331695325303554.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -1330,10 +1511,10 @@ Here in the following exampe, I&amp;rsquo;ve run the program and also opened the
 &gt;&lt;br /&gt;
 We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/IP-Location&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/IP-Location&lt;/a&gt; to get an approximate location of the Devices (although it may not always be correct)&lt;br /&gt;
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
 	width=&#34;1799&#34;
 	height=&#34;861&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location_hu6535110091859157299.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/ip_location_hu13102888798691609469.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Location&#34;
@@ -1345,10 +1526,10 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 	
 &gt;
 We can now even open the Admin Panel of the CCTV using the Browser and can manipulate crucial settings, backup storage and more.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;926&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings_hu8200271080662183132.png 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/images/cctv_settings_hu17345935752817358705.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV Settings&#34;
@@ -1364,10 +1545,10 @@ We can now even open the Admin Panel of the CCTV using the Browser and can manip
     &gt;Gill-Singh-A/SYN-Flood-Attack&lt;/a&gt;, &lt;a class=&#34;link&#34; href=&#34;https://www.kali.org/tools/goldeneye/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;GoldenEye&lt;/a&gt;, etc&lt;br /&gt;
 But I prefer using the &lt;em&gt;hping&lt;/em&gt; tool to do SYN Flood Attack because its more effective.
-&lt;img src=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
+&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
 	width=&#34;1152&#34;
 	height=&#34;648&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos_hu15656584701875584317.gif 480w, https://Gill-Singh-A.github.io/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3609808415653887726.gif 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_480x0_resize_box_1.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_1024x0_resize_box_1.gif 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DOS Attack on CCTV&#34;
@@ -1414,15 +1595,15 @@ To avoid getting your CCTV Device compromised, you should take the following ste
         </item>
         <item>
         <title>Password Cracking</title>
-        <link>https://Gill-Singh-A.github.io/p/password-cracking/</link>
+        <link>http://localhost:1313/p/password-cracking/</link>
         <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/p/password-cracking/</guid>
-        <description>&lt;img src="https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database.png&#34;
+        <guid>http://localhost:1313/p/password-cracking/</guid>
+        <description>&lt;img src="http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database.png&#34;
 	width=&#34;1720&#34;
 	height=&#34;900&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_hu1473404851421758759.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_hu5701567306370613051.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu8c45932e1f051dfcc0b4942884ad39b5_31541_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu8c45932e1f051dfcc0b4942884ad39b5_31541_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database&#34;
@@ -1435,10 +1616,10 @@ To avoid getting your CCTV Device compromised, you should take the following ste
 &gt;&lt;br /&gt;
 Passwords are stored on databases by hashing them alone or after appending them with random values. Hashing is a one-way function that converts a given string of characters into another value. A strong hashing algorithm has to be quick, deterministic, and irreversible. In this blog, we explore how a hashed password can be cracked.&lt;/p&gt;
 &lt;h2 id=&#34;hashing-algorithms&#34;&gt;Hashing Algorithms
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing.png&#34;
 	width=&#34;2079&#34;
 	height=&#34;800&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing_hu4833789966977637885.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing_hu4912368868399801949.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hub091c3b7f76b25b74806b0af93cbeea1_101896_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hub091c3b7f76b25b74806b0af93cbeea1_101896_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashing&#34;
@@ -1477,10 +1658,10 @@ Here are the main reasons why passwords are hashed:&lt;/p&gt;
 &lt;li&gt;Compliance with Security Standards: PCI DSS, GDPR, and other standards mandate password hashing for user data protection&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;salting-in-hashes&#34;&gt;Salting in Hashes
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/salting.jpg&#34;
 	width=&#34;1940&#34;
 	height=&#34;1282&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting_hu13723605654203217095.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting_hu2456114825957901133.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu6ff140cc100ddfc653e5dfc3e603bca2_85830_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu6ff140cc100ddfc653e5dfc3e603bca2_85830_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Salting&#34;
@@ -1498,10 +1679,10 @@ Salting in hashes is a technique used to enhance the security of hashed password
 &lt;li&gt;Enhancing Security: Salting significantly boosts security by mitigating various types of attacks, including brute force and dictionary attacks&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;password-protected-files-and-drives&#34;&gt;Password Protected Files and Drives
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions.jpg&#34;
 	width=&#34;550&#34;
 	height=&#34;345&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions_hu4445162751528759475.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions_hu11562899296713017864.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu7144324cac6b448626875a57b852132b_13792_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu7144324cac6b448626875a57b852132b_13792_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;File Encryption&#34;
@@ -1514,10 +1695,10 @@ Salting in hashes is a technique used to enhance the security of hashed password
 &gt;&lt;br /&gt;
 Password-protected files, such as ZIP archives and PDF documents, are digital files encrypted with a password to prevent unauthorized access. ZIP files, compressed archives containing multiple files and folders, can be password-protected to encrypt their contents, requiring the correct password for extraction. Similarly, PDF files, commonly used for document sharing, can be secured with password protection to encrypt the document&amp;rsquo;s contents and restrict access or actions like printing and editing without the correct password. Encrypted files and drives use encryption algorithms to encode data, making it unreadable without the corresponding decryption key or password. This encryption ensures the confidentiality and security of sensitive information stored within the files or drives, reinforcing protection against unauthorized access and data breaches.&lt;/p&gt;
 &lt;h2 id=&#34;hash-cracking&#34;&gt;Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/methods.jpg&#34;
 	width=&#34;495&#34;
 	height=&#34;316&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods_hu8197215681215346304.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods_hu3860945043454114380.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu7849b20ce9ad2599a2189d7278ab15e2_34890_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu7849b20ce9ad2599a2189d7278ab15e2_34890_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hash Cracking&#34;
@@ -1561,10 +1742,10 @@ In 2004, researchers Xiaoyun Wang and Hongbo Yu published a paper titled &lt;em&
 Since then, further advancements in computing power and cryptanalysis techniques have made collision attacks against MD5 even more feasible and practical. Today, it is relatively easy to generate MD5 collisions using specialized hardware or distributed computing resources. &lt;br /&gt;
 Due to these vulnerabilities, MD5 is no longer considered secure for cryptographic purposes, and its use has been strongly discouraged in favor of more secure hashing algorithms such as SHA-256 or SHA-3. In fact, most modern security standards and protocols explicitly prohibit the use of MD5 due to its susceptibility to collision attacks.&lt;/p&gt;
 &lt;h2 id=&#34;tools-for-hash-cracking&#34;&gt;Tools for Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/tools.jpg&#34;
 	width=&#34;738&#34;
 	height=&#34;576&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools_hu12748403592501029798.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools_hu8750775526461045458.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu7849b20ce9ad2599a2189d7278ab15e2_60082_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu7849b20ce9ad2599a2189d7278ab15e2_60082_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Tools&#34;
@@ -1613,10 +1794,10 @@ Due to these vulnerabilities, MD5 is no longer considered secure for cryptograph
     &gt;Ntirxgen&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;wordlists&#34;&gt;Wordlists
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists.png&#34;
 	width=&#34;1747&#34;
 	height=&#34;478&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists_hu3032474284580762306.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists_hu4384129554991596746.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu7d2a9a3bb304f895d1ca06d67ed14a50_174212_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu7d2a9a3bb304f895d1ca06d67ed14a50_174212_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Wordlists&#34;
@@ -1650,10 +1831,10 @@ Most of the time Wordlists that contain commonly used passwords and words are us
     &gt;CeWL&lt;/a&gt; (Custom Word List generator): A tool that spiders a target website to create custom wordlists based on the content found in the web pages.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;cpu-vs-gpu&#34;&gt;CPU vs GPU
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
 	width=&#34;800&#34;
 	height=&#34;445&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu_hu4494810528079756738.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu_hu7107262851154168624.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu999a13d9bf657f7eb4c0314f706a3e39_63780_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu999a13d9bf657f7eb4c0314f706a3e39_63780_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CPU vs GPU&#34;
@@ -1796,10 +1977,10 @@ Here are some common distortion rules used in password cracking:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;password-strength&#34;&gt;Password Strength
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength.jpg&#34;
 	width=&#34;2200&#34;
 	height=&#34;750&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength_hu14296305625101620386.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength_hu5624597227159595850.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu72bca6e79fc80cb7cc811c271c6f65e5_144994_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu72bca6e79fc80cb7cc811c271c6f65e5_144994_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Strength&#34;
@@ -1931,10 +2112,10 @@ That&amp;rsquo;s why you should keep a complex password that uses all of the fol
 &lt;h2 id=&#34;success-rate-of-hash-cracking&#34;&gt;Success Rate of Hash Cracking
 &lt;/h2&gt;&lt;p&gt;Based on the calculations shown in the previous section, we&amp;rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.&lt;/p&gt;
 &lt;h2 id=&#34;security-measure-against-hash-cracking&#34;&gt;Security Measure against Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/security.jpg&#34;
 	width=&#34;710&#34;
 	height=&#34;400&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security_hu4729459122753097169.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security_hu1248179033021697295.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu9d94950ea496827b9b31c29499047897_124545_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu9d94950ea496827b9b31c29499047897_124545_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Security&#34;
@@ -1958,10 +2139,10 @@ So, to enhance the Security of your password, here are a few points to keep in m
 &lt;h3 id=&#34;note&#34;&gt;Note
 &lt;/h3&gt;&lt;p&gt;The above points do not Guarantee 100% Protection; they only enhance Security.&lt;/p&gt;
 &lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak.jpg&#34;
 	width=&#34;1200&#34;
 	height=&#34;675&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak_hu15606094843707238069.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak_hu12382051111320609846.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu2649219cf6ade6e5cfa5035eea081e78_196487_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu2649219cf6ade6e5cfa5035eea081e78_196487_1024x0_resize_q75_box.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database Leak&#34;
@@ -1993,10 +2174,10 @@ There are several websites you can use to check whether your password has been l
 &lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;broken-hashing-algorithms&#34;&gt;Broken Hashing Algorithms
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
 	width=&#34;1500&#34;
 	height=&#34;900&#34;
-	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo_hu1574552661041515237.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo_hu15285761037877453571.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu66c030251c919b479d37cc5a1aba6659_1115812_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu66c030251c919b479d37cc5a1aba6659_1115812_1024x0_resize_box_3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Weak Encryption Algorithms&#34;
@@ -2022,18 +2203,18 @@ Broken hashing algorithms refer to cryptographic hash functions that have been c
         </item>
         <item>
         <title>Archives</title>
-        <link>https://Gill-Singh-A.github.io/archives/</link>
+        <link>http://localhost:1313/archives/</link>
         <pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/archives/</guid>
+        <guid>http://localhost:1313/archives/</guid>
         <description></description>
         </item>
         <item>
         <title>Search</title>
-        <link>https://Gill-Singh-A.github.io/search/</link>
+        <link>http://localhost:1313/search/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://Gill-Singh-A.github.io/search/</guid>
+        <guid>http://localhost:1313/search/</guid>
         <description></description>
         </item>
         
