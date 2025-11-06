@@ -24,7 +24,7 @@ On &lt;a class=&#34;link&#34; href=&#34;https://www.shodan.io&#34;  target=&#34;
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu94c03c09a91badb5d3b334886523d12d_229599_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu94c03c09a91badb5d3b334886523d12d_229599_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu_7c9605ae40482219.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu_720a3b92d57090a0.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search&#34;
@@ -39,7 +39,7 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu_977a34f5b9a170d1.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu_59b22200b504574c.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -54,7 +54,7 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1233&#34;
 	height=&#34;487&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu6b5986b9e1bf917e642427a816acccc6_65614_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu6b5986b9e1bf917e642427a816acccc6_65614_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu_e467b1263887df90.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu_75ca1b4d1c5a8bde.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -70,7 +70,7 @@ After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail.png&#34;
 	width=&#34;1034&#34;
 	height=&#34;530&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hue1cfcccfb596bcb7e7f311c2f431b4d4_83443_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hue1cfcccfb596bcb7e7f311c2f431b4d4_83443_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu_31d84d4c36e1a627.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu_b2472087838d0d62.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -123,7 +123,7 @@ I&amp;rsquo;ve attached a small example of brute force in the following picture.
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force.png&#34;
 	width=&#34;1214&#34;
 	height=&#34;788&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_huf93e458ca9f083c7cbce8ee4938024b6_649589_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_huf93e458ca9f083c7cbce8ee4938024b6_649589_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu_42fd676ce4ec41bf.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu_cdf974f27bd316f6.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Brute Force&#34;
@@ -139,7 +139,7 @@ I&amp;rsquo;ve attached a small example of brute force in the following picture.
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu49876a7da197e7a87d28f2239acf6b55_166016_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu49876a7da197e7a87d28f2239acf6b55_166016_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu_811119ce23eb12.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu_2e069e65ec2c8e05.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Portainer Interface&#34;
@@ -154,7 +154,7 @@ First, we have to go to Images and find any Linux OS Image. Here in this example
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_huc9608fac27f5a680d3d9edbdb5949818_105137_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_huc9608fac27f5a680d3d9edbdb5949818_105137_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu_a1c218f16225bdf0.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu_5b731d9b918d627e.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Portainer Images&#34;
@@ -169,7 +169,7 @@ Next, we go to containers and click on &lt;strong&gt;Add Container&lt;/strong&gt
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container.png&#34;
 	width=&#34;714&#34;
 	height=&#34;154&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu41a87485e77381737e450377989c25fb_19599_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu41a87485e77381737e450377989c25fb_19599_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu_35d9f61e19b4e5a6.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu_e3557053a9c45d52.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Add Container&#34;
@@ -184,7 +184,7 @@ We name the Container as &lt;em&gt;health_test&lt;/em&gt; :) and pull the Linux 
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_huc6fecb2d065d4d5fb59208f3d9eb93d2_164024_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_huc6fecb2d065d4d5fb59208f3d9eb93d2_164024_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu_adb67e525417961f.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu_3c11427f8be36278.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Name and Image&#34;
@@ -199,7 +199,7 @@ In the command and Logging Section, we select &lt;em&gt;Interactive and TTY&lt;/
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu1463858a985ee3f74705f57d5a6d75a9_173953_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu1463858a985ee3f74705f57d5a6d75a9_173953_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu_15ad211c65fc1cb3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu_b75e1f5e77ca4b79.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Interactive and TTY Console&#34;
@@ -214,7 +214,7 @@ Next we go to &lt;em&gt;Volume&lt;/em&gt;, Click on &lt;em&gt;Map Additional Vol
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu86f1cf1e1793b9e61d0b2b9ef7dae64b_157219_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu86f1cf1e1793b9e61d0b2b9ef7dae64b_157219_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu_aa3f760d3949dd31.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu_f49ca10025d7d197.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Volume Bind&#34;
@@ -229,7 +229,7 @@ Next in &lt;em&gt;Runtime &amp;amp; Resources&lt;/em&gt; turn &lt;em&gt;Privileg
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_huc788cf9700aac08dac6989b4bbb29c10_149130_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_huc788cf9700aac08dac6989b4bbb29c10_149130_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu_e0e83cc360046159.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu_d63fee8e1f856b59.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Privilege Mode&#34;
@@ -244,7 +244,7 @@ Next in &lt;em&gt;Capabilities&lt;/em&gt;, turn every Linux Capability on to ens
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu9361b5eec22654ab2ca475a10018f02b_218050_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu9361b5eec22654ab2ca475a10018f02b_218050_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu_324d8c8986c670cd.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu_9e68ca377542c43d.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Linux Capabilities&#34;
@@ -259,7 +259,7 @@ Then Click on &lt;em&gt;Deploy The Container&lt;/em&gt;.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1d08ce8189c74938f01e316cc28d4efa_166631_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1d08ce8189c74938f01e316cc28d4efa_166631_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu_729df9f8966dd7b9.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu_4a5481563abe9158.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Deploy The Container&#34;
@@ -274,7 +274,7 @@ We can see our Container &lt;em&gt;health_test&lt;/em&gt; running.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hua004ba360b181a8b7a4e398feca8f30e_152190_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hua004ba360b181a8b7a4e398feca8f30e_152190_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu_19ae4e11bcc5af17.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu_cc091b0015e510e2.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Running&#34;
@@ -289,7 +289,7 @@ Then we click on &lt;em&gt;exec console&lt;/em&gt; and in the &lt;em&gt;Containe
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hucbe3e3beb9945f8f16f48c43b91cd248_81492_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hucbe3e3beb9945f8f16f48c43b91cd248_81492_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu_f01aa0365148dca.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu_2773630b49b98b93.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Root User Bash&#34;
@@ -304,7 +304,7 @@ Here, we&amp;rsquo;ve run the &lt;em&gt;bash&lt;/em&gt; as &lt;em&gt;root&lt;/em
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hucbe3e3beb9945f8f16f48c43b91cd248_82248_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hucbe3e3beb9945f8f16f48c43b91cd248_82248_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu_37e5f07a6b22e765.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu_6093e0478911dabd.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Bash Shell&#34;
@@ -319,7 +319,7 @@ We type the command &lt;em&gt;ps aux&lt;/em&gt; and see &lt;em&gt;bash&lt;/em&gt
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid.png&#34;
 	width=&#34;1819&#34;
 	height=&#34;245&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7cc5c9b9d0eedf03a70a69b307166e6c_127742_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7cc5c9b9d0eedf03a70a69b307166e6c_127742_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu_9cc3e08f1bec15ee.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu_289b1b9ca353f049.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Bash Shell PID&#34;
@@ -334,7 +334,7 @@ Then to break out of the Container, we change our directory to &lt;em&gt;/host&l
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break.png&#34;
 	width=&#34;1196&#34;
 	height=&#34;282&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_huafe9e80e4e93464ba9ff48a61eb10a32_54703_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_huafe9e80e4e93464ba9ff48a61eb10a32_54703_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu_5d9e5489a936c51.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu_2a426f49190338f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Container Break&#34;
@@ -359,7 +359,7 @@ Next we check that we can login as root via ssh using the following command&lt;/
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login.png&#34;
 	width=&#34;470&#34;
 	height=&#34;70&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu85a40a5e26a374a82ea61d1e493bcb8f_13899_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu85a40a5e26a374a82ea61d1e493bcb8f_13899_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu_3fef1809d4bf3a7c.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu_80f11ed2f76b94bd.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Root Login&#34;
@@ -383,7 +383,7 @@ Next we generate a Public-Private Key Pair with the following command on our mac
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys.png&#34;
 	width=&#34;504&#34;
 	height=&#34;128&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_huca7f3cdd3af559fb6efff39a2a61a7d3_16132_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_huca7f3cdd3af559fb6efff39a2a61a7d3_16132_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu_bf879c62ac546629.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu_7068be33a18e6bf9.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Keys&#34;
@@ -398,7 +398,7 @@ After all this, now we&amp;rsquo;ll be able to ssh to the Target Machine with ro
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root.png&#34;
 	width=&#34;688&#34;
 	height=&#34;225&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu26f2b0f526c5ee73a05e980a5dcbb65d_138475_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu26f2b0f526c5ee73a05e980a5dcbb65d_138475_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu_63fca96dc250f1a5.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu_1be72445e6d7871c.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Root&#34;
@@ -414,7 +414,7 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation.png&#34;
 	width=&#34;1832&#34;
 	height=&#34;900&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu0a881eb2ea934190b346633a70b28db4_1427692_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu0a881eb2ea934190b346633a70b28db4_1427692_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu_180c854344c6d3d4.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu_d631ee1c65a71cb0.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Geolocation&#34;
@@ -429,7 +429,7 @@ We can use the Compromised Devices for Cluster Computing after gaining basic inf
 &lt;img src=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection.png&#34;
 	width=&#34;1618&#34;
 	height=&#34;179&#34;
-	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu6a3e483adeb668590e9ed5630a3d76d2_59854_480x0_resize_box_3.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu6a3e483adeb668590e9ed5630a3d76d2_59854_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu_f6dc8398e635f908.png 480w, http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu_d45ba41d52595480.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DB&#34;
@@ -497,7 +497,7 @@ To avoid getting your Device compromised, you should take the following steps:&l
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu_b94779ea6e06a151.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu_5b38542fb6ed759d.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan CCTV Search&#34;
@@ -512,7 +512,7 @@ We can even filter out more on various basis, for example location (country, cit
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
 	width=&#34;1279&#34;
 	height=&#34;1021&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu_f196f18bd5e712a0.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu_53f26b0872846a29.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Report&#34;
@@ -527,7 +527,7 @@ Or if we want to find CCTVs that have no authentication, we can provide the filt
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu_c5b23adcc2811892.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu_94b5c10e2fe8f37e.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search Open&#34;
@@ -542,7 +542,7 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu_977a34f5b9a170d1.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu_59b22200b504574c.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -557,7 +557,7 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;496&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu_786e6a11c59a2640.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu_5a96fb5a9b763dcd.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -573,7 +573,7 @@ After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
 	width=&#34;827&#34;
 	height=&#34;526&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu_a6871a10c73f51.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu_8c905bcbe9aeca95.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -698,7 +698,7 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1000&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu_1f62f7c0bdc7c9d8.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu_db4af8202a0843b3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Dorking&#34;
@@ -712,7 +712,7 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu_c358ac16d7979a76.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu_48251a7106494255.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -733,7 +733,7 @@ In the following example of port scan, I&amp;rsquo;ve used &lt;a class=&#34;link
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
 	width=&#34;1018&#34;
 	height=&#34;959&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu_516c0578d21891a7.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu_3f01ed640c432677.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Port Scanner&#34;
@@ -757,7 +757,7 @@ Here in the following exampe, I&amp;rsquo;ve run the program and also opened the
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu_4f17fd552e22ea11.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu_5ccbcb01454de942.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -773,7 +773,7 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
 	width=&#34;1799&#34;
 	height=&#34;861&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu_8de4204c3a4f536c.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu_b560341a9517bc7f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Location&#34;
@@ -788,7 +788,7 @@ We can now even open the Admin Panel of the CCTV using the Browser and can manip
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;926&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu_1b5d155d70e96568.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu_5613334d2cf49bfe.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV Settings&#34;
@@ -807,7 +807,7 @@ But I prefer using the &lt;em&gt;hping&lt;/em&gt; tool to do SYN Flood Attack be
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
 	width=&#34;1152&#34;
 	height=&#34;648&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_480x0_resize_box_1.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_1024x0_resize_box_1.gif 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu_9cc6157f758ed7d6.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu_a7389d442690bdd2.gif 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DOS Attack on CCTV&#34;
@@ -862,7 +862,7 @@ To avoid getting your CCTV Device compromised, you should take the following ste
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database.png&#34;
 	width=&#34;1720&#34;
 	height=&#34;900&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu8c45932e1f051dfcc0b4942884ad39b5_31541_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu8c45932e1f051dfcc0b4942884ad39b5_31541_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu_130381b2eda80e1a.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu_c00870bfc6c0210.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database&#34;
@@ -878,7 +878,7 @@ Passwords are stored on databases by hashing them alone or after appending them 
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing.png&#34;
 	width=&#34;2079&#34;
 	height=&#34;800&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hub091c3b7f76b25b74806b0af93cbeea1_101896_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hub091c3b7f76b25b74806b0af93cbeea1_101896_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hu_c2f9742670f39184.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hu_52104cd0d46cfc40.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashing&#34;
@@ -920,7 +920,7 @@ Here are the main reasons why passwords are hashed:&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/salting.jpg&#34;
 	width=&#34;1940&#34;
 	height=&#34;1282&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu6ff140cc100ddfc653e5dfc3e603bca2_85830_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu6ff140cc100ddfc653e5dfc3e603bca2_85830_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu_2353d85b07ba0473.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu_8e75afab3df8484d.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Salting&#34;
@@ -941,7 +941,7 @@ Salting in hashes is a technique used to enhance the security of hashed password
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions.jpg&#34;
 	width=&#34;550&#34;
 	height=&#34;345&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu7144324cac6b448626875a57b852132b_13792_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu7144324cac6b448626875a57b852132b_13792_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu_cc41043eed0b5719.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu_969d64b9a6b32bec.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;File Encryption&#34;
@@ -957,7 +957,7 @@ Password-protected files, such as ZIP archives and PDF documents, are digital fi
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/methods.jpg&#34;
 	width=&#34;495&#34;
 	height=&#34;316&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu7849b20ce9ad2599a2189d7278ab15e2_34890_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu7849b20ce9ad2599a2189d7278ab15e2_34890_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu_44725596dec4a58.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu_eaa6ba43fce7e1fb.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hash Cracking&#34;
@@ -1004,7 +1004,7 @@ Due to these vulnerabilities, MD5 is no longer considered secure for cryptograph
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/tools.jpg&#34;
 	width=&#34;738&#34;
 	height=&#34;576&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu7849b20ce9ad2599a2189d7278ab15e2_60082_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu7849b20ce9ad2599a2189d7278ab15e2_60082_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu_f24eb5d09d412f76.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu_859f9ae85b2ed51b.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Tools&#34;
@@ -1056,7 +1056,7 @@ Due to these vulnerabilities, MD5 is no longer considered secure for cryptograph
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists.png&#34;
 	width=&#34;1747&#34;
 	height=&#34;478&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu7d2a9a3bb304f895d1ca06d67ed14a50_174212_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu7d2a9a3bb304f895d1ca06d67ed14a50_174212_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu_b7ec3a922bf8295e.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu_17864f8a64d6f1dc.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Wordlists&#34;
@@ -1093,7 +1093,7 @@ Most of the time Wordlists that contain commonly used passwords and words are us
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
 	width=&#34;800&#34;
 	height=&#34;445&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu999a13d9bf657f7eb4c0314f706a3e39_63780_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu999a13d9bf657f7eb4c0314f706a3e39_63780_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu_9a222d7c6f7e6a48.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu_81d2d972f221aaec.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CPU vs GPU&#34;
@@ -1239,7 +1239,7 @@ Here are some common distortion rules used in password cracking:&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength.jpg&#34;
 	width=&#34;2200&#34;
 	height=&#34;750&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu72bca6e79fc80cb7cc811c271c6f65e5_144994_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu72bca6e79fc80cb7cc811c271c6f65e5_144994_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu_41a723d2d9634ea4.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu_d855944b2fef8207.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Strength&#34;
@@ -1300,73 +1300,73 @@ That&amp;rsquo;s why you should keep a complex password that uses all of the fol
 &lt;!-- --&gt;
 &lt;p&gt;Below is the table that shows how much time it would take to crack a hash with certain conditions&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Length&lt;/th&gt;
-&lt;th&gt;Numbers&lt;/th&gt;
-&lt;th&gt;Lowercase ASCII Characters&lt;/th&gt;
-&lt;th&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
-&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
-&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
-&lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;8&lt;/td&gt;
-&lt;td&gt;1 sec&lt;/td&gt;
-&lt;td&gt;34.8 min&lt;/td&gt;
-&lt;td&gt;7.83 hours&lt;/td&gt;
-&lt;td&gt;6.18 days&lt;/td&gt;
-&lt;td&gt;25.27 days&lt;/td&gt;
-&lt;td&gt;22.84 years&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;9&lt;/td&gt;
-&lt;td&gt;10 sec&lt;/td&gt;
-&lt;td&gt;15.08 hours&lt;/td&gt;
-&lt;td&gt;8.57 days&lt;/td&gt;
-&lt;td&gt;162.12 days&lt;/td&gt;
-&lt;td&gt;1.8 years&lt;/td&gt;
-&lt;td&gt;57.1 years&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;10&lt;/td&gt;
-&lt;td&gt;1.67 min&lt;/td&gt;
-&lt;td&gt;16.28 days&lt;/td&gt;
-&lt;td&gt;223.03 days&lt;/td&gt;
-&lt;td&gt;11.51 years&lt;/td&gt;
-&lt;td&gt;47.46 years&lt;/td&gt;
-&lt;td&gt;1497.55 years&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;11&lt;/td&gt;
-&lt;td&gt;16.67 min&lt;/td&gt;
-&lt;td&gt;281.93 days&lt;/td&gt;
-&lt;td&gt;10.56 years&lt;/td&gt;
-&lt;td&gt;199.92 years&lt;/td&gt;
-&lt;td&gt;820.928 years&lt;/td&gt;
-&lt;td&gt;25843.264 years&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;12&lt;/td&gt;
-&lt;td&gt;2.78 hours&lt;/td&gt;
-&lt;td&gt;9.515 years&lt;/td&gt;
-&lt;td&gt;130.341 years&lt;/td&gt;
-&lt;td&gt;2463.897 years&lt;/td&gt;
-&lt;td&gt;1023042.47 years&lt;/td&gt;
-&lt;td&gt;6133565802.2 years&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;Length&lt;/th&gt;
+          &lt;th&gt;Numbers&lt;/th&gt;
+          &lt;th&gt;Lowercase ASCII Characters&lt;/th&gt;
+          &lt;th&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
+          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
+          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
+          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;1 sec&lt;/td&gt;
+          &lt;td&gt;34.8 min&lt;/td&gt;
+          &lt;td&gt;7.83 hours&lt;/td&gt;
+          &lt;td&gt;6.18 days&lt;/td&gt;
+          &lt;td&gt;25.27 days&lt;/td&gt;
+          &lt;td&gt;22.84 years&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;9&lt;/td&gt;
+          &lt;td&gt;10 sec&lt;/td&gt;
+          &lt;td&gt;15.08 hours&lt;/td&gt;
+          &lt;td&gt;8.57 days&lt;/td&gt;
+          &lt;td&gt;162.12 days&lt;/td&gt;
+          &lt;td&gt;1.8 years&lt;/td&gt;
+          &lt;td&gt;57.1 years&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10&lt;/td&gt;
+          &lt;td&gt;1.67 min&lt;/td&gt;
+          &lt;td&gt;16.28 days&lt;/td&gt;
+          &lt;td&gt;223.03 days&lt;/td&gt;
+          &lt;td&gt;11.51 years&lt;/td&gt;
+          &lt;td&gt;47.46 years&lt;/td&gt;
+          &lt;td&gt;1497.55 years&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;11&lt;/td&gt;
+          &lt;td&gt;16.67 min&lt;/td&gt;
+          &lt;td&gt;281.93 days&lt;/td&gt;
+          &lt;td&gt;10.56 years&lt;/td&gt;
+          &lt;td&gt;199.92 years&lt;/td&gt;
+          &lt;td&gt;820.928 years&lt;/td&gt;
+          &lt;td&gt;25843.264 years&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;12&lt;/td&gt;
+          &lt;td&gt;2.78 hours&lt;/td&gt;
+          &lt;td&gt;9.515 years&lt;/td&gt;
+          &lt;td&gt;130.341 years&lt;/td&gt;
+          &lt;td&gt;2463.897 years&lt;/td&gt;
+          &lt;td&gt;1023042.47 years&lt;/td&gt;
+          &lt;td&gt;6133565802.2 years&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id=&#34;success-rate-of-hash-cracking&#34;&gt;Success Rate of Hash Cracking
 &lt;/h2&gt;&lt;p&gt;Based on the calculations shown in the previous section, we&amp;rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.&lt;/p&gt;
@@ -1374,7 +1374,7 @@ That&amp;rsquo;s why you should keep a complex password that uses all of the fol
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/security.jpg&#34;
 	width=&#34;710&#34;
 	height=&#34;400&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu9d94950ea496827b9b31c29499047897_124545_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu9d94950ea496827b9b31c29499047897_124545_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu_84a96fde6b12910f.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu_ee1d04bce66a7be1.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Security&#34;
@@ -1401,7 +1401,7 @@ So, to enhance the Security of your password, here are a few points to keep in m
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak.jpg&#34;
 	width=&#34;1200&#34;
 	height=&#34;675&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu2649219cf6ade6e5cfa5035eea081e78_196487_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu2649219cf6ade6e5cfa5035eea081e78_196487_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu_1da7b435cb57c706.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu_15edd6a9c3fa88e2.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database Leak&#34;
@@ -1436,7 +1436,7 @@ There are several websites you can use to check whether your password has been l
 &lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
 	width=&#34;1500&#34;
 	height=&#34;900&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu66c030251c919b479d37cc5a1aba6659_1115812_480x0_resize_box_3.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu66c030251c919b479d37cc5a1aba6659_1115812_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu_249feb0f89eac7e8.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu_387d8aac52fa5474.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Weak Encryption Algorithms&#34;

@@ -20,7 +20,7 @@ While analyzing one of the compromised machines during post-exploitation, I noti
 &lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
 	width=&#34;480&#34;
 	height=&#34;270&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hude972e6dd8d6e892f4ef4ee0c73f9691_17131_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu_f2032ee4f74900f3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu_7059ae9dc3729acd.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Bash History&#34;
@@ -51,7 +51,7 @@ This discovery led me to investigate further, with the goal of capturing credent
 &lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
 	width=&#34;430&#34;
 	height=&#34;172&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8f8e7ffcfb9c805c80d251f7c1de5529_22057_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu_556920c8d72024f9.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu_7bcd98c039288724.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Credentials&#34;
@@ -72,7 +72,7 @@ With these credentials, I was ready to move laterally across the network.&lt;/p&
 &lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
 	width=&#34;1487&#34;
 	height=&#34;492&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu2498c1e581f53588db7085dd4ec682ba_118733_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu_21b267b08c52ab41.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu_d212adf9b958114d.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;known_hosts&#34;
@@ -90,7 +90,7 @@ By leveraging this information, I could target machines more efficiently while m
 &lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
 	width=&#34;1112&#34;
 	height=&#34;1024&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_480x0_resize_box_3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu391daa8f73c493141dcd7984e020ef29_97151_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu_c7d485da87111f5d.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu_bfbf06884c0aec31.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;

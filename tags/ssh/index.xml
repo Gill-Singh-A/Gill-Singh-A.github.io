@@ -19,7 +19,7 @@
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
 	width=&#34;841&#34;
 	height=&#34;841&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu8c4de1fa10806a215d74c2433836b196_88365_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu8c4de1fa10806a215d74c2433836b196_88365_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_f528276b63799288.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_eb3497759e76b05.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shadow File&#34;
@@ -42,7 +42,7 @@ I copied the contents of the shadow file to my local machine and extracted the h
 &lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
 	width=&#34;1156&#34;
 	height=&#34;268&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_huafe8babadc922e10af77b4bbcfce20dc_30315_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_huafe8babadc922e10af77b4bbcfce20dc_30315_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_17f092fa4f65cc25.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_3cce7c568ec14935.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashes&#34;
@@ -89,7 +89,7 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
 	width=&#34;989&#34;
 	height=&#34;874&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu9de55c81493ffd4b275fa07b4db9a594_369889_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu9de55c81493ffd4b275fa07b4db9a594_369889_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_6e4cc396be402074.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_f0fafc78d8c60905.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Cracked Hash&#34;
@@ -105,7 +105,7 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
 	width=&#34;948&#34;
 	height=&#34;431&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu2c039f1a226d9901c7465b6070cb8d43_15516_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu2c039f1a226d9901c7465b6070cb8d43_15516_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_90039939899429dd.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_b92258cae3abf462.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Server Details&#34;
@@ -120,7 +120,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;951&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu6fafdd03b1b9cccaac7d389f4b9c02f3_138860_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu6fafdd03b1b9cccaac7d389f4b9c02f3_138860_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_da0d126d3530e5be.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_f4faf8edba9cb548.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Filtered Shodan Search&#34;
@@ -141,7 +141,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
 	width=&#34;785&#34;
 	height=&#34;223&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu5419c5fe50c108a31a4faa1b513b04fb_100975_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu5419c5fe50c108a31a4faa1b513b04fb_100975_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_1dcf517c6ebdc87f.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_aabd6b934657b411.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Brute-Force Logs of 1 pair of Credential&#34;
@@ -158,7 +158,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
 	width=&#34;1148&#34;
 	height=&#34;719&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_huef6711e9958d649e148c895e36dc7818_660057_480x0_resize_box_3.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_huef6711e9958d649e148c895e36dc7818_660057_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_797e70a14cc48100.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_497c34a6f960a385.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;
@@ -200,7 +200,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
 	width=&#34;507&#34;
 	height=&#34;617&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu6a322e42c91e5e366e6c161bc02678b4_64659_480x0_resize_box_3.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu6a322e42c91e5e366e6c161bc02678b4_64659_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu_af87e0173de1d1cf.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu_ebc4489ac5e20934.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Directory&#34;
@@ -221,7 +221,7 @@ Within this directory, I found a private key file being used for SSH logins to o
 &lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
 	width=&#34;677&#34;
 	height=&#34;747&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu9829a05cfe909d44764fe854736746de_105174_480x0_resize_box_3.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu9829a05cfe909d44764fe854736746de_105174_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu_99ea890444f8eb01.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu_cd605236348d26cb.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Connection&#34;
@@ -238,7 +238,7 @@ The connection was successfully established without any prompts for a passphrase
 &lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
 	width=&#34;803&#34;
 	height=&#34;862&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hua304c8084e2f5ab0585d310b3bae85e6_87084_480x0_resize_q75_box.jpg 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hua304c8084e2f5ab0585d310b3bae85e6_87084_1024x0_resize_q75_box.jpg 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu_8d308d0700f28274.jpg 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu_70a3223bb2202d82.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path - Plotted using Maltego&#34;
@@ -278,7 +278,7 @@ Furthermore, &lt;strong&gt;attackers can use &lt;a class=&#34;link&#34; href=&#3
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh.png&#34;
 	width=&#34;910&#34;
 	height=&#34;297&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu49471534d7b4902be2b6e2086dbbb4dd_144575_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu49471534d7b4902be2b6e2086dbbb4dd_144575_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu_7e2a3a9cdc66daa7.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/gpu_server_ssh_hu_3624c28567742ff9.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;GPU Server SSH&#34;
@@ -293,7 +293,7 @@ Each user has a 2GB directory on the Computer Center&amp;rsquo;s NFS (Network Fi
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage.png&#34;
 	width=&#34;510&#34;
 	height=&#34;366&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu72b09afdb72e468149a22f3daeee79a3_177887_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu72b09afdb72e468149a22f3daeee79a3_177887_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu_3b39c1136318cf78.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/nfs_storage_hu_b00f82285356be76.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;NFS Storage&#34;
@@ -311,7 +311,7 @@ So, I conducted a port scan of IIT Kanpur&amp;rsquo;s entire private network for
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan.png&#34;
 	width=&#34;1007&#34;
 	height=&#34;998&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_huaf93e777eee245a5ff5b1a6652713e66_463490_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_huaf93e777eee245a5ff5b1a6652713e66_463490_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu_acf6492259e13fa1.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_port_scan_hu_1aeaf39e49fd3937.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Port Scan on Private Network&#34;
@@ -329,7 +329,7 @@ To accomplish this, I used the tool &lt;a class=&#34;link&#34; href=&#34;https:/
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force.png&#34;
 	width=&#34;747&#34;
 	height=&#34;241&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu575ee8b5eb189aba034eb149a826d690_132072_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu575ee8b5eb189aba034eb149a826d690_132072_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu_9c375d1a2bec04a7.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/ssh_brute_force_hu_160a45a3cf4a4a0d.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Brute Force&#34;
@@ -346,7 +346,7 @@ After getting the Results, I got some interesting results.&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc.png&#34;
 	width=&#34;786&#34;
 	height=&#34;943&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu9c4d3a73297bb60e30e0f82d1d5b9aab_362253_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu9c4d3a73297bb60e30e0f82d1d5b9aab_362253_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu_c1957aa824bcd56e.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/linux_lab_pc_hu_82f12ce8d3bf58bb.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Linux Lab PC SSH&#34;
@@ -363,7 +363,7 @@ To check the currently logged-in users, I entered the command &lt;strong&gt;who&
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who.png&#34;
 	width=&#34;415&#34;
 	height=&#34;82&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu5df7119ac62c9c99c9b0941fc686a988_21938_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu5df7119ac62c9c99c9b0941fc686a988_21938_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu_6dc453e375ff2eea.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/who_hu_a9e4c55721a44c4c.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Users Currently Logged In&#34;
@@ -381,7 +381,7 @@ I compiled a CSV file containing the IP addresses and locations of the computers
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli.png&#34;
 	width=&#34;963&#34;
 	height=&#34;361&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_huf9d5110afa17108fe66a83298e343e77_149287_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_huf9d5110afa17108fe66a83298e343e77_149287_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu_bc1877042adc247.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_cli_hu_bbfdd9058cf07e19.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Heat Map Program&#34;
@@ -397,7 +397,7 @@ The program presents the results on the user&amp;rsquo;s &lt;a class=&#34;link&#
 &lt;img src=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome.png&#34;
 	width=&#34;1915&#34;
 	height=&#34;948&#34;
-	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu9da49b5f85f3c8169e38e5c7f14b601c_125248_480x0_resize_box_3.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu9da49b5f85f3c8169e38e5c7f14b601c_125248_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu_ba99c219d0d1b356.png 480w, http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/assets/images/heat_map_webhome_hu_e8b14995156e0cd2.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Heat Map Web Page&#34;

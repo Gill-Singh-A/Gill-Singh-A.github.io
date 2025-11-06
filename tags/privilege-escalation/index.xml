@@ -17,7 +17,7 @@
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface.png&#34;
 	width=&#34;1042&#34;
 	height=&#34;779&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu1eb34262c577f51095444feecf887986_602731_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu1eb34262c577f51095444feecf887986_602731_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu_5c6475061b4fdb03.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/remote_desktop_interface_hu_e797cf771b6c10da.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Remote Desktop Access&#34;
@@ -32,7 +32,7 @@ Upon gaining access, I found that the server was running &lt;strong&gt;Ubuntu&lt
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user.png&#34;
 	width=&#34;1038&#34;
 	height=&#34;778&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_huc2562a9c8b0d269c093fea677cad18c2_367912_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_huc2562a9c8b0d269c093fea677cad18c2_367912_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu_18fa8520ca4bc1c6.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/current_user_hu_b651d7281bcebab6.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Terminal&#34;
@@ -47,7 +47,7 @@ I added my public key to &lt;em&gt;/home/user/.ssh/authorized_keys&lt;/em&gt; an
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection.png&#34;
 	width=&#34;715&#34;
 	height=&#34;502&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu79677f45d57d073e4ba29d2ff7cf669b_171553_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu79677f45d57d073e4ba29d2ff7cf669b_171553_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu_9a6145a74fc51553.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/user_ssh_connection_hu_231f851979f3411f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;User SSH Connection&#34;
@@ -150,7 +150,7 @@ I created a single-line bash script to be appended to &lt;em&gt;/home/user/.bash
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.png&#34;
 	width=&#34;890&#34;
 	height=&#34;390&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu70dd91f32928c4beb467cf72aa2c19b5_119628_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu70dd91f32928c4beb467cf72aa2c19b5_119628_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu_557f89ae865d945f.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt_hu_17efd9e38b9af3f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Prompt&#34;
@@ -168,7 +168,7 @@ Although there were concerns about potential failures, such as entering the wron
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password.png&#34;
 	width=&#34;610&#34;
 	height=&#34;384&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hudc2f432dc96c9d532197cae7345a05db_103829_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hudc2f432dc96c9d532197cae7345a05db_103829_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu_dabd5f72a489dd9a.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_password_hu_2f0cc8e688ce933b.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Encoded Password&#34;
@@ -183,7 +183,7 @@ After Decoding it, I obtained the password.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding.png&#34;
 	width=&#34;568&#34;
 	height=&#34;119&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_huc3c946262e5c6b03bbe34431a78911bf_28095_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_huc3c946262e5c6b03bbe34431a78911bf_28095_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu_730850a881e5500.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/base64_decoding_hu_eea8558f3bf795c9.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Base64 Decoding&#34;
@@ -198,7 +198,7 @@ Finally, I verified the success of my social engineering method by checking for 
 &lt;img src=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash.png&#34;
 	width=&#34;190&#34;
 	height=&#34;40&#34;
-	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu886bedfec7845265df4dd266490c39c5_7216_480x0_resize_box_3.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu886bedfec7845265df4dd266490c39c5_7216_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu_de0527e124116296.png 480w, http://localhost:1313/p/using-social-engineering-for-privilege-escalation/assets/images/sudo_bash_hu_9fd4b26382d2840.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Sudo Bash&#34;

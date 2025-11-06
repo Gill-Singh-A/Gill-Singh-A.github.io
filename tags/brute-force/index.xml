@@ -29,7 +29,7 @@
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hua8bf343defb40d701d522bf4ddaee4f5_232124_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu_b94779ea6e06a151.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_hu_5b38542fb6ed759d.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan CCTV Search&#34;
@@ -44,7 +44,7 @@ We can even filter out more on various basis, for example location (country, cit
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report.png&#34;
 	width=&#34;1279&#34;
 	height=&#34;1021&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_huf09491e8963c635a9d13236e9b6417bb_169846_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu_f196f18bd5e712a0.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_report_hu_53f26b0872846a29.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Report&#34;
@@ -59,7 +59,7 @@ Or if we want to find CCTVs that have no authentication, we can provide the filt
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hua8bf343defb40d701d522bf4ddaee4f5_666915_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu_c5b23adcc2811892.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_search_open_hu_94b5c10e2fe8f37e.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Search Open&#34;
@@ -74,7 +74,7 @@ After setting the requeired filters, we can download the results.&lt;br /&gt;
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results.png&#34;
 	width=&#34;715&#34;
 	height=&#34;56&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu38d8d8e5d977367fbf6f84fb3f9b9dda_8804_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu_977a34f5b9a170d1.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_hu_59b22200b504574c.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -89,7 +89,7 @@ The Number of Results that can be downloaded depends upon your query credits ava
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1.png&#34;
 	width=&#34;1224&#34;
 	height=&#34;496&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu6fd825e8617507964ffb4d005f23a39f_67112_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu_786e6a11c59a2640.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_download_results_1_hu_5a96fb5a9b763dcd.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Results&#34;
@@ -105,7 +105,7 @@ After Shodan has done compiling the data, it sends us a Mail that &lt;em&gt;Data
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail.png&#34;
 	width=&#34;827&#34;
 	height=&#34;526&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu9c25980f36fa3e031a6516d91e591bda_84783_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu_a6871a10c73f51.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/shodan_mail_hu_8c905bcbe9aeca95.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shodan Download Mail&#34;
@@ -230,7 +230,7 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1000&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu85ff3ed5ed698720f1929f1e810840d1_186959_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu_1f62f7c0bdc7c9d8.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_hu_db4af8202a0843b3.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Google Dorking&#34;
@@ -244,7 +244,7 @@ The utility can be installed with the command&lt;/p&gt;
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hub51370b28b58c7968528f760064c05fa_919723_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu_c358ac16d7979a76.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/google_dorking_cctv_hu_48251a7106494255.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -265,7 +265,7 @@ In the following example of port scan, I&amp;rsquo;ve used &lt;a class=&#34;link
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner.png&#34;
 	width=&#34;1018&#34;
 	height=&#34;959&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu3450d1da4ffba5f978e6c38ab436f63c_602714_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu_516c0578d21891a7.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/port_scanner_hu_3f01ed640c432677.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Port Scanner&#34;
@@ -289,7 +289,7 @@ Here in the following exampe, I&amp;rsquo;ve run the program and also opened the
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hub64ec500cbfc26a2a89673fc077e5a3b_907851_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu_4f17fd552e22ea11.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_access_gained_hu_5ccbcb01454de942.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV&#34;
@@ -305,7 +305,7 @@ We can further more Geolocate the IP Addresses using &lt;a class=&#34;link&#34; 
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location.png&#34;
 	width=&#34;1799&#34;
 	height=&#34;861&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hue18b0cc85869d085854b6363605c0aaf_1545857_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu_8de4204c3a4f536c.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/ip_location_hu_b560341a9517bc7f.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;IP Location&#34;
@@ -320,7 +320,7 @@ We can now even open the Admin Panel of the CCTV using the Browser and can manip
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;926&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_480x0_resize_box_3.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_huf0b548d764a81b7f504d4cbafd9f09e5_94268_1024x0_resize_box_3.png 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu_1b5d155d70e96568.png 480w, http://localhost:1313/p/compromising-cctvs-101/assets/images/cctv_settings_hu_5613334d2cf49bfe.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CCTV Settings&#34;
@@ -339,7 +339,7 @@ But I prefer using the &lt;em&gt;hping&lt;/em&gt; tool to do SYN Flood Attack be
 &lt;img src=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos.gif&#34;
 	width=&#34;1152&#34;
 	height=&#34;648&#34;
-	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_480x0_resize_box_1.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu3f91a82e4c3f238e2b92f23a05e9b142_23724861_1024x0_resize_box_1.gif 1024w&#34;
+	srcset=&#34;http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu_9cc6157f758ed7d6.gif 480w, http://localhost:1313/p/compromising-cctvs-101/assets/gif/cctv_dos_hu_a7389d442690bdd2.gif 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;DOS Attack on CCTV&#34;

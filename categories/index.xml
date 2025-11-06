@@ -6,20 +6,44 @@
         <description>Recent content in Categories on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 06 Nov 2025 14:01:03 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Hacking</title>
+        <link>http://localhost:1313/categories/hacking/</link>
+        <pubDate>Thu, 06 Nov 2025 14:01:03 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/hacking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Mysql</title>
+        <link>http://localhost:1313/categories/mysql/</link>
+        <pubDate>Thu, 06 Nov 2025 14:01:03 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/mysql/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Nuclei</title>
+        <link>http://localhost:1313/categories/nuclei/</link>
+        <pubDate>Thu, 06 Nov 2025 14:01:03 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/nuclei/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Php</title>
+        <link>http://localhost:1313/categories/php/</link>
+        <pubDate>Thu, 06 Nov 2025 14:01:03 +0530</pubDate>
+        
+        <guid>http://localhost:1313/categories/php/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Cracking</title>
         <link>http://localhost:1313/categories/cracking/</link>
         <pubDate>Fri, 21 Mar 2025 23:30:23 +0530</pubDate>
         
         <guid>http://localhost:1313/categories/cracking/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Hacking</title>
-        <link>http://localhost:1313/categories/hacking/</link>
-        <pubDate>Fri, 21 Mar 2025 23:30:23 +0530</pubDate>
-        
-        <guid>http://localhost:1313/categories/hacking/</guid>
         <description></description>
         </item>
         <item>
