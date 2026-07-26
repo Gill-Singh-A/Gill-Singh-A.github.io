@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Ssh on Gill.Singh.A</title>
-        <link>http://localhost:1313/categories/ssh/</link>
+        <link>https://Gill-Singh-A.github.io/categories/ssh/</link>
         <description>Recent content in Ssh on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/ssh/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/ssh/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Cracking Linux Hashes and Expanding Access</title>
-        <link>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</link>
+        <link>https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/</link>
         <pubDate>Fri, 21 Mar 2025 23:30:23 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</guid>
-        <description>&lt;img src="http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png" alt="Featured image of post Cracking Linux Hashes and Expanding Access" /&gt;&lt;h2 id=&#34;initial-entry-point&#34;&gt;Initial Entry Point
+        <guid>https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png" alt="Featured image of post Cracking Linux Hashes and Expanding Access" /&gt;&lt;h2 id=&#34;initial-entry-point&#34;&gt;Initial Entry Point
 &lt;/h2&gt;&lt;p&gt;During a routine exploration of vulnerable servers on the internet, I successfully gained root access to several machines. While the specific method used to achieve root access is beyond the scope of this blog, I’ll focus on how I expanded my access to other servers within the same organization.&lt;/p&gt;
 &lt;h2 id=&#34;extracting-linux-user-hashes&#34;&gt;Extracting Linux User Hashes
 &lt;/h2&gt;&lt;p&gt;Once inside the compromised machine, I noticed multiple user accounts. With root privileges, I accessed the &lt;em&gt;/etc/shadow&lt;/em&gt; file, which stores password hashes for all users on the system.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
 	width=&#34;841&#34;
 	height=&#34;841&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_f528276b63799288.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_eb3497759e76b05.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu3672731679349725699.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu5329670692442262125.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shadow File&#34;
@@ -39,10 +39,10 @@ I copied the contents of the shadow file to my local machine and extracted the h
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat shadow_file &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; cut -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt; -f2 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; sort &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; uniq &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;[!-*]&amp;#39;&lt;/span&gt; &amp;gt; hashes
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
 	width=&#34;1156&#34;
 	height=&#34;268&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_17f092fa4f65cc25.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_3cce7c568ec14935.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu9024913798855049347.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu8052994993040619573.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashes&#34;
@@ -86,10 +86,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &lt;/ul&gt;
 &lt;!-- --&gt;
 &lt;p&gt;After running the command, Hashcat successfully cracked two of the hashes. Below is an example of one of the cracked hashes:&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
 	width=&#34;989&#34;
 	height=&#34;874&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_6e4cc396be402074.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_f0fafc78d8c60905.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu2398366856187407432.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu5949150121733445545.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Cracked Hash&#34;
@@ -102,10 +102,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &gt;&lt;/p&gt;
 &lt;h2 id=&#34;discovering-additional-machines&#34;&gt;Discovering Additional Machines
 &lt;/h2&gt;&lt;p&gt;With the cracked credentials in hand, my next goal was to identify other machines within the same organization. I began by gathering information about the compromised server’s owner or organization. Using tools like &lt;strong&gt;Shodan&lt;/strong&gt;, I extracted details such as the organization name, ISP (Internet Service Provider), ASN (Autonomous System Number), and subnet associated with the server’s IP address.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
 	width=&#34;948&#34;
 	height=&#34;431&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_90039939899429dd.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_b92258cae3abf462.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu14698924062869139471.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu4208050796426702305.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Server Details&#34;
@@ -117,10 +117,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 	
 &gt;&lt;br /&gt;
 Using this information, I filtered Shodan search results to compile a list of IP addresses belonging to the same organization, ISP, or subnet.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;951&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_da0d126d3530e5be.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_f4faf8edba9cb548.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu18008454021057110726.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu3654070958966295453.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Filtered Shodan Search&#34;
@@ -138,10 +138,10 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;!-- --&gt;
 &lt;p&gt;Armed with a list of IP addresses and valid credentials, I launched a SSH brute-force attack using the &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SSH-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/SSH-Brute-Force&lt;/a&gt; tool. This allowed me to authenticate successfully on several other machines within the organization.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
 	width=&#34;785&#34;
 	height=&#34;223&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_1dcf517c6ebdc87f.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_aabd6b934657b411.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu7351718088844256057.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu2408174159892381674.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Brute-Force Logs of 1 pair of Credential&#34;
@@ -155,10 +155,10 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;h2 id=&#34;attack-path-visualization&#34;&gt;Attack Path Visualization
 &lt;/h2&gt;&lt;p&gt;Below is a visual representation of the attack path, created using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Maltego&lt;/a&gt;:&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
 	width=&#34;1148&#34;
 	height=&#34;719&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_797e70a14cc48100.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_497c34a6f960a385.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu13275239387980571932.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu9965436999406051511.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;
@@ -189,18 +189,18 @@ Using this information, I filtered Shodan search results to compile a list of IP
         </item>
         <item>
         <title>Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</title>
-        <link>http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</link>
+        <link>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</link>
         <pubDate>Mon, 24 Feb 2025 00:50:12 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</guid>
-        <description>&lt;img src="http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg" alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" /&gt;&lt;h2 id=&#34;discovery-of-vulnerable-machines&#34;&gt;Discovery of Vulnerable Machines
+        <guid>https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg" alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" /&gt;&lt;h2 id=&#34;discovery-of-vulnerable-machines&#34;&gt;Discovery of Vulnerable Machines
 &lt;/h2&gt;&lt;p&gt;While investigating vulnerable, internet-facing systems, I successfully compromised several devices. Although the specific techniques I used to gain initial access fall outside the scope of this post, the real discovery came during my post-exploitation phase on one of the compromised machines.&lt;/p&gt;
 &lt;h2 id=&#34;discovering-vulnerable-ssh-configurations&#34;&gt;Discovering Vulnerable SSH Configurations
 &lt;/h2&gt;&lt;p&gt;While reviewing the files on the compromised system, I stumbled upon something interesting in the &lt;code&gt;~/.ssh&lt;/code&gt; directory of a particular user account.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory.png&#34;
 	width=&#34;507&#34;
 	height=&#34;617&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu_af87e0173de1d1cf.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu_ebc4489ac5e20934.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu262946270955953487.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_directory_hu9608147882277425666.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Directory&#34;
@@ -218,10 +218,10 @@ Within this directory, I found a private key file being used for SSH logins to o
 &lt;/blockquote&gt;
 &lt;!-- --&gt;
 &lt;p&gt;To verify if the private key was encrypted, I attempted to use it to connect to a device listed in the SSH configuration file.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection.png&#34;
 	width=&#34;677&#34;
 	height=&#34;747&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu_99ea890444f8eb01.png 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu_cd605236348d26cb.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu2589043890797124511.png 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/ssh_connection_hu7071950340316858503.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Connection&#34;
@@ -235,10 +235,10 @@ Within this directory, I found a private key file being used for SSH logins to o
 The connection was successfully established without any prompts for a passphrase, confirming that the private key was unencrypted.&lt;/p&gt;
 &lt;h2 id=&#34;spreading-to-other-machines&#34;&gt;Spreading to Other Machines
 &lt;/h2&gt;&lt;p&gt;With the unencrypted private key, I was able to repeat this process across multiple machines listed in the configuration file. By leveraging the same method, I gained access to an increasing number of devices.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.jpg&#34;
 	width=&#34;803&#34;
 	height=&#34;862&#34;
-	srcset=&#34;http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu_8d308d0700f28274.jpg 480w, http://localhost:1313/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu_70a3223bb2202d82.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu17252320995000315683.jpg 480w, https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path_hu1413890062935640257.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path - Plotted using Maltego&#34;
@@ -269,19 +269,19 @@ Furthermore, &lt;strong&gt;attackers can use &lt;a class=&#34;link&#34; href=&#3
         </item>
         <item>
         <title>Lateral Movement Through SSH Command Tampering</title>
-        <link>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</link>
+        <link>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</link>
         <pubDate>Wed, 19 Feb 2025 02:54:39 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/</guid>
-        <description>&lt;img src="http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
+        <guid>https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png" alt="Featured image of post Lateral Movement Through SSH Command Tampering" /&gt;&lt;h2 id=&#34;understanding-lateral-movement&#34;&gt;Understanding Lateral Movement
 &lt;/h2&gt;&lt;p&gt;Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.&lt;/p&gt;
 &lt;h2 id=&#34;entry-point&#34;&gt;Entry Point
 &lt;/h2&gt;&lt;p&gt;During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.&lt;br /&gt;
 While analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png&#34;
 	width=&#34;480&#34;
 	height=&#34;270&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu_f2032ee4f74900f3.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu_7059ae9dc3729acd.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu9191204011516167986.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu12104229560349473230.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Bash History&#34;
@@ -309,10 +309,10 @@ This discovery led me to investigate further, with the goal of capturing credent
     &gt;SSH Credential Logger&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;extracting-ssh-credentials&#34;&gt;Extracting SSH Credentials
 &lt;/h2&gt;&lt;p&gt;After some waiting, my setup successfully captured SSH credentials entered by the user.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png&#34;
 	width=&#34;430&#34;
 	height=&#34;172&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu_556920c8d72024f9.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu_7bcd98c039288724.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8459928850480813140.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu10474649911885188044.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Credentials&#34;
@@ -330,10 +330,10 @@ With these credentials, I was ready to move laterally across the network.&lt;/p&
 &lt;/h3&gt;&lt;p&gt;This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.&lt;/p&gt;
 &lt;h3 id=&#34;2-extracting-ips-from-known_hosts&#34;&gt;2. Extracting IPs from &lt;code&gt;known_hosts&lt;/code&gt;
 &lt;/h3&gt;&lt;p&gt;A stealthier method involves inspecting the &lt;code&gt;.ssh/known_hosts&lt;/code&gt; file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png&#34;
 	width=&#34;1487&#34;
 	height=&#34;492&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu_21b267b08c52ab41.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu_d212adf9b958114d.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu13037433810454352534.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu8199313507788782025.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;known_hosts&#34;
@@ -348,10 +348,10 @@ By leveraging this information, I could target machines more efficiently while m
 &lt;h2 id=&#34;summary&#34;&gt;Summary
 &lt;/h2&gt;&lt;p&gt;Below is the attack path I followed, visualized using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Maltego&lt;/a&gt;&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png&#34;
 	width=&#34;1112&#34;
 	height=&#34;1024&#34;
-	srcset=&#34;http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu_c7d485da87111f5d.png 480w, http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu_bfbf06884c0aec31.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu4582674992775991328.png 480w, https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu7481765843318099108.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;

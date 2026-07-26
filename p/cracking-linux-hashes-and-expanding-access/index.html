@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="In this blog, I’ll walk through how I gained access to multiple machines within an organization by cracking Linux user hashes and leveraging Shodan to identify additional targets. This post will focus on the post-exploitation phase, including hash extraction, cracking, and lateral movement.">
 <title>Cracking Linux Hashes and Expanding Access</title>
 
-<link rel='canonical' href='http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/'>
+<link rel='canonical' href='https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/'>
 
-<link rel="stylesheet" href="/scss/style.min.6a692fd055deae459f2a9767f57f3855ba80cafd5041317f24f7360f6ca47cdf.css"><meta property='og:title' content="Cracking Linux Hashes and Expanding Access">
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Cracking Linux Hashes and Expanding Access">
 <meta property='og:description' content="In this blog, I’ll walk through how I gained access to multiple machines within an organization by cracking Linux user hashes and leveraging Shodan to identify additional targets. This post will focus on the post-exploitation phase, including hash extraction, cracking, and lateral movement.">
-<meta property='og:url' content='http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/'>
+<meta property='og:url' content='https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/'>
 <meta property='og:site_name' content='Gill.Singh.A'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='lateral-movement' /><meta property='article:tag' content='ssh' /><meta property='article:tag' content='cracking' /><meta property='article:published_time' content='2025-03-21T23:30:23&#43;05:30'/><meta property='article:modified_time' content='2025-03-21T23:30:23&#43;05:30'/><meta property='og:image' content='http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='lateral-movement' /><meta property='article:tag' content='ssh' /><meta property='article:tag' content='cracking' /><meta property='article:published_time' content='2025-03-21T23:30:23&#43;05:30'/><meta property='article:modified_time' content='2025-03-21T23:30:23&#43;05:30'/><meta property='og:image' content='https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png' />
 <meta name="twitter:title" content="Cracking Linux Hashes and Expanding Access">
 <meta name="twitter:description" content="In this blog, I’ll walk through how I gained access to multiple machines within an organization by cracking Linux user hashes and leveraging Shodan to identify additional targets. This post will focus on the post-exploitation phase, including hash extraction, cracking, and lateral movement."><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png' />
+    <meta name="twitter:image" content='https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png' />
     <link rel="shortcut icon" href="/favicon.jpg" />
 
     </head>
@@ -59,7 +59,7 @@
                     
                     
                         
-                        <img src="/img/avatar_hu_27f9441ee3f7d61e.jpg" width="300"
+                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
                             height="300" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -259,8 +259,8 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/cracking-linux-hashes-and-expanding-access/">
-                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_ec8c64a5a2fc70ab.png"
-                        srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_ec8c64a5a2fc70ab.png 800w, /p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_35080ea7c625abcb.png 1600w"
+                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu14648510928486751933.png"
+                        srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu14648510928486751933.png 800w, /p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu15876419413211483624.png 1600w"
                         width="800" 
                         height="501" 
                         loading="lazy"
@@ -358,7 +358,7 @@
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png"
 	width="841"
 	height="841"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_f528276b63799288.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_eb3497759e76b05.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu3672731679349725699.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu5329670692442262125.png 1024w"
 	loading="lazy"
 	
 		alt="Shadow File"
@@ -381,7 +381,7 @@ I copied the contents of the shadow file to my local machine and extracted the h
 </div><p><img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png"
 	width="1156"
 	height="268"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_17f092fa4f65cc25.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_3cce7c568ec14935.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu9024913798855049347.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu8052994993040619573.png 1024w"
 	loading="lazy"
 	
 		alt="Hashes"
@@ -428,7 +428,7 @@ For more advanced scenarios, tools like <a class="link" href="https://github.com
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png"
 	width="989"
 	height="874"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_6e4cc396be402074.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_f0fafc78d8c60905.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu2398366856187407432.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu5949150121733445545.png 1024w"
 	loading="lazy"
 	
 		alt="Cracked Hash"
@@ -444,7 +444,7 @@ For more advanced scenarios, tools like <a class="link" href="https://github.com
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png"
 	width="948"
 	height="431"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_90039939899429dd.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_b92258cae3abf462.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu14698924062869139471.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu4208050796426702305.png 1024w"
 	loading="lazy"
 	
 		alt="Server Details"
@@ -459,7 +459,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png"
 	width="1920"
 	height="951"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_da0d126d3530e5be.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_f4faf8edba9cb548.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu18008454021057110726.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu3654070958966295453.png 1024w"
 	loading="lazy"
 	
 		alt="Filtered Shodan Search"
@@ -480,7 +480,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png"
 	width="785"
 	height="223"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_1dcf517c6ebdc87f.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_aabd6b934657b411.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu7351718088844256057.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu2408174159892381674.png 1024w"
 	loading="lazy"
 	
 		alt="SSH Brute-Force Logs of 1 pair of Credential"
@@ -497,7 +497,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
 <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png"
 	width="1148"
 	height="719"
-	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_797e70a14cc48100.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_497c34a6f960a385.png 1024w"
+	srcset="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu13275239387980571932.png 480w, /p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu9965436999406051511.png 1024w"
 	loading="lazy"
 	
 		alt="Attack Path"
@@ -580,7 +580,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
         
         
             <div class="article-image">
-                <img src="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.43ddb3f15b6426bf4f73a170f05f8e89_hu_80e1dbf869e50ce7.jpg" 
+                <img src="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.43ddb3f15b6426bf4f73a170f05f8e89_hu10640077497982418167.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -604,7 +604,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
         
         
             <div class="article-image">
-                <img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.0bbe3c40728b6b7d679711c2d6e63077_hu_49f554e894ed2bec.png" 
+                <img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.0bbe3c40728b6b7d679711c2d6e63077_hu14252440714876853350.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -624,11 +624,59 @@ Using this information, I filtered Shodan search results to compile a list of IP
             
                 
 <article class="has-image">
+    <a href="/p/from-directory-listing-to-root-shell/">
+        
+        
+            <div class="article-image">
+                <img src="/p/from-directory-listing-to-root-shell/assets/images/attack_path.d9f215022b7b1a7d637d5411f6ccdba3_hu17485442275861317011.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post From Directory Listing to Root Shell"
+                        
+                        data-hash="md5-2fIVAit7Gn1jfVQR9szbow==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">From Directory Listing to Root Shell</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/privilege-escalation-via-insecure-nfs-mounts/">
+        
+        
+            <div class="article-image">
+                <img src="/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.9336c39041c9c6a00ae89d093183514a_hu7151244482435253460.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Privilege Escalation via Insecure NFS Mounts"
+                        
+                        data-hash="md5-kzbDkEHJxqAK6J0JMYNRSg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Privilege Escalation via Insecure NFS Mounts</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/">
         
         
             <div class="article-image">
-                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu_33c20fdf1c928f44.png" 
+                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu17416119848749995212.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -641,54 +689,6 @@ Using this information, I filtered Shodan search results to compile a list of IP
 
         <div class="article-details">
             <h2 class="article-title">Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/using-social-engineering-for-privilege-escalation/">
-        
-        
-            <div class="article-image">
-                <img src="/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.96a76d9f0e028439a1e19ce7a3733583_hu_ec980b317f633196.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Using Social Engineering for Privilege Escalation"
-                        
-                        data-hash="md5-lqdtnw4ChDmh4Zzno3M1gw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Using Social Engineering for Privilege Escalation</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/getting-remote-root-shell-on-devices-via-portainer/">
-        
-        
-            <div class="article-image">
-                <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.4c459b92c425fc59dceb815826706cc8_hu_8121762b631cd359.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Getting Remote Root Shell on Devices via Portainer"
-                        
-                        data-hash="md5-TEWbksQl/Fnc64FYJnBsyA==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Getting Remote Root Shell on Devices via Portainer</h2>
         </div>
     </a>
 </article>
@@ -751,7 +751,7 @@ Using this information, I filtered Shodan search results to compile a list of IP
         
             2020 - 
         
-        2025 Gill.Singh.A
+        2026 Gill.Singh.A
     </section>
     
     <section class="powerby">

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+    <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="In this blog, we explore how to gain remote root access on devices via Portainer, covering OSINT techniques, brute-force attacks, and exploiting misconfigurations, while offering mitigation strategies to enhance security.">
 <title>Getting Remote Root Shell on Devices via Portainer</title>
 
-<link rel='canonical' href='http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/'>
+<link rel='canonical' href='https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/'>
 
-<link rel="stylesheet" href="/scss/style.min.6a692fd055deae459f2a9767f57f3855ba80cafd5041317f24f7360f6ca47cdf.css"><meta property='og:title' content="Getting Remote Root Shell on Devices via Portainer">
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Getting Remote Root Shell on Devices via Portainer">
 <meta property='og:description' content="In this blog, we explore how to gain remote root access on devices via Portainer, covering OSINT techniques, brute-force attacks, and exploiting misconfigurations, while offering mitigation strategies to enhance security.">
-<meta property='og:url' content='http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/'>
+<meta property='og:url' content='https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/'>
 <meta property='og:site_name' content='Gill.Singh.A'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='docker' /><meta property='article:tag' content='shodan' /><meta property='article:published_time' content='2024-09-23T05:21:38&#43;05:30'/><meta property='article:modified_time' content='2024-09-23T05:21:38&#43;05:30'/><meta property='og:image' content='http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='docker' /><meta property='article:tag' content='shodan' /><meta property='article:published_time' content='2024-09-23T05:21:38&#43;05:30'/><meta property='article:modified_time' content='2024-09-23T05:21:38&#43;05:30'/><meta property='og:image' content='https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png' />
 <meta name="twitter:title" content="Getting Remote Root Shell on Devices via Portainer">
 <meta name="twitter:description" content="In this blog, we explore how to gain remote root access on devices via Portainer, covering OSINT techniques, brute-force attacks, and exploiting misconfigurations, while offering mitigation strategies to enhance security."><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='http://localhost:1313/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png' />
+    <meta name="twitter:image" content='https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image.png' />
     <link rel="shortcut icon" href="/favicon.jpg" />
 
     </head>
@@ -59,7 +59,7 @@
                     
                     
                         
-                        <img src="/img/avatar_hu_27f9441ee3f7d61e.jpg" width="300"
+                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
                             height="300" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -260,8 +260,8 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/getting-remote-root-shell-on-devices-via-portainer/">
-                <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu_712f7e68eac00b9c.png"
-                        srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu_712f7e68eac00b9c.png 800w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu_3b51d0900c5a7d47.png 1600w"
+                <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu10195644687133679551.png"
+                        srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu10195644687133679551.png 800w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/main_image_hu10626419140014674947.png 1600w"
                         width="800" 
                         height="419" 
                         loading="lazy"
@@ -360,7 +360,7 @@ On <a class="link" href="https://www.shodan.io"  target="_blank" rel="noopener"
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu_7c9605ae40482219.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu_720a3b92d57090a0.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu5065758196418204342.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_search_hu3985421631415068294.png 1024w"
 	loading="lazy"
 	
 		alt="Shodan Search"
@@ -375,7 +375,7 @@ After setting the requeired filters, we can download the results.<br />
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results.png"
 	width="715"
 	height="56"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu_977a34f5b9a170d1.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu_59b22200b504574c.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu2063741215654517212.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_hu6580981014759218426.png 1024w"
 	loading="lazy"
 	
 		alt="Shodan Download Results"
@@ -390,7 +390,7 @@ The Number of Results that can be downloaded depends upon your query credits ava
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1.png"
 	width="1233"
 	height="487"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu_e467b1263887df90.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu_75ca1b4d1c5a8bde.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu14804659552564800396.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_download_results_1_hu13959971194765878774.png 1024w"
 	loading="lazy"
 	
 		alt="Shodan Download Results"
@@ -406,7 +406,7 @@ After Shodan has done compiling the data, it sends us a Mail that <em>Data is re
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail.png"
 	width="1034"
 	height="530"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu_31d84d4c36e1a627.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu_b2472087838d0d62.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu8959094722694699415.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/shodan_mail_hu11703782515361506775.png 1024w"
 	loading="lazy"
 	
 		alt="Shodan Download Mail"
@@ -459,7 +459,7 @@ I&rsquo;ve attached a small example of brute force in the following picture.<br 
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force.png"
 	width="1214"
 	height="788"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu_42fd676ce4ec41bf.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu_cdf974f27bd316f6.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu9138035496253350322.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/brute_force_hu14537001647000182556.png 1024w"
 	loading="lazy"
 	
 		alt="Brute Force"
@@ -475,7 +475,7 @@ I&rsquo;ve attached a small example of brute force in the following picture.<br 
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu_811119ce23eb12.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu_2e069e65ec2c8e05.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu9614265903048951971.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_interface_hu8576249461380108094.png 1024w"
 	loading="lazy"
 	
 		alt="Portainer Interface"
@@ -490,7 +490,7 @@ First, we have to go to Images and find any Linux OS Image. Here in this example
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu_a1c218f16225bdf0.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu_5b731d9b918d627e.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu2322801518449959949.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/portainer_images_hu18078554214050661318.png 1024w"
 	loading="lazy"
 	
 		alt="Portainer Images"
@@ -505,7 +505,7 @@ Next, we go to containers and click on <strong>Add Container</strong><br />
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container.png"
 	width="714"
 	height="154"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu_35d9f61e19b4e5a6.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu_e3557053a9c45d52.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu3666424460501405624.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/add_container_hu15059500577359673673.png 1024w"
 	loading="lazy"
 	
 		alt="Add Container"
@@ -520,7 +520,7 @@ We name the Container as <em>health_test</em> :) and pull the Linux OS Image, in
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu_adb67e525417961f.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu_3c11427f8be36278.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu908856593392907783.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_name_and_image_hu12783991672513390335.png 1024w"
 	loading="lazy"
 	
 		alt="Container Name and Image"
@@ -535,7 +535,7 @@ In the command and Logging Section, we select <em>Interactive and TTY</em> Conso
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu_15ad211c65fc1cb3.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu_b75e1f5e77ca4b79.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu15233796208589774411.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/tty_shell_hu4016618940591782649.png 1024w"
 	loading="lazy"
 	
 		alt="Interactive and TTY Console"
@@ -550,7 +550,7 @@ Next we go to <em>Volume</em>, Click on <em>Map Additional Volume</em>, Click on
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu_aa3f760d3949dd31.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu_f49ca10025d7d197.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu14721800550594329791.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/volume_bind_hu12121615468244265343.png 1024w"
 	loading="lazy"
 	
 		alt="Volume Bind"
@@ -565,7 +565,7 @@ Next in <em>Runtime &amp; Resources</em> turn <em>Privilege Mode</em> on.<br />
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu_e0e83cc360046159.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu_d63fee8e1f856b59.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu9582574800918379062.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/privilege_mode_hu17013298951981916531.png 1024w"
 	loading="lazy"
 	
 		alt="Privilege Mode"
@@ -580,7 +580,7 @@ Next in <em>Capabilities</em>, turn every Linux Capability on to ensure smooth o
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu_324d8c8986c670cd.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu_9e68ca377542c43d.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu15087138263603342898.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/linux_capabilities_hu6321382386868751134.png 1024w"
 	loading="lazy"
 	
 		alt="Linux Capabilities"
@@ -595,7 +595,7 @@ Then Click on <em>Deploy The Container</em>.<br />
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu_729df9f8966dd7b9.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu_4a5481563abe9158.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu14319672496457784038.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_deploy_hu1116306713389433321.png 1024w"
 	loading="lazy"
 	
 		alt="Deploy The Container"
@@ -610,7 +610,7 @@ We can see our Container <em>health_test</em> running.<br />
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu_19ae4e11bcc5af17.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu_cc091b0015e510e2.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu18313534528892442679.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_running_hu17285871667837831672.png 1024w"
 	loading="lazy"
 	
 		alt="Container Running"
@@ -625,7 +625,7 @@ Then we click on <em>exec console</em> and in the <em>Container Console</em> con
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu_f01aa0365148dca.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu_2773630b49b98b93.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu3161454972954789171.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_root_user_connect_hu1411818477929618143.png 1024w"
 	loading="lazy"
 	
 		alt="Container Root User Bash"
@@ -640,7 +640,7 @@ Here, we&rsquo;ve run the <em>bash</em> as <em>root</em> user in the Container<b
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell.png"
 	width="1920"
 	height="1080"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu_37e5f07a6b22e765.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu_6093e0478911dabd.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu7415295291949231712.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_hu1747088773533602066.png 1024w"
 	loading="lazy"
 	
 		alt="Container Bash Shell"
@@ -655,7 +655,7 @@ We type the command <em>ps aux</em> and see <em>bash</em> Process with PID 1, th
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid.png"
 	width="1819"
 	height="245"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu_9cc3e08f1bec15ee.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu_289b1b9ca353f049.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu14170412485534328633.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_bash_shell_pid_hu7937223515794384908.png 1024w"
 	loading="lazy"
 	
 		alt="Container Bash Shell PID"
@@ -670,7 +670,7 @@ Then to break out of the Container, we change our directory to <em>/host</em> an
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break.png"
 	width="1196"
 	height="282"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu_5d9e5489a936c51.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu_2a426f49190338f.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu15875942141868754971.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/container_break_hu16203558250265293144.png 1024w"
 	loading="lazy"
 	
 		alt="Container Break"
@@ -695,7 +695,7 @@ Next we check that we can login as root via ssh using the following command</p>
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login.png"
 	width="470"
 	height="70"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu_3fef1809d4bf3a7c.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu_80f11ed2f76b94bd.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu12176505217845881688.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_login_hu14977004533623781768.png 1024w"
 	loading="lazy"
 	
 		alt="SSH Root Login"
@@ -719,7 +719,7 @@ Next we generate a Public-Private Key Pair with the following command on our mac
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys.png"
 	width="504"
 	height="128"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu_bf879c62ac546629.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu_7068be33a18e6bf9.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14001699606681207158.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_keys_hu14605633080691089983.png 1024w"
 	loading="lazy"
 	
 		alt="SSH Keys"
@@ -734,7 +734,7 @@ After all this, now we&rsquo;ll be able to ssh to the Target Machine with root u
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root.png"
 	width="688"
 	height="225"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu_63fca96dc250f1a5.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu_1be72445e6d7871c.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu7218786597690895416.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ssh_root_hu18022615190246826073.png 1024w"
 	loading="lazy"
 	
 		alt="SSH Root"
@@ -750,7 +750,7 @@ We can further more Geolocate the IP Addresses using <a class="link" href="https
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation.png"
 	width="1832"
 	height="900"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu_180c854344c6d3d4.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu_d631ee1c65a71cb0.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu14051010684105683587.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/ip_geolocation_hu9533190491809791552.png 1024w"
 	loading="lazy"
 	
 		alt="IP Geolocation"
@@ -765,7 +765,7 @@ We can use the Compromised Devices for Cluster Computing after gaining basic inf
 <img src="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection.png"
 	width="1618"
 	height="179"
-	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu_f6dc8398e635f908.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu_d45ba41d52595480.png 1024w"
+	srcset="/p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16114222399472748084.png 480w, /p/getting-remote-root-shell-on-devices-via-portainer/assets/images/collection_hu16740672284121985108.png 1024w"
 	loading="lazy"
 	
 		alt="DB"
@@ -858,11 +858,59 @@ To avoid getting your Device compromised, you should take the following steps:</
             
                 
 <article class="has-image">
+    <a href="/p/privilege-escalation-via-insecure-nfs-mounts/">
+        
+        
+            <div class="article-image">
+                <img src="/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.9336c39041c9c6a00ae89d093183514a_hu7151244482435253460.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Privilege Escalation via Insecure NFS Mounts"
+                        
+                        data-hash="md5-kzbDkEHJxqAK6J0JMYNRSg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Privilege Escalation via Insecure NFS Mounts</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/from-directory-listing-to-root-shell/">
+        
+        
+            <div class="article-image">
+                <img src="/p/from-directory-listing-to-root-shell/assets/images/attack_path.d9f215022b7b1a7d637d5411f6ccdba3_hu17485442275861317011.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post From Directory Listing to Root Shell"
+                        
+                        data-hash="md5-2fIVAit7Gn1jfVQR9szbow==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">From Directory Listing to Root Shell</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/">
         
         
             <div class="article-image">
-                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu_33c20fdf1c928f44.png" 
+                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu17416119848749995212.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -886,7 +934,7 @@ To avoid getting your Device compromised, you should take the following steps:</
         
         
             <div class="article-image">
-                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.13e4a0b84c8a45b1c6dcbe2cea62aac2_hu_2be9cb06a4377dc5.png" 
+                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.13e4a0b84c8a45b1c6dcbe2cea62aac2_hu10573663531890710708.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -910,7 +958,7 @@ To avoid getting your Device compromised, you should take the following steps:</
         
         
             <div class="article-image">
-                <img src="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.43ddb3f15b6426bf4f73a170f05f8e89_hu_80e1dbf869e50ce7.jpg" 
+                <img src="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.43ddb3f15b6426bf4f73a170f05f8e89_hu10640077497982418167.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -923,54 +971,6 @@ To avoid getting your Device compromised, you should take the following steps:</
 
         <div class="article-details">
             <h2 class="article-title">Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/lateral-movement-through-ssh-command-tampering/">
-        
-        
-            <div class="article-image">
-                <img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.0bbe3c40728b6b7d679711c2d6e63077_hu_49f554e894ed2bec.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Lateral Movement Through SSH Command Tampering"
-                        
-                        data-hash="md5-C748QHKLa31nlxHC1uYwdw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Lateral Movement Through SSH Command Tampering</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/using-social-engineering-for-privilege-escalation/">
-        
-        
-            <div class="article-image">
-                <img src="/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.96a76d9f0e028439a1e19ce7a3733583_hu_ec980b317f633196.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Using Social Engineering for Privilege Escalation"
-                        
-                        data-hash="md5-lqdtnw4ChDmh4Zzno3M1gw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Using Social Engineering for Privilege Escalation</h2>
         </div>
     </a>
 </article>
@@ -1033,7 +1033,7 @@ To avoid getting your Device compromised, you should take the following steps:</
         
             2020 - 
         
-        2025 Gill.Singh.A
+        2026 Gill.Singh.A
     </section>
     
     <section class="powerby">

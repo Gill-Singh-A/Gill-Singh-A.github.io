@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Nfs on Gill.Singh.A</title>
+        <link>https://Gill-Singh-A.github.io/categories/nfs/</link>
+        <description>Recent content in Nfs on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Sun, 26 Jul 2026 19:13:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/nfs/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Privilege Escalation via Insecure NFS Mounts</title>
+        <link>https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/</link>
+        <pubDate>Sun, 26 Jul 2026 19:13:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.png" alt="Featured image of post Privilege Escalation via Insecure NFS Mounts" /&gt;&lt;p&gt;In this blog, I&amp;rsquo;ll walk through how I escalated my privileges from a low-privileged user to &lt;strong&gt;root&lt;/strong&gt; on a remote server by abusing an insecurely configured &lt;strong&gt;NFS export&lt;/strong&gt; (&lt;code&gt;no_root_squash&lt;/code&gt;).&lt;/p&gt;
+&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;Control is an illusion.&amp;rdquo;&lt;/strong&gt;&lt;br&gt;
+— &lt;em&gt;Mr. Robot&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;NFS has a habit of trusting whoever knocks on the door — and trust, as always, is the real vulnerability.&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;initial-foothold&#34;&gt;Initial Foothold
+&lt;/h2&gt;&lt;p&gt;At this stage I already had a shell as a regular, low-privileged user. The interesting part began while I was looking for a way up to root.&lt;/p&gt;
+&lt;h2 id=&#34;enumerating-nfs-exports&#34;&gt;Enumerating NFS Exports
+&lt;/h2&gt;&lt;p&gt;While enumerating running services, I noticed the machine was exposing an &lt;strong&gt;NFS&lt;/strong&gt; service. NFS (Network File System) lets a server share directories over the network so clients can mount them as if they were local. The quickest way to see what a host is sharing is &lt;code&gt;showmount&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;showmount -e &amp;lt;TARGET&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;One of the exported directories was shared with everyone (&lt;code&gt;*&lt;/code&gt;). That alone was worth a closer look, so I wanted to confirm exactly &lt;em&gt;how&lt;/em&gt; it was being exported.&lt;/p&gt;
+&lt;h2 id=&#34;spotting-the-misconfiguration&#34;&gt;Spotting the Misconfiguration
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;People always make the best exploits.&amp;rdquo;&lt;/strong&gt;&lt;br&gt;
+— &lt;em&gt;Elliot Alderson, Mr. Robot&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- --&gt;
+&lt;p&gt;Since I already had a shell on the box, I read the export configuration directly from &lt;code&gt;/etc/exports&lt;/code&gt;. The shared directory carried the &lt;strong&gt;&lt;code&gt;no_root_squash&lt;/code&gt;&lt;/strong&gt; option.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.png&#34;
+	width=&#34;521&#34;
+	height=&#34;90&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount_hu10707028732364289199.png 480w, https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount_hu11225004888993637415.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Unsafe NFS Mount&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;578&#34;
+		data-flex-basis=&#34;1389px&#34;
+	
+&gt;&lt;br /&gt;
+This single option is the whole ballgame. Normally NFS applies &lt;strong&gt;&lt;code&gt;root_squash&lt;/code&gt;&lt;/strong&gt;, which &lt;em&gt;squashes&lt;/em&gt; a connecting root user (UID 0) down to the unprivileged &lt;code&gt;nobody&lt;/code&gt; account — so being root on the client buys you nothing on the share. With &lt;strong&gt;&lt;code&gt;no_root_squash&lt;/code&gt;&lt;/strong&gt;, the server trusts the client&amp;rsquo;s UID as-is. If I&amp;rsquo;m root on my own machine, I&amp;rsquo;m effectively &lt;strong&gt;root on the share&lt;/strong&gt; — including the ability to write root-owned files and set the SUID bit on them.&lt;br /&gt;
+A human typed that word into a config file once and moved on. That&amp;rsquo;s the exploit.&lt;/p&gt;
+&lt;h2 id=&#34;mounting-the-export&#34;&gt;Mounting the Export
+&lt;/h2&gt;&lt;p&gt;I switched to my own machine, where I have full root, and mounted the vulnerable export locally:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mount -t nfs -o rw,suid,soft,intr,nolock,exec SERVER_ADDRESS:SERVER_DIRECTORY LOCAL_MOUNT_DIRECTORY
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/mounting_nfs.png&#34;
+	width=&#34;1003&#34;
+	height=&#34;391&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/mounting_nfs_hu14074221483757740026.png 480w, https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/mounting_nfs_hu5097211643938875101.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Mounting NFS on our own machine&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;256&#34;
+		data-flex-basis=&#34;615px&#34;
+	
+&gt;&lt;br /&gt;
+The share mounted without any authentication — NFSv3 doesn&amp;rsquo;t challenge the client, it simply trusts the source address and the UID it presents.&lt;/p&gt;
+&lt;h2 id=&#34;planting-a-root-owned-suid-binary&#34;&gt;Planting a Root-Owned SUID Binary
+&lt;/h2&gt;&lt;p&gt;With the share mounted and me sitting as root on my own box, I wrote a tiny C program that spawns a shell while preserving its privileges:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;#include&lt;/span&gt; &lt;span class=&#34;cpf&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;#include&lt;/span&gt; &lt;span class=&#34;cpf&#34;&gt;&amp;lt;stdlib.h&amp;gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;#include&lt;/span&gt; &lt;span class=&#34;cpf&#34;&gt;&amp;lt;unistd.h&amp;gt;&lt;/span&gt;&lt;span class=&#34;cp&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nf&#34;&gt;setuid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nf&#34;&gt;setgid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nf&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/bin/bash&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;I compiled it straight into the mounted share and made it a &lt;strong&gt;root-owned SUID&lt;/strong&gt; binary:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;gcc priv_esc.c
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chmod &lt;span class=&#34;m&#34;&gt;4777&lt;/span&gt; a.out
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_on_nfs.png&#34;
+	width=&#34;576&#34;
+	height=&#34;352&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_on_nfs_hu7665230804699279420.png 480w, https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_on_nfs_hu15052229268689485978.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SUID binary put on NFS Mount&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;163&#34;
+		data-flex-basis=&#34;392px&#34;
+	
+&gt;&lt;br /&gt;
+Because of &lt;code&gt;no_root_squash&lt;/code&gt;, the file lands on the server &lt;strong&gt;owned by root&lt;/strong&gt;, and the SUID bit sticks.&lt;/p&gt;
+&lt;h2 id=&#34;getting-a-root-shell&#34;&gt;Getting a Root Shell
+&lt;/h2&gt;&lt;p&gt;Back in my original low-privileged shell on the target, the binary was now sitting in the exported directory — owned by &lt;code&gt;root&lt;/code&gt;, with the SUID bit set. Executing it dropped me straight into a shell running as root:
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_root_shell.png&#34;
+	width=&#34;454&#34;
+	height=&#34;162&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_root_shell_hu2638860093658827420.png 480w, https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/suid_binary_root_shell_hu1284492576175474795.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SUID Binary executed to get root shell&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;280&#34;
+		data-flex-basis=&#34;672px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;code&gt;uid=0(root)&lt;/code&gt; — full control of the server, earned from a single misconfigured export. No kernel exploit, no crash risk, nothing fragile. Just a trust boundary that was set too wide.&lt;/p&gt;
+&lt;h2 id=&#34;attack-path&#34;&gt;Attack Path
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;Started with a low-privileged shell on the target.&lt;/li&gt;
+&lt;li&gt;Enumerated NFS and found a writable export shared with everyone.&lt;/li&gt;
+&lt;li&gt;Confirmed the export used &lt;code&gt;no_root_squash&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Mounted the export from a machine where I had root.&lt;/li&gt;
+&lt;li&gt;Planted a root-owned SUID binary in the share.&lt;/li&gt;
+&lt;li&gt;Executed it on the target to become root.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;To prevent this type of attack, consider the following security best practices:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Never use &lt;code&gt;no_root_squash&lt;/code&gt;&lt;/strong&gt;: Stick to the default &lt;code&gt;root_squash&lt;/code&gt;, and prefer &lt;code&gt;all_squash&lt;/code&gt; to map every client UID to &lt;code&gt;nobody&lt;/code&gt; unless there is a hard requirement otherwise.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mount and export with &lt;code&gt;nosuid&lt;/code&gt;&lt;/strong&gt;: The &lt;code&gt;nosuid&lt;/code&gt; option strips the effect of the SUID/SGID bits, so a planted binary can&amp;rsquo;t gain privileges.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Restrict exports to specific hosts&lt;/strong&gt;: Never export to &lt;code&gt;*&lt;/code&gt;. Pin each share to the exact IPs or subnets that legitimately need it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Export read-only where possible&lt;/strong&gt;: Use the &lt;code&gt;ro&lt;/code&gt; option whenever write access isn&amp;rsquo;t required.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prefer NFSv4 with Kerberos (&lt;code&gt;sec=krb5&lt;/code&gt;)&lt;/strong&gt;: Move away from the trust-the-client model of NFSv3 to authenticated, identity-aware access.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Firewall NFS services&lt;/strong&gt;: Restrict access to port &lt;code&gt;2049&lt;/code&gt; and the &lt;code&gt;rpcbind&lt;/code&gt;/portmapper ports so only trusted networks can reach the service.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Audit &lt;code&gt;/etc/exports&lt;/code&gt; regularly&lt;/strong&gt;: Treat any &lt;code&gt;no_root_squash&lt;/code&gt; entry as a finding that must be justified or removed.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;references&#34;&gt;References
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://gtfobins.github.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;GTFOBins - NFS no_root_squash&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://book.hacktricks.xyz/network-services-pentesting/nfs-service-pentesting&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HackTricks - NFS no_root_squash / no_all_squash Privilege Escalation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Mysql on Gill.Singh.A</title>
-        <link>http://localhost:1313/tags/mysql/</link>
+        <link>https://Gill-Singh-A.github.io/tags/mysql/</link>
         <description>Recent content in Mysql on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Thu, 06 Nov 2025 14:01:03 +0530</lastBuildDate><atom:link href="http://localhost:1313/tags/mysql/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 06 Nov 2025 14:01:03 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/tags/mysql/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability</title>
-        <link>http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/</link>
+        <link>https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/</link>
         <pubDate>Thu, 06 Nov 2025 14:01:03 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/</guid>
-        <description>&lt;img src="http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.png" alt="Featured image of post Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability" /&gt;&lt;h2 id=&#34;finding-the-vulnerability&#34;&gt;Finding the vulnerability
+        <guid>https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.png" alt="Featured image of post Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability" /&gt;&lt;h2 id=&#34;finding-the-vulnerability&#34;&gt;Finding the vulnerability
 &lt;/h2&gt;&lt;p&gt;During routine exploration of vulnerable servers, I discovered the presence of CVE-2017-9841 on a target domain using &lt;a class=&#34;link&#34; href=&#34;https://github.com/projectdiscovery/nuclei&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Nuclei&lt;/a&gt; with the &lt;a class=&#34;link&#34; href=&#34;https://github.com/projectdiscovery/nuclei-templates/blob/main/http/cves/2017/CVE-2017-9841.yaml&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;&lt;code&gt;http/cves/2017/CVE-2017-9841.yaml&lt;/code&gt;&lt;/a&gt; template. The scanner flagged an exposed PHPUnit utility script under the &lt;code&gt;/vendor&lt;/code&gt; tree.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan.png&#34;
 	width=&#34;1299&#34;
 	height=&#34;426&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan_hu_bfb4a6fda16d909f.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan_hu_5c60aaac55f285ec.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan_hu696783282821183258.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/nuclei_vulnerability_scan_hu5005320901247973273.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Nuclei Vulnerability Scan&#34;
@@ -32,10 +32,10 @@
 &gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;what-cve-2017-9841-is&#34;&gt;What CVE-2017-9841 is
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;Util/PHP/eval-stdin.php&lt;/code&gt; in PHPUnit (before 4.8.28 and 5.x before 5.6.3) allows remote attackers to execute arbitrary PHP code sent in an HTTP POST body beginning with &lt;code&gt;&amp;lt;?php &lt;/code&gt;. This is usually exposed when an application leaves its &lt;code&gt;vendor&lt;/code&gt; folder web-accessible, so the &lt;code&gt;eval-stdin.php&lt;/code&gt; file can be requested directly. Knowing this enabled me to submit PHP payloads via the POST body to the vulnerable endpoint.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request.png&#34;
 	width=&#34;1657&#34;
 	height=&#34;872&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request_hu_133c22435ae96c5e.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request_hu_36cd5bac011c4097.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request_hu14227996485893426816.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/post_request_hu7003820331658749422.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;php Code in POST Request&#34;
@@ -48,10 +48,10 @@
 &gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;attempts-at-full-remote-code-execution&#34;&gt;Attempts at full Remote Code Execution
 &lt;/h2&gt;&lt;p&gt;I attempted several approaches to obtain a shell (using &lt;code&gt;system&lt;/code&gt;, &lt;code&gt;exec&lt;/code&gt;, &lt;code&gt;passthru&lt;/code&gt;, etc.), but each attempt yielded the same error: &lt;strong&gt;Call to undefined function&lt;/strong&gt;.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function.png&#34;
 	width=&#34;1657&#34;
 	height=&#34;872&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function_hu_88cda7a5fc010c4d.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function_hu_16e4a09717ff0812.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function_hu4981046968343221021.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/undefined_function_hu9929880480111005849.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Undefined Function&#34;
@@ -63,10 +63,10 @@
 	
 &gt;&lt;br /&gt;
 Inspecting &lt;code&gt;phpinfo()&lt;/code&gt; revealed a long list of disabled functions via &lt;code&gt;disable_functions&lt;/code&gt; — including many common command-execution functions and other potentially dangerous calls. That constrained direct command execution from PHP.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function.png&#34;
 	width=&#34;939&#34;
 	height=&#34;150&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function_hu_9d8c87177db704b3.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function_hu_f4b1152e12bc9ba6.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function_hu4475590561071308786.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/disable_function_hu1131009023280815875.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Disabled Functions&#34;
@@ -78,10 +78,10 @@ Inspecting &lt;code&gt;phpinfo()&lt;/code&gt; revealed a long list of disabled f
 	
 &gt;&lt;br /&gt;
 I also attempted to identify the running user with &lt;code&gt;get_current_user()&lt;/code&gt; and explored options such as adding SSH keys to an account, but SSH was not available on the host and many web-server users are configured with shells like &lt;code&gt;/sbin/nologin&lt;/code&gt;, so those avenues were not feasible.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user.png&#34;
 	width=&#34;1641&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user_hu_e06532d73fc7bede.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user_hu_c4f348e04f35ddf6.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user_hu14918482795763228209.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/current_user_hu448391558975508997.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Current User&#34;
@@ -117,10 +117,10 @@ Editing cronjobs to gain code execution was also not possible in this environmen
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.png&#34;
 	width=&#34;1880&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing_hu_ab627caefa045add.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing_hu_a08a80c35fdd6fbd.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing_hu9417129662607310394.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing_hu17877188778722037605.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Listing Directory&#34;
@@ -146,10 +146,10 @@ Editing cronjobs to gain code execution was also not possible in this environmen
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files.png&#34;
 	width=&#34;1882&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files_hu_8ca9413a04ace7fa.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files_hu_1bc1dec9501df3fa.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files_hu6721205499655125719.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/reading_files_hu15016785657336851450.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Reading Files&#34;
@@ -285,10 +285,10 @@ Editing cronjobs to gain code execution was also not possible in this environmen
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Running that tool produced a local copy of the site’s source code and configuration files.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading.png&#34;
 	width=&#34;1515&#34;
 	height=&#34;933&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading_hu_13fd42cf99eb2ef9.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading_hu_540270158fc903e2.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading_hu10836801233591460301.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/source_code_downloading_hu17075104648674714378.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Downloading whole Directory&#34;
@@ -301,10 +301,10 @@ Editing cronjobs to gain code execution was also not possible in this environmen
 &gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;source-code-analysis--discovery-of-database-credentials&#34;&gt;Source code analysis &amp;amp; discovery of database credentials
 &lt;/h2&gt;&lt;p&gt;Within the downloaded source code I discovered database connection details (IP address and credentials) stored in configuration files. The database IP was a private class-A address, indicating it lived on an internal network and could not be accessed directly from the internet.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials.png&#34;
 	width=&#34;1882&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials_hu_847d63c136d42edf.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials_hu_26844a73e9d6af33.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials_hu7920203635237287229.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_credentials_hu12184795363014287438.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database Credentials&#34;
@@ -357,10 +357,10 @@ Verification payload used:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;This showed the server could connect to the database.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection.png&#34;
 	width=&#34;1882&#34;
 	height=&#34;901&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection_hu_4ed411cf33647b26.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection_hu_ceaa8b0f7b1160ee.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection_hu4339485006131376690.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/database_connection_hu2689872515075127187.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database Connection&#34;
@@ -480,10 +480,10 @@ To execute arbitrary queries and extract data, I used another PHP payload that a
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database.png&#34;
 	width=&#34;1882&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_hu_ef05b9f0e44e2c14.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_hu_7fa2a0604d4b423d.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_hu14687941150244598756.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_hu18125063414312530334.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Executing Queries on Database&#34;
@@ -605,10 +605,10 @@ I wrapped that into a small Python utility to run queries and save results local
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;			&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;sa&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Fore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RED&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;[-] ERROR OCCURED =&amp;gt; &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;error&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}{&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Fore&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;RESET&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;}&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.png&#34;
 	width=&#34;1908&#34;
 	height=&#34;863&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python_hu_6e55af2e65a1dbb5.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python_hu_7a3238edf360b6c2.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python_hu14813973543534982505.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python_hu9045490231871625959.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Executing Queries on Database using Python&#34;
@@ -619,10 +619,10 @@ I wrapped that into a small Python utility to run queries and save results local
 		data-flex-basis=&#34;530px&#34;
 	
 &gt;&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1.png&#34;
 	width=&#34;1897&#34;
 	height=&#34;908&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1_hu_385b99552a3be718.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1_hu_965334d7ae6331b6.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1_hu12914549811175996708.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/executing_queries_on_database_using_python.1_hu15580776619621361035.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Executing Queries on Database using Python&#34;
@@ -684,10 +684,10 @@ I wrapped that into a small Python utility to run queries and save results local
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Using the above, I scanned internal addresses and found multiple hosts with MySQL (port 3306) open. With further checks, two of those were reachable and contained the same dataset (one appeared to be a backup).&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan.png&#34;
 	width=&#34;1882&#34;
 	height=&#34;901&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan_hu_9e757094da44b6b9.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan_hu_d6baa3bfadd4d4a9.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan_hu11371996767079096096.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/port_scan_hu3342487124578233505.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Port Scan&#34;
@@ -698,10 +698,10 @@ I wrapped that into a small Python utility to run queries and save results local
 		data-flex-basis=&#34;501px&#34;
 	
 &gt;&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan_hu_2fb3df22f8695b3c.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan_hu_63ee8d742ffde3ed.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan_hu13212954020190542316.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_port_scan_hu1664962458827444434.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Burp Suite Intruder for Port Scanning&#34;
@@ -712,10 +712,10 @@ I wrapped that into a small Python utility to run queries and save results local
 		data-flex-basis=&#34;426px&#34;
 	
 &gt;&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking.png&#34;
 	width=&#34;1888&#34;
 	height=&#34;917&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking_hu_b71ffac246d41543.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking_hu_b6acb8824678c69b.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking_hu3351845479805701920.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/burp_suite_intruder_db_connection_checking_hu17959530291818287172.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Burp Suite Intruder for Checking Connection to Databases&#34;
@@ -726,10 +726,10 @@ I wrapped that into a small Python utility to run queries and save results local
 		data-flex-basis=&#34;494px&#34;
 	
 &gt;&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server.png&#34;
 	width=&#34;1913&#34;
 	height=&#34;963&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server_hu_3a0b64884916c886.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server_hu_71a4d3acdb371a2d.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server_hu9890339811430520660.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/data_on_second_server_hu17756751351890718556.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Data on Second Server&#34;
@@ -741,10 +741,10 @@ I wrapped that into a small Python utility to run queries and save results local
 	
 &gt;&lt;br /&gt;&lt;/p&gt;
 &lt;h2 id=&#34;attack-path-visualization&#34;&gt;Attack Path Visualization
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections.png&#34;
 	width=&#34;1149&#34;
 	height=&#34;849&#34;
-	srcset=&#34;http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections_hu_8435040757fae08b.png 480w, http://localhost:1313/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections_hu_1cacb18b653e3781.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections_hu11199315536539371724.png 480w, https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/db_connections_hu15929132294022327881.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path — Plotted using Maltego&#34;

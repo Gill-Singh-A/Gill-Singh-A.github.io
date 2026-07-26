@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Cracking on Gill.Singh.A</title>
-        <link>http://localhost:1313/categories/cracking/</link>
+        <link>https://Gill-Singh-A.github.io/categories/cracking/</link>
         <description>Recent content in Cracking on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="http://localhost:1313/categories/cracking/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 21 Mar 2025 23:30:23 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/cracking/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Cracking Linux Hashes and Expanding Access</title>
-        <link>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</link>
+        <link>https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/</link>
         <pubDate>Fri, 21 Mar 2025 23:30:23 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/</guid>
-        <description>&lt;img src="http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png" alt="Featured image of post Cracking Linux Hashes and Expanding Access" /&gt;&lt;h2 id=&#34;initial-entry-point&#34;&gt;Initial Entry Point
+        <guid>https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png" alt="Featured image of post Cracking Linux Hashes and Expanding Access" /&gt;&lt;h2 id=&#34;initial-entry-point&#34;&gt;Initial Entry Point
 &lt;/h2&gt;&lt;p&gt;During a routine exploration of vulnerable servers on the internet, I successfully gained root access to several machines. While the specific method used to achieve root access is beyond the scope of this blog, I’ll focus on how I expanded my access to other servers within the same organization.&lt;/p&gt;
 &lt;h2 id=&#34;extracting-linux-user-hashes&#34;&gt;Extracting Linux User Hashes
 &lt;/h2&gt;&lt;p&gt;Once inside the compromised machine, I noticed multiple user accounts. With root privileges, I accessed the &lt;em&gt;/etc/shadow&lt;/em&gt; file, which stores password hashes for all users on the system.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file.png&#34;
 	width=&#34;841&#34;
 	height=&#34;841&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_f528276b63799288.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu_eb3497759e76b05.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu3672731679349725699.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shadow_file_hu5329670692442262125.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Shadow File&#34;
@@ -39,10 +39,10 @@ I copied the contents of the shadow file to my local machine and extracted the h
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat shadow_file &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; cut -d &lt;span class=&#34;s1&#34;&gt;&amp;#39;:&amp;#39;&lt;/span&gt; -f2 &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; sort &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; uniq &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v &lt;span class=&#34;s1&#34;&gt;&amp;#39;[!-*]&amp;#39;&lt;/span&gt; &amp;gt; hashes
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes.png&#34;
 	width=&#34;1156&#34;
 	height=&#34;268&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_17f092fa4f65cc25.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu_3cce7c568ec14935.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu9024913798855049347.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hashes_hu8052994993040619573.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashes&#34;
@@ -86,10 +86,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &lt;/ul&gt;
 &lt;!-- --&gt;
 &lt;p&gt;After running the command, Hashcat successfully cracked two of the hashes. Below is an example of one of the cracked hashes:&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking.png&#34;
 	width=&#34;989&#34;
 	height=&#34;874&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_6e4cc396be402074.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu_f0fafc78d8c60905.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu2398366856187407432.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/hash_cracking_hu5949150121733445545.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Cracked Hash&#34;
@@ -102,10 +102,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 &gt;&lt;/p&gt;
 &lt;h2 id=&#34;discovering-additional-machines&#34;&gt;Discovering Additional Machines
 &lt;/h2&gt;&lt;p&gt;With the cracked credentials in hand, my next goal was to identify other machines within the same organization. I began by gathering information about the compromised server’s owner or organization. Using tools like &lt;strong&gt;Shodan&lt;/strong&gt;, I extracted details such as the organization name, ISP (Internet Service Provider), ASN (Autonomous System Number), and subnet associated with the server’s IP address.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information.png&#34;
 	width=&#34;948&#34;
 	height=&#34;431&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_90039939899429dd.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu_b92258cae3abf462.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu14698924062869139471.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_host_information_hu4208050796426702305.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Server Details&#34;
@@ -117,10 +117,10 @@ For more advanced scenarios, tools like &lt;a class=&#34;link&#34; href=&#34;htt
 	
 &gt;&lt;br /&gt;
 Using this information, I filtered Shodan search results to compile a list of IP addresses belonging to the same organization, ISP, or subnet.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search.png&#34;
 	width=&#34;1920&#34;
 	height=&#34;951&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_da0d126d3530e5be.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu_f4faf8edba9cb548.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu18008454021057110726.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/shodan_search_hu3654070958966295453.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Filtered Shodan Search&#34;
@@ -138,10 +138,10 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;!-- --&gt;
 &lt;p&gt;Armed with a list of IP addresses and valid credentials, I launched a SSH brute-force attack using the &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/SSH-Brute-Force&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Gill-Singh-A/SSH-Brute-Force&lt;/a&gt; tool. This allowed me to authenticate successfully on several other machines within the organization.&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force.png&#34;
 	width=&#34;785&#34;
 	height=&#34;223&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_1dcf517c6ebdc87f.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu_aabd6b934657b411.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu7351718088844256057.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/ssh_brute_force_hu2408174159892381674.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;SSH Brute-Force Logs of 1 pair of Credential&#34;
@@ -155,10 +155,10 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &lt;h2 id=&#34;attack-path-visualization&#34;&gt;Attack Path Visualization
 &lt;/h2&gt;&lt;p&gt;Below is a visual representation of the attack path, created using &lt;a class=&#34;link&#34; href=&#34;https://www.maltego.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;Maltego&lt;/a&gt;:&lt;br /&gt;
-&lt;img src=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.png&#34;
 	width=&#34;1148&#34;
 	height=&#34;719&#34;
-	srcset=&#34;http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_797e70a14cc48100.png 480w, http://localhost:1313/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu_497c34a6f960a385.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu13275239387980571932.png 480w, https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path_hu9965436999406051511.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Attack Path&#34;
@@ -189,15 +189,15 @@ Using this information, I filtered Shodan search results to compile a list of IP
         </item>
         <item>
         <title>Password Cracking</title>
-        <link>http://localhost:1313/p/password-cracking/</link>
+        <link>https://Gill-Singh-A.github.io/p/password-cracking/</link>
         <pubDate>Mon, 23 Sep 2024 04:56:45 +0530</pubDate>
         
-        <guid>http://localhost:1313/p/password-cracking/</guid>
-        <description>&lt;img src="http://localhost:1313/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database.png&#34;
+        <guid>https://Gill-Singh-A.github.io/p/password-cracking/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password_cracking.jpeg" alt="Featured image of post Password Cracking" /&gt;&lt;h2 id=&#34;how-passwords-are-stored-on-servers&#34;&gt;How passwords are stored on servers?
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database.png&#34;
 	width=&#34;1720&#34;
 	height=&#34;900&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_hu_130381b2eda80e1a.png 480w, http://localhost:1313/p/password-cracking/assets/images/database_hu_c00870bfc6c0210.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_hu1473404851421758759.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_hu5701567306370613051.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database&#34;
@@ -210,10 +210,10 @@ Using this information, I filtered Shodan search results to compile a list of IP
 &gt;&lt;br /&gt;
 Passwords are stored on databases by hashing them alone or after appending them with random values. Hashing is a one-way function that converts a given string of characters into another value. A strong hashing algorithm has to be quick, deterministic, and irreversible. In this blog, we explore how a hashed password can be cracked.&lt;/p&gt;
 &lt;h2 id=&#34;hashing-algorithms&#34;&gt;Hashing Algorithms
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing.png&#34;
 	width=&#34;2079&#34;
 	height=&#34;800&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/hashing_hu_c2f9742670f39184.png 480w, http://localhost:1313/p/password-cracking/assets/images/hashing_hu_52104cd0d46cfc40.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing_hu4833789966977637885.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/hashing_hu4912368868399801949.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hashing&#34;
@@ -252,10 +252,10 @@ Here are the main reasons why passwords are hashed:&lt;/p&gt;
 &lt;li&gt;Compliance with Security Standards: PCI DSS, GDPR, and other standards mandate password hashing for user data protection&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;salting-in-hashes&#34;&gt;Salting in Hashes
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/salting.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting.jpg&#34;
 	width=&#34;1940&#34;
 	height=&#34;1282&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/salting_hu_2353d85b07ba0473.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/salting_hu_8e75afab3df8484d.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting_hu13723605654203217095.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/salting_hu2456114825957901133.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Salting&#34;
@@ -273,10 +273,10 @@ Salting in hashes is a technique used to enhance the security of hashed password
 &lt;li&gt;Enhancing Security: Salting significantly boosts security by mitigating various types of attacks, including brute force and dictionary attacks&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;password-protected-files-and-drives&#34;&gt;Password Protected Files and Drives
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions.jpg&#34;
 	width=&#34;550&#34;
 	height=&#34;345&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu_cc41043eed0b5719.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/file_encryptions_hu_969d64b9a6b32bec.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions_hu4445162751528759475.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/file_encryptions_hu11562899296713017864.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;File Encryption&#34;
@@ -289,10 +289,10 @@ Salting in hashes is a technique used to enhance the security of hashed password
 &gt;&lt;br /&gt;
 Password-protected files, such as ZIP archives and PDF documents, are digital files encrypted with a password to prevent unauthorized access. ZIP files, compressed archives containing multiple files and folders, can be password-protected to encrypt their contents, requiring the correct password for extraction. Similarly, PDF files, commonly used for document sharing, can be secured with password protection to encrypt the document&amp;rsquo;s contents and restrict access or actions like printing and editing without the correct password. Encrypted files and drives use encryption algorithms to encode data, making it unreadable without the corresponding decryption key or password. This encryption ensures the confidentiality and security of sensitive information stored within the files or drives, reinforcing protection against unauthorized access and data breaches.&lt;/p&gt;
 &lt;h2 id=&#34;hash-cracking&#34;&gt;Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/methods.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods.jpg&#34;
 	width=&#34;495&#34;
 	height=&#34;316&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/methods_hu_44725596dec4a58.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/methods_hu_eaa6ba43fce7e1fb.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods_hu8197215681215346304.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/methods_hu3860945043454114380.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Hash Cracking&#34;
@@ -336,10 +336,10 @@ In 2004, researchers Xiaoyun Wang and Hongbo Yu published a paper titled &lt;em&
 Since then, further advancements in computing power and cryptanalysis techniques have made collision attacks against MD5 even more feasible and practical. Today, it is relatively easy to generate MD5 collisions using specialized hardware or distributed computing resources. &lt;br /&gt;
 Due to these vulnerabilities, MD5 is no longer considered secure for cryptographic purposes, and its use has been strongly discouraged in favor of more secure hashing algorithms such as SHA-256 or SHA-3. In fact, most modern security standards and protocols explicitly prohibit the use of MD5 due to its susceptibility to collision attacks.&lt;/p&gt;
 &lt;h2 id=&#34;tools-for-hash-cracking&#34;&gt;Tools for Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/tools.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools.jpg&#34;
 	width=&#34;738&#34;
 	height=&#34;576&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/tools_hu_f24eb5d09d412f76.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/tools_hu_859f9ae85b2ed51b.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools_hu12748403592501029798.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/tools_hu8750775526461045458.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Tools&#34;
@@ -388,10 +388,10 @@ Due to these vulnerabilities, MD5 is no longer considered secure for cryptograph
     &gt;Ntirxgen&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;wordlists&#34;&gt;Wordlists
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists.png&#34;
 	width=&#34;1747&#34;
 	height=&#34;478&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/wordlists_hu_b7ec3a922bf8295e.png 480w, http://localhost:1313/p/password-cracking/assets/images/wordlists_hu_17864f8a64d6f1dc.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists_hu3032474284580762306.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/wordlists_hu4384129554991596746.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Wordlists&#34;
@@ -425,10 +425,10 @@ Most of the time Wordlists that contain commonly used passwords and words are us
     &gt;CeWL&lt;/a&gt; (Custom Word List generator): A tool that spiders a target website to create custom wordlists based on the content found in the web pages.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;cpu-vs-gpu&#34;&gt;CPU vs GPU
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu.jpg&#34;
 	width=&#34;800&#34;
 	height=&#34;445&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu_9a222d7c6f7e6a48.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/cpu-vs-gpu_hu_81d2d972f221aaec.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu_hu4494810528079756738.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/cpu-vs-gpu_hu7107262851154168624.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;CPU vs GPU&#34;
@@ -571,10 +571,10 @@ Here are some common distortion rules used in password cracking:&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;password-strength&#34;&gt;Password Strength
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength.jpg&#34;
 	width=&#34;2200&#34;
 	height=&#34;750&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/password-strength_hu_41a723d2d9634ea4.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/password-strength_hu_d855944b2fef8207.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength_hu14296305625101620386.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/password-strength_hu5624597227159595850.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Password Strength&#34;
@@ -637,79 +637,79 @@ That&amp;rsquo;s why you should keep a complex password that uses all of the fol
 &lt;table&gt;
   &lt;thead&gt;
       &lt;tr&gt;
-          &lt;th&gt;Length&lt;/th&gt;
-          &lt;th&gt;Numbers&lt;/th&gt;
-          &lt;th&gt;Lowercase ASCII Characters&lt;/th&gt;
-          &lt;th&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
-          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
-          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
-          &lt;th&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Length&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Numbers&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Lowercase ASCII Characters&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Lowercase ASCII Characters + Numbers&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Lowercase ASCII Characters + Uppercase ASCII Characters&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Lowercase ASCII Characters + Uppercase ASCII Characters + Numbers + Special Characters&lt;/th&gt;
       &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
       &lt;tr&gt;
-          &lt;td&gt;8&lt;/td&gt;
-          &lt;td&gt;1 sec&lt;/td&gt;
-          &lt;td&gt;34.8 min&lt;/td&gt;
-          &lt;td&gt;7.83 hours&lt;/td&gt;
-          &lt;td&gt;6.18 days&lt;/td&gt;
-          &lt;td&gt;25.27 days&lt;/td&gt;
-          &lt;td&gt;22.84 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;8&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1 sec&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;34.8 min&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;7.83 hours&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;6.18 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;25.27 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;22.84 years&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;9&lt;/td&gt;
-          &lt;td&gt;10 sec&lt;/td&gt;
-          &lt;td&gt;15.08 hours&lt;/td&gt;
-          &lt;td&gt;8.57 days&lt;/td&gt;
-          &lt;td&gt;162.12 days&lt;/td&gt;
-          &lt;td&gt;1.8 years&lt;/td&gt;
-          &lt;td&gt;57.1 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;9&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;10 sec&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;15.08 hours&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;8.57 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;162.12 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1.8 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;57.1 years&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;10&lt;/td&gt;
-          &lt;td&gt;1.67 min&lt;/td&gt;
-          &lt;td&gt;16.28 days&lt;/td&gt;
-          &lt;td&gt;223.03 days&lt;/td&gt;
-          &lt;td&gt;11.51 years&lt;/td&gt;
-          &lt;td&gt;47.46 years&lt;/td&gt;
-          &lt;td&gt;1497.55 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;10&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1.67 min&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;16.28 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;223.03 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;11.51 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;47.46 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1497.55 years&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;11&lt;/td&gt;
-          &lt;td&gt;16.67 min&lt;/td&gt;
-          &lt;td&gt;281.93 days&lt;/td&gt;
-          &lt;td&gt;10.56 years&lt;/td&gt;
-          &lt;td&gt;199.92 years&lt;/td&gt;
-          &lt;td&gt;820.928 years&lt;/td&gt;
-          &lt;td&gt;25843.264 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;11&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;16.67 min&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;281.93 days&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;10.56 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;199.92 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;820.928 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;25843.264 years&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;12&lt;/td&gt;
-          &lt;td&gt;2.78 hours&lt;/td&gt;
-          &lt;td&gt;9.515 years&lt;/td&gt;
-          &lt;td&gt;130.341 years&lt;/td&gt;
-          &lt;td&gt;2463.897 years&lt;/td&gt;
-          &lt;td&gt;1023042.47 years&lt;/td&gt;
-          &lt;td&gt;6133565802.2 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;12&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;2.78 hours&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;9.515 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;130.341 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;2463.897 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;1023042.47 years&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;6133565802.2 years&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-          &lt;td&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
-          &lt;td&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;This table is just an example and not indicative of the actual time taken for hash cracking. A good understanding of multithreading and CUDA programming can even accelerate this by a factor.&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;/td&gt;
       &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id=&#34;success-rate-of-hash-cracking&#34;&gt;Success Rate of Hash Cracking
 &lt;/h2&gt;&lt;p&gt;Based on the calculations shown in the previous section, we&amp;rsquo;re convinced that Hash Cracking is difficult. So, one question arises: why does an attacker attempt to crack a hash when it would take such a long time? When an attacker gains access to a list of Hash Protected Passwords (from a Compromised Database or any other method), they run a dictionary attack instead of brute force. Because the main aim here is to crack as many passwords as possible instead of targeting a specific one, the attacker would obtain passwords that were present in the wordlist. In such scenarios, the success rate of Hash Cracking is higher than expected.&lt;/p&gt;
 &lt;h2 id=&#34;security-measure-against-hash-cracking&#34;&gt;Security Measure against Hash Cracking
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/security.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security.jpg&#34;
 	width=&#34;710&#34;
 	height=&#34;400&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/security_hu_84a96fde6b12910f.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/security_hu_ee1d04bce66a7be1.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security_hu4729459122753097169.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/security_hu1248179033021697295.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Security&#34;
@@ -733,10 +733,10 @@ So, to enhance the Security of your password, here are a few points to keep in m
 &lt;h3 id=&#34;note&#34;&gt;Note
 &lt;/h3&gt;&lt;p&gt;The above points do not Guarantee 100% Protection; they only enhance Security.&lt;/p&gt;
 &lt;h2 id=&#34;checking-leaked-passwords&#34;&gt;Checking Leaked Passwords
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak.jpg&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak.jpg&#34;
 	width=&#34;1200&#34;
 	height=&#34;675&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/database_leak_hu_1da7b435cb57c706.jpg 480w, http://localhost:1313/p/password-cracking/assets/images/database_leak_hu_15edd6a9c3fa88e2.jpg 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak_hu15606094843707238069.jpg 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/database_leak_hu12382051111320609846.jpg 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Database Leak&#34;
@@ -768,10 +768,10 @@ There are several websites you can use to check whether your password has been l
 &lt;p&gt;Source: &lt;a class=&#34;link&#34; href=&#34;https://github.com/edoardottt/awesome-hacker-search-engines&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;edoardottt/awesome-hacker-search-engines&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;broken-hashing-algorithms&#34;&gt;Broken Hashing Algorithms
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
+&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo.png&#34;
 	width=&#34;1500&#34;
 	height=&#34;900&#34;
-	srcset=&#34;http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu_249feb0f89eac7e8.png 480w, http://localhost:1313/p/password-cracking/assets/images/weak_crypto_algo_hu_387d8aac52fa5474.png 1024w&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo_hu1574552661041515237.png 480w, https://Gill-Singh-A.github.io/p/password-cracking/assets/images/weak_crypto_algo_hu15285761037877453571.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;Weak Encryption Algorithms&#34;
