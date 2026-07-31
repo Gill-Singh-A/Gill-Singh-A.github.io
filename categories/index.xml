@@ -6,12 +6,36 @@
         <description>Recent content in Categories on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sun, 26 Jul 2026 19:13:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 31 Jul 2026 13:00:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Hacking</title>
         <link>https://Gill-Singh-A.github.io/categories/hacking/</link>
-        <pubDate>Sun, 26 Jul 2026 19:13:00 +0530</pubDate>
+        <pubDate>Fri, 31 Jul 2026 13:00:00 +0530</pubDate>
         
         <guid>https://Gill-Singh-A.github.io/categories/hacking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Infrastructure</title>
+        <link>https://Gill-Singh-A.github.io/categories/infrastructure/</link>
+        <pubDate>Fri, 31 Jul 2026 13:00:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/categories/infrastructure/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Privilege Escalation</title>
+        <link>https://Gill-Singh-A.github.io/categories/privilege-escalation/</link>
+        <pubDate>Fri, 31 Jul 2026 13:00:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/categories/privilege-escalation/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Proxmox</title>
+        <link>https://Gill-Singh-A.github.io/categories/proxmox/</link>
+        <pubDate>Fri, 31 Jul 2026 13:00:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/categories/proxmox/</guid>
         <description></description>
         </item>
         <item>
@@ -20,14 +44,6 @@
         <pubDate>Sun, 26 Jul 2026 19:13:00 +0530</pubDate>
         
         <guid>https://Gill-Singh-A.github.io/categories/nfs/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Privilege Escalation</title>
-        <link>https://Gill-Singh-A.github.io/categories/privilege-escalation/</link>
-        <pubDate>Sun, 26 Jul 2026 19:13:00 +0530</pubDate>
-        
-        <guid>https://Gill-Singh-A.github.io/categories/privilege-escalation/</guid>
         <description></description>
         </item>
         <item>

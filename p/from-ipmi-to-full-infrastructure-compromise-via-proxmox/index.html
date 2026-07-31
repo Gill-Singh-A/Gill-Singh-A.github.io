@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="In this blog, I walk through how a single exposed IPMI/BMC interface let me take full control of a physical server — which turned out to be a Proxmox hypervisor — handing me every virtual machine, container, and backup running on top of it.">
+<title>From IPMI to Full Infrastructure Compromise via Proxmox</title>
+
+<link rel='canonical' href='https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="From IPMI to Full Infrastructure Compromise via Proxmox">
+<meta property='og:description' content="In this blog, I walk through how a single exposed IPMI/BMC interface let me take full control of a physical server — which turned out to be a Proxmox hypervisor — handing me every virtual machine, container, and backup running on top of it.">
+<meta property='og:url' content='https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/'>
+<meta property='og:site_name' content='Gill.Singh.A'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='ipmi' /><meta property='article:tag' content='bmc' /><meta property='article:tag' content='proxmox' /><meta property='article:tag' content='privilege escalation' /><meta property='article:tag' content='virtualization' /><meta property='article:published_time' content='2026-07-31T13:00:00&#43;05:30'/><meta property='article:modified_time' content='2026-07-31T13:00:00&#43;05:30'/><meta property='og:image' content='https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path.png' />
+<meta name="twitter:title" content="From IPMI to Full Infrastructure Compromise via Proxmox">
+<meta name="twitter:description" content="In this blog, I walk through how a single exposed IPMI/BMC interface let me take full control of a physical server — which turned out to be a Proxmox hypervisor — handing me every virtual machine, container, and backup running on top of it."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path.png' />
+    <link rel="shortcut icon" href="/favicon.jpg" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🤖</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Gill.Singh.A</a></h1>
+            <h2 class="site-description">Undergraduate Student at IIT Kanpur</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Gill-Singh-A'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://x.com/Gill_Singh_A'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#prologue">Prologue</a></li>
+    <li><a href="#what-is-ipmi">What is IPMI?</a></li>
+    <li><a href="#ipmi-over-the-network">IPMI Over the Network</a></li>
+    <li><a href="#supermicro-bmc--and-everyone-else">Supermicro BMC — and Everyone Else</a></li>
+    <li><a href="#the-vulnerabilities">The Vulnerabilities</a>
+      <ol>
+        <li><a href="#cipher-0--authentication-bypass">Cipher 0 — Authentication Bypass</a></li>
+        <li><a href="#rakp-authentication-hash-disclosure">RAKP Authentication Hash Disclosure</a></li>
+      </ol>
+    </li>
+    <li><a href="#enumeration">Enumeration</a></li>
+    <li><a href="#dumping-the-authentication-hash">Dumping the Authentication Hash</a></li>
+    <li><a href="#logging-into-the-bmc">Logging Into the BMC</a></li>
+    <li><a href="#kvm-over-ip--a-remote-screen-and-keyboard">KVM Over IP — A Remote Screen and Keyboard</a></li>
+    <li><a href="#from-kvm-to-root-editing-the-grub-entry">From KVM to Root: Editing the GRUB Entry</a></li>
+    <li><a href="#establishing-persistence">Establishing Persistence</a></li>
+    <li><a href="#this-isnt-just-a-server--its-a-hypervisor">This Isn&rsquo;t Just a Server — It&rsquo;s a Hypervisor</a></li>
+    <li><a href="#proxmox-virtual-environment">Proxmox Virtual Environment</a></li>
+    <li><a href="#accessing-the-proxmox-web-interface">Accessing the Proxmox Web Interface</a></li>
+    <li><a href="#adding-a-backdoor-proxmox-user">Adding a Backdoor Proxmox User</a></li>
+    <li><a href="#owning-the-entire-cluster">Owning the Entire Cluster</a></li>
+    <li><a href="#a-full-remote-shell-on-the-host">A Full Remote Shell on the Host</a></li>
+    <li><a href="#reaching-into-every-vm-and-container">Reaching Into Every VM and Container</a></li>
+    <li><a href="#pivoting-to-the-backups">Pivoting to the Backups</a></li>
+    <li><a href="#attack-path">Attack Path</a></li>
+    <li><a href="#mitigations">Mitigations</a>
+      <ol>
+        <li><a href="#note">Note</a></li>
+      </ol>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#references">References</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/">
+                <img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path_hu13142302425901533976.png"
+                        srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path_hu13142302425901533976.png 800w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path_hu5067832228905399438.png 1600w"
+                        width="800" 
+                        height="505" 
+                        loading="lazy"
+                        alt="Featured image of post From IPMI to Full Infrastructure Compromise via Proxmox" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/hacking/" >
+                Hacking
+            </a>
+        
+            <a href="/categories/infrastructure/" >
+                Infrastructure
+            </a>
+        
+            <a href="/categories/privilege-escalation/" >
+                Privilege Escalation
+            </a>
+        
+            <a href="/categories/proxmox/" >
+                Proxmox
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/">From IPMI to Full Infrastructure Compromise via Proxmox</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            In this blog, I walk through how a single exposed IPMI/BMC interface let me take full control of a physical server — which turned out to be a Proxmox hypervisor — handing me every virtual machine, container, and backup running on top of it.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jul 31, 2026</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    10 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>In this blog, I&rsquo;ll walk through how a single exposed <strong>IPMI/BMC</strong> interface let me take <strong>full control of a physical server</strong> — and how that server turned out to be a <strong>Proxmox</strong> hypervisor, handing me every <strong>virtual machine and container</strong> running on top of it, along with the backups behind them.</p>
+<h2 id="prologue">Prologue
+</h2><blockquote>
+<p><strong>&ldquo;A bug is never just a mistake. It represents something bigger. An error of thought that makes you who you are.&rdquo;</strong><br>
+— <em>Elliot Alderson, Mr. Robot</em></p>
+</blockquote>
+<p>Every server has a second, smaller computer living inside it — one that never sleeps, answers the network even when the machine is &ldquo;off,&rdquo; and was built entirely on the assumption that only administrators would ever talk to it. That assumption is the vulnerability.</p>
+<h2 id="what-is-ipmi">What is IPMI?
+</h2><p><strong>IPMI (Intelligent Platform Management Interface)</strong> is a protocol introduced by Intel in 1998 for <strong>remote management and monitoring of servers</strong> — even when the operating system isn&rsquo;t running, the machine is powered off, or the system has completely hung.</p>
+<p>It works because it runs on a dedicated <strong>Baseboard Management Controller (BMC)</strong> — a small microcontroller soldered onto the motherboard that operates <strong>independently of the CPU, firmware, and OS</strong>. It has its own processor, its own memory, its own network stack, and its own power. To an administrator it means <em>lights-out management</em>: power the box on or off, watch temperatures and fans, read event logs, and — crucially — get a <strong>remote console (KVM over IP)</strong> as if you were standing at the keyboard.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/IPMI-Block-Diagram.png"
+	width="702"
+	height="499"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/IPMI-Block-Diagram_hu1803846174234168858.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/IPMI-Block-Diagram_hu3895761122122067274.png 1024w"
+	loading="lazy"
+	
+		alt="IPMI Block Diagram"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="140"
+		data-flex-basis="337px"
+	
+><br />
+That last capability — a remote screen, keyboard, and power button — is exactly what makes a compromised BMC so dangerous. If you control the BMC, you control the machine at a level <em>below</em> the operating system.</p>
+<h2 id="ipmi-over-the-network">IPMI Over the Network
+</h2><p>For all of this to work, the BMC needs just two things: <strong>power</strong> and a <strong>LAN connection</strong>. It listens on <strong>UDP port 623</strong>. Find that port open on a host, and you&rsquo;ve found a BMC waiting to talk.</p>
+<h2 id="supermicro-bmc--and-everyone-else">Supermicro BMC — and Everyone Else
+</h2><p>This particular server used a <strong>Supermicro</strong> BMC supporting <strong>IPMI 2.0</strong>, exposing the usual web-based management interface. But nothing here is Supermicro-specific.</p>
+<p>The exact same weaknesses and workflow apply to virtually every server-class BMC, because they all implement the same IPMI 2.0 specification — including <strong>Tyrone</strong>, <strong>Hexadata</strong>, <strong>ASUS (ASMB)</strong>, <strong>ASRockRack</strong>, Dell iDRAC, HPE iLO, Lenovo XCC, and others. Different logos, same protocol, same design flaws. If you learn it on one, you can do it on all of them.</p>
+<p>And they all widen the attack surface the same way: every one of these vendors ships its BMCs with well-known <strong>factory-default credentials</strong> (Supermicro&rsquo;s <code>ADMIN</code>/<code>ADMIN</code>, Dell iDRAC&rsquo;s <code>root</code>/<code>calvin</code>, and so on). Left unchanged — which, in practice, they very often are — those defaults hand an attacker valid credentials outright, no cracking required, and expose the machine to the exact chain that follows.</p>
+<h2 id="the-vulnerabilities">The Vulnerabilities
+</h2><p>Two long-standing weaknesses in IPMI 2.0 make BMCs a favourite target.</p>
+<h3 id="cipher-0--authentication-bypass">Cipher 0 — Authentication Bypass
+</h3><p>IPMI 2.0 negotiates a <em>cipher suite</em> for each session. <strong>Cipher Suite 0</strong> is a special case that provides <strong>no encryption and no authentication</strong>. Where it&rsquo;s left enabled, an attacker can simply <em>request</em> a session using cipher 0 and issue privileged commands <strong>without any valid credentials</strong> — power control, monitoring, and management, straight to the BMC.</p>
+<h3 id="rakp-authentication-hash-disclosure">RAKP Authentication Hash Disclosure
+</h3><p>The bigger flaw is baked into the <strong>RAKP (Remote Authenticated Key-Exchange Protocol)</strong> handshake that IPMI 2.0 uses at login. By design, when a client begins authentication with a <strong>valid username</strong>, the BMC responds with a <strong>salted hash of that user&rsquo;s password</strong> — <em>before</em> the client has proven anything.</p>
+<p>An attacker can request this handshake, capture the returned hash, and <strong>crack it offline</strong> with Hashcat or John the Ripper. This is often called <strong>IPMI Hash Disclosure / Hash Dumping</strong>, and it&rsquo;s the path I took here.</p>
+<h2 id="enumeration">Enumeration
+</h2><p>The first step was confirming a BMC was present. A UDP scan of the target flagged <strong>port 623 open</strong>.</p>
+<ul>
+<li><strong>IP Address:</strong> <code>x.x.x.x</code></li>
+<li><strong>UDP Port:</strong> <code>623</code></li>
+</ul>
+<p><img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/udp_port_scan.png"
+	width="557"
+	height="84"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/udp_port_scan_hu5289070494960661382.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/udp_port_scan_hu7042854708004147362.png 1024w"
+	loading="lazy"
+	
+		alt="UDP Port Scan"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="663"
+		data-flex-basis="1591px"
+	
+><br />
+That&rsquo;s the fingerprint of an IPMI service. To confirm the version and implementation, I used the Metasploit Framework module <code>scanner/ipmi/ipmi_version</code>.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_version.png"
+	width="1299"
+	height="121"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_version_hu9744267908591006943.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_version_hu17840314516267811413.png 1024w"
+	loading="lazy"
+	
+		alt="IPMI Version Check"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="1073"
+		data-flex-basis="2576px"
+	
+><br />
+The scan confirmed <strong>IPMI 2.0</strong>, which meant the RAKP hash-disclosure weakness was in play.</p>
+<h2 id="dumping-the-authentication-hash">Dumping the Authentication Hash
+</h2><p>Metasploit ships a module built exactly for the RAKP flaw: <code>scanner/ipmi/ipmi_dumphashes</code>. It requests the handshake for common usernames and returns the password hashes the BMC leaks back.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_hashes_dump.png"
+	width="1905"
+	height="569"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_hashes_dump_hu3814122531336891721.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/impi_hashes_dump_hu14475520669475532297.png 1024w"
+	loading="lazy"
+	
+		alt="IPMI Hash Dump"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="334"
+		data-flex-basis="803px"
+	
+><br />
+The module recovered a hash for the user <strong><code>ADMIN</code></strong>, and because <code>CRACK_COMMON</code> was enabled it cracked the password on the spot: <strong><code>ADMIN</code></strong>. With valid credentials in hand, the offline-cracking step collapsed into an instant win.</p>
+<h2 id="logging-into-the-bmc">Logging Into the BMC
+</h2><p>With valid credentials, I logged straight into the Supermicro web interface.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/supermicro_web_interface.png"
+	width="1920"
+	height="1080"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/supermicro_web_interface_hu14091278061699230757.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/supermicro_web_interface_hu9430784452215402768.png 1024w"
+	loading="lazy"
+	
+		alt="Supermicro Web Interface"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="426px"
+	
+><br />
+At this point I had full administrative control of the <em>management plane</em> of the server — but not yet of the operating system running on it. The bridge between the two is the remote console.</p>
+<h2 id="kvm-over-ip--a-remote-screen-and-keyboard">KVM Over IP — A Remote Screen and Keyboard
+</h2><p>The BMC provides a <strong>remote console using KVM over IP</strong>, giving live <strong>screen, keyboard, and mouse</strong> access to the physical machine, exactly as if I were sitting in front of it.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/remote_console.png"
+	width="1446"
+	height="908"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/remote_console_hu5137299471754272064.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/remote_console_hu8214643457896395976.png 1024w"
+	loading="lazy"
+	
+		alt="Remote KVM Viewer"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="159"
+		data-flex-basis="382px"
+	
+><br />
+The console also exposes <strong>remote power control</strong> — Power On, Power Off, Power Cycle, and Reset.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/power_states.png"
+	width="486"
+	height="254"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/power_states_hu13616612821623616678.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/power_states_hu10386365662058605456.png 1024w"
+	loading="lazy"
+	
+		alt="Power Control Options"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="191"
+		data-flex-basis="459px"
+	
+><br />
+This combination — a keyboard on the physical console <em>plus</em> a power button — is all that&rsquo;s needed to seize the OS itself.</p>
+<h2 id="from-kvm-to-root-editing-the-grub-entry">From KVM to Root: Editing the GRUB Entry
+</h2><p>Being able to watch the boot process and reset the machine at will opens a classic <strong>physical-access attack</strong>, now available entirely over the network: editing the <strong>GRUB boot entry</strong> to boot straight into a root shell.</p>
+<p>I issued a <strong>Reset</strong> from the power menu and caught the machine at the <strong>GRUB menu</strong>.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/unedited_grub.png"
+	width="1029"
+	height="831"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/unedited_grub_hu1977778161251766106.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/unedited_grub_hu17396494310822867036.png 1024w"
+	loading="lazy"
+	
+		alt="Unedited GRUB Entry"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="123"
+		data-flex-basis="297px"
+	
+><br />
+GRUB lets you edit a boot entry temporarily (<code>e</code>). By appending <code>init=/bin/bash</code> to the kernel line, the system boots directly into a <strong>root shell</strong> instead of loading the full operating system and its login prompt — no password required.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/edited_grub.png"
+	width="1029"
+	height="831"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/edited_grub_hu7116680206908987681.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/edited_grub_hu10215441117237639113.png 1024w"
+	loading="lazy"
+	
+		alt="Edited GRUB Entry"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="123"
+		data-flex-basis="297px"
+	
+><br />
+Booting the edited entry dropped me straight to a root prompt.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/root_shell.png"
+	width="1029"
+	height="831"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/root_shell_hu2571037028640572735.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/root_shell_hu5254315854480618214.png 1024w"
+	loading="lazy"
+	
+		alt="Root Shell on the System"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="123"
+		data-flex-basis="297px"
+	
+><br />
+<code>uid=0(root)</code> — total control of the operating system, obtained without a single OS credential, purely because I could reach the management interface.</p>
+<h2 id="establishing-persistence">Establishing Persistence
+</h2><p>A shell from <code>init=/bin/bash</code> is temporary — it disappears on the next normal boot. To keep durable access, I remounted the root filesystem read-write and added a persistent account with shell and sudo access:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mount -o remount,rw /
+</span></span><span class="line"><span class="cl">useradd -m -s /bin/bash -G sudo svcadmin
+</span></span><span class="line"><span class="cl">passwd svcadmin          <span class="c1"># password set here, redacted</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then I rebooted the machine normally. After it came back up, I logged in through the KVM viewer as my new user.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backdoor_user_login.png"
+	width="806"
+	height="324"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backdoor_user_login_hu17668906138053827758.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backdoor_user_login_hu4284852607638448504.png 1024w"
+	loading="lazy"
+	
+		alt="Backdoor User Login via KVM Viewer"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="248"
+		data-flex-basis="597px"
+	
+><br /></p>
+<h2 id="this-isnt-just-a-server--its-a-hypervisor">This Isn&rsquo;t Just a Server — It&rsquo;s a Hypervisor
+</h2><p>Now inside a normal shell, I checked the network configuration with <code>ip a</code>.</p>
+<ul>
+<li><strong>IP Address:</strong> <code>x.x.x.x</code></li>
+<li><strong>Interface:</strong> <code>vmbr0</code></li>
+</ul>
+<p><img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ip_address.png"
+	width="943"
+	height="835"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ip_address_hu3508616228067189351.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ip_address_hu17478561997958481390.png 1024w"
+	loading="lazy"
+	
+		alt="IP Address of the System"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="112"
+		data-flex-basis="271px"
+	
+><br />
+That interface name — <strong><code>vmbr0</code></strong> — is a giveaway. <code>vmbrX</code> is the naming convention for a <strong>Proxmox virtual bridge</strong>. I hadn&rsquo;t just rooted a server; I&rsquo;d rooted a <strong>Proxmox VE hypervisor</strong>, the machine that hosts and controls an entire fleet of virtual machines and containers.</p>
+<h2 id="proxmox-virtual-environment">Proxmox Virtual Environment
+</h2><p><strong>Proxmox VE</strong> is an open-source virtualization platform (built on Debian) that manages <strong>KVM virtual machines</strong> and <strong>LXC containers</strong> through a web interface, with storage, backup, and clustering built in. Root on the Proxmox host means authority over <em>every</em> guest it runs — their disks, their consoles, and their power.</p>
+<h2 id="accessing-the-proxmox-web-interface">Accessing the Proxmox Web Interface
+</h2><p>Proxmox exposes its management UI on <strong><code>https://&lt;host&gt;:8006</code></strong>. Because I already had root on the host, I could reach and administer it directly.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_web_interface.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_web_interface_hu14834563982734861408.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_web_interface_hu17763980466098776795.png 1024w"
+	loading="lazy"
+	
+		alt="Proxmox Web Interface"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br /></p>
+<h2 id="adding-a-backdoor-proxmox-user">Adding a Backdoor Proxmox User
+</h2><p>For persistent control of the virtualization layer itself (independent of the OS account), I created a dedicated Proxmox administrator in the built-in authentication realm:</p>
+<ul>
+<li><strong>User:</strong> <code>proxmox@pve</code></li>
+<li><strong>Realm:</strong> Proxmox VE Authentication Server</li>
+<li><strong>Endpoint:</strong> <code>https://x.x.x.x:8006</code></li>
+</ul>
+<p><img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_backdoor_user.png"
+	width="1501"
+	height="210"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_backdoor_user_hu5064859034603465682.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/proxmox_backdoor_user_hu11784226506229334752.png 1024w"
+	loading="lazy"
+	
+		alt="Proxmox Backdoor User"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="714"
+		data-flex-basis="1715px"
+	
+><br /></p>
+<h2 id="owning-the-entire-cluster">Owning the Entire Cluster
+</h2><p>This is where a single misconfigured BMC turns into a full-infrastructure compromise. The host wasn&rsquo;t standalone — it was part of a <strong>Proxmox cluster</strong> spanning more than a dozen physical nodes, and the web interface laid the whole estate bare.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/1.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/1_hu10850786427519406712.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/1_hu16518708414401386859.png 1024w"
+	loading="lazy"
+	
+		alt="Proxmox Cluster and a Managed VM"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+The Datacenter search view enumerated <strong>every node and every guest</strong> at once — production, dev, and test servers, each running dozens of VMs, complete with their IP addresses and owner tags.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/7.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/7_hu6581717288976114064.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/7_hu16431606481168664127.png 1024w"
+	loading="lazy"
+	
+		alt="All Nodes and Virtual Machines"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/8.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/8_hu416142633152052536.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/8_hu14260960125427591813.png 1024w"
+	loading="lazy"
+	
+		alt="Full Cluster Resource View"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+From the CLI on the host, the same picture came from a single command:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">pvesh get /cluster/resources --type vm
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/vm.png"
+	width="1920"
+	height="969"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/vm_hu8395848482583507064.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/vm_hu5919793866090534812.png 1024w"
+	loading="lazy"
+	
+		alt="All Virtual Machines"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="198"
+		data-flex-basis="475px"
+	
+><br />
+The inventory read like the organisation&rsquo;s entire backbone — load balancers, IDS/IPS workers, SOC and OT-SOC monitoring VMs, Windows domain servers, databases, syslog and PCAP collectors, and more.</p>
+<h2 id="a-full-remote-shell-on-the-host">A Full Remote Shell on the Host
+</h2><p>The web UI and the KVM console weren&rsquo;t the only way in. I could also reach the host over the network — routed through <strong>ProxyChains</strong> — and open a proper interactive <strong>SSH shell</strong> on it, greeted by its own login banner:<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ssh_connection.png"
+	width="1004"
+	height="418"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ssh_connection_hu9728782279339149622.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/ssh_connection_hu4398459320297246656.png 1024w"
+	loading="lazy"
+	
+		alt="SSH Access to the Compromised Host via ProxyChains"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="240"
+		data-flex-basis="576px"
+	
+><br />
+A real shell on the hypervisor is the comfortable place to operate from — enumerating the cluster, reading root&rsquo;s command history, and lining up the next move.</p>
+<h2 id="reaching-into-every-vm-and-container">Reaching Into Every VM and Container
+</h2><p>Control of the hypervisor means control of the guests. Through the same interface I could open a <strong>console into any VM</strong> — dropping straight onto their login screens (or, for appliances, their boot output) — inspect their hardware, and manage their firewalls, power, and disks.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/4.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/4_hu3589978001827515467.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/4_hu15500739612871090944.png 1024w"
+	loading="lazy"
+	
+		alt="Console Access to a Guest VM"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/prod_firewal.png"
+	width="1920"
+	height="1015"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/prod_firewal_hu12285313653799480148.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/prod_firewal_hu15761728479532400202.png 1024w"
+	loading="lazy"
+	
+		alt="Console Access to a Firewall Appliance VM"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="189"
+		data-flex-basis="453px"
+	
+><br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/6.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/6_hu15811412310646707782.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/6_hu6278263286728348958.png 1024w"
+	loading="lazy"
+	
+		alt="Guest VM Summary"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/5.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/5_hu809607705811215486.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/5_hu3362037467556861228.png 1024w"
+	loading="lazy"
+	
+		alt="Guest VM Hardware"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/3.png"
+	width="1920"
+	height="1056"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/3_hu18226547370813682303.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/3_hu15031256658420841823.png 1024w"
+	loading="lazy"
+	
+		alt="Guest VM Firewall"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="181"
+		data-flex-basis="436px"
+	
+><br />
+Every one of these guests could now be powered off, cloned, snapshotted, consoled into, or have its virtual disk read directly from the host — regardless of whatever passwords or hardening existed <em>inside</em> the VMs. When you own the hypervisor, the guest&rsquo;s own security no longer matters.</p>
+<h2 id="pivoting-to-the-backups">Pivoting to the Backups
+</h2><p>One more step made the compromise complete. Reviewing the <strong>bash history of the root user</strong> on the host revealed an <strong>NFS server</strong> used for backups:</p>
+<ul>
+<li><strong>NFS Server:</strong> <code>y.y.y.y</code></li>
+</ul>
+<p>Mounting that export exposed the crown jewels — <strong>backups of every server, along with operational scripts and reports</strong>:</p>
+<ul>
+<li>All server backups</li>
+<li>Administrative scripts</li>
+<li>Reports</li>
+</ul>
+<p><img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backup_on_nfs_server.png"
+	width="632"
+	height="579"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backup_on_nfs_server_hu16401150639822828735.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/backup_on_nfs_server_hu9630986494769924419.png 1024w"
+	loading="lazy"
+	
+		alt="Backup on NFS Server"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="109"
+		data-flex-basis="261px"
+	
+></p>
+<p>At that point, not only was the live infrastructure under control, but so was its <strong>offline copy</strong> — the very thing you&rsquo;d rely on to recover from an incident.</p>
+<h2 id="attack-path">Attack Path
+</h2><p>Below is the full chain, from an open UDP port to complete infrastructure and backup compromise.<br />
+<img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path.png"
+	width="814"
+	height="514"
+	srcset="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path_hu1777007659346893462.png 480w, /p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path_hu3141469025641071861.png 1024w"
+	loading="lazy"
+	
+		alt="Attack Path"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="158"
+		data-flex-basis="380px"
+	
+><br /></p>
+<h2 id="mitigations">Mitigations
+</h2><p>IPMI/BMC exposure is one of the highest-impact, lowest-effort footholds in an environment. To defend against this chain:</p>
+<ul>
+<li><strong>Change default BMC credentials immediately.</strong> Default <code>ADMIN</code>/<code>ADMIN</code>-style logins are the single most common cause of BMC compromise.</li>
+<li><strong>Disable Cipher Suite 0</strong> on all BMCs.</li>
+<li><strong>Never expose IPMI to untrusted networks.</strong> Put BMCs on a dedicated, firewalled <strong>management VLAN</strong> reachable only via VPN or a jump host — never the internet, and never the general LAN.</li>
+<li><strong>Use strong, unique passwords</strong> for every BMC account; the RAKP hash-disclosure flaw is unavoidable, so password strength is your real defence against offline cracking.</li>
+<li><strong>Keep BMC firmware updated</strong> to pick up security fixes.</li>
+<li><strong>Protect GRUB</strong> with a boot password so boot entries can&rsquo;t be edited to <code>init=/bin/bash</code>, and use <strong>full-disk encryption</strong> so a physical/KVM boot attack can&rsquo;t trivially read or modify the OS.</li>
+<li><strong>Restrict and monitor the Proxmox interface</strong> — bind the web UI (<code>:8006</code>) to the management network, enforce <strong>two-factor authentication</strong>, and alert on new users and role changes.</li>
+<li><strong>Segment the backup (NFS) network</strong> so a single compromised host cannot mount and read the backups of the entire estate.</li>
+<li><strong>Monitor for the fingerprints</strong> of this attack: UDP/623 scans, RAKP requests, unexpected BMC logins, KVM sessions, and reboots into single-user/<code>init=/bin/bash</code>.</li>
+</ul>
+<h3 id="note">Note
+</h3><p>The above measures reduce risk significantly but do not guarantee 100% protection — defence in depth is the goal.</p>
+<h2 id="conclusion">Conclusion
+</h2><p>IPMI exists to make servers easier to manage, but a BMC is effectively <strong>a computer with god-mode over the host, sitting on the network</strong>. Left with default/weak credentials and reachable from the wrong network, it collapses every other control: OS passwords, VM hardening, even backups. A single open UDP port led to root on a hypervisor, and from there to <strong>every machine, container, and backup</strong> in the environment.</p>
+<p>Treat your management plane as the most sensitive part of your infrastructure — because to an attacker, it&rsquo;s the shortest path to all of it.</p>
+<h2 id="references">References
+</h2><ul>
+<li><a class="link" href="https://docs.rapid7.com/metasploit/"  target="_blank" rel="noopener"
+    >Metasploit — IPMI 2.0 RAKP Remote SHA1 Password Hash Retrieval</a></li>
+<li><a class="link" href="http://fish2.com/ipmi/"  target="_blank" rel="noopener"
+    >Dan Farmer — Sold Down the River (IPMI/BMC security research)</a></li>
+<li><a class="link" href="https://pve.proxmox.com/pve-docs/"  target="_blank" rel="noopener"
+    >Proxmox VE — pvesh / API documentation</a></li>
+<li><a class="link" href="https://gtfobins.github.io/"  target="_blank" rel="noopener"
+    >GTFOBins</a></li>
+<li><a class="link" href="https://book.hacktricks.xyz/"  target="_blank" rel="noopener"
+    >HackTricks — IPMI Pentesting</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/cybersecurity/">Cybersecurity</a>
+        
+            <a href="/tags/hacking/">Hacking</a>
+        
+            <a href="/tags/infosec/">Infosec</a>
+        
+            <a href="/tags/ipmi/">Ipmi</a>
+        
+            <a href="/tags/bmc/">Bmc</a>
+        
+            <a href="/tags/proxmox/">Proxmox</a>
+        
+            <a href="/tags/privilege-escalation/">Privilege Escalation</a>
+        
+            <a href="/tags/virtualization/">Virtualization</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/privilege-escalation-via-insecure-nfs-mounts/">
+        
+        
+            <div class="article-image">
+                <img src="/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.9336c39041c9c6a00ae89d093183514a_hu7151244482435253460.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Privilege Escalation via Insecure NFS Mounts"
+                        
+                        data-hash="md5-kzbDkEHJxqAK6J0JMYNRSg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Privilege Escalation via Insecure NFS Mounts</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/from-directory-listing-to-root-shell/">
+        
+        
+            <div class="article-image">
+                <img src="/p/from-directory-listing-to-root-shell/assets/images/attack_path.d9f215022b7b1a7d637d5411f6ccdba3_hu17485442275861317011.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post From Directory Listing to Root Shell"
+                        
+                        data-hash="md5-2fIVAit7Gn1jfVQR9szbow==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">From Directory Listing to Root Shell</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/using-social-engineering-for-privilege-escalation/">
+        
+        
+            <div class="article-image">
+                <img src="/p/using-social-engineering-for-privilege-escalation/assets/images/password_prompt.96a76d9f0e028439a1e19ce7a3733583_hu18266772748336865404.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Using Social Engineering for Privilege Escalation"
+                        
+                        data-hash="md5-lqdtnw4ChDmh4Zzno3M1gw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Using Social Engineering for Privilege Escalation</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/">
+        
+        
+            <div class="article-image">
+                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu17416119848749995212.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability"
+                        
+                        data-hash="md5-nTCHzoUWRPCo3utmdggsSQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/cracking-linux-hashes-and-expanding-access/">
+        
+        
+            <div class="article-image">
+                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.13e4a0b84c8a45b1c6dcbe2cea62aac2_hu10573663531890710708.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Cracking Linux Hashes and Expanding Access"
+                        
+                        data-hash="md5-E&#43;SguEyKRbHG3L4s6mKqwg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Cracking Linux Hashes and Expanding Access</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script>
+    window.disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 Gill.Singh.A
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.27.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
