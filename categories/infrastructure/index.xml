@@ -6,7 +6,361 @@
         <description>Recent content in Infrastructure on Gill.Singh.A</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 31 Jul 2026 13:00:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/infrastructure/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 31 Jul 2026 13:05:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/categories/infrastructure/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>From an Exposed iLO to Persistent Root via CVE-2017-12542</title>
+        <link>https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/</link>
+        <pubDate>Fri, 31 Jul 2026 13:05:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created.png" alt="Featured image of post From an Exposed iLO to Persistent Root via CVE-2017-12542" /&gt;&lt;p&gt;In this blog, I&amp;rsquo;ll walk through how a single &lt;strong&gt;unpatched out-of-band management interface&lt;/strong&gt; let me take &lt;strong&gt;full control of a physical server&lt;/strong&gt; — from one unauthenticated HTTP request, to a remote console, to a pre-OS root shell, to a permanent SSH backdoor — &lt;strong&gt;without ever knowing a single operating-system credential&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;Power belongs to the people that take it.&amp;rdquo;&lt;/strong&gt;&lt;br&gt;
+— &lt;em&gt;Mr. Robot&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Every serious server has a second, smaller computer bolted onto its motherboard whose entire job is to let an administrator control the machine as if they were standing in front of it — power it on, watch it boot, type at its console — over the network, whether or not the real operating system is even running. It is the most powerful interface on the box, and it is the one people forget to patch.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-hp-ilo&#34;&gt;What is HP iLO?
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;HP Integrated Lights-Out (iLO)&lt;/strong&gt; is HP&amp;rsquo;s &lt;strong&gt;out-of-band management (OOBM)&lt;/strong&gt; controller, embedded directly into ProLiant servers. Like any BMC, it has its &lt;strong&gt;own processor, its own network port, its own firmware, and its own power&lt;/strong&gt; — it runs completely independently of the host operating system.&lt;/p&gt;
+&lt;p&gt;Through iLO an administrator gets &lt;strong&gt;lights-out management&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Remote power control&lt;/strong&gt; — on, off, reset, at any time.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;A virtual KVM console&lt;/strong&gt; — a real-time, interactive keyboard/video/mouse session, visible from the very first BIOS/POST message through GRUB and into the OS.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Virtual media&lt;/strong&gt; — mount an ISO or USB image remotely and boot from it.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hardware health and firmware management.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Every one of these works whether the host OS is running, crashed, or powered off. That last point is the whole story: &lt;strong&gt;access to iLO is operationally equivalent to unrestricted physical access to the server.&lt;/strong&gt; If you control the management processor, you control the machine at a level &lt;em&gt;below&lt;/em&gt; the operating system — and no OS password, MFA prompt, or login screen sits between you and the hardware.&lt;/p&gt;
+&lt;h2 id=&#34;the-ilo-security-model--and-why-it-collapses&#34;&gt;The iLO Security Model — and Why It Collapses
+&lt;/h2&gt;&lt;p&gt;iLO 4 doesn&amp;rsquo;t ship with a universal default password. Each device gets a &lt;strong&gt;unique, randomly generated password printed on a physical pull-out label&lt;/strong&gt; attached to the server chassis. In the intended model, that label is the &lt;em&gt;only&lt;/em&gt; credential protecting remote access — no physical access to the chassis, no password.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CVE-2017-12542&lt;/strong&gt; throws that entire model away.&lt;/p&gt;
+&lt;h2 id=&#34;cve-2017-12542--authentication-bypass&#34;&gt;CVE-2017-12542 — Authentication Bypass
+&lt;/h2&gt;&lt;p&gt;CVE-2017-12542 is a &lt;strong&gt;critical (CVSS 9.8) authentication bypass&lt;/strong&gt; in the web server of &lt;strong&gt;HP iLO 4 firmware before version 2.53&lt;/strong&gt; (patched by HP in August 2017, with a public exploit available ever since).&lt;/p&gt;
+&lt;p&gt;The bug lives in how the iLO web server parses the HTTP &lt;strong&gt;&lt;code&gt;Connection&lt;/code&gt;&lt;/strong&gt; header. Send a request whose &lt;code&gt;Connection&lt;/code&gt; header contains &lt;strong&gt;29 or more &lt;code&gt;A&lt;/code&gt; characters&lt;/strong&gt;, and the authentication check is skipped entirely. From there an unauthenticated attacker can issue any &lt;em&gt;authenticated&lt;/em&gt; management API call — including &lt;strong&gt;creating a brand-new administrator account&lt;/strong&gt; — with no credential of any kind.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s the key: it doesn&amp;rsquo;t leak the label password, it makes the label password &lt;em&gt;irrelevant&lt;/em&gt;. The only barrier iLO 4 relies on is simply not consulted.&lt;/p&gt;
+&lt;h2 id=&#34;enumeration&#34;&gt;Enumeration
+&lt;/h2&gt;&lt;p&gt;The starting point was an &lt;strong&gt;iLO 4 web interface reachable on the internal network over HTTPS (port 443)&lt;/strong&gt;. Inspecting the firmware version string on the login page confirmed it was running &lt;strong&gt;firmware older than 2.53&lt;/strong&gt; — squarely in the vulnerable range for CVE-2017-12542.&lt;/p&gt;
+&lt;h2 id=&#34;exploiting-the-bypass--creating-an-admin-account&#34;&gt;Exploiting the Bypass — Creating an Admin Account
+&lt;/h2&gt;&lt;p&gt;I used my own CVE-2017-12542 exploit — &lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/CVE-2017-12542-Exploit&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;&lt;strong&gt;&lt;code&gt;CVE-2017-12542-Exploit&lt;/code&gt;&lt;/strong&gt;&lt;/a&gt;. A &lt;code&gt;--check&lt;/code&gt; run confirmed the target was &lt;strong&gt;&lt;code&gt;VULNERABLE&lt;/code&gt;&lt;/strong&gt; and, thanks to the same bypass, even enumerated the existing iLO accounts (&lt;code&gt;admin&lt;/code&gt;, &lt;code&gt;mgmt&lt;/code&gt;). A second run created a &lt;strong&gt;new administrator account&lt;/strong&gt; (&lt;code&gt;hp_ilo&lt;/code&gt;) on the device — no existing credential required:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Confirm the target is vulnerable and enumerate existing users&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./main.py --server https://172.31.55.220/ --check
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Abuse the bypass to create a brand-new iLO administrator account&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./main.py --server https://172.31.55.220/ --username hp_ilo --password &lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;redacted&amp;gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created.png&#34;
+	width=&#34;864&#34;
+	height=&#34;227&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created_hu1066378772165158376.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created_hu9354170662436862921.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;CVE-2017-12542 confirmed and a new iLO admin account created&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;380&#34;
+		data-flex-basis=&#34;913px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;code&gt;Account hp_ilo:... Created Successfully&lt;/code&gt;. In seconds, using nothing but network access and a short script, I had &lt;strong&gt;full administrative control of the server&amp;rsquo;s management plane.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;logging-into-ilo&#34;&gt;Logging Into iLO
+&lt;/h2&gt;&lt;p&gt;With the account I&amp;rsquo;d just minted, I logged straight into the iLO 4 web interface.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_login.png&#34;
+	width=&#34;1276&#34;
+	height=&#34;799&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_login_hu13214704839993754720.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_login_hu3969687044986427808.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Login to the iLO 4 web interface with the created account&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;383px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_web_interface.png&#34;
+	width=&#34;1276&#34;
+	height=&#34;799&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_web_interface_hu13728838490997586712.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ilo_web_interface_hu8118556199084410087.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Full administrative access to the iLO 4 web management interface&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;383px&#34;
+	
+&gt;&lt;br /&gt;
+At this point I owned the &lt;em&gt;management plane&lt;/em&gt; — but not yet the operating system running on the server. The bridge between the two is the remote console.&lt;/p&gt;
+&lt;h2 id=&#34;remote-console--a-virtual-keyboard-screen-and-power-button&#34;&gt;Remote Console — a Virtual Keyboard, Screen, and Power Button
+&lt;/h2&gt;&lt;p&gt;These devices were running under a &lt;strong&gt;licensed iLO Advanced&lt;/strong&gt; entitlement, which unlocks the &lt;strong&gt;Integrated Remote Console (IRC)&lt;/strong&gt; — a full graphical virtual-KVM session to the server. From the Remote Console section of the web UI, I downloaded the &lt;strong&gt;JNLP launcher&lt;/strong&gt; (Java Web Start) and opened it with a compatible JRE, which spun up the HP remote console.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/remote_console_download.png&#34;
+	width=&#34;1276&#34;
+	height=&#34;799&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/remote_console_download_hu13483861221235698843.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/remote_console_download_hu17285728517123612185.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Remote Console section of the iLO web interface — JNLP download&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;159&#34;
+		data-flex-basis=&#34;383px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/jnlp_file.png&#34;
+	width=&#34;1278&#34;
+	height=&#34;797&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/jnlp_file_hu14169788588634044996.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/jnlp_file_hu14042728417772969082.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;JNLP file downloaded to launch the HP Integrated Remote Console&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;160&#34;
+		data-flex-basis=&#34;384px&#34;
+	
+&gt;&lt;br /&gt;
+The console dropped me straight onto the server&amp;rsquo;s &lt;strong&gt;live physical screen&lt;/strong&gt;, sitting at its login prompt.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/console_login_prompt.png&#34;
+	width=&#34;1278&#34;
+	height=&#34;797&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/console_login_prompt_hu18271225019243588885.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/console_login_prompt_hu7725884273752946554.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;The server&amp;rsquo;s physical console, visible in the remote session&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;160&#34;
+		data-flex-basis=&#34;384px&#34;
+	
+&gt;&lt;br /&gt;
+I now had a keyboard on the physical console &lt;strong&gt;and&lt;/strong&gt; a power button. That combination is all you need to seize the OS itself — no login required.&lt;/p&gt;
+&lt;h2 id=&#34;from-console-to-root-grub--rdbreak&#34;&gt;From Console to Root: GRUB + &lt;code&gt;rd.break&lt;/code&gt;
+&lt;/h2&gt;&lt;p&gt;With interactive console access and remote power control, a classic &lt;strong&gt;physical-access attack&lt;/strong&gt; becomes available entirely over the network. I issued &lt;strong&gt;Power Switch → Reset&lt;/strong&gt; from the console toolbar and watched the machine reboot through POST toward GRUB.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/power_reset.png&#34;
+	width=&#34;1438&#34;
+	height=&#34;1039&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/power_reset_hu7154379153085807218.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/power_reset_hu5581097396734103899.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Power Switch → Reset issued from the iLO console toolbar&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/server_rebooting.png&#34;
+	width=&#34;1438&#34;
+	height=&#34;1039&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/server_rebooting_hu4945867238729350861.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/server_rebooting_hu7759776956207392005.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Server rebooting — POST output live in the remote console&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;
+When the &lt;strong&gt;GRUB boot menu&lt;/strong&gt; appeared, I pressed &lt;strong&gt;&lt;code&gt;e&lt;/code&gt;&lt;/strong&gt; to edit the boot entry before the countdown elapsed.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_menu.png&#34;
+	width=&#34;1432&#34;
+	height=&#34;1038&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_menu_hu5963628978002195206.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_menu_hu4903953324655449970.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;GRUB boot menu — pressing e to edit the boot entry&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;137&#34;
+		data-flex-basis=&#34;331px&#34;
+	
+&gt;&lt;br /&gt;
+On the &lt;code&gt;linux&lt;/code&gt; kernel line, I appended a single parameter — &lt;strong&gt;&lt;code&gt;rd.break&lt;/code&gt;&lt;/strong&gt; — and booted the edited entry with &lt;strong&gt;Ctrl+X&lt;/strong&gt;.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_rd_break.png&#34;
+	width=&#34;1438&#34;
+	height=&#34;1039&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_rd_break_hu882165119124039607.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/grub_rd_break_hu7216412468214719938.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;rd.break appended to the kernel command line in the GRUB editor&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;code&gt;rd.break&lt;/code&gt; is a legitimate Linux recovery switch. When present, &lt;strong&gt;dracut pauses the boot sequence inside the initramfs, &lt;em&gt;before&lt;/em&gt; the real root filesystem is mounted&lt;/strong&gt;, and drops you into an emergency root shell. Intended for password recovery — here it&amp;rsquo;s an attack, because the console it&amp;rsquo;s typed at is mine.&lt;/p&gt;
+&lt;h2 id=&#34;pre-os-root-shell&#34;&gt;Pre-OS Root Shell
+&lt;/h2&gt;&lt;p&gt;The kernel booted into the initramfs and halted at an emergency shell. From there I remounted the real root filesystem read-write and &lt;code&gt;chroot&lt;/code&gt;ed into it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mount -o remount,rw /sysroot
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;chroot /sysroot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/initramfs_root_shell.png&#34;
+	width=&#34;1438&#34;
+	height=&#34;1039&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/initramfs_root_shell_hu11803464023620553578.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/initramfs_root_shell_hu4694500248419335182.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Pre-OS root shell in the initramfs — sysroot mounted and chrooted&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;
+That&amp;rsquo;s an effective &lt;strong&gt;root shell inside the live operating system&lt;/strong&gt;, with full read-write access to every file — obtained without a single OS credential, purely because I could reach the management interface.&lt;/p&gt;
+&lt;h2 id=&#34;establishing-persistence--stage-1-a-backdoor-user&#34;&gt;Establishing Persistence — Stage 1: A Backdoor User
+&lt;/h2&gt;&lt;p&gt;A shell from the initramfs vanishes on the next normal boot, so the first job was durable access. Inside the &lt;code&gt;chroot&lt;/code&gt;, I created a new account and gave it full &lt;code&gt;sudo&lt;/code&gt; rights by adding it to the &lt;strong&gt;&lt;code&gt;wheel&lt;/code&gt;&lt;/strong&gt; group (which grants sudo on RHEL-family systems):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;useradd -m -s /bin/bash kaptaan
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;usermod -aG wheel kaptaan
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;passwd kaptaan          &lt;span class=&#34;c1&#34;&gt;# password set here, redacted&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/backdoor_user.png&#34;
+	width=&#34;1437&#34;
+	height=&#34;1036&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/backdoor_user_hu7463664465199219941.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/backdoor_user_hu15346517247754512983.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Backdoor user created and added to the wheel group&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;
+This account now lives in &lt;code&gt;/etc/passwd&lt;/code&gt;, &lt;code&gt;/etc/shadow&lt;/code&gt;, and &lt;code&gt;/etc/group&lt;/code&gt; and survives every reboot. I then exited the initramfs shell and let the server boot normally.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exit_shell.png&#34;
+	width=&#34;1437&#34;
+	height=&#34;1036&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exit_shell_hu10356641132415786903.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exit_shell_hu15368613161606529120.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Exiting the initramfs shell to resume a normal boot&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;138&#34;
+		data-flex-basis=&#34;332px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;persistence--stage-2-a-root-ssh-key&#34;&gt;Persistence — Stage 2: A Root SSH Key
+&lt;/h2&gt;&lt;p&gt;Once the server was up, I logged in as the backdoor user.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ssh_backdoor_login.png&#34;
+	width=&#34;1432&#34;
+	height=&#34;1038&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ssh_backdoor_login_hu13896465024899386933.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/ssh_backdoor_login_hu4984148969339085384.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Login as the backdoor user after a normal boot&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;137&#34;
+		data-flex-basis=&#34;331px&#34;
+	
+&gt;&lt;br /&gt;
+From there I dropped my own &lt;strong&gt;SSH public key into &lt;code&gt;/root/.ssh/authorized_keys&lt;/code&gt;&lt;/strong&gt;, giving me &lt;strong&gt;passwordless root SSH&lt;/strong&gt; directly from my machine. This stage needs no vulnerability at all — it&amp;rsquo;s just standard public-key authentication, bootstrapped by the account from Stage 1.&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/root_ssh_key_login.png&#34;
+	width=&#34;770&#34;
+	height=&#34;297&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/root_ssh_key_login_hu1053915110967159000.png 480w, https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/root_ssh_key_login_hu7440581841175457811.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Direct passwordless root SSH login via the implanted public key&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;259&#34;
+		data-flex-basis=&#34;622px&#34;
+	
+&gt;&lt;br /&gt;
+The result is &lt;strong&gt;two independent, mutually reinforcing persistence mechanisms&lt;/strong&gt;: losing the backdoor password doesn&amp;rsquo;t kill access while the root key remains, and vice versa. Both survive reboots, and both survive &lt;em&gt;patching the iLO vulnerability&lt;/em&gt; — closing the front door does nothing about the keys already inside.&lt;/p&gt;
+&lt;h2 id=&#34;attack-path&#34;&gt;Attack Path
+&lt;/h2&gt;&lt;p&gt;The full chain, from an exposed management port to durable root:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Discover an unpatched iLO 4 interface on the internal network.&lt;/li&gt;
+&lt;li&gt;Exploit &lt;strong&gt;CVE-2017-12542&lt;/strong&gt; to create an unauthenticated iLO administrator account.&lt;/li&gt;
+&lt;li&gt;Log into the iLO web interface with that account.&lt;/li&gt;
+&lt;li&gt;Download the &lt;strong&gt;JNLP&lt;/strong&gt; remote-console launcher and open the Integrated Remote Console.&lt;/li&gt;
+&lt;li&gt;Get a live view of the server&amp;rsquo;s physical console — no OS login needed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Power → Reset&lt;/strong&gt; to reboot the server.&lt;/li&gt;
+&lt;li&gt;Intercept GRUB, edit the kernel line, append &lt;strong&gt;&lt;code&gt;rd.break&lt;/code&gt;&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Land in the &lt;strong&gt;initramfs emergency shell&lt;/strong&gt; — a pre-OS root environment.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mount -o remount,rw /sysroot&lt;/code&gt; and &lt;code&gt;chroot /sysroot&lt;/code&gt; into the live filesystem.&lt;/li&gt;
+&lt;li&gt;Create a backdoor user in the &lt;strong&gt;&lt;code&gt;wheel&lt;/code&gt;&lt;/strong&gt; (sudo) group.&lt;/li&gt;
+&lt;li&gt;Exit and let the server boot normally.&lt;/li&gt;
+&lt;li&gt;Log in as the backdoor user.&lt;/li&gt;
+&lt;li&gt;Implant an SSH key in &lt;strong&gt;&lt;code&gt;root&lt;/code&gt;&amp;rsquo;s &lt;code&gt;authorized_keys&lt;/code&gt;&lt;/strong&gt; — persistent, passwordless root.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;An unpatched, reachable iLO is one of the highest-impact, lowest-effort footholds in an environment. To break this chain:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Patch iLO 4 firmware to 2.53 or later.&lt;/strong&gt; This is the single most important fix — it closes CVE-2017-12542. Track iLO firmware advisories separately from OS patching; they have their own CVE channel.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Segment the out-of-band management network.&lt;/strong&gt; iLO interfaces should live on a dedicated, firewalled management VLAN reachable only from documented jump hosts — never from the general LAN, and never the internet.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Lock down iLO itself.&lt;/strong&gt; Use iLO&amp;rsquo;s &lt;strong&gt;IP address allow-listing&lt;/strong&gt;, disable unused features (SNMP, IPMI, unused console types), and &lt;strong&gt;restrict or disable Virtual Media&lt;/strong&gt; so an attacker can&amp;rsquo;t boot from attacker-controlled media even with iLO access.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Protect GRUB with a superuser password&lt;/strong&gt; (&lt;code&gt;password_pbkdf2&lt;/code&gt;) so boot entries can&amp;rsquo;t be edited to add &lt;code&gt;rd.break&lt;/code&gt; (or &lt;code&gt;init=/bin/bash&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Use full-disk encryption with pre-boot authentication&lt;/strong&gt; (e.g., LUKS) so that even console/boot access can&amp;rsquo;t read or modify the filesystem.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Audit for persistence.&lt;/strong&gt; Regularly review &lt;code&gt;/etc/passwd&lt;/code&gt;, &lt;code&gt;/etc/group&lt;/code&gt;, &lt;code&gt;sudoers&lt;/code&gt;, and every &lt;code&gt;authorized_keys&lt;/code&gt; file. Deploy host-based intrusion detection (AIDE, Wazuh) to alert on changes to these.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor iLO audit logs&lt;/strong&gt; for the fingerprints of this attack: new administrator accounts, power-reset operations, and remote-console activations from unexpected sources.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The above measures reduce risk significantly but do not guarantee 100% protection — defence in depth is the goal.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;An iLO — like any BMC — is effectively &lt;strong&gt;a computer with god-mode over the host, sitting on the network&lt;/strong&gt;. Left unpatched and reachable from the wrong network, a single unauthenticated request turned it into full administrative access, a remote console turned that into physical-equivalent control, and a legitimate recovery feature (&lt;code&gt;rd.break&lt;/code&gt;) turned &lt;em&gt;that&lt;/em&gt; into a pre-OS root shell. From there, persistence was trivial — and it outlives the vulnerability that granted it.&lt;/p&gt;
+&lt;p&gt;Treat your management plane as the most sensitive part of your infrastructure. To an attacker, an exposed iLO isn&amp;rsquo;t a management convenience — it&amp;rsquo;s the shortest path to root.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Gill-Singh-A/CVE-2017-12542-Exploit&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Gill-Singh-A/CVE-2017-12542-Exploit — the exploit used in this writeup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://nvd.nist.gov/vuln/detail/CVE-2017-12542&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CVE-2017-12542 — HPE iLO 4 Authentication Bypass / RCE&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://support.hpe.com/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HPE Security Bulletin — iLO 4 firmware 2.53&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://access.redhat.com/solutions/918283&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Red Hat — Resetting access using &lt;code&gt;rd.break&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://gtfobins.github.io/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;GTFOBins&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
         <title>From IPMI to Full Infrastructure Compromise via Proxmox</title>
         <link>https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/</link>
         <pubDate>Fri, 31 Jul 2026 13:00:00 +0530</pubDate>

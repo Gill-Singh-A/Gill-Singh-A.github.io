@@ -3,51 +3,63 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://Gill-Singh-A.github.io/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/bmc/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/cve-2017-12542/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/cybersecurity/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/ilo/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/infrastructure/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/persistence/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/post/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/</loc>
+    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/infrastructure/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/ipmi/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/post/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/proxmox/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/proxmox/</loc>
-    <lastmod>2026-07-31T13:00:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/virtualization/</loc>
