@@ -1,0 +1,79 @@
+baseURL = "https://Gill-Singh-A.github.io"
+languageCode = "en-us"
+title = "Gill.Singh.A"
+theme = "github.com/adityatelange/hugo-PaperMod"
+
+[params]
+  defaultTheme = "dark"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  env = "production"
+  description = "Security Researcher"
+  mainSections = ["post"]
+
+  [params.homeInfoParams]
+    Title = "Gill.Singh.A"
+    Content = "Security Researcher"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/Gill-Singh-A"
+
+  [[params.socialIcons]]
+    name = "x"
+    url = "https://x.com/Gill_Singh_A"
+
+  [params.cover]
+    linkFullImages = true
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "Blog"
+    url = "/post/"
+    weight = 10
+  [[menu.main]]
+    identifier = "gallery"
+    name = "Photography"
+    url = "/gallery/"
+    weight = 20
+  [[menu.main]]
+    identifier = "search"
+    name = "Search"
+    url = "/search/"
+    weight = 30
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    tabWidth = 4
+
+[permalinks]
+  post = "/p/:slug/"
+  page = "/:slug/"
+
+[pagination]
+  pagerSize = 5
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]

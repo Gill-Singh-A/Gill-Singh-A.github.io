@@ -1,0 +1,35 @@
+<div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
+</div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  if (!overlay) return;
+  const lbImg = overlay.querySelector('img');
+  const closeBtn = overlay.querySelector('.lightbox-close');
+
+  document.querySelectorAll('.gallery img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = this.src;
+      lbImg.alt = this.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target !== lbImg) closeLightbox();
+  });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
