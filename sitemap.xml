@@ -3,51 +3,72 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://Gill-Singh-A.github.io/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/bmc/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/cve-2016-10108/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/cybersecurity/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/infrastructure/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/nas/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/network-proxy/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/pivoting/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/categories/pivoting/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/post/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/wd-mycloud/</loc>
+    <lastmod>2026-08-07T13:00:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/bmc/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/cve-2017-12542/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/cybersecurity/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
     <loc>https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/ilo/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/infrastructure/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/persistence/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/post/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
-    <lastmod>2026-07-31T13:05:00+05:30</lastmod>
-  </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/</loc>
