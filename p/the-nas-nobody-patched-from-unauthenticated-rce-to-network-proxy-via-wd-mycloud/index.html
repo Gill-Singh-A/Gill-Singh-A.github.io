@@ -1,378 +1,335 @@
 <!DOCTYPE html>
-<html lang="en-us" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn't even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.">
-<title>The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud</title>
+<html lang="en" dir="auto" data-theme="dark">
 
-<link rel='canonical' href='https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/'>
-
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud">
-<meta property='og:description' content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn't even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.">
-<meta property='og:url' content='https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/'>
-<meta property='og:site_name' content='Gill.Singh.A'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='nas' /><meta property='article:tag' content='wd-mycloud' /><meta property='article:tag' content='cve-2016-10108' /><meta property='article:tag' content='pivoting' /><meta property='article:tag' content='network-proxy' /><meta property='article:published_time' content='2026-08-07T13:00:00&#43;05:30'/><meta property='article:modified_time' content='2026-08-07T13:00:00&#43;05:30'/><meta property='og:image' content='https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png' />
-<meta name="twitter:title" content="The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud">
-<meta name="twitter:description" content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn't even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag."><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png' />
-    <link rel="shortcut icon" href="/favicon.jpg" />
-
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud | Gill.Singh.A</title>
+<meta name="keywords" content="cybersecurity, hacking, infosec, nas, wd-mycloud, cve-2016-10108, pivoting, network-proxy">
+<meta name="description" content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn&#39;t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.">
+<meta name="author" content="">
+<link rel="canonical" href="https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://Gill-Singh-A.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Gill-Singh-A.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Gill-Singh-A.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://Gill-Singh-A.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://Gill-Singh-A.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
         }
-    })();
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><style>
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 1.5em 0;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  aspect-ratio: auto;
+}
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.gallery-section {
+  margin: 2em 0 0.5em;
+}
+.gallery-section h2 {
+  margin-bottom: 0.3em;
+}
+.gallery-section h2 a {
+  text-decoration: none;
+  color: var(--primary);
+}
+.gallery-section h2 a:hover {
+  text-decoration: underline;
+}
+
+ 
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.lightbox-overlay.active {
+  display: flex;
+}
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px; right: 24px;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10000;
+  background: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1;
+  opacity: 0.8;
+}
+.lightbox-close:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+</style>
+<meta property="og:url" content="https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">
+  <meta property="og:site_name" content="Gill.Singh.A">
+  <meta property="og:title" content="The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud">
+  <meta property="og:description" content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn&#39;t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-08-07T13:00:00+05:30">
+    <meta property="article:modified_time" content="2026-08-07T13:00:00+05:30">
+    <meta property="article:tag" content="Cybersecurity">
+    <meta property="article:tag" content="Hacking">
+    <meta property="article:tag" content="Infosec">
+    <meta property="article:tag" content="Nas">
+    <meta property="article:tag" content="Wd-Mycloud">
+    <meta property="article:tag" content="Cve-2016-10108">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud">
+  <meta name="twitter:description" content="In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn&#39;t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://Gill-Singh-A.github.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud",
+      "item": "https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/"
+    }
+  ]
+}
 </script>
-<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-            
-            <figure class="site-avatar">
-                <a href="/">
-                
-                    
-                    
-                    
-                        
-                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
-                            height="300" class="site-logo" loading="lazy" alt="Avatar">
-                    
-                
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud",
+  "name": "The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud",
+  "description": "In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn't even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.",
+  "keywords": [
+    "cybersecurity", "hacking", "infosec", "nas", "wd-mycloud", "cve-2016-10108", "pivoting", "network-proxy"
+  ],
+  "articleBody": "In this blog, I’ll walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn’t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.\nPrologue “There is no cloud. It’s just someone else’s computer.”\n- Common saying in information security\nThe Western Digital MyCloud sits in a server room or under a desk, quietly storing backups, documents, and shared files for an entire team. Its name says “cloud,” but it’s a Linux box running on an ARM processor with its own network interface and its own IP address. When it has an unpatched vulnerability in its web interface, the device trusted with your data becomes another computer on the network that an attacker can use.\nWhat is WD MyCloud? Western Digital MyCloud is a line of Network Attached Storage (NAS) devices designed for personal and small-business use. They provide file sharing, backups, and remote access through a web-based management interface over HTTPS (port 443).\nUnder the hood, a MyCloud runs embedded Linux on an ARM processor. It has a full filesystem, a web server, and network services, everything a general-purpose Linux box has, packaged into a device that most people treat as an appliance and never think to patch.\nThe Vulnerability - Unauthenticated Command Injection The MyCloud web interface contains a command injection vulnerability that allows a remote, completely unauthenticated attacker to execute arbitrary operating-system commands on the device. No login, no session, no credential of any kind is required. A crafted HTTP request to the HTTPS management interface is enough.\nMetasploit ships a ready-made module for this: exploit/linux/http/wd_mycloud_unauthenticated_cmd_injection.\nExploitation - Reverse Shell I loaded the Metasploit module, pointed it at the target, and ran it:\n1 2 3 use exploit/linux/http/wd_mycloud_unauthenticated_cmd_injection set RHOSTS x.x.x.x exploit The module confirmed the target was a WD MyCloud, verified the injection point, and delivered a reverse shell back to my machine:\nuname -a confirmed what I’d landed on:\n1 Linux WDMyCloudEX4100 3.10.39 #1 SMP ... armv7l GNU/Linux A WD MyCloud EX4100, running a kernel from 2016, on a 32-bit ARM processor. Root-level command execution on the NAS, obtained without a single credential.\nBootstrapping SSH from Scratch The reverse shell was functional but fragile. For a stable, persistent connection (and for the proxy that comes later), I needed SSH. The problem: the device didn’t have an SSH daemon running, and didn’t have host keys generated. I had to build the entire SSH infrastructure from the reverse shell.\nGenerating Host Keys SSH refuses to start without host keys. I generated them on the device:\n1 2 /usr/bin/ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key /usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key No passphrase on either key, since they’re host keys.\nConfiguring the Daemon I edited the SSH daemon configuration (/usr/etc/sshd_config) to allow root login and set a non-standard port, and changed the root password in /etc/shadow so I could authenticate over SSH.\nStarting SSH With keys and config in place, I started the daemon in the background:\n1 /usr/sbin/sshd \u0026 SSH as Root From my machine, I connected directly:\n1 ssh -p 42822 root@x.x.x.x uid=0(root), a proper interactive root shell over SSH. The connection survives indefinitely, survives reboots of the attacker’s machine, and provides the stable tunnel needed for what comes next.\nTurning the NAS into a Network Proxy SSH has a built-in feature that turns any SSH connection into a SOCKS proxy with a single flag: -D (dynamic port forwarding).\n1 ssh -p 42822 -D 1080 -N root@x.x.x.x That’s it. One command, and a SOCKS5 proxy is now listening on 127.0.0.1:1080 on the attacker’s machine. Every connection sent through that proxy travels through the SSH tunnel and exits from the NAS’s network interface.\n-D 1080 opens a local SOCKS proxy on port 1080 -N tells SSH not to execute a remote command (just keep the tunnel open) Any application that supports SOCKS5 (a browser, proxychains, curl --socks5, scanners) can now route its traffic through the NAS. The destination sees the NAS’s IP address, not the attacker’s. The traffic looks like a NAS doing what NAS devices do: talking to the network.\nNo additional tools, no chisel, no Meterpreter, just SSH doing what SSH was designed to do.\nForward vs. Reverse The ssh -D approach works when the attacker can reach the NAS directly. If the NAS is behind a firewall that blocks inbound connections, the same trick works in reverse using ssh -R from the NAS back to the attacker, carrying the SOCKS proxy through the outbound connection.\nAttack Path The full chain, from an unpatched NAS to covert network proxy:\nDiscover a WD MyCloud NAS on the network (port 443). Exploit the unauthenticated command injection via Metasploit. Obtain a reverse shell as root. Generate SSH host keys on the device. Configure and start the SSH daemon. Change the root password for SSH authentication. SSH in as root from the attacker’s machine. Run ssh -D to create a local SOCKS5 proxy tunneled through the NAS. Point any application at the SOCKS proxy. All traffic now exits from the NAS’s IP address, the attacker is hidden. Mitigations A compromised NAS is a worst-case scenario: it holds your data and gives the attacker a network foothold. To break this chain:\nUpdate firmware immediately. WD has released patches for this vulnerability. Every unpatched MyCloud device is an unauthenticated root shell. Never expose the management interface to untrusted networks. The HTTPS interface (port 443) should only be reachable from a management VLAN or specific admin workstations, never the general LAN. Disable remote access features unless actively needed. WD MyCloud’s “remote access” and “cloud” features widen the attack surface significantly. Segment NAS devices. A NAS should be on a dedicated storage VLAN with strict firewall rules. It needs to talk to clients on specific ports (SMB, NFS), not to the entire network. Monitor for unusual services. A NAS suddenly listening on a new port (like SSH on 42822) is a strong indicator of compromise. Audit stored data. After any NAS compromise, assume all stored files have been accessed. Rotate credentials stored on or accessible through the NAS. Note The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.\nConclusion A NAS is a computer. It runs Linux, has root, and sits on the network with access to everything that talks to it. When its web interface carries an unpatched command injection, a single Metasploit module turns it into a root shell. From there, SSH is bootstrapped from nothing, and one flag (-D) turns the entire connection into a SOCKS proxy. No extra tools, no payloads, just the device’s own operating system turned against the network it serves.\nThe NAS stores your files, serves your backups, and is trusted by every machine that mounts it. That trust is exactly what makes it the perfect place to route traffic nobody will question.\nReferences CVE-2016-10108 - WD MyCloud Command Injection (NVD) Metasploit - WD MyCloud Unauthenticated Command Injection SSH Dynamic Port Forwarding (SOCKS Proxy) HackTricks - Pentesting NAS/Storage Western Digital Security Advisories ",
+  "wordCount" : "1194",
+  "inLanguage": "en",
+  "datePublished": "2026-08-07T13:00:00+05:30",
+  "dateModified": "2026-08-07T13:00:00+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gill.Singh.A",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Gill-Singh-A.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://Gill-Singh-A.github.io/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://Gill-Singh-A.github.io/" title="Home">
+                    <span>Home</span>
                 </a>
-                
-                    <span class="emoji">🤖</span>
-                
-            </figure>
-            
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">Gill.Singh.A</a></h1>
-            <h2 class="site-description">Security Researcher</h2>
-        </div>
-    </header><ol class="menu-social">
-            
-                <li>
-                    <a 
-                        href='https://github.com/Gill-Singh-A'
-                        target="_blank"
-                        title="GitHub"
-                        rel="me"
-                    >
-                        
-                        
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-</svg>
-
-
-
-                        
-                    </a>
-                </li>
-            
-                <li>
-                    <a 
-                        href='https://x.com/Gill_Singh_A'
-                        target="_blank"
-                        title="Twitter"
-                        rel="me"
-                    >
-                        
-                        
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
-</svg>
-
-
-
-                        
-                    </a>
-                </li>
-            
-        </ol><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <polyline points="5 12 3 12 12 3 21 12 19 12" />
-  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-</svg>
-
-
-
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/archives/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <rect x="3" y="4" width="18" height="4" rx="2" />
-  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
-  <line x1="10" y1="12" x2="14" y2="12" />
-</svg>
-
-
-
-                
-                <span>Archives</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/search/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="10" cy="10" r="7" />
-  <line x1="21" y1="21" x2="15" y2="15" />
-</svg>
-
-
-
-                
-                <span>Search</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    <aside class="sidebar right-sidebar sticky">
-        
-            
-                
-    <section class="widget archives">
-        <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <line x1="5" y1="9" x2="19" y2="9" />
-  <line x1="5" y1="15" x2="19" y2="15" />
-  <line x1="11" y1="4" x2="7" y2="20" />
-  <line x1="17" y1="4" x2="13" y2="20" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">Table of contents</h2>
-        
-        <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#prologue">Prologue</a></li>
-    <li><a href="#what-is-wd-mycloud">What is WD MyCloud?</a></li>
-    <li><a href="#the-vulnerability---unauthenticated-command-injection">The Vulnerability - Unauthenticated Command Injection</a></li>
-    <li><a href="#exploitation---reverse-shell">Exploitation - Reverse Shell</a></li>
-    <li><a href="#bootstrapping-ssh-from-scratch">Bootstrapping SSH from Scratch</a>
-      <ol>
-        <li><a href="#generating-host-keys">Generating Host Keys</a></li>
-        <li><a href="#configuring-the-daemon">Configuring the Daemon</a></li>
-        <li><a href="#starting-ssh">Starting SSH</a></li>
-        <li><a href="#ssh-as-root">SSH as Root</a></li>
-      </ol>
-    </li>
-    <li><a href="#turning-the-nas-into-a-network-proxy">Turning the NAS into a Network Proxy</a>
-      <ol>
-        <li><a href="#forward-vs-reverse">Forward vs. Reverse</a></li>
-      </ol>
-    </li>
-    <li><a href="#attack-path">Attack Path</a></li>
-    <li><a href="#mitigations">Mitigations</a>
-      <ol>
-        <li><a href="#note">Note</a></li>
-      </ol>
-    </li>
-    <li><a href="#conclusion">Conclusion</a></li>
-    <li><a href="#references">References</a></li>
-  </ol>
-</nav>
-        </div>
-    </section>
-
-            
-        
-    </aside>
-
-
-            <main class="main full-width">
-    <article class="has-image main-article">
-    <header class="article-header">
-        <div class="article-image">
-            <a href="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">
-                <img src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu3137338031767221300.png"
-                        srcset="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu3137338031767221300.png 800w, /p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu5500494023108296641.png 1600w"
-                        width="800" 
-                        height="187" 
-                        loading="lazy"
-                        alt="Featured image of post The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud" />
-                
-            </a>
-        </div>
-    
-
-    <div class="article-details">
-    
-    <header class="article-category">
-        
-            <a href="/categories/hacking/" >
-                Hacking
-            </a>
-        
-            <a href="/categories/infrastructure/" >
-                Infrastructure
-            </a>
-        
-            <a href="/categories/pivoting/" >
-                Pivoting
-            </a>
-        
-    </header>
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud</a>
-        </h2>
-    
-        
-        <h3 class="article-subtitle">
-            In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn&#39;t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.
-        </h3>
-        
-    </div>
-
-    
-    
-    
-    
-    <footer class="article-time">
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                <time class="article-time--published">Aug 07, 2026</time>
-            </div>
-        
-
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <polyline points="12 7 12 12 15 15" />
-</svg>
-
-
-
-                <time class="article-time--reading">
-                    6 minute read
-                </time>
-            </div>
-        
-    </footer>
-    
-
-    
-</div>
-
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/post/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/gallery/" title="Photography">
+                    <span>Photography</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </header>
+<main class="main">
 
-    <section class="article-content">
-    
-    
-    <p>In this blog, I&rsquo;ll walk through how an <strong>unauthenticated command injection</strong> in a WD MyCloud NAS gave me a reverse shell as <strong>root</strong>, how I bootstrapped a persistent <strong>SSH backdoor</strong> on a device that didn&rsquo;t even have SSH running, and how I turned that NAS into a <strong>covert SOCKS proxy</strong> with a single SSH flag.</p>
-<h2 id="prologue">Prologue
-</h2><blockquote>
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/post/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud
+    </h1>
+    <div class="post-description">
+      In this blog, I walk through how an unauthenticated command injection in a WD MyCloud NAS gave me a reverse shell as root, how I bootstrapped a persistent SSH backdoor on a device that didn&#39;t even have SSH running, and how I turned that NAS into a covert SOCKS proxy with a single SSH flag.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-07 13:00:00 +0530 IST'>August 7, 2026</span>&nbsp;·&nbsp;<span>6 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#prologue" aria-label="Prologue">Prologue</a></li>
+            <li>
+                <a href="#what-is-wd-mycloud" aria-label="What is WD MyCloud?">What is WD MyCloud?</a></li>
+            <li>
+                <a href="#the-vulnerability---unauthenticated-command-injection" aria-label="The Vulnerability - Unauthenticated Command Injection">The Vulnerability - Unauthenticated Command Injection</a></li>
+            <li>
+                <a href="#exploitation---reverse-shell" aria-label="Exploitation - Reverse Shell">Exploitation - Reverse Shell</a></li>
+            <li>
+                <a href="#bootstrapping-ssh-from-scratch" aria-label="Bootstrapping SSH from Scratch">Bootstrapping SSH from Scratch</a><ul>
+                    
+            <li>
+                <a href="#generating-host-keys" aria-label="Generating Host Keys">Generating Host Keys</a></li>
+            <li>
+                <a href="#configuring-the-daemon" aria-label="Configuring the Daemon">Configuring the Daemon</a></li>
+            <li>
+                <a href="#starting-ssh" aria-label="Starting SSH">Starting SSH</a></li>
+            <li>
+                <a href="#ssh-as-root" aria-label="SSH as Root">SSH as Root</a></li></ul>
+            </li>
+            <li>
+                <a href="#turning-the-nas-into-a-network-proxy" aria-label="Turning the NAS into a Network Proxy">Turning the NAS into a Network Proxy</a><ul>
+                    
+            <li>
+                <a href="#forward-vs-reverse" aria-label="Forward vs. Reverse">Forward vs. Reverse</a></li></ul>
+            </li>
+            <li>
+                <a href="#attack-path" aria-label="Attack Path">Attack Path</a></li>
+            <li>
+                <a href="#mitigations" aria-label="Mitigations">Mitigations</a><ul>
+                    
+            <li>
+                <a href="#note" aria-label="Note">Note</a></li></ul>
+            </li>
+            <li>
+                <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+            <li>
+                <a href="#references" aria-label="References">References</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>In this blog, I&rsquo;ll walk through how an <strong>unauthenticated command injection</strong> in a WD MyCloud NAS gave me a reverse shell as <strong>root</strong>, how I bootstrapped a persistent <strong>SSH backdoor</strong> on a device that didn&rsquo;t even have SSH running, and how I turned that NAS into a <strong>covert SOCKS proxy</strong> with a single SSH flag.</p>
+<h2 id="prologue">Prologue<a hidden class="anchor" aria-hidden="true" href="#prologue">#</a></h2>
+<blockquote>
 <p><strong>&ldquo;There is no cloud. It&rsquo;s just someone else&rsquo;s computer.&rdquo;</strong><br>
 <em>- Common saying in information security</em></p>
 </blockquote>
 <p>The Western Digital MyCloud sits in a server room or under a desk, quietly storing backups, documents, and shared files for an entire team. Its name says &ldquo;cloud,&rdquo; but it&rsquo;s a Linux box running on an ARM processor with its own network interface and its own IP address. When it has an unpatched vulnerability in its web interface, the device trusted with your data becomes another computer on the network that an attacker can use.</p>
-<h2 id="what-is-wd-mycloud">What is WD MyCloud?
-</h2><p><strong>Western Digital MyCloud</strong> is a line of <strong>Network Attached Storage (NAS)</strong> devices designed for personal and small-business use. They provide file sharing, backups, and remote access through a web-based management interface over <strong>HTTPS (port 443)</strong>.</p>
+<h2 id="what-is-wd-mycloud">What is WD MyCloud?<a hidden class="anchor" aria-hidden="true" href="#what-is-wd-mycloud">#</a></h2>
+<p><strong>Western Digital MyCloud</strong> is a line of <strong>Network Attached Storage (NAS)</strong> devices designed for personal and small-business use. They provide file sharing, backups, and remote access through a web-based management interface over <strong>HTTPS (port 443)</strong>.</p>
 <p>Under the hood, a MyCloud runs <strong>embedded Linux</strong> on an <strong>ARM processor</strong>. It has a full filesystem, a web server, and network services, everything a general-purpose Linux box has, packaged into a device that most people treat as an appliance and never think to patch.</p>
-<h2 id="the-vulnerability---unauthenticated-command-injection">The Vulnerability - Unauthenticated Command Injection
-</h2><p>The MyCloud web interface contains a <strong>command injection vulnerability</strong> that allows a remote, completely <strong>unauthenticated</strong> attacker to execute arbitrary operating-system commands on the device. No login, no session, no credential of any kind is required. A crafted HTTP request to the HTTPS management interface is enough.</p>
+<h2 id="the-vulnerability---unauthenticated-command-injection">The Vulnerability - Unauthenticated Command Injection<a hidden class="anchor" aria-hidden="true" href="#the-vulnerability---unauthenticated-command-injection">#</a></h2>
+<p>The MyCloud web interface contains a <strong>command injection vulnerability</strong> that allows a remote, completely <strong>unauthenticated</strong> attacker to execute arbitrary operating-system commands on the device. No login, no session, no credential of any kind is required. A crafted HTTP request to the HTTPS management interface is enough.</p>
 <p>Metasploit ships a ready-made module for this: <strong><code>exploit/linux/http/wd_mycloud_unauthenticated_cmd_injection</code></strong>.</p>
-<h2 id="exploitation---reverse-shell">Exploitation - Reverse Shell
-</h2><p>I loaded the Metasploit module, pointed it at the target, and ran it:</p>
+<h2 id="exploitation---reverse-shell">Exploitation - Reverse Shell<a hidden class="anchor" aria-hidden="true" href="#exploitation---reverse-shell">#</a></h2>
+<p>I loaded the Metasploit module, pointed it at the target, and ran it:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -385,35 +342,9 @@
 </span></span><span class="line"><span class="cl">exploit
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options.png"
-	width="1727"
-	height="913"
-	srcset="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options_hu5037924607508908117.png 480w, /p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options_hu13756667857306921810.png 1024w"
-	loading="lazy"
-	
-		alt="Metasploit module options for WD MyCloud command injection"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="189"
-		data-flex-basis="453px"
-	
-><br />
+</div><p><img alt="Metasploit module options for WD MyCloud command injection" loading="lazy" src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/exploit_options.png"><br />
 The module confirmed the target was a WD MyCloud, verified the injection point, and delivered a <strong>reverse shell</strong> back to my machine:<br />
-<img src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png"
-	width="1111"
-	height="260"
-	srcset="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu5175995690947653096.png 480w, /p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell_hu18258492647284815331.png 1024w"
-	loading="lazy"
-	
-		alt="Reverse shell obtained on the WD MyCloud NAS"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="427"
-		data-flex-basis="1025px"
-	
-><br /></p>
+<img alt="Reverse shell obtained on the WD MyCloud NAS" loading="lazy" src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.png"><br /></p>
 <p><code>uname -a</code> confirmed what I&rsquo;d landed on:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -424,10 +355,10 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>A <strong>WD MyCloud EX4100</strong>, running a kernel from 2016, on a 32-bit ARM processor. Root-level command execution on the NAS, obtained without a single credential.</p>
-<h2 id="bootstrapping-ssh-from-scratch">Bootstrapping SSH from Scratch
-</h2><p>The reverse shell was functional but fragile. For a stable, persistent connection (and for the proxy that comes later), I needed <strong>SSH</strong>. The problem: the device didn&rsquo;t have an SSH daemon running, and didn&rsquo;t have host keys generated. I had to build the entire SSH infrastructure from the reverse shell.</p>
-<h3 id="generating-host-keys">Generating Host Keys
-</h3><p>SSH refuses to start without host keys. I generated them on the device:</p>
+<h2 id="bootstrapping-ssh-from-scratch">Bootstrapping SSH from Scratch<a hidden class="anchor" aria-hidden="true" href="#bootstrapping-ssh-from-scratch">#</a></h2>
+<p>The reverse shell was functional but fragile. For a stable, persistent connection (and for the proxy that comes later), I needed <strong>SSH</strong>. The problem: the device didn&rsquo;t have an SSH daemon running, and didn&rsquo;t have host keys generated. I had to build the entire SSH infrastructure from the reverse shell.</p>
+<h3 id="generating-host-keys">Generating Host Keys<a hidden class="anchor" aria-hidden="true" href="#generating-host-keys">#</a></h3>
+<p>SSH refuses to start without host keys. I generated them on the device:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -439,10 +370,10 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>No passphrase on either key, since they&rsquo;re host keys.</p>
-<h3 id="configuring-the-daemon">Configuring the Daemon
-</h3><p>I edited the SSH daemon configuration (<code>/usr/etc/sshd_config</code>) to allow root login and set a non-standard port, and changed the root password in <code>/etc/shadow</code> so I could authenticate over SSH.</p>
-<h3 id="starting-ssh">Starting SSH
-</h3><p>With keys and config in place, I started the daemon in the background:</p>
+<h3 id="configuring-the-daemon">Configuring the Daemon<a hidden class="anchor" aria-hidden="true" href="#configuring-the-daemon">#</a></h3>
+<p>I edited the SSH daemon configuration (<code>/usr/etc/sshd_config</code>) to allow root login and set a non-standard port, and changed the root password in <code>/etc/shadow</code> so I could authenticate over SSH.</p>
+<h3 id="starting-ssh">Starting SSH<a hidden class="anchor" aria-hidden="true" href="#starting-ssh">#</a></h3>
+<p>With keys and config in place, I started the daemon in the background:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -451,8 +382,8 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/usr/sbin/sshd <span class="p">&amp;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h3 id="ssh-as-root">SSH as Root
-</h3><p>From my machine, I connected directly:</p>
+</div><h3 id="ssh-as-root">SSH as Root<a hidden class="anchor" aria-hidden="true" href="#ssh-as-root">#</a></h3>
+<p>From my machine, I connected directly:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -461,23 +392,10 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 <pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ssh -p <span class="m">42822</span> root@x.x.x.x
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><img src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login.png"
-	width="644"
-	height="127"
-	srcset="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login_hu2064132160768181927.png 480w, /p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login_hu9896353803423088089.png 1024w"
-	loading="lazy"
-	
-		alt="SSH root login to the WD MyCloud NAS"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="507"
-		data-flex-basis="1217px"
-	
-><br />
+</div><p><img alt="SSH root login to the WD MyCloud NAS" loading="lazy" src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/ssh_root_login.png"><br />
 <strong>uid=0(root)</strong>, a proper interactive root shell over SSH. The connection survives indefinitely, survives reboots of the attacker&rsquo;s machine, and provides the stable tunnel needed for what comes next.</p>
-<h2 id="turning-the-nas-into-a-network-proxy">Turning the NAS into a Network Proxy
-</h2><p>SSH has a built-in feature that turns any SSH connection into a <strong>SOCKS proxy</strong> with a single flag: <strong><code>-D</code></strong> (dynamic port forwarding).</p>
+<h2 id="turning-the-nas-into-a-network-proxy">Turning the NAS into a Network Proxy<a hidden class="anchor" aria-hidden="true" href="#turning-the-nas-into-a-network-proxy">#</a></h2>
+<p>SSH has a built-in feature that turns any SSH connection into a <strong>SOCKS proxy</strong> with a single flag: <strong><code>-D</code></strong> (dynamic port forwarding).</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -493,10 +411,10 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 </ul>
 <p>Any application that supports SOCKS5 (a browser, <code>proxychains</code>, <code>curl --socks5</code>, scanners) can now route its traffic through the NAS. The destination sees the NAS&rsquo;s IP address, not the attacker&rsquo;s. The traffic looks like a NAS doing what NAS devices do: talking to the network.</p>
 <p>No additional tools, no chisel, no Meterpreter, just SSH doing what SSH was designed to do.</p>
-<h3 id="forward-vs-reverse">Forward vs. Reverse
-</h3><p>The <code>ssh -D</code> approach works when the attacker can reach the NAS directly. If the NAS is behind a firewall that blocks inbound connections, the same trick works in reverse using <strong><code>ssh -R</code></strong> from the NAS back to the attacker, carrying the SOCKS proxy through the outbound connection.</p>
-<h2 id="attack-path">Attack Path
-</h2><p>The full chain, from an unpatched NAS to covert network proxy:</p>
+<h3 id="forward-vs-reverse">Forward vs. Reverse<a hidden class="anchor" aria-hidden="true" href="#forward-vs-reverse">#</a></h3>
+<p>The <code>ssh -D</code> approach works when the attacker can reach the NAS directly. If the NAS is behind a firewall that blocks inbound connections, the same trick works in reverse using <strong><code>ssh -R</code></strong> from the NAS back to the attacker, carrying the SOCKS proxy through the outbound connection.</p>
+<h2 id="attack-path">Attack Path<a hidden class="anchor" aria-hidden="true" href="#attack-path">#</a></h2>
+<p>The full chain, from an unpatched NAS to covert network proxy:</p>
 <ol>
 <li>Discover a WD MyCloud NAS on the network (port 443).</li>
 <li>Exploit the <strong>unauthenticated command injection</strong> via Metasploit.</li>
@@ -509,8 +427,8 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 <li>Point any application at the SOCKS proxy.</li>
 <li>All traffic now exits from the <strong>NAS&rsquo;s IP address</strong>, the attacker is hidden.</li>
 </ol>
-<h2 id="mitigations">Mitigations
-</h2><p>A compromised NAS is a worst-case scenario: it holds your data <em>and</em> gives the attacker a network foothold. To break this chain:</p>
+<h2 id="mitigations">Mitigations<a hidden class="anchor" aria-hidden="true" href="#mitigations">#</a></h2>
+<p>A compromised NAS is a worst-case scenario: it holds your data <em>and</em> gives the attacker a network foothold. To break this chain:</p>
 <ul>
 <li><strong>Update firmware immediately.</strong> WD has released patches for this vulnerability. Every unpatched MyCloud device is an unauthenticated root shell.</li>
 <li><strong>Never expose the management interface to untrusted networks.</strong> The HTTPS interface (port 443) should only be reachable from a management VLAN or specific admin workstations, never the general LAN.</li>
@@ -519,361 +437,205 @@ The module confirmed the target was a WD MyCloud, verified the injection point, 
 <li><strong>Monitor for unusual services.</strong> A NAS suddenly listening on a new port (like SSH on 42822) is a strong indicator of compromise.</li>
 <li><strong>Audit stored data.</strong> After any NAS compromise, assume all stored files have been accessed. Rotate credentials stored on or accessible through the NAS.</li>
 </ul>
-<h3 id="note">Note
-</h3><p>The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.</p>
-<h2 id="conclusion">Conclusion
-</h2><p>A NAS is a computer. It runs Linux, has root, and sits on the network with access to everything that talks to it. When its web interface carries an unpatched command injection, a single Metasploit module turns it into a root shell. From there, SSH is bootstrapped from nothing, and one flag (<code>-D</code>) turns the entire connection into a SOCKS proxy. No extra tools, no payloads, just the device&rsquo;s own operating system turned against the network it serves.</p>
+<h3 id="note">Note<a hidden class="anchor" aria-hidden="true" href="#note">#</a></h3>
+<p>The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>A NAS is a computer. It runs Linux, has root, and sits on the network with access to everything that talks to it. When its web interface carries an unpatched command injection, a single Metasploit module turns it into a root shell. From there, SSH is bootstrapped from nothing, and one flag (<code>-D</code>) turns the entire connection into a SOCKS proxy. No extra tools, no payloads, just the device&rsquo;s own operating system turned against the network it serves.</p>
 <p>The NAS stores your files, serves your backups, and is trusted by every machine that mounts it. That trust is exactly what makes it the perfect place to route traffic nobody will question.</p>
-<h2 id="references">References
-</h2><ul>
-<li><a class="link" href="https://nvd.nist.gov/vuln/detail/CVE-2016-10108"  target="_blank" rel="noopener"
-    >CVE-2016-10108 - WD MyCloud Command Injection (NVD)</a></li>
-<li><a class="link" href="https://docs.rapid7.com/metasploit/"  target="_blank" rel="noopener"
-    >Metasploit - WD MyCloud Unauthenticated Command Injection</a></li>
-<li><a class="link" href="https://man.openbsd.org/ssh#D"  target="_blank" rel="noopener"
-    >SSH Dynamic Port Forwarding (SOCKS Proxy)</a></li>
-<li><a class="link" href="https://book.hacktricks.xyz/"  target="_blank" rel="noopener"
-    >HackTricks - Pentesting NAS/Storage</a></li>
-<li><a class="link" href="https://www.westerndigital.com/support/product-security"  target="_blank" rel="noopener"
-    >Western Digital Security Advisories</a></li>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ul>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2016-10108">CVE-2016-10108 - WD MyCloud Command Injection (NVD)</a></li>
+<li><a href="https://docs.rapid7.com/metasploit/">Metasploit - WD MyCloud Unauthenticated Command Injection</a></li>
+<li><a href="https://man.openbsd.org/ssh#D">SSH Dynamic Port Forwarding (SOCKS Proxy)</a></li>
+<li><a href="https://book.hacktricks.xyz/">HackTricks - Pentesting NAS/Storage</a></li>
+<li><a href="https://www.westerndigital.com/support/product-security">Western Digital Security Advisories</a></li>
 </ul>
 
-</section>
 
+  </div>
 
-    <footer class="article-footer">
-    
-    <section class="article-tags">
-        
-            <a href="/tags/cybersecurity/">Cybersecurity</a>
-        
-            <a href="/tags/hacking/">Hacking</a>
-        
-            <a href="/tags/infosec/">Infosec</a>
-        
-            <a href="/tags/nas/">Nas</a>
-        
-            <a href="/tags/wd-mycloud/">Wd-Mycloud</a>
-        
-            <a href="/tags/cve-2016-10108/">Cve-2016-10108</a>
-        
-            <a href="/tags/pivoting/">Pivoting</a>
-        
-            <a href="/tags/network-proxy/">Network-Proxy</a>
-        
-    </section>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://Gill-Singh-A.github.io/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/hacking/">Hacking</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/infosec/">Infosec</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/nas/">Nas</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/wd-mycloud/">Wd-Mycloud</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/cve-2016-10108/">Cve-2016-10108</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/pivoting/">Pivoting</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/network-proxy/">Network-Proxy</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://Gill-Singh-A.github.io/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/">
+    <span class="title">Next »</span>
+    <span>From an Exposed iLO to Persistent Root via CVE-2017-12542</span>
+  </a>
+</nav>
 
-
-    
-    <section class="article-copyright">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
-</svg>
-
-
-
-        <span>Licensed under CC BY-NC-SA 4.0</span>
-    </section>
-    </footer>
-
-
-    
+  </footer>
 </article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://Gill-Singh-A.github.io/">Gill.Singh.A</a></span> · 
 
     
-
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">Related content</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="has-image">
-    <a href="/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/">
-        
-        
-            <div class="article-image">
-                <img src="/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created.3c9c6b43ade957d8990d39101dbcb542_hu1271739274174159388.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post From an Exposed iLO to Persistent Root via CVE-2017-12542"
-                        
-                        data-hash="md5-PJxrQ63pV9iZDTkQHby1Qg==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">From an Exposed iLO to Persistent Root via CVE-2017-12542</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/">
-        
-        
-            <div class="article-image">
-                <img src="/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/assets/images/attack_path.4bfc786c0a6e389e09d66f30462a585c_hu881086065493272119.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post From IPMI to Full Infrastructure Compromise via Proxmox"
-                        
-                        data-hash="md5-S/x4bApuOJ4J1m8wRipYXA==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">From IPMI to Full Infrastructure Compromise via Proxmox</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/privilege-escalation-via-insecure-nfs-mounts/">
-        
-        
-            <div class="article-image">
-                <img src="/p/privilege-escalation-via-insecure-nfs-mounts/assets/images/unsafe_nfs_mount.9336c39041c9c6a00ae89d093183514a_hu7151244482435253460.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Privilege Escalation via Insecure NFS Mounts"
-                        
-                        data-hash="md5-kzbDkEHJxqAK6J0JMYNRSg==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Privilege Escalation via Insecure NFS Mounts</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/from-directory-listing-to-root-shell/">
-        
-        
-            <div class="article-image">
-                <img src="/p/from-directory-listing-to-root-shell/assets/images/attack_path.d9f215022b7b1a7d637d5411f6ccdba3_hu17485442275861317011.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post From Directory Listing to Root Shell"
-                        
-                        data-hash="md5-2fIVAit7Gn1jfVQR9szbow==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">From Directory Listing to Root Shell</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/">
-        
-        
-            <div class="article-image">
-                <img src="/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/assets/images/directory_listing.9d3087ce851644f0a8deeb6676082c49_hu17416119848749995212.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability"
-                        
-                        data-hash="md5-nTCHzoUWRPCo3utmdggsSQ==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Dumping Source Code and Accessing Internal Databases via a Phpunit Vulnerability</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
-
-     
-    
-        
-    <div class="disqus-container">
-    <div id="disqus_thread"></div>
-<script>
-    window.disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a><div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
 </div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  if (!overlay) return;
+  const lbImg = overlay.querySelector('img');
+  const closeBtn = overlay.querySelector('.lightbox-close');
 
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
+  document.querySelectorAll('.gallery img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = this.src;
+      lbImg.alt = this.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target !== lbImg) closeLightbox();
+  });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+
 
 <script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
         }
     })
+
 </script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-            2020 - 
-        
-        2026 Gill.Singh.A
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.27.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-    
-    <div class="pswp__bg"></div>
-
-    
-    <div class="pswp__scroll-wrap">
-
-        
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
-
-        
-        <div class="pswp__ui pswp__ui--hidden">
-
-            <div class="pswp__top-bar">
-
-                
-
-                <div class="pswp__counter"></div>
-
-                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-
-                <button class="pswp__button pswp__button--share" title="Share"></button>
-
-                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-                
-                
-                <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                        <div class="pswp__preloader__cut">
-                            <div class="pswp__preloader__donut"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                <div class="pswp__share-tooltip"></div>
-            </div>
-
-            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-            </button>
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div><script 
-                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
-                defer
-                >
-            </script><link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
-            ><link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
-            >
-
-            </main>
-        </div>
-        <script 
-                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
-                
-                >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
 <script>
-    (function () {
-        const customFont = document.createElement('link');
-        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
 
-        customFont.type = "text/css";
-        customFont.rel = "stylesheet";
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
 
-        document.head.appendChild(customFont);
-    }());
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
+</body>
 
-    </body>
 </html>

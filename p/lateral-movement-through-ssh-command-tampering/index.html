@@ -1,449 +1,341 @@
 <!DOCTYPE html>
-<html lang="en-us" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.">
-<title>Lateral Movement Through SSH Command Tampering</title>
+<html lang="en" dir="auto" data-theme="dark">
 
-<link rel='canonical' href='https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/'>
-
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="Lateral Movement Through SSH Command Tampering">
-<meta property='og:description' content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.">
-<meta property='og:url' content='https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/'>
-<meta property='og:site_name' content='Gill.Singh.A'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='cybersecurity' /><meta property='article:tag' content='hacking' /><meta property='article:tag' content='infosec' /><meta property='article:tag' content='lateral-movement' /><meta property='article:published_time' content='2025-02-19T02:54:39&#43;05:30'/><meta property='article:modified_time' content='2025-02-19T02:54:39&#43;05:30'/><meta property='og:image' content='https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png' />
-<meta name="twitter:title" content="Lateral Movement Through SSH Command Tampering">
-<meta name="twitter:description" content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials."><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png' />
-    <link rel="shortcut icon" href="/favicon.jpg" />
-
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
-
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
-
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Lateral Movement Through SSH Command Tampering | Gill.Singh.A</title>
+<meta name="keywords" content="cybersecurity, hacking, infosec, lateral-movement">
+<meta name="description" content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.">
+<meta name="author" content="">
+<link rel="canonical" href="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://Gill-Singh-A.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Gill-Singh-A.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Gill-Singh-A.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://Gill-Singh-A.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://Gill-Singh-A.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
         }
-    })();
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><style>
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 1.5em 0;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  aspect-ratio: auto;
+}
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.gallery-section {
+  margin: 2em 0 0.5em;
+}
+.gallery-section h2 {
+  margin-bottom: 0.3em;
+}
+.gallery-section h2 a {
+  text-decoration: none;
+  color: var(--primary);
+}
+.gallery-section h2 a:hover {
+  text-decoration: underline;
+}
+
+ 
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.lightbox-overlay.active {
+  display: flex;
+}
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px; right: 24px;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10000;
+  background: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1;
+  opacity: 0.8;
+}
+.lightbox-close:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+</style>
+<meta property="og:url" content="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/">
+  <meta property="og:site_name" content="Gill.Singh.A">
+  <meta property="og:title" content="Lateral Movement Through SSH Command Tampering">
+  <meta property="og:description" content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2025-02-19T02:54:39+05:30">
+    <meta property="article:modified_time" content="2025-02-19T02:54:39+05:30">
+    <meta property="article:tag" content="Cybersecurity">
+    <meta property="article:tag" content="Hacking">
+    <meta property="article:tag" content="Infosec">
+    <meta property="article:tag" content="Lateral-Movement">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Lateral Movement Through SSH Command Tampering">
+  <meta name="twitter:description" content="In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://Gill-Singh-A.github.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Lateral Movement Through SSH Command Tampering",
+      "item": "https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/"
+    }
+  ]
+}
 </script>
-<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
-
-    <header>
-        
-            
-            <figure class="site-avatar">
-                <a href="/">
-                
-                    
-                    
-                    
-                        
-                        <img src="/img/avatar_hu14711219647349942965.jpg" width="300"
-                            height="300" class="site-logo" loading="lazy" alt="Avatar">
-                    
-                
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Lateral Movement Through SSH Command Tampering",
+  "name": "Lateral Movement Through SSH Command Tampering",
+  "description": "In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.",
+  "keywords": [
+    "cybersecurity", "hacking", "infosec", "lateral-movement"
+  ],
+  "articleBody": "Understanding Lateral Movement Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.\nEntry Point During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.\nWhile analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.\nThis discovery led me to investigate further, with the goal of capturing credentials to access additional systems.\nCapturing SSH Credentials “You don’t have to be a part of the system to use it. You just need to know how to manipulate it.” — Mr.Robot\nTo achieve this, I devised a simple method using a Python script alongside modifications to the .bashrc file. This setup allowed me to intercept SSH credentials entered by the user.\nImplementation Installing sshpass – This tool bypasses the native SSH password prompt, allowing automation of SSH authentication. Tampering with SSH Commands – By creating an alias for the SSH command, I ensured that every SSH connection attempt executed my Python script first, capturing the credentials before proceeding with the actual connection. For complete details on the scripts and instructions used, check out the SSH Credential Logger.\nExtracting SSH Credentials After some waiting, my setup successfully captured SSH credentials entered by the user.\nWith these credentials, I was ready to move laterally across the network.\nNetwork Traversal Once I obtained valid SSH credentials, I aimed to access additional devices on the network. Simply waiting for the user to enter credentials for other machines would be too slow, so I employed two proactive methods:\n1. Port Scanning \u0026 Brute Force This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.\n2. Extracting IPs from known_hosts A stealthier method involves inspecting the .ssh/known_hosts file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.\nBy leveraging this information, I could target machines more efficiently while minimizing network noise, making detection less likely.\nSummary Below is the attack path I followed, visualized using Maltego\nConclusion This technique demonstrates how attackers can leverage misconfigurations and simple command tampering to perform lateral movement within a network. By capturing SSH credentials and analyzing user activity, an attacker can systematically expand their foothold while remaining under the radar.\nKey takeaways:\nMonitoring bash history is crucial to detect unauthorized activity. Regularly auditing .bashrc, .profile, and alias configurations can help uncover unauthorized modifications. Network segmentation limits an attacker’s ability to move laterally across a network. Understanding these attack methods helps security professionals develop better defense mechanisms to detect and prevent unauthorized access. By staying proactive, organizations can significantly mitigate the risk of lateral movement in their networks.\n",
+  "wordCount" : "533",
+  "inLanguage": "en",
+  "datePublished": "2025-02-19T02:54:39+05:30",
+  "dateModified": "2025-02-19T02:54:39+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gill.Singh.A",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Gill-Singh-A.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://Gill-Singh-A.github.io/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://Gill-Singh-A.github.io/" title="Home">
+                    <span>Home</span>
                 </a>
-                
-                    <span class="emoji">🤖</span>
-                
-            </figure>
-            
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">Gill.Singh.A</a></h1>
-            <h2 class="site-description">Security Researcher</h2>
-        </div>
-    </header><ol class="menu-social">
-            
-                <li>
-                    <a 
-                        href='https://github.com/Gill-Singh-A'
-                        target="_blank"
-                        title="GitHub"
-                        rel="me"
-                    >
-                        
-                        
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
-</svg>
-
-
-
-                        
-                    </a>
-                </li>
-            
-                <li>
-                    <a 
-                        href='https://x.com/Gill_Singh_A'
-                        target="_blank"
-                        title="Twitter"
-                        rel="me"
-                    >
-                        
-                        
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
-</svg>
-
-
-
-                        
-                    </a>
-                </li>
-            
-        </ol><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <polyline points="5 12 3 12 12 3 21 12 19 12" />
-  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
-</svg>
-
-
-
-                
-                <span>Home</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/archives/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <rect x="3" y="4" width="18" height="4" rx="2" />
-  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
-  <line x1="10" y1="12" x2="14" y2="12" />
-</svg>
-
-
-
-                
-                <span>Archives</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/search/' >
-                
-                
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="10" cy="10" r="7" />
-  <line x1="21" y1="21" x2="15" y2="15" />
-</svg>
-
-
-
-                
-                <span>Search</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
-
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    <aside class="sidebar right-sidebar sticky">
-        
-            
-                
-    <section class="widget archives">
-        <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <line x1="5" y1="9" x2="19" y2="9" />
-  <line x1="5" y1="15" x2="19" y2="15" />
-  <line x1="11" y1="4" x2="7" y2="20" />
-  <line x1="17" y1="4" x2="13" y2="20" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">Table of contents</h2>
-        
-        <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#understanding-lateral-movement">Understanding Lateral Movement</a></li>
-    <li><a href="#entry-point">Entry Point</a></li>
-    <li><a href="#capturing-ssh-credentials">Capturing SSH Credentials</a>
-      <ol>
-        <li><a href="#implementation">Implementation</a></li>
-      </ol>
-    </li>
-    <li><a href="#extracting-ssh-credentials">Extracting SSH Credentials</a></li>
-    <li><a href="#network-traversal">Network Traversal</a>
-      <ol>
-        <li><a href="#1-port-scanning--brute-force">1. Port Scanning &amp; Brute Force</a></li>
-        <li><a href="#2-extracting-ips-from-known_hosts">2. Extracting IPs from <code>known_hosts</code></a></li>
-      </ol>
-    </li>
-    <li><a href="#summary">Summary</a></li>
-    <li><a href="#conclusion">Conclusion</a></li>
-  </ol>
-</nav>
-        </div>
-    </section>
-
-            
-        
-    </aside>
-
-
-            <main class="main full-width">
-    <article class="has-image main-article">
-    <header class="article-header">
-        <div class="article-image">
-            <a href="/p/lateral-movement-through-ssh-command-tampering/">
-                <img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu3295629997988839686.png"
-                        srcset="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu3295629997988839686.png 800w, /p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu13095012957057034254.png 1600w"
-                        width="800" 
-                        height="737" 
-                        loading="lazy"
-                        alt="Featured image of post Lateral Movement Through SSH Command Tampering" />
-                
-            </a>
-        </div>
-    
-
-    <div class="article-details">
-    
-    <header class="article-category">
-        
-            <a href="/categories/ssh/" >
-                Ssh
-            </a>
-        
-            <a href="/categories/hacking/" >
-                Hacking
-            </a>
-        
-            <a href="/categories/lateral-movement/" >
-                Lateral-Movement
-            </a>
-        
-            <a href="/categories/network/" >
-                Network
-            </a>
-        
-    </header>
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/p/lateral-movement-through-ssh-command-tampering/">Lateral Movement Through SSH Command Tampering</a>
-        </h2>
-    
-        
-        <h3 class="article-subtitle">
-            In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.
-        </h3>
-        
-    </div>
-
-    
-    
-    
-    
-    <footer class="article-time">
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                <time class="article-time--published">Feb 19, 2025</time>
-            </div>
-        
-
-        
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <polyline points="12 7 12 12 15 15" />
-</svg>
-
-
-
-                <time class="article-time--reading">
-                    3 minute read
-                </time>
-            </div>
-        
-    </footer>
-    
-
-    
-</div>
-
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/post/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/gallery/" title="Photography">
+                    <span>Photography</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </header>
+<main class="main">
 
-    <section class="article-content">
-    
-    
-    <h2 id="understanding-lateral-movement">Understanding Lateral Movement
-</h2><p>Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.</p>
-<h2 id="entry-point">Entry Point
-</h2><p>During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.<br />
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/post/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Lateral Movement Through SSH Command Tampering
+    </h1>
+    <div class="post-description">
+      In this blog, we will explore how I performed lateral movement and gained access to multiple machines on a private network by logging SSH credentials.
+    </div>
+    <div class="post-meta">
+
+<span title='2025-02-19 02:54:39 +0530 IST'>February 19, 2025</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#understanding-lateral-movement" aria-label="Understanding Lateral Movement">Understanding Lateral Movement</a></li>
+            <li>
+                <a href="#entry-point" aria-label="Entry Point">Entry Point</a></li>
+            <li>
+                <a href="#capturing-ssh-credentials" aria-label="Capturing SSH Credentials">Capturing SSH Credentials</a><ul>
+                    
+            <li>
+                <a href="#implementation" aria-label="Implementation">Implementation</a></li></ul>
+            </li>
+            <li>
+                <a href="#extracting-ssh-credentials" aria-label="Extracting SSH Credentials">Extracting SSH Credentials</a></li>
+            <li>
+                <a href="#network-traversal" aria-label="Network Traversal">Network Traversal</a><ul>
+                    
+            <li>
+                <a href="#1-port-scanning--brute-force" aria-label="1. Port Scanning &amp; Brute Force">1. Port Scanning &amp; Brute Force</a></li>
+            <li>
+                <a href="#2-extracting-ips-from-known_hosts" aria-label="2. Extracting IPs from known_hosts">2. Extracting IPs from known_hosts</a></li></ul>
+            </li>
+            <li>
+                <a href="#summary" aria-label="Summary">Summary</a></li>
+            <li>
+                <a href="#conclusion" aria-label="Conclusion">Conclusion</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="understanding-lateral-movement">Understanding Lateral Movement<a hidden class="anchor" aria-hidden="true" href="#understanding-lateral-movement">#</a></h2>
+<p>Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.</p>
+<h2 id="entry-point">Entry Point<a hidden class="anchor" aria-hidden="true" href="#entry-point">#</a></h2>
+<p>During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.<br />
 While analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.<br />
-<img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png"
-	width="480"
-	height="270"
-	srcset="/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu9191204011516167986.png 480w, /p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history_hu12104229560349473230.png 1024w"
-	loading="lazy"
-	
-		alt="Bash History"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="177"
-		data-flex-basis="426px"
-	
-><br />
+<img alt="Bash History" loading="lazy" src="/p/lateral-movement-through-ssh-command-tampering/assets/images/bash_history.png"><br />
 This discovery led me to investigate further, with the goal of capturing credentials to access additional systems.<br /></p>
-<h2 id="capturing-ssh-credentials">Capturing SSH Credentials
-</h2><blockquote>
+<h2 id="capturing-ssh-credentials">Capturing SSH Credentials<a hidden class="anchor" aria-hidden="true" href="#capturing-ssh-credentials">#</a></h2>
+<blockquote>
 <p>“You don’t have to be a part of the system to use it. You just need to know how to manipulate it.” — Mr.Robot</p>
 </blockquote>
 <!-- -->
 <p>To achieve this, I devised a simple method using a Python script alongside modifications to the <code>.bashrc</code> file. This setup allowed me to intercept SSH credentials entered by the user.</p>
-<h3 id="implementation">Implementation
-</h3><ol>
+<h3 id="implementation">Implementation<a hidden class="anchor" aria-hidden="true" href="#implementation">#</a></h3>
+<ol>
 <li><strong>Installing <code>sshpass</code></strong> – This tool bypasses the native SSH password prompt, allowing automation of SSH authentication.</li>
 <li><strong>Tampering with SSH Commands</strong> – By creating an alias for the SSH command, I ensured that every SSH connection attempt executed my Python script first, capturing the credentials before proceeding with the actual connection.</li>
 </ol>
 <!-- -->
-<p>For complete details on the scripts and instructions used, check out the <a class="link" href="https://github.com/Gill-Singh-A/SSH-Credential-Logger"  target="_blank" rel="noopener"
-    >SSH Credential Logger</a>.</p>
-<h2 id="extracting-ssh-credentials">Extracting SSH Credentials
-</h2><p>After some waiting, my setup successfully captured SSH credentials entered by the user.<br />
-<img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png"
-	width="430"
-	height="172"
-	srcset="/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu8459928850480813140.png 480w, /p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials_hu10474649911885188044.png 1024w"
-	loading="lazy"
-	
-		alt="SSH Credentials"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="250"
-		data-flex-basis="600px"
-	
-><br />
+<p>For complete details on the scripts and instructions used, check out the <a href="https://github.com/Gill-Singh-A/SSH-Credential-Logger">SSH Credential Logger</a>.</p>
+<h2 id="extracting-ssh-credentials">Extracting SSH Credentials<a hidden class="anchor" aria-hidden="true" href="#extracting-ssh-credentials">#</a></h2>
+<p>After some waiting, my setup successfully captured SSH credentials entered by the user.<br />
+<img alt="SSH Credentials" loading="lazy" src="/p/lateral-movement-through-ssh-command-tampering/assets/images/ssh_credentials.png"><br />
 With these credentials, I was ready to move laterally across the network.</p>
-<h2 id="network-traversal">Network Traversal
-</h2><p>Once I obtained valid SSH credentials, I aimed to access additional devices on the network. Simply waiting for the user to enter credentials for other machines would be too slow, so I employed two proactive methods:</p>
-<h3 id="1-port-scanning--brute-force">1. Port Scanning &amp; Brute Force
-</h3><p>This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.</p>
-<h3 id="2-extracting-ips-from-known_hosts">2. Extracting IPs from <code>known_hosts</code>
-</h3><p>A stealthier method involves inspecting the <code>.ssh/known_hosts</code> file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.<br />
-<img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png"
-	width="1487"
-	height="492"
-	srcset="/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu13037433810454352534.png 480w, /p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts_hu8199313507788782025.png 1024w"
-	loading="lazy"
-	
-		alt="known_hosts"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="302"
-		data-flex-basis="725px"
-	
-><br />
+<h2 id="network-traversal">Network Traversal<a hidden class="anchor" aria-hidden="true" href="#network-traversal">#</a></h2>
+<p>Once I obtained valid SSH credentials, I aimed to access additional devices on the network. Simply waiting for the user to enter credentials for other machines would be too slow, so I employed two proactive methods:</p>
+<h3 id="1-port-scanning--brute-force">1. Port Scanning &amp; Brute Force<a hidden class="anchor" aria-hidden="true" href="#1-port-scanning--brute-force">#</a></h3>
+<p>This involved scanning the network for open SSH ports and attempting authentication using the stolen credentials. However, this approach generates significant noise, increasing the chances of detection due to logged failed attempts.</p>
+<h3 id="2-extracting-ips-from-known_hosts">2. Extracting IPs from <code>known_hosts</code><a hidden class="anchor" aria-hidden="true" href="#2-extracting-ips-from-known_hosts">#</a></h3>
+<p>A stealthier method involves inspecting the <code>.ssh/known_hosts</code> file, which contains a list of previously connected devices. This file provided direct IPs and hostnames of machines the user had accessed before.<br />
+<img alt="known_hosts" loading="lazy" src="/p/lateral-movement-through-ssh-command-tampering/assets/images/known_hosts.png"><br />
 By leveraging this information, I could target machines more efficiently while minimizing network noise, making detection less likely.</p>
-<h2 id="summary">Summary
-</h2><p>Below is the attack path I followed, visualized using <a class="link" href="https://www.maltego.com/"  target="_blank" rel="noopener"
-    >Maltego</a><br />
-<img src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png"
-	width="1112"
-	height="1024"
-	srcset="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu4582674992775991328.png 480w, /p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path_hu7481765843318099108.png 1024w"
-	loading="lazy"
-	
-		alt="Attack Path"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="108"
-		data-flex-basis="260px"
-	
-></p>
-<h2 id="conclusion">Conclusion
-</h2><p>This technique demonstrates how attackers can leverage misconfigurations and simple command tampering to perform lateral movement within a network. By capturing SSH credentials and analyzing user activity, an attacker can systematically expand their foothold while remaining under the radar.<br />
+<h2 id="summary">Summary<a hidden class="anchor" aria-hidden="true" href="#summary">#</a></h2>
+<p>Below is the attack path I followed, visualized using <a href="https://www.maltego.com/">Maltego</a><br />
+<img alt="Attack Path" loading="lazy" src="/p/lateral-movement-through-ssh-command-tampering/assets/images/attack_path.png"></p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>This technique demonstrates how attackers can leverage misconfigurations and simple command tampering to perform lateral movement within a network. By capturing SSH credentials and analyzing user activity, an attacker can systematically expand their foothold while remaining under the radar.<br />
 Key takeaways:</p>
 <ul>
 <li><strong>Monitoring bash history</strong> is crucial to detect unauthorized activity.</li>
@@ -453,334 +345,191 @@ Key takeaways:</p>
 <!-- -->
 <p>Understanding these attack methods helps security professionals develop better defense mechanisms to detect and prevent unauthorized access. By staying proactive, organizations can significantly mitigate the risk of lateral movement in their networks.</p>
 
-</section>
 
+  </div>
 
-    <footer class="article-footer">
-    
-    <section class="article-tags">
-        
-            <a href="/tags/cybersecurity/">Cybersecurity</a>
-        
-            <a href="/tags/hacking/">Hacking</a>
-        
-            <a href="/tags/infosec/">Infosec</a>
-        
-            <a href="/tags/lateral-movement/">Lateral-Movement</a>
-        
-    </section>
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://Gill-Singh-A.github.io/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/hacking/">Hacking</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/infosec/">Infosec</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/lateral-movement/">Lateral-Movement</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/">
+    <span class="title">« Prev</span>
+    <span>Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</span>
+  </a>
+  <a class="next" href="https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/">
+    <span class="title">Next »</span>
+    <span>Building a Heat Map for IIT Kanpur&#39;s Computer Labs</span>
+  </a>
+</nav>
 
-
-    
-    <section class="article-copyright">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
-</svg>
-
-
-
-        <span>Licensed under CC BY-NC-SA 4.0</span>
-    </section>
-    </footer>
-
-
-    
+  </footer>
 </article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://Gill-Singh-A.github.io/">Gill.Singh.A</a></span> · 
 
     
-
     
-
-<aside class="related-content--wrapper">
-    <h2 class="section-title">Related content</h2>
-    <div class="related-content">
-        <div class="flex article-list--tile">
-            
-                
-<article class="has-image">
-    <a href="/p/cracking-linux-hashes-and-expanding-access/">
-        
-        
-            <div class="article-image">
-                <img src="/p/cracking-linux-hashes-and-expanding-access/assets/images/attack_path.13e4a0b84c8a45b1c6dcbe2cea62aac2_hu10573663531890710708.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Cracking Linux Hashes and Expanding Access"
-                        
-                        data-hash="md5-E&#43;SguEyKRbHG3L4s6mKqwg==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Cracking Linux Hashes and Expanding Access</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/">
-        
-        
-            <div class="article-image">
-                <img src="/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/assets/images/attack_path.43ddb3f15b6426bf4f73a170f05f8e89_hu10640077497982418167.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems"
-                        
-                        data-hash="md5-Q92z8VtkJr9Pc6Fw8F&#43;OiQ==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/from-directory-listing-to-root-shell/">
-        
-        
-            <div class="article-image">
-                <img src="/p/from-directory-listing-to-root-shell/assets/images/attack_path.d9f215022b7b1a7d637d5411f6ccdba3_hu17485442275861317011.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post From Directory Listing to Root Shell"
-                        
-                        data-hash="md5-2fIVAit7Gn1jfVQR9szbow==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">From Directory Listing to Root Shell</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/">
-        
-        
-            <div class="article-image">
-                <img src="/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/assets/images/reverse_shell.c18fbc69999dfb9d521ca2552ae40fb7_hu16070963664074950060.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud"
-                        
-                        data-hash="md5-wY&#43;8aZmd&#43;51SHKJVKuQPtw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/">
-        
-        
-            <div class="article-image">
-                <img src="/p/from-an-exposed-ilo-to-persistent-root-via-cve-2017-12542/assets/images/exploit_admin_created.3c9c6b43ade957d8990d39101dbcb542_hu1271739274174159388.png" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post From an Exposed iLO to Persistent Root via CVE-2017-12542"
-                        
-                        data-hash="md5-PJxrQ63pV9iZDTkQHby1Qg==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">From an Exposed iLO to Persistent Root via CVE-2017-12542</h2>
-        </div>
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-</aside>
-
-     
-    
-        
-    <div class="disqus-container">
-    <div id="disqus_thread"></div>
-<script>
-    window.disqus_config = function () {
-    
-    
-    
-    };
-    (function() {
-        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
-            return;
-        }
-        var d = document, s = d.createElement('script'); s.async = true;
-        s.src = '//' + "hugo-theme-stack" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a><div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
 </div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  if (!overlay) return;
+  const lbImg = overlay.querySelector('img');
+  const closeBtn = overlay.querySelector('.lightbox-close');
 
-<style>
-    .disqus-container {
-        background-color: var(--card-background);
-        border-radius: var(--card-border-radius);
-        box-shadow: var(--shadow-l1);
-        padding: var(--card-padding);
-    }
-</style>
+  document.querySelectorAll('.gallery img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = this.src;
+      lbImg.alt = this.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target !== lbImg) closeLightbox();
+  });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+
 
 <script>
-    window.addEventListener('onColorSchemeChange', (e) => {
-        if (typeof DISQUS == 'object') {
-            DISQUS.reset({
-                reload: true
-            });
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
         }
     })
+
 </script>
-
-    
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-            2020 - 
-        
-        2026 Gill.Singh.A
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.27.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-
-    
-    <div class="pswp__bg"></div>
-
-    
-    <div class="pswp__scroll-wrap">
-
-        
-        <div class="pswp__container">
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-            <div class="pswp__item"></div>
-        </div>
-
-        
-        <div class="pswp__ui pswp__ui--hidden">
-
-            <div class="pswp__top-bar">
-
-                
-
-                <div class="pswp__counter"></div>
-
-                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-
-                <button class="pswp__button pswp__button--share" title="Share"></button>
-
-                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-
-                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-
-                
-                
-                <div class="pswp__preloader">
-                    <div class="pswp__preloader__icn">
-                        <div class="pswp__preloader__cut">
-                            <div class="pswp__preloader__donut"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                <div class="pswp__share-tooltip"></div>
-            </div>
-
-            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
-            </button>
-
-            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
-            </button>
-
-            <div class="pswp__caption">
-                <div class="pswp__caption__center"></div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div><script 
-                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
-                defer
-                >
-            </script><script 
-                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
-                defer
-                >
-            </script><link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
-            ><link 
-                rel="stylesheet" 
-                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
-            >
-
-            </main>
-        </div>
-        <script 
-                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
-                
-                >
-            </script><script type="text/javascript" src="/ts/main.js" defer></script>
 <script>
-    (function () {
-        const customFont = document.createElement('link');
-        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
 
-        customFont.type = "text/css";
-        customFont.rel = "stylesheet";
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
 
-        document.head.appendChild(customFont);
-    }());
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
 </script>
+</body>
 
-    </body>
 </html>

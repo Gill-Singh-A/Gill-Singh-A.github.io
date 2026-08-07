@@ -14,10 +14,10 @@
     <loc>https://Gill-Singh-A.github.io/tags/cybersecurity/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/hacking/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/hacking/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/infosec/</loc>
@@ -32,10 +32,10 @@
     <loc>https://Gill-Singh-A.github.io/tags/network-proxy/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/pivoting/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/pivoting/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/pivoting/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/pivoting/</loc>
     <lastmod>2026-08-07T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/post/</loc>
@@ -65,10 +65,10 @@
     <loc>https://Gill-Singh-A.github.io/tags/persistence/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/privilege-escalation/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/privilege-escalation/</loc>
     <lastmod>2026-07-31T13:05:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/from-ipmi-to-full-infrastructure-compromise-via-proxmox/</loc>
@@ -77,19 +77,19 @@
     <loc>https://Gill-Singh-A.github.io/tags/ipmi/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/proxmox/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/proxmox/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/proxmox/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/proxmox/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/virtualization/</loc>
     <lastmod>2026-07-31T13:00:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/nfs/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/nfs/</loc>
     <lastmod>2026-07-26T19:13:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/nfs/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/nfs/</loc>
     <lastmod>2026-07-26T19:13:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/</loc>
@@ -98,16 +98,16 @@
     <loc>https://Gill-Singh-A.github.io/p/from-directory-listing-to-root-shell/</loc>
     <lastmod>2026-02-07T16:45:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/lateral-movement/</loc>
-    <lastmod>2026-02-07T16:45:00+05:30</lastmod>
-  </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/lateral-movement/</loc>
     <lastmod>2026-02-07T16:45:00+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/postgresql/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/lateral-movement/</loc>
     <lastmod>2026-02-07T16:45:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/postgresql/</loc>
+    <lastmod>2026-02-07T16:45:00+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/postgresql/</loc>
     <lastmod>2026-02-07T16:45:00+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/ssh/</loc>
@@ -116,25 +116,25 @@
     <loc>https://Gill-Singh-A.github.io/p/dumping-source-code-and-accessing-internal-databases-via-a-phpunit-vulnerability/</loc>
     <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/mysql/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/mysql/</loc>
     <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/mysql/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/mysql/</loc>
     <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/nuclei/</loc>
     <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/php/</loc>
-    <lastmod>2025-11-06T14:01:03+05:30</lastmod>
-  </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/php/</loc>
     <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/cracking/</loc>
-    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+    <loc>https://Gill-Singh-A.github.io/tags/php/</loc>
+    <lastmod>2025-11-06T14:01:03+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/categories/cracking/</loc>
+    <lastmod>2025-03-21T23:30:23+05:30</lastmod>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/tags/cracking/</loc>
     <lastmod>2025-03-21T23:30:23+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/cracking-linux-hashes-and-expanding-access/</loc>
@@ -155,10 +155,10 @@
     <loc>https://Gill-Singh-A.github.io/p/building-a-heat-map-for-iit-kanpurs-computer-labs/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/development/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/development/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/development/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/development/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/heat-map/</loc>
@@ -173,10 +173,10 @@
     <loc>https://Gill-Singh-A.github.io/tags/tracking/</loc>
     <lastmod>2024-09-24T04:24:41+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/social-engineering/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/social-engineering/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/social-engineering/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/social-engineering/</loc>
     <lastmod>2024-09-23T05:28:07+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/using-social-engineering-for-privilege-escalation/</loc>
@@ -185,10 +185,10 @@
     <loc>https://Gill-Singh-A.github.io/categories/cybersecurity/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/docker/</loc>
+    <loc>https://Gill-Singh-A.github.io/categories/docker/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/categories/docker/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/docker/</loc>
     <lastmod>2024-09-23T05:21:38+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/p/getting-remote-root-shell-on-devices-via-portainer/</loc>
@@ -212,10 +212,10 @@
     <loc>https://Gill-Singh-A.github.io/tags/hashing/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/tags/password-cracking/</loc>
+    <loc>https://Gill-Singh-A.github.io/p/password-cracking/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
-    <loc>https://Gill-Singh-A.github.io/p/password-cracking/</loc>
+    <loc>https://Gill-Singh-A.github.io/tags/password-cracking/</loc>
     <lastmod>2024-09-23T04:56:45+05:30</lastmod>
   </url><url>
     <loc>https://Gill-Singh-A.github.io/tags/password-security/</loc>
@@ -230,6 +230,20 @@
     <loc>https://Gill-Singh-A.github.io/page/</loc>
     <lastmod>2022-03-06T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/campus/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/kerala/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/pu/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/pind/</loc>
+  </url><url>
     <loc>https://Gill-Singh-A.github.io/search/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/search/</loc>
+  </url><url>
+    <loc>https://Gill-Singh-A.github.io/gallery/vietnam/</loc>
   </url>
 </urlset>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Photography on Gill.Singh.A</title>
+    <link>https://Gill-Singh-A.github.io/gallery/</link>
+    <description>Recent content in Photography on Gill.Singh.A</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://Gill-Singh-A.github.io/gallery/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IIT Kanpur Campus</title>
+      <link>https://Gill-Singh-A.github.io/gallery/campus/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://Gill-Singh-A.github.io/gallery/campus/</guid>
+      <description>Drone shots of the IIT Kanpur campus</description>
+    </item>
+    <item>
+      <title>Kerala</title>
+      <link>https://Gill-Singh-A.github.io/gallery/kerala/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://Gill-Singh-A.github.io/gallery/kerala/</guid>
+      <description>Travel photography from Kerala</description>
+    </item>
+    <item>
+      <title>PU</title>
+      <link>https://Gill-Singh-A.github.io/gallery/pu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://Gill-Singh-A.github.io/gallery/pu/</guid>
+      <description>Drone shots from Panjab University</description>
+    </item>
+    <item>
+      <title>Ropar</title>
+      <link>https://Gill-Singh-A.github.io/gallery/pind/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://Gill-Singh-A.github.io/gallery/pind/</guid>
+      <description>Drone shots from Ropar</description>
+    </item>
+    <item>
+      <title>Vietnam</title>
+      <link>https://Gill-Singh-A.github.io/gallery/vietnam/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://Gill-Singh-A.github.io/gallery/vietnam/</guid>
+      <description>Travel photography from Vietnam</description>
+    </item>
+  </channel>
+</rss>
