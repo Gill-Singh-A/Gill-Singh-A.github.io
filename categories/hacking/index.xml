@@ -6,8 +6,15 @@
     <description>Recent content in Hacking on Gill.Singh.A</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 07 Aug 2026 13:00:00 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 07 Aug 2026 13:10:00 +0530</lastBuildDate>
     <atom:link href="https://Gill-Singh-A.github.io/categories/hacking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hiding Behind a CCTV - Turning a Hikvision RCE into a Covert Network Proxy</title>
+      <link>https://Gill-Singh-A.github.io/p/hiding-behind-a-cctv-turning-a-hikvision-rce-into-a-covert-network-proxy/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/p/hiding-behind-a-cctv-turning-a-hikvision-rce-into-a-covert-network-proxy/</guid>
+      <description>In this blog, I show how a single unauthenticated vulnerability in a Hikvision CCTV camera gave me not just a root shell on the device, but a covert network proxy, routing my traffic through the camera so every packet appeared to come from a surveillance device instead of my machine.</description>
+    </item>
     <item>
       <title>The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud</title>
       <link>https://Gill-Singh-A.github.io/p/the-nas-nobody-patched-from-unauthenticated-rce-to-network-proxy-via-wd-mycloud/</link>

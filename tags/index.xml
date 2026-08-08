@@ -6,8 +6,64 @@
     <description>Recent content in Tags on Gill.Singh.A</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 07 Aug 2026 13:00:00 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 07 Aug 2026 13:10:00 +0530</lastBuildDate>
     <atom:link href="https://Gill-Singh-A.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cctv</title>
+      <link>https://Gill-Singh-A.github.io/tags/cctv/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/cctv/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cve-2021-36260</title>
+      <link>https://Gill-Singh-A.github.io/tags/cve-2021-36260/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/cve-2021-36260/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cybersecurity</title>
+      <link>https://Gill-Singh-A.github.io/tags/cybersecurity/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/cybersecurity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hacking</title>
+      <link>https://Gill-Singh-A.github.io/tags/hacking/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/hacking/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hikvision</title>
+      <link>https://Gill-Singh-A.github.io/tags/hikvision/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/hikvision/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Infosec</title>
+      <link>https://Gill-Singh-A.github.io/tags/infosec/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/infosec/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Network-Proxy</title>
+      <link>https://Gill-Singh-A.github.io/tags/network-proxy/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/network-proxy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pivoting</title>
+      <link>https://Gill-Singh-A.github.io/tags/pivoting/</link>
+      <pubDate>Fri, 07 Aug 2026 13:10:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/tags/pivoting/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Cve-2016-10108</title>
       <link>https://Gill-Singh-A.github.io/tags/cve-2016-10108/</link>
@@ -16,45 +72,10 @@
       <description></description>
     </item>
     <item>
-      <title>Cybersecurity</title>
-      <link>https://Gill-Singh-A.github.io/tags/cybersecurity/</link>
-      <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/cybersecurity/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Hacking</title>
-      <link>https://Gill-Singh-A.github.io/tags/hacking/</link>
-      <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/hacking/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Infosec</title>
-      <link>https://Gill-Singh-A.github.io/tags/infosec/</link>
-      <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/infosec/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Nas</title>
       <link>https://Gill-Singh-A.github.io/tags/nas/</link>
       <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
       <guid>https://Gill-Singh-A.github.io/tags/nas/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Network-Proxy</title>
-      <link>https://Gill-Singh-A.github.io/tags/network-proxy/</link>
-      <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/network-proxy/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Pivoting</title>
-      <link>https://Gill-Singh-A.github.io/tags/pivoting/</link>
-      <pubDate>Fri, 07 Aug 2026 13:00:00 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/pivoting/</guid>
       <description></description>
     </item>
     <item>
@@ -223,13 +244,6 @@
       <link>https://Gill-Singh-A.github.io/tags/brute-force/</link>
       <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
       <guid>https://Gill-Singh-A.github.io/tags/brute-force/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Cctv</title>
-      <link>https://Gill-Singh-A.github.io/tags/cctv/</link>
-      <pubDate>Mon, 23 Sep 2024 05:13:06 +0530</pubDate>
-      <guid>https://Gill-Singh-A.github.io/tags/cctv/</guid>
       <description></description>
     </item>
     <item>

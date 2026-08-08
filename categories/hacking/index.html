@@ -191,6 +191,24 @@
 
 <article class="post-entry tag-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Hiding Behind a CCTV - Turning a Hikvision RCE into a Covert Network Proxy
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>In this blog, I’ll show how a single unauthenticated vulnerability in a Hikvision CCTV camera gave me not just a root shell on the device, but a covert network proxy, routing my traffic through the camera so every packet appeared to come from a surveillance device instead of my machine.
+Prologue “Quis custodiet ipsos custodes?”
+(Who watches the watchmen?) - Juvenal
+A CCTV camera’s entire purpose is to watch. It records everything in its field of view, day and night, trusting that nobody will turn the lens around. But nobody watches the watcher. Behind the lens is a computer, an embedded Linux system, with its own processor, its own network stack, and its own firmware. If that firmware carries an unpatched vulnerability, the device built to expose intruders becomes the perfect place to hide.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-08-07 13:10:00 +0530 IST'>August 7, 2026</span>&nbsp;·&nbsp;<span>9 min</span></footer>
+  <a class="entry-link" aria-label="post link to Hiding Behind a CCTV - Turning a Hikvision RCE into a Covert Network Proxy" href="https://Gill-Singh-A.github.io/p/hiding-behind-a-cctv-turning-a-hikvision-rce-into-a-covert-network-proxy/"></a>
+</article>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">The NAS Nobody Patched - From Unauthenticated RCE to Network Proxy via WD MyCloud
     </h2>
   </header>
@@ -258,26 +276,6 @@ Initial Foothold At this stage I already had a shell as a regular, low-privilege
 
 <span title='2026-07-26 19:13:00 +0530 IST'>July 26, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
   <a class="entry-link" aria-label="post link to Privilege Escalation via Insecure NFS Mounts" href="https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/"></a>
-</article>
-
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">From Directory Listing to Root Shell
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>In this blog, I will demonstrate how a simple directory listing vulnerability led to full system compromise during a penetration test.
-Prologue “The best exploits are the ones that never feel like exploits at all.”
-— Mr. Robot
-I discovered that a web server was exposing its directory contents.
-Several configuration and compressed files were visible, indicating possible sensitive information leakage.
-Source Code Analysis After downloading and analyzing the exposed files, I found a PHP configuration file containing PostgreSQL database credentials.
-...</p>
-  </div>
-  <footer class="entry-footer">
-
-<span title='2026-02-07 16:45:00 +0530 IST'>February 7, 2026</span>&nbsp;·&nbsp;<span>2 min</span></footer>
-  <a class="entry-link" aria-label="post link to From Directory Listing to Root Shell" href="https://Gill-Singh-A.github.io/p/from-directory-listing-to-root-shell/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">
