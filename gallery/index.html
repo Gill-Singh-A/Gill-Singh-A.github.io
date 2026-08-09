@@ -187,60 +187,104 @@
     </nav>
 </header>
 <main class="main">
-<article class="post-single">
-  <header class="post-header">
-    <h1 class="post-title">Photography</h1>
-    <div class="post-description">Aerial shots and travel photography</div>
-  </header>
-  <div class="post-content">
-    <div class="gallery-section">
-<h2><a href="/gallery/campus/">IIT Kanpur Campus</a></h2>
-<div class="gallery">
-  <img src="/gallery/campus/Campus 1.png" alt="IIT Kanpur Campus" loading="lazy" />
-  <img src="/gallery/campus/Campus 2.png" alt="IIT Kanpur Campus" loading="lazy" />
-  <img src="/gallery/campus/Campus 3.png" alt="IIT Kanpur Campus" loading="lazy" />
-  <img src="/gallery/campus/Campus 4.png" alt="IIT Kanpur Campus" loading="lazy" />
-  <img src="/gallery/campus/Campus 5.jpg" alt="IIT Kanpur Campus" loading="lazy" />
-</div>
-</div>
-<div class="gallery-section">
-<h2><a href="/gallery/kerala/">Kerala</a></h2>
-<div class="gallery">
-  <img src="/gallery/kerala/Kerala 1.jpg" alt="Kerala" loading="lazy" />
-  <img src="/gallery/kerala/Kerala 2.jpg" alt="Kerala" loading="lazy" />
-  <img src="/gallery/kerala/Kerala 3.jpg" alt="Kerala" loading="lazy" />
-  <img src="/gallery/kerala/Kerala 4.jpg" alt="Kerala" loading="lazy" />
-  <img src="/gallery/kerala/Kerala 5.jpg" alt="Kerala" loading="lazy" />
-</div>
-</div>
-<div class="gallery-section">
-<h2><a href="/gallery/vietnam/">Vietnam</a></h2>
-<div class="gallery">
-  <img src="/gallery/vietnam/Vietnam 1.jpg" alt="Vietnam" loading="lazy" />
-  <img src="/gallery/vietnam/Vietnam 2.jpg" alt="Vietnam" loading="lazy" />
-  <img src="/gallery/vietnam/Vietnam 3.jpg" alt="Vietnam" loading="lazy" />
-  <img src="/gallery/vietnam/Vietnam 4.jpg" alt="Vietnam" loading="lazy" />
-  <img src="/gallery/vietnam/Vietnam 5.jpg" alt="Vietnam" loading="lazy" />
-  <img src="/gallery/vietnam/Vietnam 6.jpg" alt="Vietnam" loading="lazy" />
-</div>
-</div>
-<div class="gallery-section">
-<h2><a href="/gallery/pind/">Ropar</a></h2>
-<div class="gallery">
-  <img src="/gallery/pind/Pind 1.png" alt="Pind" loading="lazy" />
-  <img src="/gallery/pind/Pind 2.png" alt="Pind" loading="lazy" />
-</div>
-</div>
-<div class="gallery-section">
-<h2><a href="/gallery/pu/">Panjab University</a></h2>
-<div class="gallery">
-  <img src="/gallery/pu/PU 1.png" alt="Panjab University" loading="lazy" />
-  <img src="/gallery/pu/PU 2.png" alt="Panjab University" loading="lazy" />
-</div>
-</div>
 
+<header class="page-header">
+  <h1>Photography</h1>
+  <div class="post-description">Aerial shots and travel photography</div>
+</header>
+
+<style>
+.yt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin: 1.5em 0;
+}
+.yt-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--entry);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.yt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.yt-card a {
+  text-decoration: none;
+  color: inherit;
+}
+.yt-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+.yt-info {
+  padding: 12px 14px 16px;
+}
+.yt-info h2 {
+  font-size: 1.05rem;
+  margin: 0 0 4px;
+  color: var(--primary);
+}
+.yt-info p {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--secondary);
+}
+@media (max-width: 600px) {
+  .yt-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="yt-grid">
+  <div class="yt-card">
+    <a href="https://Gill-Singh-A.github.io/gallery/campus/">
+        <img class="yt-thumb" src="/gallery/campus/Campus%203.png" alt="IIT Kanpur Campus" loading="lazy" />
+      <div class="yt-info">
+        <h2>IIT Kanpur Campus</h2>
+        <p>Drone shots of the IIT Kanpur campus</p>
+      </div>
+    </a>
   </div>
-</article>
+  <div class="yt-card">
+    <a href="https://Gill-Singh-A.github.io/gallery/kerala/">
+        <img class="yt-thumb" src="/gallery/kerala/Kerala%204.jpg" alt="Kerala" loading="lazy" />
+      <div class="yt-info">
+        <h2>Kerala</h2>
+        <p>Travel photography from Kerala</p>
+      </div>
+    </a>
+  </div>
+  <div class="yt-card">
+    <a href="https://Gill-Singh-A.github.io/gallery/pu/">
+        <img class="yt-thumb" src="/gallery/pu/PU%201.png" alt="Panjab University" loading="lazy" />
+      <div class="yt-info">
+        <h2>Panjab University</h2>
+        <p>Drone shots from Panjab University</p>
+      </div>
+    </a>
+  </div>
+  <div class="yt-card">
+    <a href="https://Gill-Singh-A.github.io/gallery/pind/">
+        <img class="yt-thumb" src="/gallery/pind/Pind%201.png" alt="Ropar" loading="lazy" />
+      <div class="yt-info">
+        <h2>Ropar</h2>
+        <p>Drone shots from Ropar</p>
+      </div>
+    </a>
+  </div>
+  <div class="yt-card">
+    <a href="https://Gill-Singh-A.github.io/gallery/vietnam/">
+        <img class="yt-thumb" src="/gallery/vietnam/Vietnam%203.jpg" alt="Vietnam" loading="lazy" />
+      <div class="yt-info">
+        <h2>Vietnam</h2>
+        <p>Travel photography from Vietnam</p>
+      </div>
+    </a>
+  </div>
+</div>
     </main>
     
 <footer class="footer">
