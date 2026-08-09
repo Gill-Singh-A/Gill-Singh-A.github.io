@@ -3,6 +3,9 @@ title: "Kerala"
 description: "Travel photography from Kerala"
 ShowReadingTime: false
 ShowDate: false
+cover:
+  image: "Kerala 4.jpg"
+  hiddenInSingle: true
 ---
 
 <div class="gallery">

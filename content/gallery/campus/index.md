@@ -3,6 +3,9 @@ title: "IIT Kanpur Campus"
 description: "Drone shots of the IIT Kanpur campus"
 ShowReadingTime: false
 ShowDate: false
+cover:
+  image: "Campus 3.png"
+  hiddenInSingle: true
 ---
 
 <div class="gallery">

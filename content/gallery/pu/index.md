@@ -1,8 +1,11 @@
 ---
-title: "PU"
+title: "Panjab University"
 description: "Drone shots from Panjab University"
 ShowReadingTime: false
 ShowDate: false
+cover:
+  image: "PU 1.png"
+  hiddenInSingle: true
 ---
 
 <div class="gallery">

@@ -1,13 +1,92 @@
 {{- define "main" }}
-<article class="post-single">
-  <header class="post-header">
-    <h1 class="post-title">{{ .Title }}</h1>
-    {{- if .Description }}
-    <div class="post-description">{{ .Description }}</div>
-    {{- end }}
-  </header>
-  <div class="post-content">
-    {{ .Content }}
+
+<header class="page-header">
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <div class="post-description">{{ .Description }}</div>
+  {{- end }}
+</header>
+
+<style>
+.yt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+  margin: 1.5em 0;
+}
+.yt-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--entry);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.yt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.yt-card a {
+  text-decoration: none;
+  color: inherit;
+}
+.yt-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+.yt-info {
+  padding: 12px 14px 16px;
+}
+.yt-info h2 {
+  font-size: 1.05rem;
+  margin: 0 0 4px;
+  color: var(--primary);
+}
+.yt-info p {
+  font-size: 0.85rem;
+  margin: 0;
+  color: var(--secondary);
+}
+@media (max-width: 600px) {
+  .yt-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<div class="yt-grid">
+  {{- $pages := .Pages }}
+  {{- $paginator := .Paginate $pages }}
+  {{- range $paginator.Pages }}
+  <div class="yt-card">
+    <a href="{{ .Permalink }}">
+      {{- $cover := .Params.cover }}
+      {{- if $cover.image }}
+        {{- $img := .Resources.GetMatch $cover.image }}
+        {{- if $img }}
+        <img class="yt-thumb" src="{{ $img.RelPermalink }}" alt="{{ .Title }}" loading="lazy" />
+        {{- end }}
+      {{- end }}
+      <div class="yt-info">
+        <h2>{{ .Title }}</h2>
+        {{- if .Description }}
+        <p>{{ .Description }}</p>
+        {{- end }}
+      </div>
+    </a>
   </div>
-</article>
+  {{- end }}
+</div>
+
+{{- if gt $paginator.TotalPages 1 }}
+<footer class="page-footer">
+  <nav class="pagination">
+    {{- if $paginator.HasPrev }}
+    <a class="prev" href="{{ $paginator.Prev.URL }}">« Previous</a>
+    {{- end }}
+    {{- if $paginator.HasNext }}
+    <a class="next" href="{{ $paginator.Next.URL }}">Next »</a>
+    {{- end }}
+  </nav>
+</footer>
+{{- end }}
+
 {{- end }}

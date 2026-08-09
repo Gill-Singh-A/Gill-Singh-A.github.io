@@ -3,6 +3,9 @@ title: "Vietnam"
 description: "Travel photography from Vietnam"
 ShowReadingTime: false
 ShowDate: false
+cover:
+  image: "Vietnam 3.jpg"
+  hiddenInSingle: true
 ---
 
 <div class="gallery">
