@@ -16,6 +16,12 @@ theme = "github.com/adityatelange/hugo-PaperMod"
   description = "Security Researcher"
   mainSections = ["post"]
 
+  [params.assets]
+    favicon = "/favicon.jpg"
+    favicon16x16 = "/favicon.jpg"
+    favicon32x32 = "/favicon.jpg"
+    apple_touch_icon = "/favicon.jpg"
+
   [params.homeInfoParams]
     Title = "Gill.Singh.A"
     Content = "Security Researcher"
