@@ -190,6 +190,25 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">Privilege Escalation via Insecure NFS Mounts
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>In this blog, I’ll walk through how I escalated my privileges from a low-privileged user to root on a remote server by abusing an insecurely configured NFS export (no_root_squash).
+Prologue “Control is an illusion.”
+— Mr. Robot
+NFS has a habit of trusting whoever knocks on the door — and trust, as always, is the real vulnerability.
+Initial Foothold At this stage I already had a shell as a regular, low-privileged user. The interesting part began while I was looking for a way up to root.
+...</p>
+  </div>
+  <footer class="entry-footer">
+
+<span title='2026-07-26 19:13:00 +0530 IST'>July 26, 2026</span>&nbsp;·&nbsp;<span>4 min</span></footer>
+  <a class="entry-link" aria-label="post link to Privilege Escalation via Insecure NFS Mounts" href="https://Gill-Singh-A.github.io/p/privilege-escalation-via-insecure-nfs-mounts/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">From Directory Listing to Root Shell
     </h2>
   </header>
@@ -256,24 +275,6 @@ Within this directory, I found a private key file being used for SSH logins to o
 
 <span title='2025-02-24 00:50:12 +0530 IST'>February 24, 2025</span>&nbsp;·&nbsp;<span>3 min</span></footer>
   <a class="entry-link" aria-label="post link to Exploiting Unencrypted Private Keys and Misconfigured SSH Settings to Breach Multiple Systems" href="https://Gill-Singh-A.github.io/p/exploiting-unencrypted-private-keys-and-misconfigured-ssh-settings-to-breach-multiple-systems/"></a>
-</article>
-
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">Lateral Movement Through SSH Command Tampering
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Understanding Lateral Movement Lateral movement in cybersecurity refers to the techniques used by attackers to move within a compromised network after gaining initial access. This allows them to escalate privileges, exfiltrate data, and reach high-value targets while evading detection. Advanced Persistent Threats (APTs) commonly use this tactic to maintain long-term access, often remaining undetected for extended periods.
-Entry Point During my exploration of vulnerable and misconfigured internet-facing machines, I was able to gain root access to several devices. The methods I used to gain initial access are beyond the scope of this blog.
-While analyzing one of the compromised machines during post-exploitation, I noticed in the bash history that the user frequently connected to other devices via SSH.
-This discovery led me to investigate further, with the goal of capturing credentials to access additional systems.
-...</p>
-  </div>
-  <footer class="entry-footer">
-
-<span title='2025-02-19 02:54:39 +0530 IST'>February 19, 2025</span>&nbsp;·&nbsp;<span>3 min</span></footer>
-  <a class="entry-link" aria-label="post link to Lateral Movement Through SSH Command Tampering" href="https://Gill-Singh-A.github.io/p/lateral-movement-through-ssh-command-tampering/"></a>
 </article>
 <footer class="page-footer">
   <nav class="pagination">

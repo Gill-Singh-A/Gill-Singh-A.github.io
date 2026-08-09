@@ -6,8 +6,15 @@
     <description>Recent content in Hacking on Gill.Singh.A</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 07 Aug 2026 13:10:00 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 07 Aug 2026 13:15:00 +0530</lastBuildDate>
     <atom:link href="https://Gill-Singh-A.github.io/categories/hacking/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nobody Suspects the TV - From an Open ADB Port to Network Proxy via Chisel</title>
+      <link>https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/</link>
+      <pubDate>Fri, 07 Aug 2026 13:15:00 +0530</pubDate>
+      <guid>https://Gill-Singh-A.github.io/p/nobody-suspects-the-tv-from-an-open-adb-port-to-network-proxy-via-chisel/</guid>
+      <description>In this blog, I show how an unauthenticated Android Debug Bridge port on a Smart TV gave me an instant root shell on the device, and how I turned that shell into a covert SOCKS proxy using chisel, routing my network traffic through a television set sitting on the network.</description>
+    </item>
     <item>
       <title>Hiding Behind a CCTV - Turning a Hikvision RCE into a Covert Network Proxy</title>
       <link>https://Gill-Singh-A.github.io/p/hiding-behind-a-cctv-turning-a-hikvision-rce-into-a-covert-network-proxy/</link>
