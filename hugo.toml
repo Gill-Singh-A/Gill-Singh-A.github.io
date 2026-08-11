@@ -53,6 +53,11 @@ theme = "github.com/adityatelange/hugo-PaperMod"
     url = "/post/"
     weight = 10
   [[menu.main]]
+    identifier = "field-guide"
+    name = "Field Guide"
+    url = "/field-guide/"
+    weight = 15
+  [[menu.main]]
     identifier = "gallery"
     name = "Photography"
     url = "/gallery/"

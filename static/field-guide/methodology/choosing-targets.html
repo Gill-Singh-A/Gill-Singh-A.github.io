@@ -1,0 +1,119 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Choosing Targets &amp; Programs · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Choosing Targets &amp; Programs</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main"><header class="entry-head"><h1>Choosing Targets &amp; Programs</h1></header><p>&gt; Where you point your effort matters more than how hard you hit. This page distills the &gt; target-selection judgment that separates high-earning reports in this corpus from the noise. &gt; General background is marked; specific patterns link to the class pages.</p>
+<h2 class="sec" id="pick-programs-by-your-edge-not-by-brand"><span class="tick">§</span>Pick programs by <em>your</em> edge, not by brand</h2>
+<ul><li><strong>Wide scope &gt; narrow scope.</strong> <code>*.target.com</code> and "all acquisitions" beat a single app — more</li></ul>
+<p>surface, more forgotten hosts, fewer hunters per endpoint.</p>
+<ul><li><strong>New scope / new features</strong> are underhunted. When a program adds an asset or ships a feature,</li></ul>
+<p>the low-hanging fruit resets. Watch changelogs, <code>/blog</code>, release notes, and app-store updates.</p>
+<ul><li><strong>Match the tech to your skills.</strong> GraphQL-heavy? Hunt GraphQL BOLA/introspection. Reversing? Hunt</li></ul>
+<p>mobile and thick clients. Infra? Hunt SSRF/subdomain-takeover/cloud misconfig.</p>
+<ul><li><strong>Responsiveness &amp; signal.</strong> Fast triage, fair severity, and disclosure (so you can learn) beat a</li></ul>
+<p>higher theoretical payout that never triages.</p>
+<h2 class="sec" id="pick-assets-by-expected-input-reaches-code-density"><span class="tick">§</span>Pick assets by expected input-reaches-code density</h2>
+<p>Rank in-scope assets by how much <em>untrusted input reaches privileged code</em>:</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>High ROI</th><th>Why</th></tr></thead><tbody><tr><td>API gateways, GraphQL endpoints</td><td>Object-level authz is hard; BOLA/BFLA everywhere</td></tr><tr><td>"Import from URL" / preview / screenshot / PDF</td><td>Server fetches attacker URLs → SSRF/XXE</td></tr><tr><td>File upload + server-side processing</td><td>Upload→RCE, image parser bugs, XXE in office formats</td></tr><tr><td>Multi-tenant apps</td><td>Tenant isolation breaks = one bug, every customer</td></tr><tr><td>Auth/SSO/OAuth/reset flows</td><td>Account takeover; small logic slips = critical</td></tr><tr><td>Admin &amp; internal tooling subdomains</td><td>Weak authz, debug endpoints, verbose errors</td></tr><tr><td>Webhooks / integrations / OAuth apps</td><td>SSRF, secret leakage, redirect_uri abuse</td></tr></tbody></table></div>
+<p>Deprioritize (still test, but expect noise): static marketing sites, pages with no state-changing actions, endpoints with no IDs/params.</p>
+<h2 class="sec" id="read-the-program-s-own-hints"><span class="tick">§</span>Read the program's own hints</h2>
+<ul><li><strong>Out-of-scope &amp; known-issues</strong> tell you what's already been reported — and what's <em>nearby</em> and</li></ul>
+<p>untested. If self-XSS is out of scope, look for a delivery vector that makes it not-self.</p>
+<ul><li><strong>Severity/bounty table</strong> reveals what they fear (usually: ATO, RCE, SSRF-to-internal, PII).</li><li><strong>Past disclosed reports</strong> (this corpus!) show the app's recurring weak spots — the same class</li></ul>
+<p>often recurs after a patch as a <em>variant</em> (see §2.3 merge cases on class pages).</p>
+<h2 class="sec" id="the-variant-hunting-mindset"><span class="tick">§</span>The variant-hunting mindset</h2>
+<p>The cheapest critical is the sibling of a patched bug. When you find (or read) one report:</p>
+<ul><li>Re-test the same class on <em>adjacent</em> params/endpoints/tenants.</li><li>Check whether the fix is complete (encoding one context but not another, blocking one scheme but</li></ul>
+<p>not <code>gopher:</code>/<code>dict:</code>, filtering <code>127.0.0.1</code> but not <code>[::1]</code>/<code>0.0.0.0</code>/decimal IP).</p>
+<ul><li>Diff old vs new API versions — the old one may keep the bug.</li></ul>
+<h2 class="sec" id="effort-budgeting"><span class="tick">§</span>Effort budgeting</h2>
+<ul><li>Timebox recon; switch to testing once you have a param list and a shortlist of juicy features.</li><li>When an app is hardened, pivot to <em>logic</em> — race conditions, workflow skips, price/quantity abuse</li></ul>
+<p>— which scanners and other hunters miss. (See <code>vulnerabilities/business-logic/</code>.)</p>
+<ul><li>Chain low findings into high impact: open-redirect + OAuth = token theft; IDOR + info-leak = ATO.</li></ul>
+<p>The <code>chains/</code> page catalogs real multi-bug escalations from the corpus.</p>
+<h2 class="sec" id="references"><span class="tick">§</span>References</h2>
+<ul><li>Cross-links: <code>methodology/recon.md</code>, <code>methodology/triage-and-impact.md</code>, <code>chains/README.md</code>.</li><li>Reference books: <em>Bug Bounty Bootcamp</em> (Choosing a Bug Bounty Program), <em>Real-World Bug Hunting</em>.</li></ul></main>
+  <nav class="toc"><h5>On this page</h5><a href="#pick-programs-by-your-edge-not-by-brand">Pick programs by *your* edge, not by brand</a><a href="#pick-assets-by-expected-input-reaches-code-density">Pick assets by expected input-reaches-code density</a><a href="#read-the-program-s-own-hints">Read the program's own hints</a><a href="#the-variant-hunting-mindset">The variant-hunting mindset</a><a href="#effort-budgeting">Effort budgeting</a><a href="#references">References</a></nav></div><footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

