@@ -1,0 +1,824 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session Management · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Session Management</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="on" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Session Management</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>61</b></span><a class="chip lab" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Authentication</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A session is the credential that outlives the password — the cookie, bearer token, or magic link that proves "you already logged in." Every session control rests on two invariants: <strong>binding</strong> (a session belongs to exactly one authenticated user) and <strong>lifecycle</strong> (the session dies when it should — on logout, password change, revoke, or expiry). Break binding and you get <strong>session fixation</strong>; break lifecycle and a "revoked" credential keeps authenticating.</p>
+<p>Because the session <em>is</em> the post-login identity, almost every session bug is an <strong>account-takeover primitive</strong>. The ceiling is forging the session outright: when a session is <em>signed but not encrypted</em> (Flask/itsdangerous, Rails cookie store, JWT) and the signing secret is default or leaked, you mint an admin session without ever touching a login form.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Locate the session credential.</strong> Cookie (<code>app.session</code>, <code>*.sid</code>, <code>_*_session</code>), <code>Authorization: Bearer</code>, or a URL token (<code>?login_token=</code>, magic link). Note which channels use which — web cookie vs. mobile bearer vs. GraphQL are often authenticated by <em>different</em> code paths.</li><li><strong>Diff the login boundary.</strong> Capture the session id <em>before</em> auth, log in (or enter a share password), and compare. Unchanged value = fixation.</li><li><strong>Probe every lifecycle event by replay.</strong> Snapshot an authenticated request to a <em>sensitive</em> endpoint, perform the "invalidating" action (logout / password change / revoke / 2FA-enable), then replay the saved request. Still <code>200 + data</code> = lifecycle broken.</li><li><strong>Fan the replay across channels.</strong> Revoke/logout is usually wired to only the primary web pipeline — retry the <em>same</em> revoked session against REST, GraphQL, websocket, and the mobile bearer independently.</li><li><strong>Assess token strength.</strong> Sample several tokens; look for structure (fixed increment, embedded user id, timestamp basis). Source-grep for weak RNG.</li><li><strong>Test cookie scoping.</strong> Retry every host/domain check with a trailing dot, mixed case, and percent-encoded name (see Bypasses).</li></ol>
+<div class="pre" data-lang="bash"># weak-token tell: time/PRNG-seeded session, reset, or CSRF tokens are predictable
+grep -REn 'uniqid|mt_rand|\brand\(|microtime' .</div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Group your finding into one of these, then use the matching probe/payload.</p>
+<h3 class="sub" id="session-fixation-login-boundary">Session fixation (login-boundary)</h3>
+<p>The pre-auth session id is reused after login instead of regenerated, so an id planted <em>before</em> login becomes an authenticated session. Any cookie-write primitive — shared machine, CRLF/cookie-injection, or a sibling-subdomain XSS that only needs to <em>set</em> a cookie — escalates to ATO.</p>
+<div class="pre" data-lang="http"># 1. Unauthenticated GET — record the assigned id
+GET / HTTP/1.1
+Host: TARGET
+# -&gt; Set-Cookie: app.session=PRE_AUTH_VALUE; Path=/
+
+# 2. Log in (or enter the share password), then re-inspect.
+#    If app.session is STILL PRE_AUTH_VALUE -&gt; fixation.</div>
+<div class="pre" data-lang="js">// write a known unauth id domain-scoped into the victim, then have them log in over it
+document.cookie = '_flow_session=7b2f6c606fab4186d7be385aa66d53d9;domain=.TARGET;path=/';
+// id not rotated at the OAuth/login callback -&gt; replay it as the authenticated victim</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Fixation is not only full-account login. Any unauth → auth transition must rotate the id: password-gated public share links, guest → member, and OAuth callbacks are all in scope. Diff the cookie across the <em>specific</em> boundary you're testing.</div></div>
+<h3 class="sub" id="broken-logout-lifecycle">Broken logout / lifecycle</h3>
+<p>Log out, then replay a captured cookie/token against a sensitive endpoint. Still authenticated = logout was client-only. Watch for logout calls that error <em>silently</em> so the server skips revocation.</p>
+<div class="pre" data-lang="http"># logout aborts server-side on a missing param -&gt; token never revoked
+DELETE /api/v1/logout HTTP/1.1
+Host: accounts.TARGET
+Authorization: Bearer atkn_**********
+# -&gt; {"error":"Missing Logout Token Hint"}
+
+# replay after "logout" — still 200 with PII
+GET /oauth/userinfo HTTP/1.1
+Authorization: Bearer atkn_**********</div>
+<h3 class="sub" id="stateless-jwt-orphaned-token-replay">Stateless-JWT / orphaned-token replay</h3>
+<p>A stateless JWT (Cognito/Auth0) has no server-side session store, so "logout" only drops it client-side — it authorizes until <code>exp</code> unless a denylist exists. Same shape for any <em>derived</em> credential (refresh token, remember-me, passwordless/magic <code>login_token</code>) that outlives its parent grant.</p>
+<div class="pre" data-lang="http"># decode exp, log out, replay a privileged call — still 200
+POST /studio/invitations?tenantId=... HTTP/2
+Host: api.TARGET
+Authorization: Bearer eyJraWQ...&lt;cognito-id-token&gt;...
+Content-Type: application/json
+
+{"email":"attacker@evil.com","role":"ADMINISTRATOR"}</div>
+<h3 class="sub" id="credential-change-hooks">Credential-change hooks</h3>
+<p>Password reset/change, 2FA enable, and SSO disconnect <em>should</em> tear down all other sessions. They frequently hook only one code path. Enumerate <strong>every</strong> entry point that mutates credentials — web form, CLI, admin API, bulk import, SSO sync — and test each for missing teardown.</p>
+<div class="pre" data-lang="bash"># web /resetmypassword clears sessions, but the CLI path bypasses the hook
+airflow users reset-password --username VICTIM --password NEW   # old sessions stay live</div>
+<h3 class="sub" id="forged-predictable-tokens">Forged / predictable tokens</h3>
+<p>When the session is signed client-side with a <strong>known/default secret</strong>, forge it directly. When it's generated from a non-CSPRNG, predict it.</p>
+<div class="pre" data-lang="python"># signed-but-not-encrypted session with a known SECRET_KEY -&gt; forge a reset token for user_id 1
+from itsdangerous import URLSafeTimedSerializer
+s = URLSafeTimedSerializer("SECRET_KEY")
+print(s.dumps("1"))          # GET /reset/&lt;forged&gt; -&gt; set new password -&gt; admin</div>
+<div class="pre" data-lang="php">// predictable: session token derived from the server clock, not a CSPRNG
+$token = uniqid();           // microtime-based -&gt; sample a few, brute the nearby timestamps</div>
+<h3 class="sub" id="cookie-scoping-parser-differentials">Cookie scoping &amp; parser differentials</h3>
+<p>The browser enforces <code>__Host-</code>/<code>__Secure-</code> prefix rules and public-suffix (PSL) scoping on the <strong>literal, canonical</strong> name/host. If any server-side parser <em>decodes</em> the name or <em>normalizes</em> the host differently than the browser, a percent-encoded or trailing-dot/mixed-case variant slips the check yet matches at use time.</p>
+<div class="pre" data-lang="js">// browser enforces prefix rules on "__Host-"; the server URL-decodes "__%48ost-" to "__Host-"
+document.cookie = "__%48ost-evil=evil; domain=.TARGET";   // spoofs a "trusted" prefixed cookie</div>
+<div class="pre" data-lang="bash"># trailing-dot FQDN accepted where the canonical public-suffix domain is rejected -&gt; supercookie
+curl -b "" --connect-to foo.co.uk.:PORT:127.0.0.1:PORT \
+           --connect-to bar.co.uk.:PORT:127.0.0.1:PORT ...
+# Set-Cookie: trail=1; Domain=co.uk.   -&gt; later sent to unrelated bar.co.uk.</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<p>Real logic/parser bypasses that defeated a session or cookie control:</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>"Revoke session" covers only web</td><td>Replay the <em>same</em> session on the GraphQL API after revoke</td><td>#417382</td></tr><tr><td>Invalidation wired to one code path</td><td>Change password via CLI (<code>airflow users reset-password</code>) — web-form teardown missed</td><td>#3073507</td></tr><tr><td>Logout errors out silently</td><td><code>DELETE /api/v1/logout</code> → <code>Missing Logout Token Hint</code>; server skips revocation</td><td>#1172205</td></tr><tr><td>Stateless-JWT "logout"</td><td>No server denylist — bearer authorizes until <code>exp</code></td><td>#1319892</td></tr><tr><td>Revocation doesn't cascade</td><td>Passwordless <code>login_token</code> survives parent OAuth-token revoke</td><td>#172837</td></tr><tr><td>Logout only <em>deactivates</em> the id</td><td>Dormant session revives on next login, rebinds to the next user</td><td>#250688</td></tr><tr><td><code>__Host-</code>/<code>__Secure-</code> prefix trust</td><td>Percent-encode the name (<code>__%48ost-evil</code>) — server URL-decodes, browser never enforced</td><td>#895727, #1464396</td></tr><tr><td>Public-suffix (PSL) reject</td><td>Trailing-dot FQDN <code>Domain=co.uk.</code> accepted where <code>co.uk</code> rejected</td><td>#3733905, #1565615</td></tr><tr><td>PSL reject (case-sensitive)</td><td>Mixed-case <code>Domain=co.UK</code> — validation case-sensitive, matching case-insensitive</td><td>#2212193</td></tr><tr><td>Cross-origin cookie isolation</td><td>Reused libcurl handle keeps stale <code>cookiehost</code> / Proxy-Digest state across host/proxy switch</td><td>#3671818, #3697719</td></tr><tr><td>Session id unguessable</td><td>Cookie value <em>is</em> the raw user identifier — nothing to brute</td><td>#178567</td></tr></tbody></table></div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The cookie-scoping rows share one principle: a check that <strong>normalizes differently than the later matcher</strong> is bypassable. Retry every host/domain/name check with a trailing <code>.</code> appended, uppercased, and percent-encoded.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Session bugs are rarely the whole exploit — they are the amplifier that turns a "low" primitive into full ATO.</p>
+<ul><li><strong>Cookie-write → fixation → ATO.</strong> A by-design or out-of-scope subdomain XSS becomes takeover when the session id isn't rotated at the OAuth callback (#423136). The XSS only needs a <code>document.cookie</code> write, not exfiltration — see <a href="#">xss</a>.</li><li><strong>Known secret → forged session/reset → instance takeover</strong> (#1380121). Cross-link JWT and weak-crypto: default framework secrets (Redash, Grafana) are the fast path.</li><li><strong>Predictable token → mass ATO.</strong> <code>uniqid()</code>-derived tokens brute-forced from the timestamp basis reconstruct <em>other</em> users' sessions (#1306942).</li><li><strong>Dormant session → cross-user hijack.</strong> A logout that only deactivates (not destroys) the id revives it on next login and binds it to whoever authenticates next on a shared machine (#250688).</li><li><strong>Supercookie → cross-site injection.</strong> A public-suffix-scoped cookie is shared across unrelated hosts, enabling cross-site cookie injection/fixation (#3733905, #2212193).</li></ul>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A logout that flips the UI to "logged out" proves nothing. The credential can live on server-side (client-only logout, stateless JWT, orphaned derived tokens). Always confirm with a replay against a <em>sensitive</em> endpoint on <em>every</em> channel — a <code>200</code> there is the finding, not the UI state.</div></div>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Regenerate the session id on every privilege transition</strong> — login, guest → member, password-gate. Diff before/after; if it changes, fixation doesn't apply.</li><li><strong>Server-side invalidation on logout and credential change</strong>, wired to <em>every</em> mutation path (web, CLI, admin API, SSO sync) and enforced on <em>every</em> channel (REST, GraphQL, mobile bearer).</li><li><strong>Cascade revocation</strong> to all derived credentials (refresh, remember-me, magic/passwordless tokens). Give stateless JWTs a short TTL plus a denylist so "logout" means something.</li><li><strong>CSPRNG</strong> (<code>random_bytes</code>) for all session/reset/CSRF tokens — never <code>uniqid()</code>/<code>rand()</code>/<code>mt_rand()</code> or an embedded user id.</li><li><strong>Cookie hygiene</strong>: <code>Secure</code> + <code>HttpOnly</code> + <code>SameSite</code>; never trust <code>__Host-</code>/<code>__Secure-</code> if any parser URL-decodes cookie names; normalize host/domain <em>identically</em> at check-time and use-time.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater for the replay probe, Intruder for token entropy, <strong>Sequencer</strong> for randomness analysis, and the Sessions / cookie-jar view.</li><li><strong>Browser DevTools</strong> — cookie inspector for the login-boundary diff.</li><li><strong><code>flask-unsign</code> / <code>itsdangerous</code></strong> — decode and re-sign Flask/itsdangerous cookies with a candidate secret.</li><li><strong><code>jwt_tool</code> + <code>hashcat</code>/<code>john</code></strong> — JWT <code>alg</code> attacks and offline <code>HS256</code> secret cracking.</li><li><strong><code>curl --connect-to</code></strong> — trailing-dot / mixed-case PSL and cookie-scoping tests against a controlled host.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>61</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1380121" style="--sv:var(--sev-crit)" data-sev="4" data-votes="123" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Forge Flask/Redash session via known static SECRET_KEY -&gt; ATO</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1380121</b> · urbancompany · awarded · 123 votes · resolved</div>
+<div class="taxo"><span>Program <b>urbancompany</b></span><span>Surface <b>web</b></span><span>Chain <b>known SECRET_KEY -&gt; forged reset token/session -&gt; log </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Redash instance signed Flask sessions and password-reset tokens with a static/known secret. Knowing the secret lets an attacker forge signed tokens (e.g. itsdangerous URLSafeTimedSerializer) to reset any user's password or set an arbitrary session user_id, yielding admin access.</p>
+<h4>Method</h4><ol><li>Determine the static REDASH_SECRET_KEY / REDASH_COOKIE_SECRET (default/leaked)</li><li>Use itsdangerous with that secret to sign a password-reset token for user id 1</li><li>Browse /reset/&lt;forged-token&gt; and set a new password to log in as that user (admin)</li></ol>
+<div class="pre">&gt;&gt;&gt; from itsdangerous import URLSafeTimedSerializer
+&gt;&gt;&gt; s = URLSafeTimedSerializer("&lt;SECRET_KEY&gt;")
+&gt;&gt;&gt; s.dumps(str("1"))   # forged reset token for user_id 1
+# GET /reset/&lt;forged&gt; -&gt; set new password -&gt; admin login</div>
+<p class="insight"><b>Insight —</b> When an app uses signed-but-not-encrypted client-side sessions (Flask/itsdangerous, Rails cookie store, JWT), a default or leaked secret is game over: forge sessions or reset tokens directly. Check for default framework secrets (Redash, Grafana, etc.) and test decoding/re-signing cookies offline.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1380121" target="_blank" rel="noopener">hackerone.com/reports/1380121</a></span><a class="src" href="#report-1380121" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-222082" style="--sv:var(--sev-crit)" data-sev="4" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SSO session not invalidated on logout (replay re-login)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#222082</b> · owox · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>owox</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After logout the server-side session is not destroyed; replaying the old authenticated request, or clicking Sign in, restores access without re-entering Google/SSO credentials.</p>
+<h4>Method</h4><ol><li>Sign in via Google SSO and browse</li><li>Log out (also log out of Google)</li><li>Click Sign in again / replay a prior authenticated request</li><li>Access is restored with no credential prompt</li></ol>
+<p class="insight"><b>Insight —</b> Logout must invalidate the server session, not just clear the client; test old-request replay and re-click sign-in after logout, especially on SSO/OAuth-fronted apps.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/222082" target="_blank" rel="noopener">hackerone.com/reports/222082</a></span><a class="src" href="#report-222082" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1150573" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Application accepts arbitrary session id to impersonate any user</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1150573</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The portal trusts a caller-supplied session identifier without binding it to the authenticated principal, so substituting another member's session id returns that member's data as if authenticated as them.</p>
+<h4>Method</h4><ol><li>Authenticate to the portal with valid credentials and locate where the session id is supplied.</li><li>Replace it with another member's session id.</li><li>Observe access to that member's data as though authenticated as them.</li></ol>
+<p class="insight"><b>Insight —</b> Where a session id is passed in a parameter/field rather than only as an opaque server-bound cookie, try swapping it for another user's value. If the app resolves identity purely from the supplied id, it is session hijacking / IDOR-over-session-id, often critical.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1150573" target="_blank" rel="noopener">hackerone.com/reports/1150573</a></span><a class="src" href="#report-1150573" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1464396" style="--sv:var(--sev-high)" data-sev="3" data-votes="31" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cookie __Host-/__Secure- prefix spoofing via name URL-decoding</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1464396</b> · ibb · USD 2000 · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Ruby CGI::Cookie.parse applied URL-decoding to cookie NAMES. An attacker can send a percent-encoded name like __%48ost-evil that decodes to __Host-evil, injecting a value into a name that the browser/app trusts as prefix-protected (CVE-2021-41819, same class as CVE-2020-8184).</p>
+<h4>Method</h4><ol><li>Send a cookie header with a URL-encoded prefix in the name plus a real prefixed cookie</li><li>Server-side parser decodes the name, collapsing __%48ost- into __Host-</li><li>The spoofed value is merged/returned for the protected cookie name</li><li>App makes a security decision on an attacker-influenced __Host-/__Secure- cookie</li></ol>
+<div class="pre">Cookie: __%48ost-evil=evil;__Host-evil=abc
+# CGI::Cookie.parse(...)["__Host-evil"].to_a =&gt; ["evil","abc"]</div>
+<p class="insight"><b>Insight —</b> Cookie prefixes (__Host-, __Secure-) are only trustworthy if the parser does NOT decode/normalize names. When auditing cookie parsers, test percent-encoded prefix names; fix is to never URL-decode cookie names.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1464396" target="_blank" rel="noopener">hackerone.com/reports/1464396</a></span><a class="src" href="#report-1464396" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1079561" style="--sv:var(--sev-high)" data-sev="3" data-votes="59" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Embedded browser forwards secure cookies across origin on redirect</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1079561</b> · valve · awarded · 59 votes · resolved</div>
+<div class="taxo"><span>Program <b>valve</b></span><span>Surface <b>desktop</b></span><span>Chain <b>cross-origin redirect -&gt; login cookie leak -&gt; account </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An in-app browser (Steam Big Picture mode) attaches secure login cookies to a request that begins at a trusted origin but is then forwarded/redirected to a different origin, leaking the cookies to that other site.</p>
+<h4>Method</h4><ol><li>Get the embedded browser to open a trusted-origin URL that redirects cross-origin</li><li>Observe secure/login cookies attached to the request as it is forwarded to the new origin</li><li>Capture the leaked cookies on the attacker origin -&gt; potential account takeover</li></ol>
+<p class="insight"><b>Insight —</b> Embedded/game/console browsers often mishandle cookie scoping on cross-origin redirects. Test WebViews/in-app browsers: start at a trusted origin that 302s to attacker.com and check whether Secure/HttpOnly session cookies follow. (From program summary; body limited-disclosure.)</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1079561" target="_blank" rel="noopener">hackerone.com/reports/1079561</a></span><a class="src" href="#report-1079561" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3697719" style="--sv:var(--sev-med)" data-sev="2" data-votes="37" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-proxy Digest auth state leak on reused libcurl easy handle</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3697719</b> · curl · none · 37 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">libcurl preserves per-easy-handle Proxy-Digest challenge state (realm/nonce) across transfer boundaries; after the proxy is switched, the first CONNECT to proxyB is built preemptively from proxyA's Digest state instead of starting unauthenticated.</p>
+<h4>Method</h4><ol><li>On a reused easy handle, complete a CONNECT authenticated to proxyA (learns realm/nonce).</li><li>Change the proxy to attacker-controlled proxyB and start a new transfer.</li><li>Observe the first CONNECT to proxyB carries Proxy-Authorization: Digest built from proxyA's realm/nonce.</li><li>Replay that leaked header to proxyA for the same CONNECT authority -&gt; accepted 200 (real auth value); different authority -&gt; 407.</li></ol>
+<div class="pre">CONNECT victim.test:18099 HTTP/1.1
+Proxy-Authorization: Digest username="proxyuser", realm="proxyArealm", nonce="proxyAnonce", uri="victim.test:18099", ...
+// controls: fresh handle or curl_easy_reset() suppress the leak</div>
+<p class="insight"><b>Insight —</b> When auditing HTTP client libraries, look for per-connection/credential state stored on a reusable handle that is not cleared across trust boundaries (proxy switch, host switch, transfer end). Reused handles crossing identity boundaries leak credentials.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3697719" target="_blank" rel="noopener">hackerone.com/reports/3697719</a></span><a class="src" href="#report-3697719" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2212193" style="--sv:var(--sev-med)" data-sev="2" data-votes="28" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mixed-case domain bypasses PSL check to set supercookie</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2212193</b> · curl · none · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">libcurl passes hostname and cookie domain to libpsl's psl_is_cookie_domain_acceptable without lowercasing them; an uppercase in the domain (e.g. domain=co.UK) evades the public-suffix rejection, while cookie matching later is case-insensitive, yielding a supercookie across the whole TLD (CVE-2023-46218).</p>
+<h4>Method</h4><ol><li>Serve Set-Cookie with a public-suffix domain using mixed case (domain=co.UK) to a request whose Host uses matching mixed case</li><li>curl accepts and stores the supercookie because the PSL check saw a non-normalized domain</li><li>Request any other host under that suffix; the supercookie is sent</li></ol>
+<div class="pre">HTTP/1.1 200 OK
+Set-Cookie: super=oops; domain=co.UK
+
+# stored as: .co.UK  TRUE  /  FALSE  0  super  oops
+# then sent to any *.co.uk host</div>
+<p class="insight"><b>Insight —</b> Look for case/normalization mismatches between the validation step and the use step. If a security check (PSL, allowlist, path, host compare) normalizes differently than the later matcher, a mixed-case or encoded variant slips past the check yet still matches at use time.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2212193" target="_blank" rel="noopener">hackerone.com/reports/2212193</a></span><a class="src" href="#report-2212193" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3783738" style="--sv:var(--sev-med)" data-sev="2" data-votes="27" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Failed XML-RPC login still issues a usable, non-invalidated session</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3783738</b> · revive_adserver · none · 27 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Revive Adserver's XML-RPC ox.login returned an error but the HTTP response still set a valid session-id cookie and the session was never invalidated, so the leaked session id could drive subsequent authenticated API calls, bypassing the admin-only restriction.</p>
+<h4>Method</h4><ol><li>Call the XML-RPC ox.login method (even with non-admin/invalid conditions)</li><li>Method returns an error but response headers contain a Set-Cookie session id</li><li>Reuse that session id for further API calls; they succeed without restriction</li></ol>
+<div class="pre">POST /www/api/v2/xmlrpc/ (method: ox.login)
+-&gt; response: error body BUT Set-Cookie: &lt;valid session id&gt;
+-&gt; reuse session id for authenticated API calls</div>
+<p class="insight"><b>Insight —</b> Inspect responses to FAILED auth for tokens/cookies. An error status doesn't mean no session was created. Always test whether a session id issued on a failed/partial login is actually usable and whether the error path invalidates it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3783738" target="_blank" rel="noopener">hackerone.com/reports/3783738</a></span><a class="src" href="#report-3783738" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1565615" style="--sv:var(--sev-med)" data-sev="2" data-votes="27" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cookie set on TLD via trailing-dot host (curl CVE-2022-27779)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1565615</b> · ibb · awarded · 27 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>network</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">libcurl (7.82-7.83.0, built without libpsl) rejected cookies for TLDs but the check failed when the host was given with a trailing dot (e.g. 'com.'), allowing a super-cookie shared across all sites under that TLD.</p>
+<h4>Method</h4><ol><li>Target a curl-based client without libpsl</li><li>Serve a Set-Cookie with domain matching a trailing-dot TLD host</li><li>Cookie is now sent to unrelated sites under that TLD (session fixation)</li></ol>
+<div class="pre">curl 'http://example.com./' with Set-Cookie: X=Y; domain=.com.</div>
+<p class="insight"><b>Insight —</b> Trailing-dot / case / IDN variants of a hostname routinely bypass public-suffix and domain-scoping checks; test them against cookie, CORS and SOP logic.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1565615" target="_blank" rel="noopener">hackerone.com/reports/1565615</a></span><a class="src" href="#report-1565615" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1306942" style="--sv:var(--sev-med)" data-sev="2" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Predictable session tokens from PHP uniqid()</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1306942</b> · revive_adserver · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span><span>Chain <b>predictable token -&gt; session hijack -&gt; mass account ta</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Session tokens were generated with PHP uniqid(), which is derived from the server clock (microtime) and is not cryptographically secure, so tokens are low-entropy and predictable -&gt; mass account takeover.</p>
+<h4>Method</h4><ol><li>Locate token/session/reset generation and confirm uniqid()/rand()/mt_rand()/microtime() usage</li><li>Sample a few tokens to learn the timestamp basis</li><li>Predict/brute nearby timestamps to reconstruct valid session tokens for other users</li></ol>
+<div class="pre">// vulnerable: session token = uniqid();  (time-based, not CSPRNG)</div>
+<p class="insight"><b>Insight —</b> Grep source for uniqid(), rand(), mt_rand(), microtime() feeding session tokens, password-reset links, or CSRF tokens - all predictable. The correct primitive is random_bytes()/CSPRNG. Predictable tokens escalate straight to ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1306942" target="_blank" rel="noopener">hackerone.com/reports/1306942</a></span><a class="src" href="#report-1306942" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1319892" style="--sv:var(--sev-med)" data-sev="2" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stateless JWT bearer token cannot be revoked on logout</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1319892</b> · trycourier · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>trycourier</b></span><span>Surface <b>api</b></span><span>Tag <b>jwt</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The API authenticates with a stateless Cognito-issued JWT (Authorization: Bearer). Logout only discards it client-side; the backend has no revocation list, so the token keeps authorizing privileged actions until its exp claim.</p>
+<h4>Method</h4><ol><li>Log in and capture a privileged API request carrying the JWT (e.g. POST /studio/invitations with Authorization: Bearer &lt;jwt&gt;).</li><li>Log out of the web app.</li><li>Replay the captured request with the same JWT and confirm it still returns 200 and performs the action (invite user / create workspace).</li></ol>
+<div class="pre">POST /studio/invitations?tenantId=... HTTP/2
+Host: api.courier.com
+Authorization: Bearer eyJraWQ...&lt;cognito-id-token&gt;...
+Content-Type: application/json
+
+{"email":"attacker@yopmail.com","role":"ADMINISTRATOR"}</div>
+<p class="insight"><b>Insight —</b> Decode the JWT (check exp) and replay it after logout. Stateless JWT auth (Cognito/Auth0) is commonly not revocable server-side, so 'logout' is meaningless until token expiry unless a denylist/short TTL + refresh rotation exists.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1319892" target="_blank" rel="noopener">hackerone.com/reports/1319892</a></span><a class="src" href="#report-1319892" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1553301" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cookie set for TLD + trailing dot leaks cross-site (curl CVE-2022-27779)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1553301</b> · curl · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">curl's cookie engine rejects cookies scoped to a bare TLD but not to TLD+'.' (e.g. Domain=.me.); since a trailing-dot host is treated as equivalent to the plain host, a cookie set for '.me.' is later sent to unrelated *.me sites.</p>
+<h4>Method</h4><ol><li>Attacker site responds with Set-Cookie for Domain=&lt;tld&gt;. (trailing dot)</li><li>curl stores it scoped to the trailing-dot TLD</li><li>When curl requests any host under that TLD via trailing-dot form, the cookie is attached</li><li>Cookie crosses to unrelated victim sites</li></ol>
+<div class="pre"># attacker response header:
+Set-Cookie: a=b; Domain=.me.
+
+curl -c cookies.txt http://localtest.me./index.php
+# cookies.txt: .me.  TRUE  /  FALSE  0  a  b
+curl -b cookies.txt http://victim.me./  # sends Cookie: a=b</div>
+<p class="insight"><b>Insight —</b> Trailing-dot (FQDN root) hostnames bypass many domain/suffix checks (cookie scoping, SOP, host allowlists, Public Suffix List). Test appending '.' to hosts to defeat domain-equality logic and to smuggle cross-site cookies/routing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1553301" target="_blank" rel="noopener">hackerone.com/reports/1553301</a></span><a class="src" href="#report-1553301" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-667739" style="--sv:var(--sev-med)" data-sev="2" data-votes="176" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated after MFA activation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#667739</b> · superhuman · awarded · 176 votes · resolved</div>
+<div class="taxo"><span>Program <b>superhuman</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Enabling 2FA/MFA does not invalidate previously established sessions on other devices; those sessions remain fully authenticated without ever passing the new second factor.</p>
+<h4>Method</h4><ol><li>Log into the same account on devices A and B</li><li>On A, complete 2FA activation</li><li>On B, reload — session remains active without MFA challenge</li></ol>
+<p class="insight"><b>Insight —</b> Test session lifecycle around every security event: enabling MFA, password change, email change, logout-all. Pre-existing sessions should be revoked or re-challenged. This is a quick, high-signal check on any account-security settings page.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/667739" target="_blank" rel="noopener">hackerone.com/reports/667739</a></span><a class="src" href="#report-667739" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1547684" style="--sv:var(--sev-med)" data-sev="2" data-votes="20" data-bounty="1600">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Disconnecting an SSO/social login provider does not revoke active session</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1547684</b> · shopify · USD 1600 · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>password compromise -&gt; link attacker SSO -&gt; disconnect</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Unlinking an external login provider (Google) from an account does not terminate sessions that were established via that provider, so an attacker who linked their Google account keeps access even after the victim disconnects it.</p>
+<h4>Method</h4><ol><li>Attacker (having obtained the victim's password) links their own Google account to the victim's account and logs in via Google.</li><li>Victim notices and disconnects the attacker's Google account.</li><li>Attacker's existing session does not expire and still has access; attacker can re-link their Google account as a persistent backdoor.</li></ol>
+<p class="insight"><b>Insight —</b> Disconnecting/unlinking an SSO provider is a revocation event that many apps ignore. Test that removing a linked identity provider (Google/GitHub/SAML) kills sessions created through it; otherwise it is a backdoor that survives even password changes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1547684" target="_blank" rel="noopener">hackerone.com/reports/1547684</a></span><a class="src" href="#report-1547684" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-347748" style="--sv:var(--sev-med)" data-sev="2" data-votes="19" data-bounty="560">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web-push subscriptions persist per-account across logout/switch and leak data</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#347748</b> · twitter · USD 560 · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>twitter</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Web push notification subscriptions are bound per-account and are not torn down on logout or account switch, so notifications (including DM contents) for a signed-out account keep arriving in the browser.</p>
+<h4>Method</h4><ol><li>Log in to multiple accounts one by one and enable web push notifications.</li><li>Log in to one account; have someone send a DM to a DIFFERENT (logged-out) account.</li><li>Observe browser notifications for the logged-out account, exposing DM content; clicking sends that account's cookies alongside the other account's request.</li></ol>
+<p class="insight"><b>Insight —</b> After logout/account-switch, check whether push subscriptions, service workers, or notification tokens are revoked. Persistent push registrations are a data-leak channel that survives session teardown on multi-account clients.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/347748" target="_blank" rel="noopener">hackerone.com/reports/347748</a></span><a class="src" href="#report-347748" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-388515" style="--sv:var(--sev-med)" data-sev="2" data-votes="17" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Scope revocation doesn't invalidate the session cookie derived from the token</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#388515</b> · nextcloud · 100 · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Revoking an app token's filesystem-access scope does not invalidate the session cookie already minted from that token, so the live session keeps file access after the permission is revoked (CVE-2018-16466).</p>
+<h4>Method</h4><ol><li>Obtain an app token</li><li>Access files with it and save the resulting cookies</li><li>Revoke filesystem access for that token</li><li>Reuse the saved cookies - files are still accessible</li></ol>
+<p class="insight"><b>Insight —</b> After revoking a permission/scope/token, always re-test existing sessions and cookies derived from it. Revocation frequently only blocks new authentication, leaving live sessions fully privileged.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/388515" target="_blank" rel="noopener">hackerone.com/reports/388515</a></span><a class="src" href="#report-388515" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2123094" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="2540">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Long-lived sub-session (web terminal/exec) outlives parent session expiry</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2123094</b> · ibb · USD 2540 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An interactive web-terminal/exec channel established during a valid session keeps operating (websocket to a live machine) after the parent web session has expired, because its lifetime is not tied to the session.</p>
+<h4>Method</h4><ol><li>Log in to the application (ArgoCD).</li><li>Open a web-terminal session that operates a backend machine.</li><li>Wait until the main web session expires.</li><li>Confirm the terminal/exec channel is still connected and usable.</li></ol>
+<p class="insight"><b>Insight —</b> Persistent channels (web terminals, websockets, SSE, long-poll, exec streams) often authenticate once at open time and never re-check session validity. Open such a channel, expire/revoke the parent session, and verify the channel dies.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2123094" target="_blank" rel="noopener">hackerone.com/reports/2123094</a></span><a class="src" href="#report-2123094" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3672641" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web session ID reused against admin-only XML-RPC API</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3672641</b> · revive_adserver · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Session IDs minted for the low-privileged web admin console were accepted by the XML-RPC API, whose authentication is normally restricted to admin users; the session was not bound to a context (web vs API), so a low-priv web session authenticated privileged API calls.</p>
+<h4>Method</h4><ol><li>Log into the web console as a low-privileged user and capture the session ID</li><li>Present that session ID to the XML-RPC API endpoint</li><li>API accepts it and exposes admin-only operations/vulnerabilities</li></ol>
+<p class="insight"><b>Insight —</b> When one app exposes multiple auth surfaces (web UI + API/XML-RPC), test cross-surface session portability. Sessions should carry a context/audience so a low-trust session can't drive a high-trust interface.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3672641" target="_blank" rel="noopener">hackerone.com/reports/3672641</a></span><a class="src" href="#report-3672641" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-165353" style="--sv:var(--sev-med)" data-sev="2" data-votes="3" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session revocation doesn't revoke desktop/mobile client access</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#165353</b> · nextcloud · none · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Killing a session in the web UI only destroys the PHP web session. Desktop/mobile clients that authenticated with raw username+password silently re-create a session on the next request, and some client sessions never appear in the session list at all.</p>
+<h4>Method</h4><ol><li>Log in on web, desktop client, and mobile client with the same account (username+password, not app-specific token).</li><li>In web UI, revoke the desktop client's session.</li><li>Continue syncing from the desktop client -&gt; it keeps working with no re-auth prompt.</li><li>Note the mobile client never shows up in the sessions tab, so it can't be revoked at all.</li></ol>
+<p class="insight"><b>Insight —</b> When testing 'log out other sessions'/'revoke device' features, verify the token is actually invalidated server-side AND that every client type is enumerable/revocable. Clients holding raw credentials (vs app-specific tokens) defeat session revocation; the fix is per-client app passwords.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/165353" target="_blank" rel="noopener">hackerone.com/reports/165353</a></span><a class="src" href="#report-165353" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-837729" style="--sv:var(--sev-low)" data-sev="1" data-votes="157" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated on logout; store password readable post-logout</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#837729</b> · shopify · awarded · 157 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After a 'successful logout' the server session remained valid; browsing directly to the storefront-password page still returned the protected store password, showing logout did not destroy the server-side session.</p>
+<h4>Method</h4><ol><li>Log in, then log out (confirm success message)</li><li>Navigate directly to /accounts/passwords (or another authenticated URL)</li><li>Sensitive data still returned -&gt; session alive</li></ol>
+<div class="pre">GET https://&lt;shop&gt;.myshopify.com/accounts/passwords   (after logout, still authorized)</div>
+<p class="insight"><b>Insight —</b> Never trust the logout UI: replay an authenticated request after logout. If it still returns data, the server session/token was not invalidated.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/837729" target="_blank" rel="noopener">hackerone.com/reports/837729</a></span><a class="src" href="#report-837729" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1172205" style="--sv:var(--sev-low)" data-sev="1" data-votes="63" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Logout does not invalidate server-side token (client-only logout)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1172205</b> · shopify · awarded · 63 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>mobile-android</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The logout call fails server-side (here DELETE /api/v1/logout returns 'Missing Logout Token Hint') or only clears client storage, so the access/session token remains valid and any captured token keeps authenticating requests.</p>
+<h4>Method</h4><ol><li>Capture the bearer/session token from a logged-in session (HTTP request or local storage such as shared_prefs/default_user.xml).</li><li>Log out from the app.</li><li>Replay an authenticated request (e.g. GET /oauth/userinfo) with the old token and confirm it still succeeds.</li></ol>
+<div class="pre">DELETE /api/v1/logout HTTP/1.1
+Host: accounts.shopify.com
+authorization: Bearer atkn_**********
+
+-&gt; {"error":"Missing Logout Token Hint"}  (server never revokes)
+
+GET /oauth/userinfo HTTP/1.1
+authorization: Bearer atkn_**********  -&gt; 200 with user PII</div>
+<p class="insight"><b>Insight —</b> After logout, replay a previously captured token/cookie against a sensitive endpoint. If it still returns data, logout is client-only. Watch for logout requests that error out silently (missing hint/param) so the server skips revocation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1172205" target="_blank" rel="noopener">hackerone.com/reports/1172205</a></span><a class="src" href="#report-1172205" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3073507" style="--sv:var(--sev-low)" data-sev="1" data-votes="57" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session invalidation covers web password change but not the CLI path</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3073507</b> · ibb · awarded · 57 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /resetmypassword web form terminates all existing sessions, but changing the same password via the admin CLI tool bypasses that hook and leaves sessions active.</p>
+<h4>Method</h4><ol><li>Log in as the target user and keep the session alive.</li><li>Change that user's password using the CLI/admin tool (not the web reset form).</li><li>Replay the still-active session and confirm continued access despite the password change.</li></ol>
+<div class="pre">airflow users reset-password --username &lt;user&gt; --password &lt;new&gt;   # sessions not cleared</div>
+<p class="insight"><b>Insight —</b> Session-invalidation-on-credential-change is often wired to ONE code path (the web form). Enumerate every entry point that mutates credentials (CLI, admin API, bulk import, SSO sync) and test each for missing session teardown.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3073507" target="_blank" rel="noopener">hackerone.com/reports/3073507</a></span><a class="src" href="#report-3073507" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-417382" style="--sv:var(--sev-low)" data-sev="1" data-votes="47" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session-revoke UI does not cover the GraphQL API channel</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#417382</b> · security · USD 500 · 47 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'revoke session' feature invalidates the web session for normal POST/GET flows but the GraphQL endpoint continues to honour the revoked session, allowing sensitive queries after revocation.</p>
+<h4>Method</h4><ol><li>While logged in, capture a sensitive GraphQL query (e.g. User_bounty_settings_page) and send it to Repeater.</li><li>Go to settings/sessions and Revoke the current session; you get logged out of the web UI.</li><li>Replay the GraphQL request from Repeater and confirm it still returns sensitive data.</li></ol>
+<div class="pre">POST /graphql
+{"query":"query User_bounty_settings_page(...){ me { ... bounties{edges{node{awarded_amount,report{title,team{handle}}}}} } }","variables":{...}}</div>
+<p class="insight"><b>Insight —</b> Session revocation and logout are frequently enforced only on the primary web pipeline. Independently test every API surface (GraphQL, REST, websocket, mobile token) against a revoked/logged-out session.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/417382" target="_blank" rel="noopener">hackerone.com/reports/417382</a></span><a class="src" href="#report-417382" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-895727" style="--sv:var(--sev-low)" data-sev="1" data-votes="46" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cookie-prefix (__Host-/__Secure-) spoofing via percent-encoded cookie name</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#895727</b> · rails · none · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Rack unescaped cookie NAMES while parsing, so a cookie named __%48ost- decodes server-side to __Host-. The browser never enforced the __Host-/__Secure- integrity rules (Secure, HostOnly, path=/) on the encoded form, so an attacker on a subdomain could set a cookie the server parses as a trusted prefixed cookie.</p>
+<h4>Method</h4><ol><li>From an attacker-controlled subdomain, set a cookie whose name is the percent-encoded prefix with a wildcard domain</li><li>Browser sends __%48ost-evil to the app (no HostOnly enforcement since name != literal __Host-)</li><li>Server-side unescape turns it into __Host-evil, which app logic trusts</li></ol>
+<div class="pre">document.cookie = "__%48ost-evil=evil; domain=.example.com";
+// server: URI.unescape("__%48ost-evil") =&gt; "__Host-evil"</div>
+<p class="insight"><b>Insight —</b> Never trust __Host-/__Secure- prefixes if any parser in the stack unescapes cookie names. Test percent-encoded prefix variants (__%48ost-, __%53ecure-) from a subdomain to forge 'trusted' cookies. Cookie name encoding is a parser-differential surface just like the value.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/895727" target="_blank" rel="noopener">hackerone.com/reports/895727</a></span><a class="src" href="#report-895727" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-284" style="--sv:var(--sev-low)" data-sev="1" data-votes="35" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated on logout (cookie replay)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#284</b> · security · awarded · 35 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Logout only cleared the client cookie; the server-side session was not destroyed, so a previously captured cookie remained valid for hours.</p>
+<h4>Method</h4><ol><li>Log in and export the session cookies</li><li>Log out of the account</li><li>Re-import the same cookies later (e.g. after several hours)</li><li>Observe you are logged back in</li></ol>
+<div class="pre"># capture Cookie: session=...  then after logout replay the same header -&gt; still authenticated</div>
+<p class="insight"><b>Insight —</b> Always test cookie replay after logout, password change, and expiry. Logout must invalidate the session server-side, not just delete the cookie.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/284" target="_blank" rel="noopener">hackerone.com/reports/284</a></span><a class="src" href="#report-284" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3671818" style="--sv:var(--sev-low)" data-sev="1" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stale cookiehost on reused libcurl easy handle leaks cookies cross-origin</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3671818</b> · curl · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>cookie leak -&gt; attacker jar poisoning -&gt; poisoned cook</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">libcurl keeps data-&gt;state.aptr.cookiehost from a request that used a custom Host: header and reuses it for cookie selection/attribution on later requests that have no custom Host:, breaking cookie origin isolation across reused handles.</p>
+<h4>Method</h4><ol><li>On one easy handle with a cookie jar, request 1 to victim.internal with a custom Host: header (seeds cookiehost).</li><li>Request 2 to attacker.test WITHOUT the custom Host: header; victim's cookies are sent to attacker and attacker's Set-Cookie is stored under victim.internal.</li><li>Request 3 to victim.internal replays the attacker-poisoned cookie back to the victim.</li></ol>
+<div class="pre"># req1: Host: victim.internal  -&gt; jar stores sid=SECRET123 for victim.internal
+# req2: (no custom Host) -&gt; attacker.test receives cookie: sid=SECRET123; injects poison=EVIL
+# req3: victim.internal receives cookie: poison=EVIL; sid=SECRET123</div>
+<p class="insight"><b>Insight —</b> Same class as the proxy-digest leak: stale per-handle state (cookiehost) not cleared on the non-custom-host path. Confidentiality (cookie theft) plus integrity (jar poisoning) break across reused connections.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3671818" target="_blank" rel="noopener">hackerone.com/reports/3671818</a></span><a class="src" href="#report-3671818" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-237184" style="--sv:var(--sev-low)" data-sev="1" data-votes="20" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session fixation on password-protected public share (no cookie rotation after auth)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#237184</b> · nextcloud · awarded · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Password-protected public download/share links authenticate the visitor but never replace the pre-existing session cookies, so an attacker-provisioned session id survives successful authentication.</p>
+<h4>Method</h4><ol><li>Pre-provision the victim with attacker-chosen cookie values (session id + oc_sessionPassphrase).</li><li>Victim opens the password-protected public share link and enters the password across the multi-request download flow.</li><li>Observe that every request keeps the pre-provisioned cookies and the server never issues a fresh session id after the password is accepted.</li><li>Attacker reuses the known session id to access the share as the authenticated victim.</li></ol>
+<div class="pre">Cookie: ocu1w9tvnra8=AAAAAAAAAAAAAAAAAAAAAAAAA1; oc_sessionPassphrase=AAAA...AAAA1</div>
+<p class="insight"><b>Insight —</b> Any transition from unauthenticated to authenticated (login, password-gate on a public link, guest-&gt;member) must rotate the session id. Diff the session cookie before and after entering the password; if unchanged, it is fixation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/237184" target="_blank" rel="noopener">hackerone.com/reports/237184</a></span><a class="src" href="#report-237184" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-250688" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Logout leaves session dormant and rebinds it to the next user to log in</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#250688</b> · gsa_bbp · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>stale session cookie -&gt; revived on next login -&gt; cross</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Logout only invalidates the upstream OAuth token, not the local session id; the same session id is reactivated on the next login and, because it is not regenerated, can be bound to a different user who logs in on that machine.</p>
+<h4>Method</h4><ol><li>Log in, save the session cookie (federalist.sid), then log out; replaying /v0/me now returns 403.</li><li>Log back in with the SAME account; replay the old cookie -&gt; success (dormant session revived).</li><li>Log out again, then log in with a DIFFERENT account; replay the old saved cookie -&gt; success and it now returns the second user's data.</li></ol>
+<div class="pre">GET /v0/me HTTP/1.1
+Cookie: federalist.sid=&lt;saved-pre-logout-value&gt;</div>
+<p class="insight"><b>Insight —</b> A session that is merely deactivated (not destroyed) on logout becomes a backdoor: it revives on next login. If the id is also not regenerated per user, an old cookie can hijack whoever authenticates next on shared machines. Test the two-account revival sequence.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/250688" target="_blank" rel="noopener">hackerone.com/reports/250688</a></span><a class="src" href="#report-250688" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-178567" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session cookie value is the raw user identifier</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#178567</b> · bumble · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The session cookie stores the user identifier directly rather than an unguessable token, so modifying the cookie changes which account the request is treated as, enabling impersonation / forced actions on another profile.</p>
+<h4>Method</h4><ol><li>Log in and inspect the 'session' cookie value</li><li>Observe it equals/derives from your user id</li><li>Change the value to another user's identifier and replay -&gt; requests act in that user's context</li></ol>
+<div class="pre">Cookie: session=&lt;other_user_id&gt;
+# also usable to force a victim onto attacker's profile via crafted link</div>
+<p class="insight"><b>Insight —</b> Always decode/inspect session cookies for meaningful, predictable content (user id, email, sequential value). If the cookie IS the identity rather than an opaque random token, it is an IDOR-grade auth bypass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/178567" target="_blank" rel="noopener">hackerone.com/reports/178567</a></span><a class="src" href="#report-178567" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-7931" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="150">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Persistent 'remember me' token not rotated on logout/re-login</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#7931</b> · security · 150 · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The remember_user_token cookie is not regenerated across the session lifecycle: after logout and re-login the same token value is reissued, and presenting only that cookie yields the same token back, so a captured token stays valid indefinitely.</p>
+<h4>Method</h4><ol><li>Log in with 'remember me', capture remember_user_token.</li><li>Log out, then log in again; observe the same token value is returned.</li><li>Send a request carrying only remember_user_token; confirm the response reuses the same token (no rotation/invalidation).</li></ol>
+<div class="pre">Cookie: remember_user_token=&lt;captured-value&gt;</div>
+<p class="insight"><b>Insight —</b> When auditing 'remember me' / persistent-login: check whether the long-lived token rotates on logout and on each use. A static, non-rotating remember token means one-time capture = lasting access even after the victim logs out.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/7931" target="_blank" rel="noopener">hackerone.com/reports/7931</a></span><a class="src" href="#report-7931" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3733905" style="--sv:var(--sev-low)" data-sev="1" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Trailing-dot FQDN bypasses public-suffix cookie rejection (curl super-cookie)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3733905</b> · curl · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>trailing-dot PSL bypass -&gt; super-cookie scoped to public </b></span></div>
+<h4>Root cause</h4><p style="margin:0">PSL/public-suffix cookie checks canonicalize hostnames but not their trailing-dot FQDN form, so Domain=co.uk is rejected while Domain=co.uk. is accepted, letting a cookie be scoped to a public suffix and shared across unrelated hosts.</p>
+<h4>Method</h4><ol><li>Reach a server via a trailing-dot hostname (foo.co.uk.)</li><li>Server sets Set-Cookie: trail=1; Domain=co.uk.; Path=/ (public suffix + trailing dot)</li><li>curl accepts it (the canonical Domain=co.uk is correctly rejected)</li><li>Follow a redirect to another trailing-dot host (bar.co.uk.); curl sends Cookie: trail=1 to it</li></ol>
+<div class="pre"># Canonical control (correctly rejected):
+Set-Cookie: canonical=1; Domain=co.uk; Path=/
+
+# Trailing-dot bypass (accepted, then leaked cross-host):
+Set-Cookie: trail=1; Domain=co.uk.; Path=/
+# later request to bar.co.uk. -&gt; Cookie: trail=1
+
+curl -b "" \
+  --connect-to foo.co.uk.:PORT:127.0.0.1:PORT \
+  --connect-to bar.co.uk.:PORT:127.0.0.1:PORT ...</div>
+<p class="insight"><b>Insight —</b> Any hostname/domain validation that normalizes the canonical form but not the trailing-dot FQDN is bypassable. When testing PSL/same-site/domain-scoping logic, retry every check with a trailing '.' appended to the host and to the Domain attribute.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3733905" target="_blank" rel="noopener">hackerone.com/reports/3733905</a></span><a class="src" href="#report-3733905" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2234736" style="--sv:var(--sev-low)" data-sev="1" data-votes="89" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated on security-critical change (enabling 2FA)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2234736</b> · sidefx · USD 300 · 89 votes · resolved</div>
+<div class="taxo"><span>Program <b>sidefx</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Enabling 2FA does not invalidate other concurrently active sessions, and those pre-2FA sessions retain full privilege including password change.</p>
+<h4>Method</h4><ol><li>Log in to the same account in two browsers</li><li>In browser 1, complete 2FA enrollment</li><li>In browser 2 (older session), reload - still authenticated</li><li>In browser 2, change the account password successfully</li></ol>
+<p class="insight"><b>Insight —</b> Test session lifecycle around security-state transitions: enabling 2FA, password change, email change, logout-all should terminate other sessions. If an old session survives a 2FA enrollment and can still perform sensitive actions, that's a reportable session-management flaw.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2234736" target="_blank" rel="noopener">hackerone.com/reports/2234736</a></span><a class="src" href="#report-2234736" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-634488" style="--sv:var(--sev-low)" data-sev="1" data-votes="44" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated after password change / logout</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#634488</b> · omise · awarded · 44 votes · resolved</div>
+<div class="taxo"><span>Program <b>omise</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing the password (or logging out) in one browser did not destroy other active server-side sessions, so a previously-authenticated attacker session remained valid — defeating the primary account-recovery/eviction control after credential theft.</p>
+<h4>Method</h4><ol><li>Log in to the same account from two browsers/sessions (A and B)</li><li>In session A, change the password and/or log out</li><li>Confirm session B remains authenticated and can still act (edit profile)</li></ol>
+<p class="insight"><b>Insight —</b> After any password change or logout, all other sessions/tokens should be revoked. Test by holding a second session and checking it survives a password reset — if it does, stolen sessions cannot be evicted, undermining the whole recovery story.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/634488" target="_blank" rel="noopener">hackerone.com/reports/634488</a></span><a class="src" href="#report-634488" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2279041" style="--sv:var(--sev-low)" data-sev="1" data-votes="40" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Password change does not invalidate other active sessions</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2279041</b> · portswigger · awarded · 40 votes · resolved</div>
+<div class="taxo"><span>Program <b>portswigger</b></span><span>Surface <b>web</b></span><span>Chain <b>session hijack -&gt; victim resets password -&gt; attacker s</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing the administrator password (via admin console reset) did not terminate existing sessions. An attacker who hijacked a session retains access even after the legitimate owner detects the compromise and resets the password.</p>
+<h4>Method</h4><ol><li>Authenticate and keep a session cookie in browser A.</li><li>Change the account password through the console/reset path.</li><li>Confirm browser A's session is still valid -&gt; old sessions not revoked.</li></ol>
+<p class="insight"><b>Insight —</b> After any credential-change action, verify all OTHER sessions are killed. Test: log in on two clients, change password on one, confirm the other is logged out. Also applies to reset-link invalidation (see #1288898).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2279041" target="_blank" rel="noopener">hackerone.com/reports/2279041</a></span><a class="src" href="#report-2279041" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2121960" style="--sv:var(--sev-low)" data-sev="1" data-votes="26" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credential change does not invalidate other active sessions</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2121960</b> · ibb · awarded · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing/resetting a user's password (or other credentials) does not destroy that user's other active server-side sessions, so an attacker who already holds a session keeps full access after the victim rotates the password.</p>
+<h4>Method</h4><ol><li>Log in to the same account in two browsers (or capture a live session), simulating attacker + victim.</li><li>In browser A (or via admin Reset Password), change or reset the account password.</li><li>In browser B replay a captured request / perform a state-changing action and confirm it still succeeds despite the password change.</li></ol>
+<p class="insight"><b>Insight —</b> After any credential change (password reset, admin reset, email change, disabling 2FA) always re-test previously captured sessions. Secure apps invalidate all sessions on password change; many keep them alive until natural expiry. Note secure-cookie/JWT backends may be impossible to force-logout without rotating the signing key.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2121960" target="_blank" rel="noopener">hackerone.com/reports/2121960</a></span><a class="src" href="#report-2121960" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1797661" style="--sv:var(--sev-low)" data-sev="1" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Desktop app uninstall leaves valid session on disk</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1797661</b> · mattermost · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>mattermost</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The desktop client stores its session token in a local profile directory that the uninstaller does not remove; reinstalling reloads the persisted token and auto-authenticates without any credential entry.</p>
+<h4>Method</h4><ol><li>Install desktop app and log in</li><li>Uninstall the app</li><li>Reinstall -&gt; automatically logged back into the same account (incl. admin panel) with no login prompt</li></ol>
+<p class="insight"><b>Insight —</b> Check whether desktop/Electron apps wipe session tokens on uninstall/logout. Residual tokens in the user profile dir let a later local user regain full account access. Look for the token files (e.g. LevelDB/Cookies under app data).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1797661" target="_blank" rel="noopener">hackerone.com/reports/1797661</a></span><a class="src" href="#report-1797661" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-176116" style="--sv:var(--sev-low)" data-sev="1" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Forgot-password keeps same session id &amp; other sessions alive</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#176116</b> · revive_adserver · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Password reset neither rotates the session id nor invalidates other active sessions, enabling session fixation (pre-set id survives the reset) and persistence of a hijacked session after the victim resets.</p>
+<h4>Method</h4><ol><li>Note the sessionID cookie on the pre-login recovery page</li><li>Complete reset; observe sessionID is unchanged and you're logged in</li><li>A separate already-logged-in session (Browser A) stays valid after the reset</li></ol>
+<p class="insight"><b>Insight —</b> After any password reset/change, verify (a) the session id rotates and (b) all other sessions are killed; failure yields fixation and post-compromise persistence.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/176116" target="_blank" rel="noopener">hackerone.com/reports/176116</a></span><a class="src" href="#report-176116" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-288" style="--sv:var(--sev-low)" data-sev="1" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated server-side on logout</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#288</b> · security · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Logout only clears the cookie in the browser; the session token remains valid server-side, so a previously captured cookie still authenticates after the user 'signs out' (and even after a new login is issued).</p>
+<h4>Method</h4><ol><li>Capture the session cookie while logged in</li><li>Click Sign-Out</li><li>Replay the old cookie; the server still accepts it and grants account access</li></ol>
+<p class="insight"><b>Insight —</b> Always test logout as a server-side event: grab a token, log out, replay. Also test that changing password / new login invalidates old sessions. Client-only cookie clearing is a common, easily-verified flaw.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/288" target="_blank" rel="noopener">hackerone.com/reports/288</a></span><a class="src" href="#report-288" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1927360" style="--sv:var(--sev-low)" data-sev="1" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Enabling 2FA does not invalidate existing sessions</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1927360</b> · wordpress · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>wordpress</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Turning on 2FA changes the login requirement going forward but does not terminate already-authenticated sessions, so a session established before 2FA (e.g. by an attacker who had the password) stays valid without ever satisfying 2FA.</p>
+<h4>Method</h4><ol><li>Log the same account in on device A and device B</li><li>On device A, enable 2FA</li><li>On device B, reload — the pre-existing session is still authenticated with no 2FA challenge</li></ol>
+<p class="insight"><b>Insight —</b> Security-state changes (enable 2FA, change password, revoke device) must revoke other sessions. Test whether enabling 2FA / changing password invalidates a second concurrent session; if not, an attacker who already had access keeps it after the victim 'secures' the account.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1927360" target="_blank" rel="noopener">hackerone.com/reports/1927360</a></span><a class="src" href="#report-1927360" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-678050" style="--sv:var(--sev-low)" data-sev="1" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated after password change/reset</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#678050</b> · liberapay · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>liberapay</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing or resetting the password does not terminate other active sessions, so a session captured before the change (or an attacker's session on a shared device) remains valid afterward.</p>
+<h4>Method</h4><ol><li>Log in to the same account in two browsers/sessions</li><li>Change the password in session A</li><li>Refresh session B and confirm it is still authenticated</li><li>Log in again with the new password: the old session still coexists</li></ol>
+<p class="insight"><b>Insight —</b> After password change/reset, all other sessions must be revoked. Test by holding a second session across the change; if it survives, a compromised/stolen session persists post-remediation. A core check in any ATO-recovery review.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/678050" target="_blank" rel="noopener">hackerone.com/reports/678050</a></span><a class="src" href="#report-678050" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1971610" style="--sv:var(--sev-low)" data-sev="1" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SSO logout desync: consumer logout leaves IdP session, re-login without creds</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1971610</b> · weblate · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Tag <b>saml</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An SSO IdP keeps its session alive when a downstream consumer logs the user out; clicking login again silently re-authenticates via the still-valid IdP session, so a user who 'logged out' can be re-logged-in without credentials.</p>
+<h4>Method</h4><ol><li>Log in to consumer site (weblate.org) via SSO to hosted IdP (hosted.weblate.org)</li><li>Log out on the consumer site</li><li>Click the login icon again</li><li>Observe you are logged straight back in with no credential prompt (IdP session persisted)</li></ol>
+<p class="insight"><b>Insight —</b> Test SSO logout completeness: after logout on a relying party, re-trigger the SSO login; if it round-trips without a credential prompt the IdP session was never invalidated. On shared machines this is a real ATO of the previous user's account.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1971610" target="_blank" rel="noopener">hackerone.com/reports/1971610</a></span><a class="src" href="#report-1971610" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-55530" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Password change fails to invalidate mobile/POS sessions</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#55530</b> · shopify · USD 500 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'change password + log out of Shopify Mobile/POS' option only terminates web sessions; the Android mobile session remains authenticated after the password change.</p>
+<h4>Method</h4><ol><li>Log in on web and on the mobile (Android) app</li><li>On web, change the password and tick 'Also log out of Shopify Mobile / POS'</li><li>Observe the mobile app session is still valid</li></ol>
+<p class="insight"><b>Insight —</b> After a password change or explicit 'log out everywhere', verify EVERY session class is killed: web, mobile app tokens, API/OAuth tokens, POS. Different session stores are often missed. A stolen mobile token survives the victim's password reset.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/55530" target="_blank" rel="noopener">hackerone.com/reports/55530</a></span><a class="src" href="#report-55530" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-15852" style="--sv:var(--sev-low)" data-sev="1" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Password reset does not invalidate existing sessions</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#15852</b> · mavenlink · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>mavenlink</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After a password change via reset, pre-existing authenticated sessions are not terminated and logging in with the new password does not revoke the old ones, so a session established with the old password stays valid.</p>
+<h4>Method</h4><ol><li>Log in as the victim in browser A (establishes session S1)</li><li>Trigger password reset and set a new password (e.g. from browser B)</li><li>Confirm S1 in browser A is still authenticated</li><li>Optionally log in with the new password in browser C and confirm all three sessions coexist</li></ol>
+<p class="insight"><b>Insight —</b> After any credential change (password reset, password change, email change, deactivation), test whether ALL other active sessions are killed. Keep a parallel session open before the change and see if it survives; if it does, an attacker who captured a session survives the victim's remediation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/15852" target="_blank" rel="noopener">hackerone.com/reports/15852</a></span><a class="src" href="#report-15852" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-223475" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions survive removal of linked SSO provider</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#223475</b> · weblate · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Removing a linked third-party (Google) auth association did not invalidate sessions that had been established via that provider, so an attacker's active session on another device stayed authenticated after the victim unlinked/revoked access.</p>
+<h4>Method</h4><ol><li>Link a third-party (Google) account and log in on device 2 via it</li><li>On device 1, remove the Google link and disconnect</li><li>Device 2's session remains valid despite the credential source being revoked</li></ol>
+<p class="insight"><b>Insight —</b> Revoking a credential/SSO link must terminate all sessions derived from it; test that unlinking a provider or changing credentials kills existing sessions everywhere.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/223475" target="_blank" rel="noopener">hackerone.com/reports/223475</a></span><a class="src" href="#report-223475" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-10377" style="--sv:var(--sev-low)" data-sev="1" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated on password change</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#10377</b> · c2fo · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>c2fo</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing the account password does not terminate other active sessions authenticated with the old password, so an attacker who compromised a session/password keeps access after the victim's remediation.</p>
+<h4>Method</h4><ol><li>Log in to the same account from two browsers (attacker + victim).</li><li>As victim, change the account password.</li><li>Confirm the attacker's pre-existing session remains authenticated and can still act until natural expiry.</li></ol>
+<p class="insight"><b>Insight —</b> On any password-change/reset test, verify old sessions are killed server-side. Persisting sessions after a reset defeats the primary account-recovery remediation and is a standard session-management checklist item.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/10377" target="_blank" rel="noopener">hackerone.com/reports/10377</a></span><a class="src" href="#report-10377" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-423136" style="--sv:var(--sev-none)" data-sev="0" data-votes="144" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session fixation via by-design XSS on shared cookie domain</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#423136</b> · shopify · awarded · 144 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>subdomain XSS (cookie write) -&gt; session fixation -&gt; ac</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Apps that use a plain session id and do not regenerate it on login assign auth state to whatever session id the browser already carries. Combined with a subdomain XSS to write a scoped cookie, the attacker fixes the victim's session.</p>
+<h4>Method</h4><ol><li>As attacker, visit the target app and grab a session id it assigns to an unauthenticated visitor (e.g. _flow_session).</li><li>Use an XSS (here N/A/by-design on *.shopifycloud.com) to write that session id into the victim's browser scoped to the parent domain: document.cookie='_flow_session=EVIL;domain=.shopifycloud.com;path=/'.</li><li>Force the victim through the login/OAuth-callback flow (redirect them to the app).</li><li>Because the session id is not rotated at /auth/callback, the victim's login binds to the attacker-known id; attacker replays it to authenticate as the victim.</li></ol>
+<div class="pre">document.cookie='_flow_session=7b2f6c606fab4186d7be385aa66d53d9;domain=.shopifycloud.com;path=/';</div>
+<p class="insight"><b>Insight —</b> Test whether the session cookie value changes across the login/OAuth-callback boundary. If it does not, any cookie-write primitive (even a low-severity or by-design XSS on a sibling subdomain) escalates to full account takeover via session fixation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/423136" target="_blank" rel="noopener">hackerone.com/reports/423136</a></span><a class="src" href="#report-423136" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-56511" style="--sv:var(--sev-none)" data-sev="0" data-votes="29" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>IDOR on 'expire all sessions' endpoint force-logs-out any user</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#56511</b> · shopify · 1000 · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The account-scoped session-termination endpoint keyed off a user id in the URL without verifying it belonged to the authenticated session, so any id could be targeted.</p>
+<h4>Method</h4><ol><li>As attacker, open account settings and click 'expire all sessions'; capture the request</li><li>Replace the numeric account id in the path with the victim's id and forward</li><li>Victim's sessions are invalidated (denial of service / session logout)</li></ol>
+<div class="pre">POST /admin/settings/account/expire_specific_users_sessions/{VICTIM_ID} HTTP/1.1
+Host: {shop}.myshopify.com
+Content-Type: application/x-www-form-urlencoded
+
+utf8=%E2%9C%93&amp;_method=patch&amp;authenticity_token={TOKEN}</div>
+<p class="insight"><b>Insight —</b> Session-management actions (expire sessions, revoke tokens, logout-everywhere) are frequently missing ownership checks - always A/B test them with a foreign account id.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/56511" target="_blank" rel="noopener">hackerone.com/reports/56511</a></span><a class="src" href="#report-56511" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-353" style="--sv:var(--sev-none)" data-sev="0" data-votes="22" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated server-side on logout</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#353</b> · security · 100 · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Logout clears the client cookie but the server keeps the session valid, so a previously-captured session token still authenticates after the user logs out.</p>
+<h4>Method</h4><ol><li>Log in and capture an authenticated request (e.g. profile edit)</li><li>Log out</li><li>Replay the captured request -&gt; still returns the authenticated response</li></ol>
+<div class="pre"># 1. capture authed request in proxy
+# 2. click logout
+# 3. replay captured request -&gt; 200 with private data</div>
+<p class="insight"><b>Insight —</b> Always test session termination: capture a request, log out, replay. Also test password-change and idle-timeout invalidation. Server-side session store must be destroyed on logout, not just the cookie cleared.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/353" target="_blank" rel="noopener">hackerone.com/reports/353</a></span><a class="src" href="#report-353" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-135797" style="--sv:var(--sev-none)" data-sev="0" data-votes="12" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session fixation - session cookie not rotated on login</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#135797</b> · enter · awarded · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>enter</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The pre-authentication session identifier is reused after a successful login instead of being regenerated, so a session value planted before login becomes an authenticated session.</p>
+<h4>Method</h4><ol><li>As attacker, visit the site (do not log in) and record the session + xsrf cookies</li><li>Plant those same cookies in the victim's browser (shared machine, or via injection bug)</li><li>Victim logs in with the fixed cookies</li><li>Attacker reuses the original cookies and is now authenticated as the victim</li></ol>
+<div class="pre">Cookie: app.session=s%3AEHm0kA9uwWYHayOwdRQXbuZWEIRIliQZ...; XSRF-TOKEN=AAG02cId-yyza3k8uhQR7JKuB-4YOmhizkjM</div>
+<p class="insight"><b>Insight —</b> Grab a session cookie pre-login, authenticate, and check whether the identifier changed; if it survives login, it's fixation. Especially impactful on shared machines or chained with a cookie-injection/CRLF bug.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/135797" target="_blank" rel="noopener">hackerone.com/reports/135797</a></span><a class="src" href="#report-135797" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-172837" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Passwordless login token survives OAuth access-token revocation</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#172837</b> · shopify · USD 500 · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>api</b></span><span>Chain <b>Malicious/compromised app -&gt; stash passwordless token -&g</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A GraphQL mutation (adminPasswordlessLogin) issues a single-use passwordless login token. Revoking the app's OAuth access token does not invalidate previously-minted passwordless tokens, so a malicious app can retain a live login link after the user revokes it.</p>
+<h4>Method</h4><ol><li>As an authorized app, call the passwordless-login mutation to obtain a login token (do not consume it)</li><li>User revokes the app's access token in the admin</li><li>Use the stored token: GET /admin?login_token=&lt;token&gt; — it still authenticates</li></ol>
+<div class="pre">POST /admin/api/graphql
+X-Shopify-Access-Token: &lt;app token&gt;
+Content-Type: application/graphql
+
+mutation{adminPasswordlessLogin(input:{}){passwordlessLoginToken}}
+
+# then:
+https://&lt;shop&gt;.myshopify.com/admin?login_token=&lt;passwordlessLoginToken&gt;</div>
+<p class="insight"><b>Insight —</b> Revocation must cascade to every derived credential. When testing OAuth/app integrations, mint a secondary token (magic link, passwordless token, refresh token, API key) from an app, then revoke the app and check whether the derived token still works. Orphaned tokens = persistence after 'revocation'.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/172837" target="_blank" rel="noopener">hackerone.com/reports/172837</a></span><a class="src" href="#report-172837" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-283847" style="--sv:var(--sev-none)" data-sev="0" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session/GraphQL token survives password change and logout</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#283847</b> · security · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The auth token (x-auth-token) and host session cookie used by the password-change GraphQL mutation are not invalidated when the password changes or the user signs out, so the captured request stays replayable.</p>
+<h4>Method</h4><ol><li>Log in, open password-change form, submit and capture the GraphQL mutation (x-auth-token + __Host-session)</li><li>Sign out / let the session appear to expire</li><li>Replay the captured mutation with new password values -&gt; password changes again without re-authenticating</li></ol>
+<div class="pre">POST /graphql
+x-auth-token: &lt;captured&gt;
+Cookie: __Host-session=&lt;captured&gt;
+{ mutation changePassword(currentPassword, password, confirm) }</div>
+<p class="insight"><b>Insight —</b> After any auth-state change (password change, logout, MFA reset), re-test whether old session cookies AND API/GraphQL bearer tokens are actually revoked. Sensitive mutations often trust a token that outlives the session.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/283847" target="_blank" rel="noopener">hackerone.com/reports/283847</a></span><a class="src" href="#report-283847" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-48416" style="--sv:var(--sev-none)" data-sev="0" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Login-denial DoS by replaying an old/invalidated session token</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#48416</b> · security · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app destroys sessions on logout/password change, but replaying an old destroyed session cookie triggers logic that invalidates the victim's currently active session; looping the replay keeps kicking the victim out, denying them login.</p>
+<h4>Method</h4><ol><li>Capture any authenticated request from the victim (an old session token)</li><li>Send it to Burp Intruder</li><li>Have the victim log in on another device</li><li>Continuously replay the old-session request - each replay force-logs-out the victim's fresh session, so they can never stay logged in</li></ol>
+<div class="pre">(replay a captured request carrying an old/destroyed session cookie in a loop via Intruder)</div>
+<p class="insight"><b>Insight —</b> Session-invalidation logic can be weaponised: if presenting a stale token invalidates the newest session, an attacker who once captured any token can perpetually deny the victim access. Test that presenting an expired token affects only that token, never the victim's active sessions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/48416" target="_blank" rel="noopener">hackerone.com/reports/48416</a></span><a class="src" href="#report-48416" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-123748" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Missing Secure flag enables MITM session hijack</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#123748</b> · veris · none · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>veris</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Session cookies (uid + user token) lacked the Secure attribute, so a network attacker who lures the victim to the HTTP version of the site captures the cookies and replays them to hijack the session.</p>
+<h4>Method</h4><ol><li>Confirm auth cookies are set without Secure (sent over plain HTTP)</li><li>On the same network, induce the victim to load an http:// URL in cookie scope</li><li>Capture the uid/token cookies in transit</li><li>Set the stolen cookies in your browser to assume the victim's session</li></ol>
+<div class="pre"># Cookie issued without Secure:
+Set-Cookie: PHPSESSID=...; path=/; HttpOnly
+# attacker overwrites own cookies with captured uid/token to take over session</div>
+<p class="insight"><b>Insight —</b> Audit auth cookies for the Secure flag and force an http:// request in scope; if the session cookie is transmitted in clear it is a demonstrable MITM takeover, not just a header nag. Pair with any http-&gt;https redirect that still leaks the cookie first.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/123748" target="_blank" rel="noopener">hackerone.com/reports/123748</a></span><a class="src" href="#report-123748" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-194329" style="--sv:var(--sev-none)" data-sev="0" data-votes="35" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions survive password change; mobile sessions not revocable</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#194329</b> · nextcloud · awarded · 35 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing the account password does not invalidate existing authenticated sessions, and mobile/app sessions are not enumerated in the session-management UI, so a victim cannot terminate an attacker's foothold even after rotating credentials.</p>
+<h4>Method</h4><ol><li>Obtain an active session (e.g. via mobile app login)</li><li>Victim changes their password to lock the attacker out</li><li>Attacker's existing session remains valid (no logout on password change)</li><li>Victim's session list does not show the mobile session, so it cannot be revoked</li></ol>
+<p class="insight"><b>Insight —</b> After a password change, verify every other session is actually killed, and confirm the session-management list includes ALL session types (web + mobile + API tokens). Gaps here defeat the primary account-recovery control.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/194329" target="_blank" rel="noopener">hackerone.com/reports/194329</a></span><a class="src" href="#report-194329" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-737" style="--sv:var(--sev-none)" data-sev="0" data-votes="24" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-logout session cookie remains valid after CSRF-triggered logout</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#737</b> · security · 100 · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When a request arrived with an invalid authenticity_token the app logged the user out and issued a new unauthenticated cookie, but the previously issued authenticated session cookie was never server-side invalidated and stayed active.</p>
+<h4>Method</h4><ol><li>Capture your authenticated session cookie</li><li>Send a request with an invalid authenticity_token to trigger logout / new cookie issuance</li><li>Replay the original captured cookie - it is still authenticated</li></ol>
+<p class="insight"><b>Insight —</b> Logout and session-reissue events should invalidate the old session server-side, not just hand the browser a new cookie. Test by replaying the pre-event cookie after logout/reset - many frameworks only rotate client-side.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/737" target="_blank" rel="noopener">hackerone.com/reports/737</a></span><a class="src" href="#report-737" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1166076" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated after password change</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#1166076</b> · upchieve · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>upchieve</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing the account password does not destroy other active sessions, so an attacker who already has a session (with the old password) retains access even after the victim resets the password.</p>
+<h4>Method</h4><ol><li>Log in to the same account in two browsers.</li><li>Change the password from browser A.</li><li>Confirm browser B remains authenticated - the victim cannot evict the attacker by resetting the password.</li></ol>
+<p class="insight"><b>Insight —</b> Password change / reset must revoke all other sessions server-side. Test by holding a second session and changing the password from the first; a still-valid second session is a reportable session-management flaw (removes the victim's remediation path after compromise).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1166076" target="_blank" rel="noopener">hackerone.com/reports/1166076</a></span><a class="src" href="#report-1166076" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-152080" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session not invalidated on logout (cookie replay)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#152080</b> · coursera · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>coursera</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Logout only clears the client cookie but does not invalidate the server-side session, so a copied session cookie re-authenticates long after logout.</p>
+<h4>Method</h4><ol><li>Log in and capture all session cookies</li><li>Log out and clear cookies in the browser</li><li>Re-import the previously saved cookies</li><li>Access is restored and account data is editable</li></ol>
+<p class="insight"><b>Insight —</b> Test session termination by saving cookies pre-logout and replaying them post-logout; a still-valid cookie proves the server keeps the session alive. Applies to both logout and password-change flows.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/152080" target="_blank" rel="noopener">hackerone.com/reports/152080</a></span><a class="src" href="#report-152080" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-15785" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not fully invalidated after password reset (remember-me/refresh survive)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#15785</b> · security · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After a password change/reset, existing sessions are not all terminated; notably 'remember me' persistent sessions and OAuth refresh tokens keep working, so two different passwords remain concurrently valid.</p>
+<h4>Method</h4><ol><li>Log in in two browsers (one with 'remember me' checked).</li><li>Reset/change the password in one browser.</li><li>Confirm the other browser's session (and any refresh token) still authenticates.</li></ol>
+<p class="insight"><b>Insight —</b> Password change must revoke ALL sessions and refresh/remember-me tokens server-side, not just the current cookie. Specifically test the persistent-login and OAuth refresh-token paths, which are the usual gaps.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/15785" target="_blank" rel="noopener">hackerone.com/reports/15785</a></span><a class="src" href="#report-15785" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-9950" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Sessions not invalidated on password change/reset</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#9950</b> · security · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Changing or resetting the password did not terminate existing sessions, so an attacker who hijacked a session keeps access even after the victim changes the password (the usual remediation step).</p>
+<h4>Method</h4><ol><li>Obtain an active victim session</li><li>Victim changes/resets their password to lock the attacker out</li><li>Attacker's old session cookie remains valid</li></ol>
+<p class="insight"><b>Insight —</b> Always test session lifecycle: after a password change/reset from browser A, check whether an already-authenticated browser B is logged out. Persistence-after-password-change is a real ATO-recovery failure.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/9950" target="_blank" rel="noopener">hackerone.com/reports/9950</a></span><a class="src" href="#report-9950" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-17105" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Authenticated edit page cached and served to the next user</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#17105</b> · security · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">After a password change forces logout, the previous user's authenticated page (their edit/profile page revealing username) was cached and rendered for the next account logging in on the same browser.</p>
+<h4>Method</h4><ol><li>Log into account A and change its password (forces logout)</li><li>Log into account B in the same browser</li><li>Observe account A's edit page (leaking A's username) is displayed</li></ol>
+<p class="insight"><b>Insight —</b> Sensitive authenticated pages must send no-store/no-cache; test post-logout/post-password-change flows for cached user-identifying pages served cross-session.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/17105" target="_blank" rel="noopener">hackerone.com/reports/17105</a></span><a class="src" href="#report-17105" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-67220" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Session revocation incomplete across clients/tokens</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#67220</b> · shopify · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An explicit 'Expire User Sessions' admin action (and, in the merged case, a password change) reported success but did not invalidate every active session/token — the iOS app's session stayed authenticated.</p>
+<h4>Method</h4><ol><li>Log in via the mobile app and the web admin concurrently</li><li>In web admin click 'Expire User Sessions' (or change the account password)</li><li>Confirm the mobile-app session/token still works despite the success message</li></ol>
+<p class="insight"><b>Insight —</b> After ANY forced-logout / password-change / de-provision action, replay every other live session (mobile app token, API token, second browser, remember-me cookie). 'Log out all sessions' features routinely miss non-web token stores.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/67220" target="_blank" rel="noopener">hackerone.com/reports/67220</a></span><a class="src" href="#report-67220" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (37 of 61 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">Authentication labs</a> (hands-on practice).</li>
+<li>All 61 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#session-fixation-login-boundary" style="padding-left:24px">↳ Session fixation (login-boundary)</a><a href="#broken-logout-lifecycle" style="padding-left:24px">↳ Broken logout / lifecycle</a><a href="#stateless-jwt-orphaned-token-replay" style="padding-left:24px">↳ Stateless-JWT / orphaned-token replay</a><a href="#credential-change-hooks" style="padding-left:24px">↳ Credential-change hooks</a><a href="#forged-predictable-tokens" style="padding-left:24px">↳ Forged / predictable tokens</a><a href="#cookie-scoping-parser-differentials" style="padding-left:24px">↳ Cookie scoping &amp; parser differentials</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (61)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/authentication" target="_blank" rel="noopener">⚑ PortSwigger: Authentication</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

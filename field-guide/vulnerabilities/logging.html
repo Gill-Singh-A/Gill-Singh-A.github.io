@@ -1,0 +1,367 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logging &amp; Monitoring Failures · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Logging &amp; Monitoring Failures</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="on" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>Logging &amp; Monitoring Failures</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>14</b></span><span class="chip">No direct PortSwigger lab</span></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 14 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Logging &amp; monitoring failures are the <strong>two-way break of the audit pipeline</strong>. Either the log <strong>records too much</strong> — plaintext passwords, API keys, bearer tokens, and PII pulled into a file that a lower-privileged reader can reach — or it <strong>records too little / wrong</strong> — entries an attacker can forge, drop, or strip of attribution so detection and incident response never fire. A log is a <strong>durable, replayable credential store</strong> that outlives the request and sits <em>outside</em> the app's own access-control model: whoever can read the log effectively reads every secret that flowed through it.</p>
+<p>The core mechanism is that sanitization is applied on the <strong>happy path</strong> and forgotten on the <strong>failure path</strong>. Auth code scrubs the password when login succeeds, then an exception handler serializes the <em>call arguments</em> — password included — the instant login fails. On the audit side, defenders check "is the action logged?" but not <em>what</em> is logged, so an event can be present yet forensically useless (blanked source IP) or absent entirely (an alternate endpoint wired to a different logging path). Treat logging bugs as a <strong>credential-harvest and anti-forensics primitive</strong>, not a compliance nit.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Get a log-read primitive first</strong> — decide <em>how</em> you can read logs, then decide <em>what</em> leaked. Log-read can be: local admin / shared container, a <code>pods/log</code> RBAC grant, a log-viewer feature in the app, an LFI/path-traversal, or an exposed/guessable log file (<code>error.log</code>, <code>debug.log</code>, <code>*_ERROR_LOG</code>).</li><li><strong>Grep the reachable logs</strong> for the classic secret sinks (<code>authorization</code>, <code>bearer</code>, <code>access_token</code>, <code>api_key</code>, <code>password</code>) and for argument-dump signatures (<code>ldap_bind</code>, <code>validateUserPass</code>, <code>toCurl</code>).</li><li><strong>Force the error/failure path</strong> — this is where scrubbing is weakest. Make the auth backend unreachable, fail a 2FA/WebDAV login, break SMTP mid-signup, or raise log verbosity so debug dumpers fire.</li><li><strong>Read the secret out of the log and reuse it</strong> — a harvested password/token is replayed against the same or an adjacent service (LDAP, cluster API, the linked OAuth system).</li><li>For <strong>attacker-controlled fields</strong> (username, method, path, <code>X-Forwarded-For</code>), test whether they land in logs unescaped → log forging, entry-drop, ANSI injection, or audit-IP spoofing.</li><li>For <strong>audit evasion</strong>, don't ask "is it logged?" — <strong>baseline the production call, then diff</strong> an alternate endpoint (non-prod / FIPS / mirror) and check whether the event appears at all, and whether WHO/WHERE fields survive.</li></ol>
+<div class="pre" data-lang="bash"># Grep any reachable log for the classic secret sinks
+grep -RniE 'authorization|bearer|access_token|refresh_token|api[_-]?key|password|ldap_bind' /path/to/logs
+# Argument-dump loggers: serialized call args that hold secrets
+grep -RniE 'validateUserPass|areCredentialsValid|ldap_bind|addUser|toCurl' /path/to/logs
+# PII / raw statements baked into error logs
+grep -RniE 'INSERT INTO|UPDATE .* SET|VALUES \(' /path/to/logs</div>
+<h2 class="sec" id="leak-lie-sinks"><span class="tick">§</span>Leak &amp; lie sinks</h2>
+<p>Find which of these the target exhibits, then apply the matching probe.</p>
+<h3 class="sub" id="argument-dump-exception-loggers">Argument-dump / exception loggers</h3>
+<p>The single most common sink. A generic handler serializes the <strong>arguments</strong> of the failing call — and the secret was passed as one of those arguments. Trigger the failure path to make it fire.</p>
+<div class="pre" data-lang="bash"># Fail auth against a 2FA-required account -&gt; the auth exception logs the raw password arg
+curl -u 'VICTIM:REALPASSWORD' https://TARGET/remote.php/dav/
+# Resulting log line:
+#   OCA\DAV\Connector\Sabre\Auth-&gt;validateUserPass('VICTIM', 'REALPASSWORD')
+
+# Make the LDAP/auth backend unreachable so the failing bind() logs its DN + password,
+# or drop log level to debug so a blanket arg-dumper serializes ldap_bind:
+grep -i ldap_bind /path/to/nextcloud.log
+#   Calling LDAP function ldap_bind with parameters [{},"uid=VICTIM","REALPASSWORD"]</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Attack the <strong>failure path</strong>, not the login flow. Password captured on a <em>failed</em> login is the tell that an exception serializer — not the auth code — is doing the logging, and those serializers scrub by method allowlist, not by parameter name, so any un-enumerated method leaks.</div></div>
+<h3 class="sub" id="verbose-debug-request-dumpers">Verbose / debug request dumpers</h3>
+<p><code>toCurl()</code>, request/response dumpers, and "log the full HTTP call" helpers serialize headers — including <code>Authorization</code> and <code>Cookie</code> — often masking in one branch but not the sibling curl-dump branch. Raise verbosity to trigger them.</p>
+<div class="pre" data-lang="bash"># Raise component verbosity so the curl-command dumper serializes the bearer token
+# (klog.V(9) round_trippers.go toCurl(); debug-level app request dumpers):
+kubectl -n kube-system logs &lt;controller-manager-pod&gt; | grep -iE 'Authorization|curl -k'
+#   curl -k -v -XGET -H "Authorization: Bearer &lt;TOKEN&gt;" 'https://TARGET'   &lt;- replay this token
+
+# Integration/bot exhaust leaks live OAuth tokens after any auth flow:
+grep -RniE 'access_token|refresh_token|Authorization' /var/log/hubot* /path/to/integration-logs</div>
+<h3 class="sub" id="raw-sql-query-error-logs">Raw SQL / query error logs</h3>
+<p>On DB failure, an error handler writes the entire failed statement — with every field value — into a log file. Find a reachable log, then grep for statements, not just stack traces.</p>
+<div class="pre" data-lang="bash"># Locate an exposed/guessable error log, then pull the embedded PII out of raw INSERTs
+grep -RniE 'INSERT INTO|UPDATE .* SET' /path/to/logs
+#   INSERT INTO dli.dli_customer_data VALUES (seq.NEXTVAL, SYSDATE, &lt;name&gt;, &lt;email&gt;, &lt;phone&gt;, &lt;address&gt;, ...)</div>
+<h3 class="sub" id="log-injection-forging-attacker-controlled-fields">Log injection &amp; forging (attacker-controlled fields)</h3>
+<p>Any request-controlled value written into a space/quote-delimited log without escaping lets you <strong>forge lines, drop entries, or inject terminal escapes</strong>. The fields defenders forget: <code>$remote_user</code> (Basic-auth username), <code>REQUEST_METHOD</code>, path, and User-Agent.</p>
+<div class="pre" data-lang="bash"># Delimiter smuggling: a space in the decoded Basic-auth username adds a column,
+# breaking the space-delimited log parser so the whole entry is silently dropped.
+curl -X POST -u '- A:B' 'https://TARGET/graphql?secret=1'
+# Authorization: Basic LSBBOkI=  -&gt;  $remote_user = '- A'  -&gt;  extra field  -&gt;  ingestion drops the line</div>
+<p>The same class, delivered as raw control bytes. Send <code>0x08</code> (backspace) / <code>0x1b</code> (ESC) inside a field the logger prints verbatim, and the sequence executes when an operator <code>tail</code>s the log in a terminal.</p>
+<div class="pre" data-lang="http">GET\b\b\bPOST /sign_in?x=1 HTTP/1.0
+Host: TARGET
+
+# \b = 0x08 backspace, ESC = 0x1b -&gt; hide/forge lines, move cursor, set the terminal title
+# (the logger escaped the query string but printed REQUEST_METHOD raw)</div>
+<h3 class="sub" id="audit-trail-spoofing-evasion">Audit-trail spoofing &amp; evasion</h3>
+<p>Two distinct failures. <strong>Spoof</strong> the recorded identity by poisoning a trusted-but-forgeable field; or <strong>evade</strong> by routing the call through an endpoint wired to a different (or no) logging path.</p>
+<div class="pre" data-lang="http">POST /accounts/login/ HTTP/1.1
+Host: TARGET
+X-Forwarded-For: VICTIM-IP
+Content-Type: application/x-www-form-urlencoded
+
+username=victim&amp;password=x
+# App trusts raw XFF (no trusted-proxy allowlist) -&gt; forged IP lands in the profile audit + admin console</div>
+<div class="pre" data-lang="bash"># Silent enumeration: baseline hits CloudTrail, the alternate endpoint does not.
+aws s3tables list-table-buckets --region us-west-2                       # baseline -&gt; event appears
+aws s3tables list-table-buckets --region us-west-2 \
+  --endpoint-url https://s3tables.us-west-2.&lt;internal&gt;.people.aws.dev \
+  --no-verify-ssl                                                        # NO CloudTrail event = blind spot
+# permitted principal -&gt; {"tableBuckets": []}
+# denied principal    -&gt; AccessDeniedException: not authorized to perform: s3tables:ListTableBuckets</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>"Is it logged?" is the wrong question. An event can be <strong>present yet useless</strong>: FIPS endpoints record the call but set <code>sourceIPAddress</code> and <code>userAgent</code> to the literal <code>AWS Internal</code>, gutting the network/host indicators an investigator would pivot on. Always check whether the WHO/WHERE fields survive, not just whether a row exists.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Masking on one debug branch</td><td><code>toCurl()</code> dumps <code>Authorization</code> unmasked while the sibling <code>debugRequestHeaders</code> masks it</td><td>#952771</td></tr><tr><td>Sanitize allowlist by method</td><td>scrub list enumerates auth methods but not LDAP <code>bind</code>/<code>areCredentialsValid</code></td><td>#264426</td></tr><tr><td>Happy-path scrubbing only</td><td>exception serializer logs call args even when normal-path logging is sanitized</td><td>#1662194, #244092</td></tr><tr><td>Blanket arg-dump wrapper</td><td><code>json_encode</code> of every LDAP arg at debug leaks the <code>ldap_bind</code> password</td><td>#2101165</td></tr><tr><td>Log-before-validate</td><td>raw token logged before it is parsed; stays valid on the error path</td><td>#972561</td></tr><tr><td>Verbosity gate</td><td><code>--v=4+</code> prints full k8s Secret objects (tokens/keys) to component logs</td><td>#966383</td></tr><tr><td>Space-delimited log parser</td><td>space in Basic-auth <code>$remote_user</code> adds a column → ingestion drops the line</td><td>#447488</td></tr><tr><td>Field the logger forgets to escape</td><td>query string escaped but <code>REQUEST_METHOD</code> printed raw → ANSI/control-char injection</td><td>#1411867</td></tr><tr><td>Trusted-proxy assumption</td><td>raw <code>X-Forwarded-For</code> written to the audit log without a proxy allowlist</td><td>#296632</td></tr><tr><td>Alternate endpoint, no log</td><td>non-prod <code>*.people.aws.dev</code> speaks the API but isn't wired to CloudTrail</td><td>#3780277</td></tr><tr><td>Alternate endpoint, blanked fields</td><td>FIPS endpoint logs the event but sets source IP / user-agent to <code>AWS Internal</code></td><td>#2979238</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A secret in a log is only a finding if you can <strong>reach the log</strong> with a principal that shouldn't hold that secret. "Passwords are logged" with no log-read primitive, or where only root on the same box can read them, is a hardening nag. Pair the sink with a concrete read path — <code>pods/log</code> grant, log-viewer app, exposed file, LFI — or it closes as informative.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Logging bugs are almost never the endpoint — they feed the next stage.</p>
+<ul><li><strong>Log secret → credential reuse / privesc</strong> — a harvested plaintext password is replayed against LDAP or an adjacent service (#244092, #264426); a leaked bearer token is replayed to impersonate the user (#952771); a leaked Kubernetes service-account token is a direct cluster privesc (#966383); an OAuth token grants access to the linked system (#1394399).</li><li><strong>LFI / path-traversal → log-read → secret</strong> — any file-read primitive turns a secret-in-log sink into disclosure. Chain with path-traversal / file-upload primitives to reach the log file, then grep it.</li><li><strong>Audit evasion → invisible attack</strong> — silent IAM enumeration maps a stolen identity's exact privileges with <strong>no failed-call spike</strong> for defenders to alert on (#3780277), then attribution-blanking hides the follow-on actions (#2979238).</li><li><strong>Log-drop → anti-forensics</strong> — smuggling a delimiter to drop the log entry (#447488) hides the malicious request itself; pair it with any noisy exploit to blind the SIEM.</li><li><strong>PII in logs → mass disclosure</strong> — one reachable error log full of raw <code>INSERT</code> statements is a bulk customer-data breach with no SQLi required (#3242830).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Scrub by parameter <em>name</em>, not a method allowlist</strong> — redact <code>$password</code>/<code>token</code>/<code>secret</code> wherever they appear, so a new method or an error path can't leak (fixes #264426, #1662194).</li><li><strong>Mask in every logging code path</strong> — request dumpers, <code>toCurl()</code>/<code>toString()</code> helpers, and each debug branch must reuse the <em>same</em> masking routine (#952771).</li><li><strong>Never log raw input before validation</strong> and never log raw SQL statements or DB rows; redact tokens before writing (#972561, #3242830, #1394399).</li><li><strong>Escape / strip control chars and delimiters</strong> in any attacker-controlled field written to logs, and quote every <code>log_format</code> placeholder so a smuggled space can't add a column (#1411867, #447488).</li><li><strong>Derive client IP from a trusted-proxy chain</strong>, not raw <code>X-Forwarded-For</code> / <code>X-Real-IP</code> (#296632).</li><li><strong>Treat every endpoint family (FIPS / mirror / non-prod) as needing full, attributed audit coverage</strong> — same signed request, different host must not mean different or absent logging (#3780277, #2979238).</li><li><strong>Scope log-read tightly</strong> — logs inherit none of the app's access control; restrict <code>pods/log</code>, log-viewer features, and file permissions to the same trust level as the secrets they may contain.</li></ul>
+<details class="fold"><summary>Where secrets hide in the "exhaust" — a hunting checklist</summary><div class="body"><p>Secrets leak most often not in the app UI but in its exhaust. After exercising any auth/OAuth/integration flow, grep for <code>authorization|bearer|access_token|refresh_token|api_key|password</code> across: application &amp; exception logs, <code>pods/log</code> in <code>kube-system</code>, node <code>journald</code>, log-aggregation UIs (Kibana/Grafana/Splunk), integration &amp; bot logs (Hubot, webhook handlers), CI/CD job output, debug/<code>--verbose</code> dumps, and any <code>*_ERROR_LOG</code> / <code>debug.log</code> / <code>.log.1</code> a path guess reaches. Then force the error path (unreachable backend, failed 2FA, broken SMTP, raised verbosity) and grep again — the failure handler usually dumps more than the happy path.</p></div></details>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong><code>grep -RniE</code></strong> over log directories — the primary tool here; the queries in Methodology are the workhorses.</li><li><strong>Certificate Transparency</strong> (crt.sh / certstream) — discover alternate / non-prod / FIPS endpoints to audit-diff (#3780277).</li><li><strong>AWS CLI <code>--endpoint-url</code></strong> — redirect a signed request to an alternate host and diff CloudTrail across all regions.</li><li><strong>Burp Repeater / Intruder</strong> — inject control chars, delimiters, and spoofed <code>X-Forwarded-For</code> into request fields.</li><li><strong>Source audit</strong> (grep the codebase for arg-dump loggers, <code>toCurl</code>/<code>toString</code> request dumpers, and the log-scrub allowlist) — see the <code>18-source-code-audit</code> and <code>log-analysis</code> skills; <code>ha-insecure-logging</code> for the Android logcat variant.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>14</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-244092" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Plaintext password of failed login written to application log</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#244092</b> · nextcloud · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>log credential leak -&gt; credential reuse against LDAP/othe</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When a WebDAV/2FA login failed, the Sabre Auth code path threw and logged the exception with the method arguments, writing the user's (correct) plaintext password into the application log where admins/debuggers could read it.</p>
+<h4>Method</h4><ol><li>Trigger a failing auth path that still receives the real password (e.g. WebDAV basic auth against a 2FA-required account)</li><li>Inspect the application/exception log for the logged call arguments</li><li>Read the plaintext credential from the stack trace: Auth-&gt;validateUserPass('user','PASSWORD')</li></ol>
+<div class="pre"># log line pattern
+OCA\DAV\Connector\Sabre\Auth-&gt;validateUserPass('USER', 'THE_PASSWORD')</div>
+<p class="insight"><b>Insight —</b> Exception handlers that log function arguments will spill secrets passed as parameters (passwords, tokens, card numbers). Look for verbose debug/exception logs and endpoints that fail after receiving credentials; the log becomes a credential store reusable against LDAP/other services.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/244092" target="_blank" rel="noopener">hackerone.com/reports/244092</a></span><a class="src" href="#report-244092" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3242830" style="--sv:var(--sev-high)" data-sev="3" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Error log records full SQL INSERT statements containing PII</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#3242830</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">On DB failure the app's error handler writes the entire failed SQL INSERT (including all customer field values) into a log file that is itself reachable/retrievable, persisting cleartext PII well beyond intent.</p>
+<h4>Method</h4><ol><li>Locate exposed/retrievable log files (ORDER_ERROR_LOG, error.log, debug logs) via path guessing or listing</li><li>Search the log for full INSERT/UPDATE statements</li><li>Extract the embedded PII (names, emails, phones, addresses, customer/transaction data)</li></ol>
+<div class="pre"># ORDER_ERROR_LOG contains:
+INSERT INTO dli.dli_customer_data VALUES ( dli_customer_data_sequence.NEXTVAL, SYSDATE, &lt;full_name&gt;, &lt;email&gt;, &lt;phone&gt;, &lt;address&gt;, ... )
+# hunt:
+grep -RniE 'INSERT INTO|UPDATE .* SET' /path/to/logs</div>
+<p class="insight"><b>Insight —</b> Two-part lesson: (1) as an app antipattern, logging raw failed SQL statements bakes PII into logs; (2) as a hunter, when you find any reachable log/debug file, grep it for INSERT/UPDATE statements and connection strings, not just stack traces.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3242830" target="_blank" rel="noopener">hackerone.com/reports/3242830</a></span><a class="src" href="#report-3242830" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3780277" style="--sv:var(--sev-med)" data-sev="2" data-votes="64" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Silent AWS IAM permission enumeration via non-production endpoints that skip CloudTrail</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3780277</b> · aws_vdp · none · 64 votes · resolved</div>
+<div class="taxo"><span>Program <b>aws_vdp</b></span><span>Surface <b>cloud</b></span><span>Chain <b>Stolen creds -&gt; silent permission enumeration here -&gt; </b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">AWS spins up non-production/personal service endpoints (test NLBs, *.people.aws.dev, employee-aliased hosts) that accept real signed SigV4 requests with standard IAM credentials and perform normal IAM authorization, but do NOT emit a matching CloudTrail event. An attacker who redirects the AWS CLI/SDK to one of these hosts can test whether stolen credentials hold a given permission without generating the failed/successful API log that detection relies on.</p>
+<h4>Method</h4><ol><li>Obtain/target a set of AWS credentials (the attacker case: stolen access keys or an assumed role).</li><li>Discover candidate non-production endpoints: monitor Certificate Transparency logs (crt.sh / cert-stream) for hostnames like &lt;service&gt;*.people.aws.dev, s3table-nlb-personal-*.elb.&lt;region&gt;.amazonaws.com, &lt;service&gt;-fips.*, and other employee/test-named service hosts.</li><li>Baseline: run a normal read call against the production endpoint (e.g. `aws s3tables list-table-buckets`), wait 10-15 min, confirm a CloudTrail event appears.</li><li>Redirect the same call to a candidate endpoint with `--endpoint-url` (add `--no-verify-ssl` / short timeouts as needed) and repeat with both a privileged and an unprivileged principal.</li><li>Diff the two responses: a permitted principal returns normal data / a non-IAM error, a denied principal returns an explicit AccessDeniedException naming the action. That differential leaks whether the credential holds the permission.</li><li>Re-check CloudTrail (all regions) and confirm NO matching event was produced for either principal -&gt; the enumeration was invisible.</li></ol>
+<div class="pre"># Baseline (production, DOES log to CloudTrail):
+aws s3tables list-table-buckets --region us-west-2
+
+# Silent test against a non-production endpoint (NO CloudTrail event):
+aws s3tables list-table-buckets --region us-west-2 \
+  --cli-connect-timeout 10 --cli-read-timeout 10 \
+  --endpoint-url https://s3tables.us-west-2.&lt;internal&gt;.people.aws.dev \
+  --no-verify-ssl
+
+# Response differential reveals the permission bit:
+#  permitted principal -&gt; {"tableBuckets": []}
+#  denied principal    -&gt; AccessDeniedException: ... not authorized to perform: s3tables:ListTableBuckets</div>
+<p class="insight"><b>Insight —</b> Detection of credential abuse in AWS assumes every API call hits CloudTrail. Any alternate host that speaks the same API but is not wired into CloudTrail is a logging blind spot. When assessing a cloud provider or a large SaaS, hunt for non-production/mirror endpoints (Certificate Transparency is the cheap discovery channel) and test whether they are (a) reachable with prod credentials and (b) absent from the audit log. The `--endpoint-url` override is the general trick: same signed request, different host, different (or zero) logging.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3780277" target="_blank" rel="noopener">hackerone.com/reports/3780277</a></span><a class="src" href="#report-3780277" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1662194" style="--sv:var(--sev-med)" data-sev="2" data-votes="31" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Secrets logged in cleartext (API keys and passwords in logs)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1662194</b> · Omise · awarded · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>Omise</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Sensitive values were written to logs in cleartext: the Omise client debug-logs the Authorization/secret API key, and (merged 469668) Nextcloud's exception serializer logs full method parameters including user passwords when an exception is thrown.</p>
+<h4>Method</h4><ol><li>Enable/inspect debug logging or trigger an exception in a code path handling secrets</li><li>For Omise: run any request with logging level DEBUG; secret key appears via logger.debug('Authorization: %s', api_key)</li><li>For Nextcloud (469668): create a user while SMTP is down; the addUser exception stack trace logs the password parameter</li><li>Read the secrets from the log output</li></ol>
+<div class="pre"># Omise omise/request.py L88/L111
+logger.debug('Authorization: %s', self.api_key)
+
+# Nextcloud exception log (SMTP failure during addUser)
+addUser("[user]", "[PASSWORD]", ...) at Dispatcher.php:166</div>
+<p class="insight"><b>Insight —</b> Grep the codebase/logs for logger.debug/print of api_key, Authorization, password, token. Exception serializers that dump call arguments are a stealthy sink: filter by parameter name ($password), not by an allowlist of methods, or passwords leak on every unexpected error.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1662194" target="_blank" rel="noopener">hackerone.com/reports/1662194</a></span><a class="src" href="#report-1662194" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2979238" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CloudTrail attribution obfuscation: FIPS endpoints log attacker IP/user-agent as 'AWS Internal'</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2979238</b> · aws_vdp · none · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>aws_vdp</b></span><span>Surface <b>cloud</b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">For certain AWS service endpoints (observed on FIPS endpoints across several services), CloudTrail still records the event but populates the sourceIPAddress and userAgent fields with the literal string 'AWS Internal' instead of the caller's real IP and client. An attacker routing calls through these endpoints keeps the action logged but strips the network/host indicators an investigator would pivot on.</p>
+<h4>Method</h4><ol><li>Baseline: run a call against the normal production endpoint (e.g. `aws comprehendmedical list-phi-detection-jobs`), wait 5-10 min, inspect the CloudTrail record and confirm sourceIPAddress and userAgent are populated with the real values.</li><li>Repeat the identical call against a FIPS endpoint via `--endpoint-url` (e.g. comprehendmedical-fips.us-east-1.api.aws).</li><li>Inspect the resulting CloudTrail event: sourceIPAddress and userAgent now read 'AWS Internal', hiding the attacker's IP and client fingerprint.</li><li>Prefer these endpoints for logged-but-attributed operations to degrade incident-response pivoting on network indicators.</li></ol>
+<div class="pre"># Baseline (real IP + user-agent land in CloudTrail):
+aws comprehendmedical list-phi-detection-jobs
+
+# Via FIPS endpoint -&gt; CloudTrail records sourceIPAddress/userAgent = "AWS Internal":
+aws comprehendmedical list-phi-detection-jobs \
+  --endpoint-url https://comprehendmedical-fips.us-east-1.api.aws</div>
+<p class="insight"><b>Insight —</b> Logging is not binary. An event can be present in the audit log yet still be useless for attribution if the identifying fields are blanked or spoofed. When reviewing any audit pipeline, don't just check whether an action is logged -- check whether the WHO/WHERE (source IP, user-agent, principal) survive. Alternate endpoint families (FIPS, dualstack, regional mirrors) can be logged by a different code path that fills these fields differently.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2979238" target="_blank" rel="noopener">hackerone.com/reports/2979238</a></span><a class="src" href="#report-2979238" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2101165" style="--sv:var(--sev-med)" data-sev="2" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credentials written to application debug logs</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2101165</b> · nextcloud · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A generic pre-call logger json_encodes all arguments of every LDAP function at debug level, so ldap_bind's password argument lands in cleartext in the log file (CVE-2023-48305).</p>
+<h4>Method</h4><ol><li>Set loglevel to 0 (debug) on an LDAP-backed instance</li><li>Log in as an LDAP user</li><li>Grep the log for 'ldap_bind' and read the cleartext password in the message args</li></ol>
+<div class="pre">grep ldap_bind nextcloud.log
+# message: Calling LDAP function ldap_bind with parameters [{},"uid=&lt;USER&gt;","&lt;PASSWORD&gt;"]</div>
+<p class="insight"><b>Insight —</b> Blanket 'log all function args' wrappers are a recurring credential-leak sink. When you have log read access (local admin, log-viewer app, exposed log endpoint), grep for bind/login/auth function names; secrets often sit in serialized argument arrays.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2101165" target="_blank" rel="noopener">hackerone.com/reports/2101165</a></span><a class="src" href="#report-2101165" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-447488" style="--sv:var(--sev-med)" data-sev="2" data-votes="19" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Log injection / entry-drop via Basic-auth username in nginx $remote_user</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#447488</b> · security · none · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">nginx logs $remote_user (decoded from Authorization: Basic) unquoted and unescaped between space-delimited fields. An attacker embeds a space/delimiter in the username, adding an extra column that breaks downstream log ingestion so the entry is silently discarded.</p>
+<h4>Method</h4><ol><li>Send Basic auth whose decoded username contains a whitespace/delimiter</li><li>Request is proxied normally but the access-log line gains an extra field</li><li>Log pipeline fails to parse and drops the entry -&gt; request is unlogged (anti-forensics)</li></ol>
+<div class="pre">curl -X POST -u '- A:B' 'https://TARGET/graphql?secret=1'
+# Authorization: Basic LSBBOkI=  -&gt; $remote_user = '- A' -&gt; extra column in space-delimited access log</div>
+<p class="insight"><b>Insight —</b> Attacker-controlled fields written into space/quote-delimited logs without escaping enable log forging and, worse, log-drop that hides malicious requests from the SIEM. Audit every request-controlled value ($remote_user, cookies, UA) in log_format for unquoted placeholders.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/447488" target="_blank" rel="noopener">hackerone.com/reports/447488</a></span><a class="src" href="#report-447488" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-966383" style="--sv:var(--sev-med)" data-sev="2" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>High log verbosity prints Kubernetes Secret contents in cloud controller logs</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#966383</b> · kubernetes · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>cloud</b></span><span>Chain <b>pods/log read in kube-system -&gt; Secret contents in contro</b></span><span>Tag <b>cloud</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The vSphere legacy cloud provider registers a Secret informer and logs the full secret object; with kube-controller-manager log verbosity set to 4 or higher, secret data (passwords, private keys, service-account tokens) is written to the controller-manager log on every secret create/update (CVE-2020-8563).</p>
+<h4>Method</h4><ol><li>Confirm the cluster runs vSphere as cloud provider with controller-manager verbosity &gt;= 4.</li><li>As a principal that can read kube-system pod logs (GET pods/log), tail the cloud-controller-manager / kube-controller-manager pod log.</li><li>Trigger or wait for a Secret create/update; read the secret payload printed by the SetInformers handler.</li><li>If a leaked value is a service-account token, use it to escalate privileges.</li></ol>
+<div class="pre">kubectl -n kube-system logs &lt;kube-controller-manager-pod&gt; | grep -i secret
+# with --v=4+, secret objects (data incl. tokens/keys) are printed on create/update</div>
+<p class="insight"><b>Insight —</b> Verbose logging is a first-class secret sink in cloud/orchestration platforms. Whoever can read component logs (pods/log in kube-system, node journald, log aggregators) effectively reads secrets. Audit log verbosity flags and which identities can read the logs; a leaked SA token is a direct privesc.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/966383" target="_blank" rel="noopener">hackerone.com/reports/966383</a></span><a class="src" href="#report-966383" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1411867" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ANSI/terminal escape-sequence injection into request logs</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1411867</b> · rails · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Rack CommonLogger writes the raw REQUEST_METHOD (and other request metadata) to the log without stripping control characters, so control bytes/escape sequences land verbatim in log files.</p>
+<h4>Method</h4><ol><li>Send a request whose method or path contains raw control bytes (backspace 0x08, ESC 0x1b).</li><li>The logger escapes the query string but prints the request method as-is.</li><li>When an operator views the log in a terminal, the injected escape sequences execute (cursor moves, color, title-set, potential command hiding).</li></ol>
+<div class="pre">GET\b\b\bPOST /sign_in?test1=1\b2 HTTP/1.0
+Host: 127.0.0.1:4567
+
+# \b = 0x08 backspace; ESC (0x1b) sequences enable ANSI injection / log forging</div>
+<p class="insight"><b>Insight —</b> Anywhere raw request fields (method, UA, path, headers) are echoed to logs, test control-char/ANSI injection: hide entries with backspaces, forge lines with CRLF, or trigger terminal escape sequences on whoever tails the log. Same class curl fixed in WEBrick years earlier.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1411867" target="_blank" rel="noopener">hackerone.com/reports/1411867</a></span><a class="src" href="#report-1411867" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-952771" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bearer tokens logged via klog verbose toCurl() (CVE-2019-11250)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#952771</b> · kubernetes · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span><span>Chain <b>Token in logs -&gt; log-reader (Eve) replays bearer token -&</b></span><span>Tag <b>jwt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">client-go's debuggingRoundTripper masks header values only in the debugRequestHeaders branch; the preceding debugCurlCommand branch calls reqInfo.toCurl(), which serializes all request headers (including Authorization) unmasked into logs at high klog verbosity.</p>
+<h4>Method</h4><ol><li>Run kube components at high verbosity (klog.V(9)/debugCurlCommand)</li><li>Observe round_trippers.go logging a full 'curl -k -v -H "Authorization: &lt;token&gt;" URL' line</li><li>Anyone with log access replays the bearer token to impersonate the user</li></ol>
+<div class="pre">// round_trippers.go toCurl(): builds "curl -k -v -X%s %s '%s'" with raw -H "Authorization: &lt;bearer&gt;"
+// maskValue() applied only in debugRequestHeaders branch, not in toCurl()</div>
+<p class="insight"><b>Insight —</b> Credential masking must cover every logging code path, not just one. When auditing verbose/debug logging, grep for curl-command builders, request dumpers, and toString()/toCurl() helpers that serialize headers without reusing the masking routine - Authorization/Cookie/token headers leak to log readers who lack cluster access.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/952771" target="_blank" rel="noopener">hackerone.com/reports/952771</a></span><a class="src" href="#report-952771" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1394399" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth tokens written to integration logs in cleartext</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1394399</b> · rocket_chat · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An integration/bot subsystem (Hubot) logs full request/response data including OAuth access tokens in plaintext, so anyone with log access (ops, log aggregation, shared containers) can lift live credentials.</p>
+<h4>Method</h4><ol><li>After any OAuth/token flow, inspect application, integration, and bot logs (Hubot, webhook handlers, debug logs) for Authorization headers, access_token, refresh_token, or bearer values.</li><li>Confirm the tokens are live (unredacted) and grant access to the linked system; report as cleartext storage of secrets.</li></ol>
+<p class="insight"><b>Insight —</b> Secrets leak most often not in the app UI but in its exhaust: integration/bot logs, debug output, and log shippers. Always grep captured logs and any log-viewing UI for token/bearer/authorization/password after exercising auth flows. Fix is to redact/placeholder tokens before logging.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1394399" target="_blank" rel="noopener">hackerone.com/reports/1394399</a></span><a class="src" href="#report-1394399" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-972561" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Secret logged before validation/deletion (kubeadm bootstrap token)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#972561</b> · kubernetes · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CLI logs the raw input (which may be a full bootstrap token, not just an ID) at verbosity before parsing/deleting it; if deletion fails the token stays valid and is now persisted in logs.</p>
+<h4>Method</h4><ol><li>Locate log calls that print user/CLI input prior to type/validity checks</li><li>Note where input may be a full credential vs an identifier</li><li>Confirm the credential remains valid on the error path -&gt; log-readable secret</li></ol>
+<div class="pre">// kubeadm cmd/token.go RunDeleteTokens
+klog.V(1).Infof("[token] parsing token %q", tokenIDOrToken) // logs full token before it is parsed</div>
+<p class="insight"><b>Insight —</b> Grep source/logs for the pattern 'log the raw argument, then decide if it's a secret'. Sensitive material logged before validation (or on failure paths) is a durable credential leak to anyone with log access.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/972561" target="_blank" rel="noopener">hackerone.com/reports/972561</a></span><a class="src" href="#report-972561" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-264426" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Credentials written to logs on error path (missing from sensitive-param sanitize list)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#264426</b> · nextcloud · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>backend error -&gt; creds in logs -&gt; (with log-read/LFI) </b></span></div>
+<h4>Root cause</h4><p style="margin:0">When an LDAP backend is unavailable, the failing method call (bind/areCredentialsValid/etc.) is logged with its arguments; those methods were not enumerated in the log's sensitive-parameter exclusion list, so plaintext usernames and passwords land in log files.</p>
+<h4>Method</h4><ol><li>Trigger the auth backend error path (e.g. make the LDAP server unreachable)</li><li>Observe that the failing method call is logged with full arguments</li><li>Read plaintext credentials from the application log</li></ol>
+<div class="pre"># lib/private/Log.php $methodsWithSensitiveParameters missing:
+#   bind, areCredentialsValid, invokeLDAPMethod, checkPasswordNoLogging
+# -&gt; LDAP bind() DN + password logged in cleartext on connection failure</div>
+<p class="insight"><b>Insight —</b> Audit error/exception logging paths: happy-path logging is usually sanitized, but failure handlers frequently dump full method args including passwords/tokens. When reviewing source, grep the log-scrubbing allowlist and diff it against every method that receives a secret. As an attacker, force auth/backend errors and then find a log-read primitive to harvest creds.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/264426" target="_blank" rel="noopener">hackerone.com/reports/264426</a></span><a class="src" href="#report-264426" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-296632" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Audit-log source-IP spoofing via X-Forwarded-For at login</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#296632</b> · weblate · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Tag <b>logging</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The application (Dockerized Weblate behind a reverse proxy) trusts the client-supplied X-Forwarded-For header as the real client IP and writes it directly into audit-log entries without validating it against the actual trusted-proxy chain.</p>
+<h4>Method</h4><ol><li>Locate a feature that records the client IP into an audit/security log (login events, profile activity, admin console).</li><li>Send the login (or logged action) with a spoofed X-Forwarded-For: ATTACKER-CHOSEN-IP header.</li><li>Observe the forged IP appear in the user profile audit log and admin console.</li><li>Optionally probe adjacent sinks: here User-Agent value '"&lt;b&gt;test was stored unencoded (no XSS, but a sign the field flows into other sinks).</li></ol>
+<div class="pre">POST /accounts/login/ HTTP/1.1
+Host: TARGET
+X-Forwarded-For: 1.2.3.4
+Content-Type: application/x-www-form-urlencoded
+
+username=victim&amp;password=...</div>
+<p class="insight"><b>Insight —</b> When an app sits behind a proxy, check whether logged/displayed client IPs come from X-Forwarded-For (or X-Real-IP) without a trusted-proxy allowlist. If so you can poison the audit trail, frame another IP, or hide the real source of a compromise. Also test whether the same forgeable IP feeds rate-limiting or IP-based access control for higher impact.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/296632" target="_blank" rel="noopener">hackerone.com/reports/296632</a></span><a class="src" href="#report-296632" style="color:var(--faint)">#</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>No dedicated PortSwigger lab for this class; use the methodology above and the cited reports.</li>
+<li>All 14 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#leak-lie-sinks">Leak &amp; lie sinks</a><a href="#argument-dump-exception-loggers" style="padding-left:24px">↳ Argument-dump / exception loggers</a><a href="#verbose-debug-request-dumpers" style="padding-left:24px">↳ Verbose / debug request dumpers</a><a href="#raw-sql-query-error-logs" style="padding-left:24px">↳ Raw SQL / query error logs</a><a href="#log-injection-forging-attacker-controlled-fields" style="padding-left:24px">↳ Log injection &amp; forging (attacker-controlled fields)</a><a href="#audit-trail-spoofing-evasion" style="padding-left:24px">↳ Audit-trail spoofing &amp; evasion</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (14)</a><a href="#refs">References</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

