@@ -11,7 +11,6 @@ draft: false
 tags: ["whatsapp", "webrtc", "stun", "ip tracking", "geolocation", "cybersecurity", "infosec", "hacking", "network analysis", "wireshark"]
 categories: ["cybersecurity", "network"]
 ---
-# Every Call Leaves a Trail - Extracting IP Addresses and Locations from WhatsApp Calls
 In this blog, I'll walk through how the **STUN protocol** and **WebRTC** can expose a caller's real IP address during a WhatsApp call, and how I built a tool that captures STUN packets to extract and geolocate the other participant's IP in real time.
 
 The idea for this came from reading [**Analyzing WhatsApp Calls**](https://medium.com/@schirrmacher/analyzing-whatsapp-calls-176a9e776213) by [Schirrmacher](https://medium.com/@schirrmacher), which breaks down the network-level behavior and low level workings of WhatsApp calls. That analysis made me want to build something that automates the entire process: from packet capture to IP extraction to geolocation, all in one tool.
