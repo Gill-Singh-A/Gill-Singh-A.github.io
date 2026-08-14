@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="dark">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1314&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
@@ -9,16 +9,16 @@
 <meta name="keywords" content="cybersecurity, infosec, network, sniffing, tcpdump, tshark, wireshark, ldap">
 <meta name="description" content="In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1314/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+<link rel="canonical" href="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1314/favicon.jpg">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1314/favicon.jpg">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1314/favicon.jpg">
-<link rel="apple-touch-icon" href="http://localhost:1314/favicon.jpg">
-<link rel="mask-icon" href="http://localhost:1314/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon.jpg">
+<link rel="apple-touch-icon" href="http://localhost:1313/favicon.jpg">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1314/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
 <noscript>
     <style>
         #theme-toggle,
@@ -106,7 +106,7 @@
   .gallery { grid-template-columns: 1fr; }
 }
 </style>
-<meta property="og:url" content="http://localhost:1314/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+<meta property="og:url" content="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
   <meta property="og:site_name" content="Gill.Singh.A">
   <meta property="og:title" content="Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests">
   <meta property="og:description" content="In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.">
@@ -136,13 +136,13 @@
       "@type": "ListItem",
       "position":  1 ,
       "name": "Posts",
-      "item": "http://localhost:1314/post/"
+      "item": "http://localhost:1313/post/"
     }, 
     {
       "@type": "ListItem",
       "position":  2 ,
       "name": "Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests",
-      "item": "http://localhost:1314/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
+      "item": "http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
     }
   ]
 }
@@ -164,14 +164,14 @@
   "dateModified": "2024-09-28T07:09:31+05:30",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "http://localhost:1314/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
+    "@id": "http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Gill.Singh.A",
     "logo": {
       "@type": "ImageObject",
-      "url": "http://localhost:1314/favicon.jpg"
+      "url": "http://localhost:1313/favicon.jpg"
     }
   }
 }
@@ -181,7 +181,7 @@
     <header class="header">
     <nav class="header-nav">
         <div class="logo">
-            <a href="http://localhost:1314/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
             <div class="logo-switches">
                 <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
@@ -207,27 +207,27 @@
         </div>
         <ul id="menu" class="menu">
             <li>
-                <a href="http://localhost:1314/" title="Home">
+                <a href="http://localhost:1313/" title="Home">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1314/post/" title="Blog">
+                <a href="http://localhost:1313/post/" title="Blog">
                     <span>Blog</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1314/field-guide/" title="Field Guide">
+                <a href="http://localhost:1313/field-guide/" title="Field Guide">
                     <span>Field Guide</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1314/gallery/" title="Photography">
+                <a href="http://localhost:1313/gallery/" title="Photography">
                     <span>Photography</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1314/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -394,21 +394,21 @@ As we navigate our digital landscape, it’s essential to ensure that proper sec
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1314/tags/cybersecurity/">Cybersecurity</a></li>
-      <li><a href="http://localhost:1314/tags/infosec/">Infosec</a></li>
-      <li><a href="http://localhost:1314/tags/network/">Network</a></li>
-      <li><a href="http://localhost:1314/tags/sniffing/">Sniffing</a></li>
-      <li><a href="http://localhost:1314/tags/tcpdump/">Tcpdump</a></li>
-      <li><a href="http://localhost:1314/tags/tshark/">Tshark</a></li>
-      <li><a href="http://localhost:1314/tags/wireshark/">Wireshark</a></li>
-      <li><a href="http://localhost:1314/tags/ldap/">Ldap</a></li>
+      <li><a href="http://localhost:1313/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="http://localhost:1313/tags/infosec/">Infosec</a></li>
+      <li><a href="http://localhost:1313/tags/network/">Network</a></li>
+      <li><a href="http://localhost:1313/tags/sniffing/">Sniffing</a></li>
+      <li><a href="http://localhost:1313/tags/tcpdump/">Tcpdump</a></li>
+      <li><a href="http://localhost:1313/tags/tshark/">Tshark</a></li>
+      <li><a href="http://localhost:1313/tags/wireshark/">Wireshark</a></li>
+      <li><a href="http://localhost:1313/tags/ldap/">Ldap</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="http://localhost:1314/p/lateral-movement-through-ssh-command-tampering/">
+  <a class="prev" href="http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/">
     <span class="title">« Prev</span>
     <span>Lateral Movement Through SSH Command Tampering</span>
   </a>
-  <a class="next" href="http://localhost:1314/p/building-a-heat-map-for-iit-kanpurs-computer-labs/">
+  <a class="next" href="http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/">
     <span class="title">Next »</span>
     <span>Building a Heat Map for IIT Kanpur&#39;s Computer Labs</span>
   </a>
@@ -419,7 +419,7 @@ As we navigate our digital landscape, it’s essential to ensure that proper sec
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1314/">Gill.Singh.A</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Gill.Singh.A</a></span> · 
 
     
     
