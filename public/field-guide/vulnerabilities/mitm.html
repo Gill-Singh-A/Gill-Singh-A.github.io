@@ -1,0 +1,349 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Man-in-the-Middle · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Man-in-the-Middle</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="on" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>Man-in-the-Middle</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>12</b></span><span class="chip">No direct PortSwigger lab</span></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 12 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Machine-in-the-Middle (MITM) is any bug where an attacker on — or able to <em>claim</em> — the network path between two endpoints reads, forges, or replaces traffic the victim believed was authenticated and confidential. It is not one bug but a family: a single plaintext <code>http://</code> hop, a middlebox that strips HSTS, a TLS library that reuses an unverified connection, a squattable named pipe, a rogue router advertisement, or a Wi-Fi frame-injection flaw all collapse an "encrypted" channel back to cleartext.</p>
+<p>The core mechanism is <strong>misplaced transport trust</strong>: an endpoint treats a channel as verified when some link in the chain never actually verified it. Two halves recur. <strong>Path bugs</strong> put you (or let you route yourself) between the endpoints — rogue IPv6 RA, IP hijack, ARP/BT/pipe squatting. <strong>Trust bugs</strong> make the endpoint accept an attacker-controlled channel it should have rejected — no pinning, HSTS stripped, verify-mode skipped on connection reuse, integrity-failure not discarded. A report only needs <em>one</em> half plus a plausible position for the other. Most of the time you never need a live on-path position to file — you <strong>simulate</strong> it.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Enumerate every hop of every "secure" flow.</strong> SSO/OAuth <code>authorize</code>, <code>redirect_uri</code>, intermediate redirects, update manifests, download links, in-app API calls. Any single <code>http://</code> hop that carries a secret or runnable content is a finding.</li><li><strong>Grep for plaintext delivery of runnable / security-relevant content</strong> — installers, binaries, scripts, SWFs, and auth endpoints served over <code>http://</code> when <code>https://</code> exists.</li><li><strong>Simulate the on-path position.</strong> Point a hostname at an attacker IP via the hosts file (cert-block simulation) or drop an intercepting proxy with a custom CA in front of the client.</li><li><strong>Probe the trust check.</strong> Does the client still hard-block the cert error? Does it re-verify after restart? Does it pin? Does a middlebox re-add a click-through override?</li><li><strong>For libraries/protocols, audit the verify path directly</strong> — connection-reuse caches (are <em>all</em> TLS settings compared?), integrity-failure branches (is the whole message discarded?), signed→unsigned assignments, and scheme flags that exempt STARTTLS.</li><li><strong>For fabric bugs</strong>, check whether the L2/L3 assumption actually holds: is IPv6 hard-disabled or merely unused? Are <code>externalIPs</code>/pipe DACLs validated? Does reconnection re-authenticate?</li></ol>
+<div class="pre" data-lang="bash"># Any http:// hop to a binary, installer, script, or auth endpoint is a finding
+grep -RniE 'http://[^"'\'' ]+\.(exe|dmg|apk|tar\.[a-z0-9]+|zip|sh|swf)' .
+grep -RniE 'http://[^"'\'' ]*/(oauth|authorize|login|sso|saml)' .</div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Find which class the target fits, then use the matching probe/exploit.</p>
+<h3 class="sub" id="plaintext-hop-in-a-secure-flow">Plaintext hop in a "secure" flow</h3>
+<p>A single <code>http://</code> hop leaks whatever crosses it. In SSO/OAuth the prize is the session-bound <code>state</code>/<code>code</code>; capture it on-path and complete the flow yourself to log the victim into an attacker-controlled session (login-CSRF → ATO). For downloads, the prize is the binary itself — swap it for a trojanized build.</p>
+<div class="pre" data-lang="http"># One plaintext authorize hop leaks the state+code (#703759)
+GET http://www.PROVIDER/oauth/authorize?response_type=code&amp;display=popup&amp;client_id=...&amp;state=&lt;session-bound&gt;&amp;redirect_uri=https%3A%2F%2FTARGET%2Fredirector
+
+# Plaintext installer delivery -&gt; swap the artifact in transit (#84797)
+http://download.TARGET/community/installer-stable.tar.bz2   # https:// exists -&gt; avoidable MITM</div>
+<h3 class="sub" id="client-transport-trust-config-pinning-verify-skipped">Client transport-trust config (pinning / verify skipped)</h3>
+<p>The endpoint runs TLS but never enforces it. Mobile apps that toggle a "secure connection" but don't persist it after restart and don't pin; TLS libraries whose connection-reuse cache skips the verify/pin re-check. Prove it with an intercepting proxy + custom CA.</p>
+<div class="pre" data-lang="bash"># Mobile: install custom CA, set device proxy -&gt; mitmproxy/Burp, then KILL and relaunch the app.
+# TELL: readable traffic after restart = "secure" toggle not enforced AND no pinning (#64731)
+
+# curl STARTTLS connection reuse skips pinning/verify (#3718195, CVE-2022-27782 sibling)
+# Both transfers MUST run in ONE curl process (--next) so they share the connection cache;
+# two separate curl invocations each get their own pool and would NOT reuse the conn.
+curl --ssl-reqd --insecure imap://TARGET/ \
+     --next \
+     --ssl-reqd --pinnedpubkey KEY imap://TARGET/   # handle B reuses A's unverified conn -&gt; pin check NEVER runs</div>
+<h3 class="sub" id="tls-terminating-middlebox-strips-hsts">TLS-terminating middlebox strips HSTS</h3>
+<p>AV / "web protection" / corporate proxies that break up HTTPS to scan it take over certificate validation — and downgrade it. Where a browser hard-blocks a cert error on an HSTS/preloaded site, the middlebox re-adds a clickable override, turning HSTS-immune high-value sites back into MITM targets. Simulate with a hosts-file redirect.</p>
+<div class="pre" data-lang="bash"># %WINDIR%\system32\drivers\etc\hosts  -- redirect an HSTS-preloaded host to a wrong IP
+93.184.216.34   www.google.com
+# Load with the TLS-scanning AV installed. A bare browser HARD-blocks (HSTS).
+# TELL: an "I understand the risks" override reappears -&gt; middlebox stripped HSTS enforcement (#461780)</div>
+<h3 class="sub" id="integrity-crypto-wrapper-failure">Integrity / crypto wrapper failure</h3>
+<p>On a cryptographically protected channel (GSSAPI/krb5), the verify-failure branch must <strong>discard the whole message</strong>. A "log-and-continue" path that overwrites only a prefix leaves the rest of the attacker bytes intact as forged responses — and error sentinels (<code>-1</code>) flowing into unsigned size fields underflow and leak memory.</p>
+<div class="pre" data-lang="c">// GSS-unwrap failure masks only 5 bytes; rest of attacker data survives as forged FTP responses (#1590071)
+maj = gss_unwrap(&amp;min, *context, &amp;enc, &amp;dec, NULL, NULL);
+if (maj != GSS_S_COMPLETE) {
+  if (len &gt;= 4)
+    strcpy(buf, "599 ");   // only overwrites 5 bytes -- attacker's remaining bytes survive
+  return -1;               // becomes size_t buf-&gt;size -&gt; underflow -&gt; heap leak
+}</div>
+<h3 class="sub" id="local-ipc-as-a-network-named-pipe-squat">Local IPC as a network (named-pipe squat)</h3>
+<p>On Windows, named pipes without an explicit restrictive DACL are squattable: multiple instances of the same name coexist, so a local attacker races to own an instance a client binds to, then relays to the real server — MITMing a cleartext local protocol.</p>
+<div class="pre" data-lang="bash"># Attacker creates an extra instance of the target's named pipe and waits for a client (#1019891)
+# On client connect: open the REAL pipe as a client, relay both ways -&gt; read/alter cleartext SQL.
+# Audit CreateNamedPipe() calls for missing/weak security descriptors.</div>
+<h3 class="sub" id="l2-l3-network-fabric">L2/L3 network fabric</h3>
+<p>Claim or reconfigure the path itself.</p>
+<div class="pre" data-lang="yaml"># Kubernetes externalIPs / LoadBalancer-status IP hijack (#764986, CVE-2020-8554)
+# Anyone able to create Services can claim ANY IP -- kube-proxy routes it to the attacker pod.
+apiVersion: v1
+kind: Service
+metadata: {name: mitm-external-eip, namespace: kubeproxy-mitm}
+spec:
+  ports: [{name: https, port: 443, targetPort: 8443}]
+  selector: {app: echoserver}
+  type: ClusterIP
+  externalIPs: ["VICTIM_IP"]        # claim 1.1.1.1, a ClusterIP, a pod IP...</div>
+<div class="pre" data-lang="bash"># LoadBalancer variant patches status -- only THIS path can claim 127.0.0.1 (#764986)
+curl -XPATCH -H 'Content-Type: application/merge-patch+json' \
+  '.../services/mitm-external-lb/status' \
+  -d '{"status":{"loadBalancer":{"ingress":[{"ip":"VICTIM_IP"}]}}}'</div>
+<div class="pre" data-lang="bash"># Rogue IPv6 Router Advertisements MITM an "IPv4-only" cluster (#819717)
+# From a root container (CAP_NET_RAW is enough): broadcast crafted ICMPv6 RAs on the veth/host link.
+# Host (accept_ra=1) autoconfigures a default route pointing at you. Run a USERSPACE TCP/IP stack
+# (POC: smoltcp) since CAP_NET_ADMIN/iptables are unavailable. Dual-stack A+AAAA DNS + happy-eyeballs
+# means clients try IPv6 FIRST -&gt; you MITM even hosts that "used no IPv6".
+sysctl net.ipv6.conf.&lt;iface&gt;.accept_ra   # 1 = spoofable; fix: 0 (or ipv6.disable=1)</div>
+<div class="pre" data-lang="bash"># Bluetooth SSP reconnection impersonation -- no pairing mode, no user action (#2642615)
+echo 'PRETTY_HOSTNAME=Example Laptop' &gt;&gt; /etc/machine-info   # match victim's paired-peer name
+./chgbtaddr -addr 00:11:22:33:44:55                          # clone the paired-peer BT address
+sudo systemctl restart bluetooth.service
+bluetoothctl discoverable on
+# Wait for the target to power-cycle/idle-off, short-press power (avoids pairing mode) -&gt; it
+# auto-connects to you. Impersonate BOTH peers -&gt; full BT MitM.</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Wi-Fi FragAttacks (<code>#1238470</code>) is the fabric-injection variant: the A-MSDU flag in the plaintext 802.11 header is unauthenticated, and receivers reassemble fragments across keys / from stale caches — so plaintext (fragmented) frames are accepted even in protected networks. Run <code>fragattacks</code> against <strong>both</strong> clients and APs; injected frames enable DNS hijack and internal-network pivots.</div></div>
+<h3 class="sub" id="parallel-channel-config-write">Parallel-channel config write</h3>
+<p>A sensitive settings store served over HTTPS is still MITM-able if a parallel <code>http://</code> path can write the same state. Check whether security-relevant settings/cookies can be set over an unauthenticated channel.</p>
+<div class="pre" data-lang="bash"># Flash settings-manager: SWF served over HTTPS but the same settings store is writable over HTTP (#54094)
+# Serve a modified settings SWF at the manager path via mitmproxy over the victim's HTTP traffic
+# -&gt; persist webcam/mic grants, CORS exemptions, or disable auto-update for the attacker's domain.</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>HSTS enforcement</td><td>TLS-scanning AV outsources cert decisions, re-adds a click-through override on preloaded sites</td><td>#461780</td></tr><tr><td>Pinning / verifypeer</td><td>STARTTLS schemes lack <code>PROTOPT_SSL</code>, so the conn-reuse config-match is never called; handle B reuses handle A's unverified session</td><td>#3718195</td></tr><tr><td>Integrity check</td><td>GSS-unwrap failure overwrites only a 5-byte <code>599 </code> prefix; rest of attacker bytes survive as forged FTP responses (<code>-1</code>→<code>size_t</code> underflow leaks heap)</td><td>#1590071</td></tr><tr><td>"IPv4-only" network</td><td>IPv6 merely unused (<code>accept_ra=1</code>), not <code>ipv6.disable=1</code>; CAP_NET_RAW + a userspace stack MITMs without CAP_NET_ADMIN</td><td>#819717</td></tr><tr><td>Loopback guard</td><td><code>127.0.0.1</code> blocked for <code>externalIPs</code> but claimable via the LoadBalancer-status path</td><td>#764986</td></tr><tr><td>WPA/WPA2 protection</td><td>unauthenticated A-MSDU flag + mixed-key / stale-cache fragment reassembly injects plaintext frames into protected networks</td><td>#1238470</td></tr><tr><td>Reconnection auth</td><td>SSP re-authentication not run on reconnect; matching address+name is trusted, no pairing mode needed</td><td>#2642615</td></tr><tr><td>HTTPS-only settings store</td><td>the same Flash settings SWF/cookie is writable over a parallel <code>http://</code> path</td><td>#54094</td></tr><tr><td>Named-pipe ACL</td><td>Windows multi-instance pipes with weak/absent DACL let a hostile instance win the client bind</td><td>#1019891</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A "missing pinning" or "http:// link" finding is only real with a <strong>plausible position</strong>. Simulating the on-path role (hosts file, proxy + custom CA, local user for a pipe squat) is enough to demonstrate it — but a report that just observes plaintext with no secret/runnable content crossing it, and no demonstrated interception, closes as informative. Show what you <em>capture or swap</em>, not merely that the channel is plaintext.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>MITM is a <strong>position</strong> primitive; the impact is whatever you inject once you hold it.</p>
+<ul><li><strong>Plaintext SSO hop → intercept <code>state</code>/<code>code</code> → account login (ATO)</strong> — the dominant web outcome (<code>#703759</code>); HSTS-strip on preloaded high-value sites re-enables ATO-grade phishing (<code>#461780</code>).</li><li><strong>Rogue IPv6 RA → host MITM → node takeover</strong> — redirect the host's traffic, then chain a host-side RCE (apt CVE-2019-3462) (<code>#819717</code>).</li><li><strong>Wi-Fi injection → DNS hijack / SSL-strip / internal pivot</strong> — force a malicious DNS server or punch NAT holes to internal devices (<code>#1238470</code>).</li><li><strong>Service create → kube-proxy reroute → intercept/relay TLS across tenants</strong> with an attacker cert (<code>#764986</code>).</li><li><strong>HTTP-delivered installer swap → code execution</strong> — a supply-chain outcome from a single plaintext link (<code>#84797</code>); named-pipe squat → MITM cleartext SQL → arbitrary SQL as the victim (<code>#1019891</code>).</li><li><strong>Integrity-check bypass → control-channel response injection → heap leak</strong> (<code>#1590071</code>).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Force HTTPS on every hop</strong>, and verify signatures on downloaded artifacts — an end-to-end <code>https://</code> flow with no plaintext store-write is not exploitable (<code>#84797</code>, <code>#703759</code>).</li><li><strong>Honor HSTS/preload in any TLS-terminating middlebox</strong> — no click-through override (<code>#461780</code>).</li><li><strong>Compare ALL security-relevant TLS settings before connection reuse</strong> (verify mode, pinned key, client cert, SNI); do not exempt STARTTLS via a scheme flag (<code>#3718195</code>).</li><li><strong>Discard the whole message on integrity failure</strong>; never let error sentinels (<code>-1</code>) flow into unsigned size fields (<code>#1590071</code>).</li><li><strong>Hard-disable IPv6</strong> (<code>ipv6.disable=1</code>) or set <code>accept_ra=0</code> on managed interfaces (<code>#819717</code>); restrict <code>externalIPs</code>/LB IP ranges with an admission webhook (<code>#764986</code>).</li><li><strong>Restrictive DACLs on named pipes</strong> (<code>#1019891</code>); enforce certificate pinning + persistent HTTPS in mobile apps (<code>#64731</code>); <strong>re-authenticate on device reconnection</strong> (<code>#2642615</code>).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>mitmproxy / Burp</strong> with a custom CA — client interception and cert-block simulation (<code>#54094</code>, <code>#64731</code>).</li><li><strong>hosts-file redirect</strong> — point an HSTS host at a wrong IP to test middlebox override behavior (<code>#461780</code>).</li><li><strong>fragattacks</strong> (<a href="https://github.com/vanhoefm/fragattacks">github.com/vanhoefm/fragattacks</a>) — Wi-Fi fragmentation/aggregation injection (<code>#1238470</code>).</li><li><strong>smoltcp</strong> userspace TCP/IP stack + raw ICMPv6 — rogue Router Advertisements without CAP_NET_ADMIN (<code>#819717</code>).</li><li><strong>curl</strong> with <code>--pinnedpubkey</code> / <code>--ssl-reqd</code> — connection-reuse and verify/pin regression tests (<code>#3718195</code>).</li><li><strong>bluetoothctl</strong> + a BT-address spoof helper — SSP reconnection impersonation (<code>#2642615</code>).</li><li><strong>kubectl / curl PATCH</strong> — the Kubernetes <code>externalIPs</code> and LoadBalancer-status hijack paths (<code>#764986</code>).</li><li><strong>bettercap / arpspoof</strong> — general on-path positioning on a shared LAN.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>12</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-2642615" style="--sv:var(--sev-high)" data-sev="3" data-votes="71" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bluetooth reconnection auth bypass by impersonating a paired device (SSP non-compliance)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2642615</b> · sony · none · 71 votes · resolved</div>
+<div class="taxo"><span>Program <b>sony</b></span><span>Surface <b>other</b></span><span>Chain <b>impersonate laptop -&gt; connect to headphones; impersonate </b></span></div>
+<h4>Root cause</h4><p style="margin:0">On reconnection the device does not follow Secure Simple Pairing's re-authentication; an attacker who clones a previously-paired peer's BT address and adapter name connects with no user interaction and even when the device is not in pairing mode.</p>
+<h4>Method</h4><ol><li>Pair victim device with its legitimate master in advance.</li><li>Spoof the Raspberry Pi's BT address (script) and adapter name to match the victim's master, set Discoverable.</li><li>Wait for the target to power-cycle/idle-off; power it on (short-press to avoid pairing mode) -&gt; it auto-connects to the attacker with no prior pairing.</li></ol>
+<div class="pre"># change BT name
+echo 'PRETTY_HOSTNAME=Example Laptop' &gt;&gt; /etc/machine-info
+# change BT address (Go helper from report)
+go build main.go -o chgbtaddr
+./chgbtaddr -addr 00:11:22:33:44:55
+sudo systemctl restart bluetooth.service
+bluetoothctl discoverable on</div>
+<p class="insight"><b>Insight —</b> For BT/BLE devices, test whether reconnection re-runs authentication or just trusts a matching address+name. Spoof the paired peer identity while the device is out of pairing mode; success = impersonation primitive that, combined with power-save/idle-off session drops, yields a full MitM.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2642615" target="_blank" rel="noopener">hackerone.com/reports/2642615</a></span><a class="src" href="#report-2642615" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1019891" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Windows named-pipe squatting/MITM via weak security descriptor</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1019891</b> · mariadb · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>mariadb</b></span><span>Surface <b>desktop</b></span><span>Chain <b>pipe instance squatting -&gt; MITM cleartext protocol -&gt; </b></span></div>
+<h4>Root cause</h4><p style="margin:0">MariaDB's named-pipe server is created without a restrictive security descriptor, so any local user can create additional instances of the same pipe; an attacker races to own an instance a client connects to, then proxies to the real server, MITMing cleartext SQL traffic.</p>
+<h4>Method</h4><ol><li>Attacker creates an instance of the MariaDB named pipe and waits for a client to connect to it</li><li>On client connect, attacker opens the real pipe server instance as a client</li><li>Attacker relays messages both ways, reading/altering the cleartext SQL and running commands as the connected user</li></ol>
+<p class="insight"><b>Insight —</b> On Windows, named pipes without an explicit restrictive DACL are squattable: multiple instances of the same name coexist and clients may bind to a hostile one. Audit CreateNamedPipe calls for missing/weak security descriptors; the same pattern enables local privilege escalation and credential theft in many services.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1019891" target="_blank" rel="noopener">hackerone.com/reports/1019891</a></span><a class="src" href="#report-1019891" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-461780" style="--sv:var(--sev-med)" data-sev="2" data-votes="41" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TLS-intercepting security software strips HSTS enforcement</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#461780</b> · kaspersky · none · 41 votes · resolved</div>
+<div class="taxo"><span>Program <b>kaspersky</b></span><span>Surface <b>desktop</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">AV/'web protection' products that break up HTTPS to scan it take over certificate validation but do not honor HSTS (preload list or Strict-Transport-Security header). Where a browser would hard-block a cert error on an HSTS site, the AV re-adds a clickable 'I understand the risks' override, re-enabling MITM against sites that should be immune.</p>
+<h4>Method</h4><ol><li>Confirm target host is HSTS-preloaded / sends Strict-Transport-Security.</li><li>Simulate MITM by pointing the hostname at an attacker IP (edit hosts file to a wrong IP for www.google.com).</li><li>Load the site with the TLS-scanning AV installed; observe an override option ('I understand the risks') appears despite HSTS.</li><li>User (or social-engineered victim) clicks through -&gt; attacker-served content is accepted.</li></ol>
+<div class="pre"># %WINDIR%\system32\drivers\etc\hosts
+93.184.216.34 www.google.com   # example.com IP, simulates MITM of an HSTS-preloaded host</div>
+<p class="insight"><b>Insight —</b> Any middlebox that MITMs TLS (AV, corporate proxy, parental filter) is a downgrade of the browser's own defenses: test whether it re-enables cert-warning bypass on HSTS/preloaded sites. AV presence is fingerprintable, so an attacker only fires when the weakened client is present.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/461780" target="_blank" rel="noopener">hackerone.com/reports/461780</a></span><a class="src" href="#report-461780" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-54094" style="--sv:var(--sev-med)" data-sev="2" data-votes="12" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Flash settings-manager MITM: local SWF loadable over HTTP sets sandbox perms</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#54094</b> · ibb · awarded · 12 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>desktop</b></span><span>Chain <b>network MITM -&gt; write persistent Flash sandbox settings (</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Flash Player settings manager is served over HTTPS, but the local settings SWF/cookie can also be placed/edited by serving the corresponding path over plain HTTP, so a network MITM can write persistent sandbox settings.</p>
+<h4>Method</h4><ol><li>MITM the victim's HTTP traffic (e.g. mitmproxy) and serve an altered settings SWF on the matching path</li><li>Write local settings granting webcam/mic access, CORS exemptions, or disabling auto-update</li><li>Settings persist, widening the attack surface for the attacker's domain</li></ol>
+<div class="pre"># serve modified settings SWF over HTTP at the settings-manager path via mitmproxy; embed remote SWF or inject into victim HTTP traffic</div>
+<p class="insight"><b>Insight —</b> A sensitive config surface delivered over HTTPS is still MITM-able if a parallel HTTP path can write the same state. Check whether security-relevant settings/cookies can be set over an unauthenticated/HTTP channel.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/54094" target="_blank" rel="noopener">hackerone.com/reports/54094</a></span><a class="src" href="#report-54094" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-819717" style="--sv:var(--sev-med)" data-sev="2" data-votes="10" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>IPv6 rogue router advertisements MITM on IPv4-only clusters</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#819717</b> · kubernetes · awarded · 10 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>cloud</b></span><span>Chain <b>Rogue IPv6 RA -&gt; host IPv6 MITM -&gt; chain apt CVE-2019-</b></span><span>Tag <b>cloud-gcp</b></span></div>
+<h4>Root cause</h4><p style="margin:0">IPv4-only Kubernetes nodes usually leave IPv6 not fully disabled, with accept_ra=1 and forwarding=0. A process running as root in a container (default CAP_NET_RAW, veth to host) can broadcast rogue IPv6 Router Advertisements that reconfigure the host's IPv6 stack, redirecting the host's IPv6 traffic to the attacker container. Dual-stack DNS (A+AAAA) means clients try IPv6 first, giving the attacker a window even where no IPv6 was in use.</p>
+<h4>Method</h4><ol><li>From a root container, use CAP_NET_RAW to send crafted ICMPv6 Router Advertisements onto the veth/host link.</li><li>Host accepts RA (accept_ra=1) and autoconfigures IPv6 default route/prefix pointing at the attacker.</li><li>Run a userspace TCP/IP stack (POC uses smoltcp) since CAP_NET_ADMIN/iptables are unavailable; listen on IPv6 addresses.</li><li>Victim host resolves A+AAAA, connects over IPv6 first -&gt; reaches attacker = MITM; optionally chain a host-side RCE (apt CVE-2019-3462) to escalate to the node.</li></ol>
+<div class="pre"># root-in-container POC (smoltcp): broadcast rogue IPv6 RA + serve dummy HTTP on any v6 addr
+# fix: set net.ipv6.conf.&lt;iface&gt;.accept_ra=0 on all CNI/K8s-managed interfaces</div>
+<p class="insight"><b>Insight —</b> IPv6 SLAAC/RA spoofing MITMs 'IPv4-only' networks whenever IPv6 is merely unused rather than hard-disabled (ipv6.disable=1). CAP_NET_RAW alone (no CAP_NET_ADMIN) suffices by implementing the stack in userspace. Always check accept_ra and whether IPv6 is truly off, not just unconfigured.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/819717" target="_blank" rel="noopener">hackerone.com/reports/819717</a></span><a class="src" href="#report-819717" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-764986" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Kubernetes Service externalIPs/LoadBalancer status hijacks arbitrary IPs (CVE-2020-8554)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#764986</b> · kubernetes · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>cloud</b></span><span>Chain <b>Service create/patch -&gt; kube-proxy routes victim IP to at</b></span><span>Tag <b>cloud-gcp</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Any principal able to create/patch Services can set spec.externalIPs to an arbitrary IP, or (with status patch rights) set a LoadBalancer ingress IP, with no validation that the IP belongs to the cluster's allocation. kube-proxy programs iptables/IPVS to route that IP to the attacker's pod, intercepting traffic destined for external IPs (e.g. 1.1.1.1), ClusterIPs, pod IPs, or 127.0.0.1.</p>
+<h4>Method</h4><ol><li>As a user who can create Services, deploy an attacker echo/mitm pod + Service.</li><li>ExternalIPs path: create a ClusterIP Service with spec.externalIPs=[victimIP].</li><li>LoadBalancer path: create a LoadBalancer Service then patch status.loadBalancer.ingress[].ip=victimIP via the API.</li><li>kube-proxy now routes victimIP to the attacker pod; test node-&gt;IP and pod-&gt;IP curls to confirm interception (external IP, ClusterIP, pod IP; 127.0.0.1 works only via LB path).</li></ol>
+<div class="pre">apiVersion: v1
+kind: Service
+metadata: {name: mitm-external-eip, namespace: kubeproxy-mitm}
+spec:
+  ports: [{name: https, port: 443, targetPort: 8443}]
+  selector: {app: echoserver}
+  type: ClusterIP
+  externalIPs: ["1.1.1.1"]
+---
+# LoadBalancer variant: patch status
+curl -XPATCH -H 'Content-Type: application/merge-patch+json' \
+  '.../services/mitm-external-lb/status' \
+  -d '{"status":{"loadBalancer":{"ingress":[{"ip":"1.1.1.1"}]}}}'</div>
+<p class="insight"><b>Insight —</b> In multi-tenant Kubernetes, the ability to create Services is an IP-hijacking / MITM primitive: externalIPs and LB status IPs are trusted by kube-proxy without ownership checks. Mitigate with an admission controller (later shipped as the externalIP webhook) restricting externalIPs/LoadBalancer IP ranges. When testing clusters, try claiming a ClusterIP, pod IP, or 127.0.0.1 to intercept internal service traffic.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/764986" target="_blank" rel="noopener">hackerone.com/reports/764986</a></span><a class="src" href="#report-764986" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-703759" style="--sv:var(--sev-low)" data-sev="1" data-votes="14" data-bounty="150">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth/SSO authorize redirect over http enables MITM takeover</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#703759</b> · bumble · 150 · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span><span>Chain <b>http authorize hop -&gt; MITM intercept state/code -&gt; acc</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The SSO flow redirects the user to the identity provider's plaintext http authorize URL; a network attacker can serve a fake login page (credential theft) or capture the http-borne state/code and replay it to authenticate as/into the victim.</p>
+<h4>Method</h4><ol><li>Start SSO login and capture the redirect to the IdP authorize endpoint</li><li>Confirm the authorize URL uses http:// (not https)</li><li>From a MITM position, either phish credentials on a fake IdP page or intercept the state/code and complete the flow</li></ol>
+<div class="pre">http://www.PROVIDER/oauth/authorize?response_type=code&amp;display=popup&amp;client_id=...&amp;scope=...&amp;state=&lt;session-bound&gt;&amp;redirect_uri=https%3A%2F%2FTARGET%2Fredirector</div>
+<p class="insight"><b>Insight —</b> Inspect every hop of SSO/OAuth flows for http:// URLs (authorize endpoint, redirect_uri, intermediate redirects); a single plaintext hop leaks the state/code and enables credential-phishing or login-CSRF for a MITM attacker.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/703759" target="_blank" rel="noopener">hackerone.com/reports/703759</a></span><a class="src" href="#report-703759" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1590071" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>FTP-KRB response injection via mishandled gss_unwrap error (CVE-2022-32208)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1590071</b> · curl · none · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>integrity-check bypass -&gt; control-channel response inject</b></span></div>
+<h4>Root cause</h4><p style="margin:0">On a GSSAPI-protected FTP control channel, when gss_unwrap returns an error curl only prefixes the buffer with '599 ' and returns -1, but read_data assigns that -1 into a size_t buf-&gt;size and does not discard the raw attacker bytes, so unverified server data is treated as legitimate FTP responses and an underflowed size later leaks heap memory.</p>
+<h4>Method</h4><ol><li>MITM (or malicious server) sends data that fails GSS verification on a krb5 FTP control channel</li><li>curl writes only a 5-byte '599 ' junk prefix but keeps the rest of the attacker bytes as response lines</li><li>Attacker picks a protocol position where 599 is non-fatal, then forges subsequent (predicted) control responses; -1 -&gt; size_t underflow additionally leaks heap</li></ol>
+<div class="pre">maj = gss_unwrap(&amp;min, *context, &amp;enc, &amp;dec, NULL, NULL);
+if(maj != GSS_S_COMPLETE) {
+  if(len &gt;= 4)
+    strcpy(buf, "599 ");   // only masks 5 bytes, rest of attacker data survives
+  return -1;                // becomes size_t buf-&gt;size -&gt; underflow
+}</div>
+<p class="insight"><b>Insight —</b> When an integrity check fails, the failure path must DISCARD the whole message, not partially overwrite it, and error sentinels (-1) must never flow into unsigned size fields. Audit crypto/verify wrappers for 'log-and-continue' handling and signed-&gt;unsigned assignments.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1590071" target="_blank" rel="noopener">hackerone.com/reports/1590071</a></span><a class="src" href="#report-1590071" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-84797" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Executable/software download delivered over plaintext HTTP (MITM binary tampering)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#84797</b> · owncloud · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>owncloud</b></span><span>Surface <b>web</b></span><span>Chain <b>MITM position -&gt; replace HTTP-delivered installer -&gt; c</b></span><span>Tag <b>supply-chain</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A download link for an installable artifact (tar.bz2) pointed at http:// even though https:// was available, letting a network attacker transparently replace the binary with a malware-bound version.</p>
+<h4>Method</h4><ol><li>Find download/update links for installers, binaries, or archives in pages/emails</li><li>Check the scheme - if http://, a MITM attacker can intercept and swap the file for a trojanized build</li><li>Confirm the same host also serves https:// (proving the http link is an avoidable exposure)</li></ol>
+<div class="pre">http://download.owncloud.org/community/owncloud-daily-stable8.1.tar.bz2
+(should be https://download.owncloud.org/...)</div>
+<p class="insight"><b>Insight —</b> Grep target pages, emails and update manifests for http:// links to executables/archives/scripts. Plaintext delivery of runnable content is a real supply-chain/MITM finding even without a stored bug - the fix is forcing HTTPS (and ideally signature verification).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/84797" target="_blank" rel="noopener">hackerone.com/reports/84797</a></span><a class="src" href="#report-84797" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3718195" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>STARTTLS connection reused without TLS-config match (curl)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3718195</b> · curl · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>connection-reuse pooling flaw -&gt; pinning/verifypeer bypas</b></span></div>
+<h4>Root cause</h4><p style="margin:0">curl's connection-reuse ssl-config comparison (Curl_ssl_conn_config_match) is gated on the scheme flag PROTOPT_SSL; STARTTLS protocols (imap/pop3/smtp/ftp/ldap with CURLOPT_USE_SSL) run TLS but lack that flag, so a second handle silently reuses an existing TLS session without re-checking verifypeer/pinning.</p>
+<h4>Method</h4><ol><li>Handle A connects imap://host with USE_SSL=ALL and VERIFYPEER=0; an on-path attacker MITMs the STARTTLS upgrade.</li><li>Handle B connects the same imap://host with USE_SSL=ALL, VERIFYPEER=1 and a pinned key.</li><li>Because the plain imap:// scheme lacks PROTOPT_SSL, url_match_ssl_config returns TRUE without calling the ssl-config comparison.</li><li>B reuses A's unverified/attacker-controlled TLS session; B's verifypeer and pinning never run.</li></ol>
+<div class="pre"># Same bug class as CVE-2022-27782; STARTTLS protocols missed the fix.
+# A: curl --ssl-reqd --insecure imap://host/  (attacker MITMs STARTTLS)
+# B: curl --ssl-reqd --pinnedpubkey &lt;key&gt; imap://host/  (reuses A's conn, checks skipped)</div>
+<p class="insight"><b>Insight —</b> When auditing any connection-pool/keep-alive cache, verify that ALL security-relevant settings (TLS verify mode, pinned key, client cert, SNI) are compared before a reuse, and that protocol-upgrade (STARTTLS) connections are not exempted by a scheme flag. A partial gate that only covers 'implicit TLS' schemes leaves the upgrade path unchecked.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3718195" target="_blank" rel="noopener">hackerone.com/reports/3718195</a></span><a class="src" href="#report-3718195" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-64731" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mobile app 'secure connection' not enforced + no certificate pinning</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#64731</b> · vkcom · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>vkcom</b></span><span>Surface <b>mobile-ios</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app's HTTPS/secure-connection setting is not persistently enforced and no certificate pinning is applied, so a proxy/attacker on the network can transparently intercept and read the app's traffic.</p>
+<h4>Method</h4><ol><li>Log in and enable the app's 'secure connection (HTTPS)' setting</li><li>Kill and relaunch the app behind an intercepting proxy</li><li>Observe traffic is downgraded/unpinned and fully interceptable</li></ol>
+<p class="insight"><b>Insight —</b> Test mobile apps for (1) HTTPS actually enforced after restart, not just toggled, and (2) absence of certificate pinning -- both let a network MITM read sensitive traffic. Use an intercepting proxy + custom CA; if it works, pinning is missing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/64731" target="_blank" rel="noopener">hackerone.com/reports/64731</a></span><a class="src" href="#report-64731" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1238470" style="--sv:var(--sev-none)" data-sev="0" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>FragAttacks: Wi-Fi fragmentation/aggregation packet injection</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#1238470</b> · ibb · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>network</b></span><span>Chain <b>packet injection -&gt; malicious DNS / SSL strip / NAT hole-</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Design and implementation flaws in 802.11: the A-MSDU flag in the plaintext header is unauthenticated, plaintext (fragmented) frames are accepted in protected networks, and receivers reassemble fragments across keys or from stale caches - enabling arbitrary packet injection and data exfiltration.</p>
+<h4>Method</h4><ol><li>Use the fragattacks test tool to probe a client/AP</li><li>Inject plaintext or plaintext-fragmented frames accepted despite protection</li><li>Abuse the unauthenticated A-MSDU flag to inject packets (with minor social engineering)</li><li>Pivot: force a malicious DNS server, or punch NAT holes to attack internal devices</li></ol>
+<div class="pre"># github.com/vanhoefm/fragattacks test tool (CVE-2020-24586/24587/24588 + impl CVEs)</div>
+<p class="insight"><b>Insight —</b> Protocol-level trust of unauthenticated header fields (the A-MSDU flag) and lax fragment reassembly are a general injection class. For Wi-Fi engagements, run fragattacks against both clients and APs; injected packets enable DNS hijack and internal-network pivots.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1238470" target="_blank" rel="noopener">hackerone.com/reports/1238470</a></span><a class="src" href="#report-1238470" style="color:var(--faint)">#</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>No dedicated PortSwigger lab for this class; use the methodology above and the cited reports.</li>
+<li>All 12 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#plaintext-hop-in-a-secure-flow" style="padding-left:24px">↳ Plaintext hop in a "secure" flow</a><a href="#client-transport-trust-config-pinning-verify-skipped" style="padding-left:24px">↳ Client transport-trust config (pinning / verify skipped)</a><a href="#tls-terminating-middlebox-strips-hsts" style="padding-left:24px">↳ TLS-terminating middlebox strips HSTS</a><a href="#integrity-crypto-wrapper-failure" style="padding-left:24px">↳ Integrity / crypto wrapper failure</a><a href="#local-ipc-as-a-network-named-pipe-squat" style="padding-left:24px">↳ Local IPC as a network (named-pipe squat)</a><a href="#l2-l3-network-fabric" style="padding-left:24px">↳ L2/L3 network fabric</a><a href="#parallel-channel-config-write" style="padding-left:24px">↳ Parallel-channel config write</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (12)</a><a href="#refs">References</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

