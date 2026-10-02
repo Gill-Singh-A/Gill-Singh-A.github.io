@@ -162,7 +162,7 @@ GET /?page=../../../../var/log/apache2/access.log&amp;c=id</div>
     <div class="sortbar"><label for="sort">Sort specimens:</label>
       <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
       <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
-    <div class="specimens" id="specimens"><article class="spec" id="report-850447" style="--sv:var(--sev-crit)" data-sev="4" data-votes="409" data-bounty="10000">
+    <div class="specimens"><article class="spec" id="report-850447" style="--sv:var(--sev-crit)" data-sev="4" data-votes="409" data-bounty="10000">
 <div class="spec-eyebrow">Real-world example</div>
 <div class="spec-top"><h3>GitLab workhorse multipart bypass -&gt; arbitrary file read</h3><span class="fieldmark">◆ Critical</span></div>
 <div class="catalog">Specimen <b>#850447</b> · gitlab · 10000 · 409 votes · resolved</div>
@@ -1455,7 +1455,7 @@ data_tar.add_symlink "tmp/dir", ".", 16877
 <div class="spec-top"><h3>Symlink-in-archive escapes extraction dir -&gt; arbitrary write</h3><span class="fieldmark">◆ Medium</span></div>
 <div class="catalog">Specimen <b>#270072</b> · rubygems · awarded · 35 votes · resolved</div>
 <div class="taxo"><span>Program <b>rubygems</b></span><span>Surface <b>other</b></span><span>Chain <b>arbitrary file write -&gt; overwrite binary/.profile -&gt; c</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>supply-chain</b></span></div>
-<h4>Root cause</h4><p style="margin:0">The unpacker's realpath+start_with? containment check passes for a symlink whose location is inside the dir, and also passes for a subsequent file written *through* that symlink; combined they allow writing outside the install directory.</p>
+<h4>Root cause</h4><p style="margin:0">The unpacker's realpath+start_with? containment check passes for a symlink whose location is inside the dir, and also passes for a subsequent file written <em>through</em> that symlink; combined they allow writing outside the install directory.</p>
 <h4>Method</h4><ol><li>Build a gem whose data.tar contains: a symlink 'link' -&gt; '/tmp', then a regular file 'link/HACKED'</li><li>gem install / gem unpack follows the symlink</li><li>File is written to /tmp/HACKED with attacker-controlled name, contents, and permissions</li></ol>
 <div class="pre">$ tar -tvf data.tar.gz
 -rw-r--r-- README
@@ -1920,7 +1920,7 @@ link($target, $path);   // validator sees ...dummy.ext, Windows link() acts on /
 <div class="spec-top"><h3>Arbitrary file write on `yarn install` via out-of-root symlink + tar transform (CVE-2020-8131)</h3><span class="fieldmark">◆ Medium</span></div>
 <div class="catalog">Specimen <b>#730239</b> · nodejs-ecosystem · none · 2 votes · resolved</div>
 <div class="taxo"><span>Program <b>nodejs-ecosystem</b></span><span>Surface <b>other</b></span><span>Chain <b>malicious package → symlink traversal on extract → tar-trans</b></span><span>Tag <b>file-upload</b></span><span>Tag <b>supply-chain</b></span></div>
-<h4>Root cause</h4><p style="margin:0">Yarn extracted package tarballs without rejecting symlinks that point outside the install dir. A malicious package ships a symlink (via ../ traversal) to a target path, then uses a tar path-transform so a second archive entry is written *through* that symlink, giving arbitrary filesystem write during install — even with --ignore-scripts.</p>
+<h4>Root cause</h4><p style="margin:0">Yarn extracted package tarballs without rejecting symlinks that point outside the install dir. A malicious package ships a symlink (via ../ traversal) to a target path, then uses a tar path-transform so a second archive entry is written <em>through</em> that symlink, giving arbitrary filesystem write during install — even with --ignore-scripts.</p>
 <h4>Method</h4><ol><li>In the package, create a symlink my-file -&gt; ../../../../../../tmp/target (absolute paths get the leading / stripped, so use ../ traversal)</li><li>Publish; yarn preserves the traversal symlink on extract</li><li>Use `tar --transform` so an archive entry is extracted onto the symlink path, writing through it to the external target</li><li>Write to .bashrc/.npmrc/authorized_keys etc. → RCE</li></ol>
 <div class="pre">ln -s ../../../../../../../../../../../../tmp/my-file package/my-file
 gtar --transform='s|package/my-file|package/my-file|' -cvzf pkg.tgz package/package.json package/my-file
