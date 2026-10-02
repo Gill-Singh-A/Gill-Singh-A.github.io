@@ -1663,7 +1663,7 @@ Content-Type: application/x-www-form-urlencoded
 Cookie: sid=[...]
 
 client_id=ATTACKER_CLIENT_ID&amp;redirect_uri=https%3A%2F%2Fattacker%2Foauth%2Fperiscope</div>
-<p class="insight"><b>Insight —</b> The OAuth *authorization* (consent) POST is a high-value CSRF target distinct from account-linking: if it lacks a token/Origin check, an attacker silently grants their own app access to victim accounts. Test the consent submission itself, not just the callback. No user interaction is needed when a real third-party client is used.</p>
+<p class="insight"><b>Insight —</b> The OAuth <em>authorization</em> (consent) POST is a high-value CSRF target distinct from account-linking: if it lacks a token/Origin check, an attacker silently grants their own app access to victim accounts. Test the consent submission itself, not just the callback. No user interaction is needed when a real third-party client is used.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/215381" target="_blank" rel="noopener">hackerone.com/reports/215381</a></span><a class="src" href="#report-215381" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/csrf" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-26647" style="--sv:var(--sev-none)" data-sev="0" data-votes="70" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>

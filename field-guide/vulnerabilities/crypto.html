@@ -789,7 +789,7 @@ DNS:nodejs.org, DNS:blah.attacker.example
 X509v3 Subject Alternative Name:
   DNS:nodejs.org, DNS:blah.attacker.example
 # Correct approach: walk GENERAL_NAME structs / use OpenSSL hostname-checking APIs, never parse *_print output.</div>
-<p class="insight"><b>Insight —</b> Treat any use of OpenSSL/X.509 *print* functions as a parsing sink: their output is diagnostic, unescaped, and NUL-truncating. Grep targets for cert-field handling that string-splits on ', ' -&gt; SAN/CN injection and name-constraint bypass. This is the modern form of the classic NUL-prefix cert attack.</p>
+<p class="insight"><b>Insight —</b> Treat any use of OpenSSL/X.509 <em>print</em> functions as a parsing sink: their output is diagnostic, unescaped, and NUL-truncating. Grep targets for cert-field handling that string-splits on ', ' -&gt; SAN/CN injection and name-constraint bypass. This is the modern form of the classic NUL-prefix cert attack.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1429694" target="_blank" rel="noopener">hackerone.com/reports/1429694</a></span><a class="src" href="#report-1429694" style="color:var(--faint)">#</a></div></article>
 <article class="spec hidden" id="report-1730660" style="--sv:var(--sev-med)" data-sev="2" data-votes="2" data-bounty="0">
 <div class="spec-eyebrow">Real-world example</div>

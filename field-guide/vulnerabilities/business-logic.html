@@ -2711,7 +2711,7 @@ document.querySelector('[data-upgrade="true"]').removeAttribute('data-upgrade')<
 <h4>Method</h4><ol><li>Sync a node so it believes it is synced</li><li>Craft a block full of invalid txs and submit it via P2P</li><li>Block is rejected but its txs stay in the tx-pool under relay_method::block</li><li>Invalid txs are never pruned; pool fills with junk and can freeze the node</li></ol>
 <div class="pre">cargo run -r mainnet 127.0.0.1:18080
 # repeatedly sends blocks full of invalid txs; block-method txs skip input check (tx_pool.cpp L274) and never pruned (L465)</div>
-<p class="insight"><b>Insight —</b> When a system trusts data because of the *path* it arrived on ('came in a block, so validated'), check what happens if that trust is later revoked (block invalid). Skipped checks + retained state = poisoning/DoS.</p>
+<p class="insight"><b>Insight —</b> When a system trusts data because of the <em>path</em> it arrived on ('came in a block, so validated'), check what happens if that trust is later revoked (block invalid). Skipped checks + retained state = poisoning/DoS.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2315026" target="_blank" rel="noopener">hackerone.com/reports/2315026</a></span><a class="src" href="#report-2315026" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/logic-flaws" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-173043" style="--sv:var(--sev-none)" data-sev="0" data-votes="20" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>

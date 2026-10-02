@@ -514,7 +514,7 @@ echo stream_get_contents($fh); // endless loop, 100% CPU</div>
 <h4>Root cause</h4><p style="margin:0">A write API (CreateVideo) accepted an unbounded string in the 'shoutout' parameter with no length validation; the oversized value is later serialized by every read API that returns the object, throwing INTERNAL_SERVER_ERROR and taking down shared surfaces (trending hashtag feeds, community feeds, profile feeds).</p>
 <h4>Method</h4><ol><li>Find a write/create API field with no server-side length limit</li><li>Store a very long string in that field on an object that appears on shared/aggregated feeds (e.g. a trending hashtag)</li><li>Query the read APIs that render that object; they now return 200 OK with INTERNAL_SERVER_ERROR in the body and drop all other results</li></ol>
 <div class="pre">CreateVideo mutation with shoutout parameter set to a multi-KB/MB string; then query TagUGC / UserUGC / CommunityPosts</div>
-<p class="insight"><b>Insight —</b> Stored-then-rendered DoS: the amplification comes from placing the poisoned object on a *shared* resource (trending hashtag), so one oversized field denies the feed to all users. Always test max-length on create/update fields and check whether the bad value breaks aggregate read endpoints.</p>
+<p class="insight"><b>Insight —</b> Stored-then-rendered DoS: the amplification comes from placing the poisoned object on a <em>shared</em> resource (trending hashtag), so one oversized field denies the feed to all users. Always test max-length on create/update fields and check whether the bad value breaks aggregate read endpoints.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1237428" target="_blank" rel="noopener">hackerone.com/reports/1237428</a></span><a class="src" href="#report-1237428" style="color:var(--faint)">#</a></div></article>
 <article class="spec hidden" id="report-448524" style="--sv:var(--sev-high)" data-sev="3" data-votes="31" data-bounty="0">
 <div class="spec-eyebrow">Real-world example</div>
@@ -1225,7 +1225,7 @@ Accept-Encoding: &lt;long crafted value triggering regex backtracking&gt;</div>
 Content-Type: multipart/form-data; boundary=X
 --X\r\nContent-Disposition: form-data; name="f"; filename="a"\r\n\r\n\r\n(repeat this file-part tens of thousands of times)
 # fix: DATA_UPLOAD_MAX_NUMBER_FILES cap</div>
-<p class="insight"><b>Insight —</b> Body parsers that allocate a resource per part (temp file, buffer, object) with no count cap are DoS sinks; the number of *parts*, not total body size, is the unbounded axis. This was a coordinated cross-vendor disclosure - the same 'unbounded parts' vector affects many frameworks.</p>
+<p class="insight"><b>Insight —</b> Body parsers that allocate a resource per part (temp file, buffer, object) with no count cap are DoS sinks; the number of <em>parts</em>, not total body size, is the unbounded axis. This was a coordinated cross-vendor disclosure - the same 'unbounded parts' vector affects many frameworks.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1904097" target="_blank" rel="noopener">hackerone.com/reports/1904097</a></span><a class="src" href="#report-1904097" style="color:var(--faint)">#</a></div></article>
 <article class="spec hidden" id="report-2058337" style="--sv:var(--sev-med)" data-sev="2" data-votes="46" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
@@ -3382,7 +3382,7 @@ https://api.tumblr.com/console/auth?consumer_key=x;%20domain=tumblr.com;%20Max-A
 # claim value that triggers exponential backtracking:
 refs/heads/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!
 # sink: Regexp.new(value).match?(claim_value)  (no Regexp.timeout)</div>
-<p class="insight"><b>Insight —</b> When an app lets users provide the *regex itself* (policy rules, search filters, validation config, WAF rules), ReDoS is trivial and self-inflicted - and the operator's own worst case is guaranteed reachable. Fix is Regexp.timeout / RE2 / complexity limits. Distinct from user-input-against-fixed-regex ReDoS.</p>
+<p class="insight"><b>Insight —</b> When an app lets users provide the <em>regex itself</em> (policy rules, search filters, validation config, WAF rules), ReDoS is trivial and self-inflicted - and the operator's own worst case is guaranteed reachable. Fix is Regexp.timeout / RE2 / complexity limits. Distinct from user-input-against-fixed-regex ReDoS.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3542546" target="_blank" rel="noopener">hackerone.com/reports/3542546</a></span><a class="src" href="#report-3542546" style="color:var(--faint)">#</a></div></article>
 <article class="spec hidden" id="report-3185083" style="--sv:var(--sev-none)" data-sev="0" data-votes="39" data-bounty="0">
 <div class="spec-eyebrow">Real-world example</div>

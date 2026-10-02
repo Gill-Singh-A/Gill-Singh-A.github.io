@@ -2002,7 +2002,7 @@ https://TARGET/static/html/github-btn.html?#&amp;user=../../another/endpoint&amp
 <h4>Method</h4><ol><li>Invoke curl with a schemeless URL + --proto-default sftp and a host-key pin</li><li>Tool guesses HTTP, skips SSH host-key setup; libcurl connects SFTP unverified</li><li>Rogue SSH server (paramiko) captures the victim credential despite the pin</li></ol>
 <div class="pre">curl -q --user victim:Secret123 --proto-default sftp --hostpubsha256 SHA256:WRONGPIN 127.0.0.1:2222/tmp/file
 # connects &amp; sends password to rogue host; pin never enforced</div>
-<p class="insight"><b>Insight —</b> When a security option is gated on a *guessed* protocol/scheme but the real protocol is decided later, the option silently no-ops. Test schemeless/ambiguous inputs against tools that pin host keys or certs.</p>
+<p class="insight"><b>Insight —</b> When a security option is gated on a <em>guessed</em> protocol/scheme but the real protocol is decided later, the option silently no-ops. Test schemeless/ambiguous inputs against tools that pin host keys or certs.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/3797526" target="_blank" rel="noopener">hackerone.com/reports/3797526</a></span><a class="src" href="#report-3797526" style="color:var(--faint)">#</a></div></article>
 <article class="spec hidden" id="report-222224" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>

@@ -890,7 +890,7 @@ Cookie: &lt;attacker session&gt;
 <h4>Method</h4><ol><li>Authenticate and open a record you own; capture the XHR (listReviews?perId=)</li><li>Increment/replace perId with arbitrary values</li><li>Read the returned JSON containing ssn/edipi/soldierName</li></ol>
 <div class="pre">GET https://TARGET/svc/reviewController/listReviews?perId=&lt;any&gt;
 -&gt; [{"perId":..,"ssn":"...","edipi":"..."}]</div>
-<p class="insight"><b>Insight —</b> Watch the network tab for numeric-keyed *Controller/list* XHRs; incrementing the id is the whole exploit when authz is missing.</p>
+<p class="insight"><b>Insight —</b> Watch the network tab for numeric-keyed <em>Controller/list</em> XHRs; incrementing the id is the whole exploit when authz is missing.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1541817" target="_blank" rel="noopener">hackerone.com/reports/1541817</a></span><a class="src" href="#report-1541817" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-674195" style="--sv:var(--sev-high)" data-sev="3" data-votes="25" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
@@ -1519,7 +1519,7 @@ name="BoardId" 1021
 <h4>Root cause</h4><p style="margin:0">A token-generation endpoint issues a KITCRM auth token for whatever staff-member id is passed, so a low-priv user mints a high-priv user's token.</p>
 <h4>Method</h4><ol><li>Low-priv user gets a Shopify Ping access token via the login API</li><li>Call POST /api/v1/arro_token with id=&lt;high-priv staff member id&gt;</li><li>Response returns the high-priv user's KITCRM bearer token</li><li>Use it to read (GET /api/v2/messages) and write (POST /api/v2/messages) as that user</li></ol>
 <div class="pre">POST /api/v1/arro_token?access_token=&lt;lowpriv&gt;&amp;myshopify_domain=&lt;shop&gt;&amp;id=&lt;highpriv_staff_id&gt;</div>
-<p class="insight"><b>Insight —</b> Token/credential-issuing endpoints are the highest-value IDOR: if they accept a target user id, they hand you that user's credential. Fuzz an id/staff_id on any *token* endpoint.</p>
+<p class="insight"><b>Insight —</b> Token/credential-issuing endpoints are the highest-value IDOR: if they accept a target user id, they hand you that user's credential. Fuzz an id/staff_id on any <em>token</em> endpoint.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/909863" target="_blank" rel="noopener">hackerone.com/reports/909863</a></span><a class="src" href="#report-909863" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-1523584" style="--sv:var(--sev-med)" data-sev="2" data-votes="37" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
@@ -1630,7 +1630,7 @@ Authorization: Bearer &lt;TOKEN&gt;</div>
 Host: TARGET
 
 {"note":{"noteable_type":"personal_snippet","noteable_id":VICTIM_SNIPPET_ID,"internal":false,"note":"x"}}</div>
-<p class="insight"><b>Insight —</b> When an endpoint accepts a *type*/kind discriminator (noteable_type, target_type, commentable_type), enumerate every allowed value - a code path for one type often skips the ownership check other types enforce.</p>
+<p class="insight"><b>Insight —</b> When an endpoint accepts a <em>type</em>/kind discriminator (noteable_type, target_type, commentable_type), enumerate every allowed value - a code path for one type often skips the ownership check other types enforce.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1751258" target="_blank" rel="noopener">hackerone.com/reports/1751258</a></span><a class="src" href="#report-1751258" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-514897" style="--sv:var(--sev-med)" data-sev="2" data-votes="29" data-bounty="1500">
 <div class="spec-eyebrow">Real-world example</div>
@@ -2836,7 +2836,7 @@ GET  /datasources.json   -&gt; {"login":"bot","pwd":"&lt;VICTIM_DB_PASSWORD&gt;"
 Content-Type: application/json
 
 {...,"approval_status":2,"responder_user_id":&lt;OTHER_ORG_USER_ID&gt;,"user_id":1920}</div>
-<p class="insight"><b>Insight —</b> Whenever a request body carries the *actor's* identity (responder_user_id, approver_id, acting_as, on_behalf_of), it is an IDOR: the acting principal must come from the session, never the payload. Cross-tenant success shows there is no org-boundary check either.</p>
+<p class="insight"><b>Insight —</b> Whenever a request body carries the <em>actor's</em> identity (responder_user_id, approver_id, acting_as, on_behalf_of), it is an IDOR: the acting principal must come from the session, never the payload. Cross-tenant success shows there is no org-boundary check either.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/725569" target="_blank" rel="noopener">hackerone.com/reports/725569</a></span><a class="src" href="#report-725569" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-144000" style="--sv:var(--sev-none)" data-sev="0" data-votes="35" data-bounty="100">
 <div class="spec-eyebrow">Real-world example</div>

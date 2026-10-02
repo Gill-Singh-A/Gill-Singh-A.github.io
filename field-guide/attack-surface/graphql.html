@@ -711,7 +711,7 @@ Host: STORE.myshopify.com
 Content-Type: application/json
 
 {"operationName":"LiveView","variables":{},"query":"query LiveView { shop { id billingAddress { address1 city country zip } plan { displayName shopifyPlus } shopifyPaymentsAccount { balance { amount currencyCode } id } uploadedImages(first:0){edges{node{originalSrc id}}} } }"}</div>
-<p class="insight"><b>Insight —</b> When testing GraphQL, replay named privileged operations and request the *full* type selection as a low-priv user. Authz enforced at the resolver/operation boundary often misses individual fields; enumerate every field of returned objects.</p>
+<p class="insight"><b>Insight —</b> When testing GraphQL, replay named privileged operations and request the <em>full</em> type selection as a low-priv user. Authz enforced at the resolver/operation boundary often misses individual fields; enumerate every field of returned objects.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/409973" target="_blank" rel="noopener">hackerone.com/reports/409973</a></span><a class="src" href="#report-409973" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
     <button class="loadmore" id="loadmore">Load more specimens (18 of 42 remaining)</button>
     <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>

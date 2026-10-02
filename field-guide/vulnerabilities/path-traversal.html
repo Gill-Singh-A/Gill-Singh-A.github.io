@@ -860,7 +860,7 @@ GET /somepath%3Fname=... (encoded ? in backreference) HTTP/1.1</div>
 <div class="pre"># scapy SRV response payload
 TARGET = b"xxx./tmp/attack"   # trailing '.' passes the subdomain check; prefix is injected into the path
 DNSRRSRV(type=33, rrname=q.qname, ttl=30, priority=0, weight=1, port=80, target=TARGET)</div>
-<p class="insight"><b>Insight —</b> Package managers that transform source URLs via network lookups (SRV/redirects) can have the resolved *path* influenced, not just the host - a supply-chain traversal. Audit any code that reuses HTTP-URL rewriting logic for file:// / s3:// schemes.</p>
+<p class="insight"><b>Insight —</b> Package managers that transform source URLs via network lookups (SRV/redirects) can have the resolved <em>path</em> influenced, not just the host - a supply-chain traversal. Audit any code that reuses HTTP-URL rewriting logic for file:// / s3:// schemes.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/411519" target="_blank" rel="noopener">hackerone.com/reports/411519</a></span><a class="src" href="#report-411519" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/file-path-traversal" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-1102067" style="--sv:var(--sev-high)" data-sev="3" data-votes="18" data-bounty="0">
 <div class="spec-eyebrow">Real-world example</div>

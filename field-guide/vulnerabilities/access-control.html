@@ -913,7 +913,7 @@ Content-Type: application/json
 Content-Length: 22
 
 {"appState":"quiesce"}</div>
-<p class="insight"><b>Insight —</b> On admin/control-plane REST APIs, probe verbs beyond GET (PUT/POST/PATCH) on *state*, *config*, *lifecycle*, *maintenance* endpoints; unauthenticated state writes can quiesce/restart/kill the service.</p>
+<p class="insight"><b>Insight —</b> On admin/control-plane REST APIs, probe verbs beyond GET (PUT/POST/PATCH) on <em>state</em>, <em>config</em>, <em>lifecycle</em>, <em>maintenance</em> endpoints; unauthenticated state writes can quiesce/restart/kill the service.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/993722" target="_blank" rel="noopener">hackerone.com/reports/993722</a></span><a class="src" href="#report-993722" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-1486310" style="--sv:var(--sev-high)" data-sev="3" data-votes="48" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
@@ -1560,7 +1560,7 @@ twurl /fleets/v1/create -X POST --header 'Content-Type: application/json' -d '{"
 <div class="taxo"><span>Program <b>stripe</b></span><span>Surface <b>web</b></span><span>Chain <b>email edit of member -&gt; password reset to attacker email </b></span><span>Tag <b>account-takeover</b></span></div>
 <h4>Root cause</h4><p style="margin:0">An Organization Owner could change the email address of any member of their org; combined with email-based password reset this yields takeover of that member's account.</p>
 <h4>Method</h4><ol><li>As an org owner/admin, edit a target member's profile and change their email to an attacker-controlled address.</li><li>Trigger password reset (or re-verification) which now goes to the attacker email.</li><li>Complete reset -&gt; control of the victim account.</li></ol>
-<p class="insight"><b>Insight —</b> On any multi-tenant/org app, test whether an admin/owner role can mutate another user's *email* (or phone) field. Email is the recovery anchor, so email-edit on someone else's account is almost always an ATO primitive. Owners should be blocked from editing member emails.</p>
+<p class="insight"><b>Insight —</b> On any multi-tenant/org app, test whether an admin/owner role can mutate another user's <em>email</em> (or phone) field. Email is the recovery anchor, so email-edit on someone else's account is almost always an ATO primitive. Owners should be blocked from editing member emails.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/1634165" target="_blank" rel="noopener">hackerone.com/reports/1634165</a></span><a class="src" href="#report-1634165" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-3506183" style="--sv:var(--sev-high)" data-sev="3" data-votes="87" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
@@ -4893,7 +4893,7 @@ curl ... -d 'username=user2&amp;group=group2'   # group2 not administered by att
 const fs = require('fs');
 fs.statfs('./restricted.js', (e, s) =&gt; console.log(s));
 // run: node --experimental-permission --allow-fs-read=/path/to/index.js index.js</div>
-<p class="insight"><b>Insight —</b> When a sandbox/permission model lands, enumerate EVERY sibling of a guarded call - callback vs promise variants, *fs vs f* (fd-based), statfs vs stat, unix-socket vs TCP. Incomplete patches consistently leave one path unchecked; patch-bypass reports (chmod/chown promise, unix socket) recur on the same model.</p>
+<p class="insight"><b>Insight —</b> When a sandbox/permission model lands, enumerate EVERY sibling of a guarded call - callback vs promise variants, <em>fs vs f</em> (fd-based), statfs vs stat, unix-socket vs TCP. Incomplete patches consistently leave one path unchecked; patch-bypass reports (chmod/chown promise, unix socket) recur on the same model.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/2051224" target="_blank" rel="noopener">hackerone.com/reports/2051224</a></span><a class="src" href="#report-2051224" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/access-control" target="_blank" rel="noopener">⚑ Lab</a></div></article>
 <article class="spec hidden" id="report-423198" style="--sv:var(--sev-low)" data-sev="1" data-votes="8" data-bounty="500">
 <div class="spec-eyebrow">Real-world example</div>
