@@ -1,92 +1,47 @@
 {{- define "main" }}
-
-<header class="page-header">
+{{- if .Params.album }}
+{{- $pager := .Paginate .RegularPages.ByWeight 10 }}
+<header class="page-header photo-heading">
+  <a class="photo-back" href="{{ "gallery/" | relURL }}">← Photography</a>
   <h1>{{ .Title }}</h1>
-  {{- if .Description }}
-  <div class="post-description">{{ .Description }}</div>
-  {{- end }}
+  <p class="photo-description">{{ .Description }}</p>
+  <p class="photo-count">{{ .Params.image_count }} images · Page {{ $pager.PageNumber }} of {{ $pager.TotalPages }}</p>
 </header>
-
-<style>
-.yt-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-  margin: 1.5em 0;
-}
-.yt-card {
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--entry);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.yt-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-}
-.yt-card a {
-  text-decoration: none;
-  color: inherit;
-}
-.yt-thumb {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  display: block;
-}
-.yt-info {
-  padding: 12px 14px 16px;
-}
-.yt-info h2 {
-  font-size: 1.05rem;
-  margin: 0 0 4px;
-  color: var(--primary);
-}
-.yt-info p {
-  font-size: 0.85rem;
-  margin: 0;
-  color: var(--secondary);
-}
-@media (max-width: 600px) {
-  .yt-grid { grid-template-columns: 1fr; }
-}
-</style>
-
-<div class="yt-grid">
-  {{- $pages := .Pages }}
-  {{- $paginator := .Paginate $pages }}
-  {{- range $paginator.Pages }}
-  <div class="yt-card">
-    <a href="{{ .Permalink }}">
-      {{- $cover := .Params.cover }}
-      {{- if $cover.image }}
-        {{- $img := .Resources.GetMatch $cover.image }}
-        {{- if $img }}
-        <img class="yt-thumb" src="{{ $img.RelPermalink }}" alt="{{ .Title }}" loading="lazy" />
-        {{- end }}
-      {{- end }}
-      <div class="yt-info">
-        <h2>{{ .Title }}</h2>
-        {{- if .Description }}
-        <p>{{ .Description }}</p>
-        {{- end }}
-      </div>
+<div class="photo-grid" aria-label="{{ .Title }} images">
+  {{- range $index, $photo := $pager.Pages }}
+  <figure class="photo-frame" data-image-key="{{ .Params.image_key }}">
+    <a class="photo-open" data-photo data-caption="{{ .Title }}" href="{{ .Params.image | relURL }}" aria-label="Enlarge: {{ .Title }}">
+      <img src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}" width="{{ .Params.image_width }}" height="{{ .Params.image_height }}" {{ if lt $index 2 }}loading="eager"{{ else }}loading="lazy"{{ end }} decoding="async" />
     </a>
-  </div>
+    <figcaption>{{ .Params.media_label }}</figcaption>
+  </figure>
   {{- end }}
 </div>
-
-{{- if gt $paginator.TotalPages 1 }}
-<footer class="page-footer">
-  <nav class="pagination">
-    {{- if $paginator.HasPrev }}
-    <a class="prev" href="{{ $paginator.Prev.URL }}">« Previous</a>
+{{- if gt $pager.TotalPages 1 }}
+<nav class="photo-pagination" aria-label="{{ .Title }} gallery pages">
+  <div class="photo-page-arrows">
+    {{ if $pager.HasPrev }}<a rel="prev" href="{{ $pager.Prev.URL }}">← Previous</a>{{ else }}<span aria-disabled="true">← Previous</span>{{ end }}
+    <span>{{ $pager.PageNumber }} / {{ $pager.TotalPages }}</span>
+    {{ if $pager.HasNext }}<a rel="next" href="{{ $pager.Next.URL }}">Next →</a>{{ else }}<span aria-disabled="true">Next →</span>{{ end }}
+  </div>
+  <div class="photo-page-numbers">
+    {{- range $pager.Pagers }}
+    <a href="{{ .URL }}" {{ if eq .PageNumber $pager.PageNumber }}aria-current="page"{{ end }} aria-label="Page {{ .PageNumber }}">{{ .PageNumber }}</a>
     {{- end }}
-    {{- if $paginator.HasNext }}
-    <a class="next" href="{{ $paginator.Next.URL }}">Next »</a>
-    {{- end }}
-  </nav>
-</footer>
+  </div>
+</nav>
 {{- end }}
-
+{{- else }}
+<header class="page-header photo-heading"><h1>{{ .Title }}</h1><p class="photo-description">Photos and drone stills</p></header>
+<div class="photo-albums">
+  {{- range .Sections.ByWeight }}
+  <article class="photo-album">
+    <a href="{{ .RelPermalink }}">
+      <img src="{{ .Params.album_cover | relURL }}" alt="{{ .Title }} photography" width="1200" height="750" loading="eager" decoding="async" />
+      <div class="photo-album-info"><h2>{{ .Title }}</h2><p>{{ .Description }}</p><span>{{ .Params.image_count }} images</span></div>
+    </a>
+  </article>
+  {{- end }}
+</div>
+{{- end }}
 {{- end }}

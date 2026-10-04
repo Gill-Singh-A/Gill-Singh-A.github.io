@@ -1,4 +1,4 @@
 ---
 title: "Photography"
-description: "Aerial shots and travel photography"
+description: "Photos and drone stills"
 ---

@@ -1,0 +1,19 @@
+{
+  "title": "IIT Kanpur · Drone still 3",
+  "weight": 3,
+  "scene": "Campus architecture",
+  "image": "/photography/iit-kanpur/website-campus-04-large.webp",
+  "thumbnail": "/photography/iit-kanpur/website-campus-04-thumb.webp",
+  "image_width": 2000,
+  "image_height": 1125,
+  "image_key": "iit-kanpur--website-campus-04--photo",
+  "build": {
+    "render": "never",
+    "list": "local",
+    "publishResources": false
+  },
+  "sitemap": {
+    "disable": true
+  },
+  "media_label": "Drone still"
+}

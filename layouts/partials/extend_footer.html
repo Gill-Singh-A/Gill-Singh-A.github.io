@@ -1,35 +1,21 @@
-<div class="lightbox-overlay" id="lightbox">
-  <button class="lightbox-close" aria-label="Close">&times;</button>
-  <img src="" alt="" />
-</div>
+<dialog class="photo-lightbox" id="photo-lightbox" aria-label="Enlarged photograph">
+  <div class="photo-lightbox-top"><span id="photo-counter"></span><button type="button" id="photo-close" aria-label="Close enlarged photograph">Close ×</button></div>
+  <img id="photo-large" alt="" />
+  <div class="photo-lightbox-nav"><button type="button" id="photo-prev" aria-label="Previous photograph">←</button><p id="photo-caption"></p><button type="button" id="photo-next" aria-label="Next photograph">→</button></div>
+</dialog>
 <script>
-(function() {
-  const overlay = document.getElementById('lightbox');
-  if (!overlay) return;
-  const lbImg = overlay.querySelector('img');
-  const closeBtn = overlay.querySelector('.lightbox-close');
-
-  document.querySelectorAll('.gallery img').forEach(function(img) {
-    img.addEventListener('click', function() {
-      lbImg.src = this.src;
-      lbImg.alt = this.alt;
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  function closeLightbox() {
-    overlay.classList.remove('active');
-    document.body.style.overflow = '';
-    lbImg.src = '';
-  }
-
-  overlay.addEventListener('click', function(e) {
-    if (e.target !== lbImg) closeLightbox();
-  });
-  closeBtn.addEventListener('click', closeLightbox);
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
-  });
+(function(){
+  const dialog=document.getElementById('photo-lightbox');
+  const links=Array.from(document.querySelectorAll('a[data-photo]'));
+  if(!dialog||!links.length)return;
+  const image=document.getElementById('photo-large'),caption=document.getElementById('photo-caption'),counter=document.getElementById('photo-counter'),prev=document.getElementById('photo-prev'),next=document.getElementById('photo-next');
+  let index=0,opener=null,oldOverflow='';
+  function show(i){index=i;image.src=links[i].href;image.alt=links[i].dataset.caption;caption.textContent=image.alt;counter.textContent=(i+1)+' / '+links.length+' on this page';prev.disabled=i===0;next.disabled=i===links.length-1;}
+  links.forEach((link,i)=>link.addEventListener('click',e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;if(typeof dialog.showModal!=='function')return;e.preventDefault();opener=link;oldOverflow=document.body.style.overflow;show(i);dialog.showModal();document.body.style.overflow='hidden';}));
+  document.getElementById('photo-close').addEventListener('click',()=>dialog.close());
+  prev.addEventListener('click',()=>{if(index>0)show(index-1)});next.addEventListener('click',()=>{if(index<links.length-1)show(index+1)});
+  dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+  dialog.addEventListener('close',()=>{document.body.style.overflow=oldOverflow;image.removeAttribute('src');if(opener)opener.focus()});
+  dialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'&&index>0){e.preventDefault();show(index-1)}if(e.key==='ArrowRight'&&index<links.length-1){e.preventDefault();show(index+1)}});
 })();
 </script>
