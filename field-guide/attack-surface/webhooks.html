@@ -90,17 +90,17 @@
 <p>webhooks, OAuth <code>redirect_uri</code> and <code>notification_url</code>, RSS/feed importers, "test webhook" buttons.</p>
 <h2 class="sec" id="what-to-test"><span class="tick">§</span>What to test</h2>
 <ul><li><strong>SSRF</strong>: point the webhook at your collaborator, then at <code>169.254.169.254</code>/internal hosts. Many</li></ul>
-<p>webhook senders follow redirects — host an allowlisted URL that 302s to the metadata service. See <a href="../vulnerabilities/ssrf.html">Server-Side Request Forgery (SSRF)</a> and <a href="#">1</a>.</p>
+<p>webhook senders follow redirects — host an allowlisted URL that 302s to the metadata service. See <a href="../vulnerabilities/ssrf.html"> 0 </a> and <a href="#"> 1 </a>.</p>
 <ul><li><strong>Secret leakage</strong>: capture what the server sends — signing secret, bearer token, internal</li></ul>
-<p>headers. A leaked signing secret lets you forge webhook events. (See <a href="../vulnerabilities/info-disclosure.html">Information Disclosure</a>.)</p>
+<p>headers. A leaked signing secret lets you forge webhook events. (See <a href="../vulnerabilities/info-disclosure.html"> 0 </a>.)</p>
 <ul><li><strong>Redirect/parser tricks</strong>: <code>http://allowed@evil/</code>, <code>#</code>, <code>@</code>, DNS rebinding to bypass a URL</li></ul>
 <p>allowlist (same <a href="../vulnerabilities/ssrf.html#bypasses">bypass matrix</a>).</p>
 <ul><li><strong>Injection into the consumer</strong>: if your webhook body is rendered in an admin/other-tenant UI,</li></ul>
-<p>it's stored XSS/HTML injection (see <a href="../vulnerabilities/xss.html">Cross-Site Scripting (XSS)</a>).</p>
+<p>it's stored XSS/HTML injection (see <a href="../vulnerabilities/xss.html"> 0 </a>).</p>
 <h2 class="sec" id="remediation"><span class="tick">§</span>Remediation</h2>
 <ul><li>Allowlist destination hosts; resolve-and-pin IPs; block link-local/private ranges; don't follow</li></ul>
 <p>redirects to new hosts; sign requests but never leak the secret to attacker-controlled URLs.</p>
 <h2 class="sec" id="references"><span class="tick">§</span>References</h2>
-<ul><li><a href="../vulnerabilities/ssrf.html">Server-Side Request Forgery (SSRF)</a>, <a href="#">1</a>, <a href="../chains.html">Exploit Chains</a>.</li></ul></main>
+<ul><li><a href="../vulnerabilities/ssrf.html"> 0 </a>, <a href="#"> 1 </a>, <a href="../chains.html"> 2 </a>.</li></ul></main>
   <nav class="toc"><h5>On this page</h5><a href="#where-to-look">Where to look</a><a href="#what-to-test">What to test</a><a href="#remediation">Remediation</a><a href="#references">References</a></nav></div><footer class="foot"><img class="seal" src="/favicon.jpg" alt="Logo"><span>The Hacktivity Field Guide — distilled from disclosed HackerOne reports for defensive, educational research. Every specimen cites <code>hackerone.com/reports/&lt;id&gt;</code>.</span></footer>
 <script src="../assets/app.js"></script></body></html>

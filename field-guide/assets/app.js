@@ -12,7 +12,7 @@
  window.addEventListener('hashchange',revealHash);revealHash();
  // load more
  var lm=document.getElementById('loadmore');if(lm)lm.onclick=function(){document.querySelectorAll('.spec.hidden').forEach(function(s){s.classList.remove('hidden')});lm.remove();upd();};
- var cont=document.querySelector('.specimens');
+ var cont=document.getElementById('specimens');
  function upd(){var sh=document.getElementById('showing');if(sh&&cont)sh.textContent='showing '+cont.querySelectorAll('.spec:not(.hidden)').length;}
  var sortSel=document.getElementById('sort');if(sortSel)sortSel.onchange=function(){var k=this.value;var a=[].slice.call(cont.children);a.sort(function(x,y){if(k==='score')return 0;return (+y.dataset[k==='sev'?'sev':k])-(+x.dataset[k==='sev'?'sev':k])});a.forEach(function(el){cont.appendChild(el)});};
  upd();
